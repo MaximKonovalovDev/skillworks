@@ -1,0 +1,3 @@
+{"q": "which gateway lanes exist", "must": ["chat", "vision"]}
+{"q": "what happens without a provider key", "must": ["refuses", "key"]}
+{"q": "how is batch work claimed", "must": ["lease", "requeue"]}
