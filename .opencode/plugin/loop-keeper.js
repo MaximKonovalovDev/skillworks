@@ -128,10 +128,10 @@ const REPOS = {
     knobs: "C:/Users/me/Desktop/design-studio/.opencode/knobs.json", command: "C:/Users/me/Desktop/design-studio/.opencode/commands/sprint.md",
   },
   skillworks: {
-    lock: "C:/Users/me/AppData/Local/Temp/opencode/skillworks-kit/sprint/lock.txt", halt: "C:/Users/me/AppData/Local/Temp/opencode/skillworks-kit/sprint/halt",
-    handoff: "C:/Users/me/AppData/Local/Temp/opencode/skillworks-kit/sprint/handoff.md", inbox: "C:/Users/me/AppData/Local/Temp/opencode/skillworks-kit/sprint/inbox.md",
-    state: "C:/Users/me/AppData/Local/Temp/opencode/skillworks-kit/sprint/loop-keeper.json", cmd: "C:/Users/me/AppData/Local/Temp/opencode/skillworks-kit/sprint/loop-keeper.cmd.json",
-    knobs: "C:/Users/me/AppData/Local/Temp/opencode/skillworks-kit/.opencode/knobs.json", command: "C:/Users/me/AppData/Local/Temp/opencode/skillworks-kit/.opencode/commands/sprint.md",
+    lock: "C:/Users/me/Desktop/skillworks/sprint/lock.txt", halt: "C:/Users/me/Desktop/skillworks/sprint/halt",
+    handoff: "C:/Users/me/Desktop/skillworks/sprint/handoff.md", inbox: "C:/Users/me/Desktop/skillworks/sprint/inbox.md",
+    state: "C:/Users/me/Desktop/skillworks/sprint/loop-keeper.json", cmd: "C:/Users/me/Desktop/skillworks/sprint/loop-keeper.cmd.json",
+    knobs: "C:/Users/me/Desktop/skillworks/.opencode/knobs.json", command: "C:/Users/me/Desktop/skillworks/.opencode/commands/sprint.md",
   },
 };
 const CFG = {
