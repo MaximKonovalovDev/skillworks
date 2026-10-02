@@ -850,6 +850,7 @@ const makeKeeper = async ({ client, worktree, directory }, options) => {
     const reply = replies.at(-1);
     const keys = {
       consent: keyOf(owner, msgs), turnKey: keyOf(turn, msgs), replyKey: keyOf(reply, msgs),
+      lastId: msgs.length ? keyOf(msgs.at(-1), msgs) : null,
       users: new Set(msgs.filter(isUser).map((m) => keyOf(m, msgs))),
       // The continue runs as the loop's own agent and model, not the default agent.
       via: viaOf(owner), title: info.title,
@@ -995,6 +996,20 @@ const makeKeeper = async ({ client, worktree, directory }, options) => {
           if (fresh.due) return freshCtxRenew(id, fresh.input, fresh.threshold, fresh.k);
         } catch { /* a failed read continues as usual */ }
       }
+      // Stale-continue guard (bb steerTurn expectedTurnId shape, 2026-10-03):
+      // the wait is over, but something else may have moved the session since
+      // this continue was planned (a helper result, a retried message, a second
+      // keeper). Re-read the last message id right before sending; a newer
+      // message means this continue is superseded: skip it, never double-send.
+      try {
+        const cur = (await client.session.messages({ path: { id } }))?.data ?? [];
+        const curLast = cur.length ? keyOf(cur.at(-1), cur) : null;
+        if (now2.lastId && curLast && curLast !== now2.lastId) {
+          st.recheck = true;
+          log(`${id} stale-continue skipped: a newer message (${curLast}) appeared after ${now2.lastId}; no continue sent`);
+          return record(id, "waiting", `stale-continue skipped: a newer message appeared after ${now2.lastId}`, st);
+        }
+      } catch { /* a failed re-read sends as planned */ }
       await send(id, st, now2);
     } catch (e) {
       if (!keeperGlitch(e)) return stop(id, st, `continue failed: ${e?.message ?? e}`);
@@ -2020,11 +2035,19 @@ Ready work: ${readyItem.id}. Claim only this item; selectors do not authorize sw
       if (running && running !== "idle") return answer("already running");
       if (state.get(id)?.timer) return answer("a continue is already waiting");
       const msgs = (await client.session.messages({ path: { id } }))?.data ?? [];
+      const goLast = msgs.length ? keyOf(msgs.at(-1), msgs) : null;
       await reload();
       // The GO carries the keeper's facts (a bare GO met "holding at 14/15" twice, factory 2026-09-27).
       const command = commandNews();
       const facts = [command?.text, ...Object.values(stateNotes(await helpersRunning(id), localStatus(state.get(id))))].filter(Boolean);
       const go = facts.length ? `${goText(cmd.from)}\n${KEEPER} Facts: ${facts.join(" ")}` : goText(cmd.from);
+      // Same stale-continue guard as the continue above: a newer message since
+      // the GO was read means someone already moved the session; skip the send.
+      try {
+        const cur = (await client.session.messages({ path: { id } }))?.data ?? [];
+        const curLast = cur.length ? keyOf(cur.at(-1), cur) : null;
+        if (goLast && curLast && curLast !== goLast) return answer(`stale-continue skipped: a newer message appeared after ${goLast}; GO not sent`);
+      } catch { /* a failed re-read sends as planned */ }
       await client.session.promptAsync({ path: { id }, body: bodyFor(viaOf(msgs.findLast(isOwner)), go) });
       if (command) write({ commandSeen: command.at });
       return answer(`sent GO to the sprint session${facts.length ? ` with ${facts.length} facts` : ""}`);
