@@ -1,22 +1,24 @@
-# skillworks handoff - round 18 (token 557c)
+# skillworks handoff - round 19 (token eed3)
 
-Round: 18
-Written: 2026-10-03T07:28Z
-Token: 557c
+Round: 19
+Written: 2026-10-03T09:41Z
+Token: eed3
+Takeover: replaced stale lead#557c since 2026-10-03T05:55Z (closed app) with lead#eed3 since 2026-10-03T09:37Z.
 
 ## Heading
-- No Scorecard move. 003 NOOP (already DONE); S03 steal filed (5 cards + 6 rejects).
+- No Scorecard move. 004 NOOP (gate already enforced 38a9f9d); S04 steal filed (5 cards + 6 rejects).
 
 ## Done
-- Batch r17: builder-003 NOOP (README eval line verified runnable, pytest 11 passed); researcher-steal DONE S03 Skrun (cards 2026-10-03-S03.md, VISION S03 dated, pytest 11 passed).
-- Committing now: research/cards/2026-10-03-S03.md + VISION.md S03 date.
+- Batch r19: builder-004 NOOP (export gate verified on all 3 paths, pytest 11 passed, no files changed; notes duplicate export-gate row to retire).
+- Researcher-steal DONE S04 Evos (cards 2026-10-03-S04.md Apache-2.0, VISION S04 dated, pytest 11 passed).
+- Committed 7181f94: research/cards/2026-10-03-S04.md + VISION.md S04 date (pytest 11 passed in body).
 
 ## Checks
-- pytest 11 passed (helper proof). Checks to rerun at commit.
+- pytest 11 passed (helper + lead proof). sprint/check.mjs PASS (19 pass, 2 warn). vision-check WARN (17 never-read, 4 seed Parts).
 
 ## Blockers
-- None.
+- None. K-07 nested-export deletions (6 codex cheatsheet paths) left unstaged for 014 to finish clean x4.
 
 ## Next
-- Batch (width 2): builder 014-k07-redo-clean-export (retry after interrupt; rm nested export/ scratch incl. committed 9c2f7e1 garbage, clean x4) + planner-research-merge (S03 cards -> rows/folds).
-- Then K-07 judge, K-10 MCP, K-15..K-21 builds.
+- Batch (width 2): builder 014-k07-redo-clean-export (clean export x4, rm nested scratch) + planner-research-merge (S03+S04 cards -> rows/folds).
+- Then K-10 MCP handshake, K-15..K-21 builds, retire duplicate 004 gate row.
