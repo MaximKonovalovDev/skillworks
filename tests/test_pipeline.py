@@ -77,6 +77,37 @@ def test_grow_qa_from_chapter() -> None:
         assert item["must"] and item["must"][0] in chapter.lower()
 
 
+def test_gutenberg_marker_strip(tmp_path: Path) -> None:
+    """K-28: PG header/footer markers stripped, body kept, receipt flags it."""
+    header = (
+        "The Project Gutenberg eBook of Test Dreams\n"
+        "Title: Test Dreams\n"
+        "*** START OF THE PROJECT GUTENBERG EBOOK TEST DREAMS ***\n"
+    )
+    body = "Dream analysis chapter one about free association.\n" * 120
+    footer = "*** END OF THE PROJECT GUTENBERG EBOOK TEST DREAMS ***\nMost people start at our website\n"
+    src = tmp_path / "gutenberg.txt"
+    src.write_text(header + body + footer, encoding="utf-8")
+    work = tmp_path / "work"
+    receipt = extract_mod.extract(str(src), work)
+    text = (work / "full_text.txt").read_text(encoding="utf-8")
+    assert receipt["stripped"] is True
+    assert "The Project Gutenberg eBook of Test Dreams" not in text
+    assert "Most people start at our website" not in text
+    assert "*** START OF" not in text and "*** END OF" not in text
+    assert "free association" in text
+    # no-marker fallback: plain text untouched, stripped False
+    plain = tmp_path / "plain.txt"
+    plain.write_text("just a body paragraph, no markers", encoding="utf-8")
+    receipt2 = extract_mod.extract(str(plain), tmp_path / "work2")
+    assert receipt2["stripped"] is False
+    assert (tmp_path / "work2" / "full_text.txt").read_text(encoding="utf-8") == "just a body paragraph, no markers"
+    # opt-out keeps boilerplate
+    receipt3 = extract_mod.extract(str(src), tmp_path / "work3", strip_gutenberg=False)
+    assert receipt3["stripped"] is False
+    assert "The Project Gutenberg eBook" in (tmp_path / "work3" / "full_text.txt").read_text(encoding="utf-8")
+
+
 def test_export_gate_refuses_failing_skill(tmp_path: Path) -> None:
     work = tmp_path / "work"
     (work / "chunks").mkdir(parents=True)
