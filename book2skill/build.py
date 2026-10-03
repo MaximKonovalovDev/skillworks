@@ -12,6 +12,17 @@ from pathlib import Path
 
 PROMPT_FILE = Path(__file__).resolve().parent.parent / "prompts" / "build-skill.md"
 
+NAME_RE = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
+NAME_RULE = "name matches dir, a-z0-9- only"
+
+
+def validate_name(name: str, skilldir: Path) -> None:
+    """Refuse a --name that breaks the skill naming rule (016)."""
+    if not NAME_RE.match(name):
+        raise ValueError(f"--name '{name}' is invalid (rule: {NAME_RULE})")
+    if name != skilldir.name:
+        raise ValueError(f"--name '{name}' must match skill dir '{skilldir.name}' (rule: {NAME_RULE})")
+
 
 def prompt_version() -> str:
     """Version stamp of the chapter-to-skill prompt fragment (llm pattern)."""
@@ -29,6 +40,7 @@ def _frontmatter(name: str, description: str) -> str:
 
 
 def build(workdir: Path, skilldir: Path, name: str, description: str) -> dict:
+    validate_name(name, skilldir)
     heads = []
     for path in sorted((workdir / "chunks").glob("*.txt")):
         heads.append(f"## {path.stem}\n" + path.read_text(encoding="utf-8")[:600])

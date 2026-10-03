@@ -61,7 +61,7 @@ def test_build_skill_pack_layout(tmp_path: Path) -> None:
     (work / "chunks").mkdir(parents=True)
     (work / "chunks" / "0000.txt").write_text("chapter about leases", encoding="utf-8")
     skill = tmp_path / "skill"
-    receipt = build_mod.build(work, skill, "demo-skill", "demo description")
+    receipt = build_mod.build(work, skill, "skill", "demo description")
     assert receipt["layout"] == "skill-pack"
     assert receipt["prompt"] == "v1"
     assert (skill / "references" / "sources.md").read_text(encoding="utf-8").startswith("# Sources")
@@ -158,6 +158,47 @@ def test_export_skips_own_output_dir_no_nesting(tmp_path: Path) -> None:
     # re-export over an existing dest still leaves a flat tree
     export_mod.export(skill, "claude", out, eval_report=report)
     assert list((out / "claude" / skill.name).rglob("export")) == []
+
+
+def test_build_refuses_name_dir_mismatch(tmp_path: Path) -> None:
+    """K-36 [016]: --name != skill dir basename or bad charset fails fast, rule quoted."""
+    import pytest
+
+    work = tmp_path / "work"
+    (work / "chunks").mkdir(parents=True)
+    (work / "chunks" / "0000.txt").write_text("chapter about leases", encoding="utf-8")
+    skill = tmp_path / "skill"
+    runner = CliRunner()
+    # mismatched pair: exit != 0 with the rule quoted
+    result = runner.invoke(
+        main,
+        ["build", "--work", str(work), "--skill", str(skill),
+         "--name", "pilot-r3-demo", "--description", "demo"],
+    )
+    assert result.exit_code != 0
+    assert "must match skill dir" in result.output
+    assert "a-z0-9-" in result.output
+    assert not (skill / "SKILL.md").exists()
+    # bad charset also refused with the rule quoted
+    bad = tmp_path / "Bad_Name"
+    result_bad = runner.invoke(
+        main,
+        ["build", "--work", str(work), "--skill", str(bad),
+         "--name", "Bad_Name", "--description", "demo"],
+    )
+    assert result_bad.exit_code != 0
+    assert "a-z0-9-" in result_bad.output
+    # direct API refuses too
+    with pytest.raises(ValueError, match="a-z0-9-"):
+        build_mod.build(work, skill, "pilot-r3-demo", "demo")
+    # matching pair still builds
+    result_ok = runner.invoke(
+        main,
+        ["build", "--work", str(work), "--skill", str(skill),
+         "--name", "skill", "--description", "demo"],
+    )
+    assert result_ok.exit_code == 0
+    assert (skill / "SKILL.md").exists()
 
 
 def test_export_unknown_target_clean_error(tmp_path: Path) -> None:

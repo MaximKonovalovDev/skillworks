@@ -57,7 +57,10 @@ def index_cmd(work: str) -> None:
 @click.option("--description", required=True)
 def build(work: str, skill: str, name: str, description: str) -> None:
     """Stage 4: notes-then-skill scaffold."""
-    receipt = build_mod.build(Path(work), Path(skill), name, description)
+    try:
+        receipt = build_mod.build(Path(work), Path(skill), name, description)
+    except ValueError as exc:
+        raise click.UsageError(str(exc)) from None
     click.echo(f"built {receipt['skill']} ({receipt['note_chars']} note chars)")
 
 
