@@ -103,7 +103,7 @@ researcher reads the row read longest ago and writes its date back.
 | S14 | adjacent | agentskills.io skill spec | R1 | SKILL.md frontmatter rules? | spec reference-only live 2026-10-03 | 2026-10-03 |
 | S15 | adjacent | MCP Python SDK (stdio) | P2 | handshake + tool schema? | MIT (live 2026-10-03) | 2026-10-03 |
 | S16 | adjacent | Gutenberg catalog + ebooklib/pypdf/docx | P3 | clean text extract? | AGPL-3.0 (ebooklib LICENSE.txt live 2026-10-03) / PD / BSD / MIT | 2026-10-03 |
-| S17 | adjacent | Freud/James public-domain texts | P3 | first psychology test books? | public domain | never |
+| S17 | adjacent | Freud/James public-domain texts | P3 | first psychology test books? | public domain | 2026-10-03 |
 | S18 | adjacent | open programming books (free-programming-books list) | P3 | first programming test books? | CC/MIT mix, check each | never |
 | S19 | adjacent | Gumroad + itch.io seller pages | P5 | price + listing shape? | terms live | never |
 | S20 | adjacent | MoneyPrinterTurbo demo style | P5 | GIF demo that sells? | check live | never |
