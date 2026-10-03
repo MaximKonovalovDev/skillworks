@@ -1,27 +1,23 @@
-# skillworks handoff - round 20 (token eed3)
+# skillworks handoff - round 21 (token eed3)
 
-Round: 20
-Written: 2026-10-03T10:15Z
+Round: 21
+Written: 2026-10-03T10:22Z
 Token: eed3
-Takeover: lead#eed3 since 2026-10-03T09:37Z (replaced stale 557c, closed app).
+Knobs: width 2, dispatch foreground, heavy_max 3, helper_max 90m, bg_width 0, cards_per_reader 5 (re-read 2026-10-03, no proposal).
 
 ## Heading
-- No Scorecard move. 005 NOOP (UsageError already in HEAD); S05 steal filed (5 cards + 7 rejects, BSD-3-Clause).
+- P2+R3 swept (measured handshake). 006 repair DONE, needs judge before commit.
 
 ## Done
-- Batch r20: builder-005 NOOP (bad-target clean UsageError verified, pytest 12 passed, no edit).
-- Researcher-steal DONE S05 aps (cards 2026-10-03-S05.md, VISION S05 dated BSD-3-Clause, pytest 12 passed).
-- Committed 8b42627: research/cards/2026-10-03-S05.md + VISION.md S05 date (pytest 12 passed in body).
+- Builder-006 DONE: progit QA single-word musts -> source-derived multi-word (diverge from main line, hotfix branch, merge conflict...), 12/12=1.0 progit, 6/12=0.5 freud untouched, pytest 12 passed. Left uncommitted for judge (chain).
+- Researcher-vision DONE P2: card 2026-10-03-P2.md (godot-agent MIT + hermes MIT + MCP SDK MIT), VISION P2+R3 rewritten measured 2026-10-03, handshake returns progit-branching, pytest 12 passed.
+- Committed d7fb945: research/cards/2026-10-03-P2.md + VISION.md P2/R3 (pytest 12 passed in body).
 
 ## Checks
-- pytest 12 passed (11 + new K-07 no-nesting test, unstaged). sprint/check PASS (19 pass, 2 warn).
+- pytest 12 passed. sprint/check PASS (19 pass, 2 warn: 15 never-read steal rows).
 
 ## Blockers
-- K-07 nesting still open: export.py _own_output_ignore + no-nesting test unstaged (from interrupted 014), plus untracked export-in-export garbage (filename-too-long). Leave for 014 redo to finish clean x4; do NOT commit without judge PASS.
+- 006 QA fix + K-07 export _own_output_ignore + no-nesting test all unstaged, need judge PASS (007-review-repair-006 ready). Untracked export-in-export garbage still present (filename-too-long).
 
 ## Next
-- Keeper names next batch (014 redo + merge expected). Then K-10 MCP, K-15..K-21.
-
-## Retro (every 5 rounds)
-- Metrics 10-02->10-03: judge PASS 6/8 (75%), FAIL 2 (nesting); worst repeated = export-in-export nesting + researcher live-read fails (4 github_get + 4 deepwiki).
-- PROPOSAL: book2skill/export.py | skip own output dir in copytree + test_export_skips_own_output_dir_no_nesting | nesting FAILs 2/8, pytest 12 passed now
+- Keeper names next batch (judge 006 + 014 redo + merge expected). Then K-10 MCP, K-15..K-21.
