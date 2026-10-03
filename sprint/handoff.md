@@ -1,25 +1,24 @@
-# skillworks handoff - round 50 (token f3a9)
+# skillworks handoff - round 51 (token f3a9)
 
-Round: 50
-Written: 2026-10-03T13:58Z
-Token: f3a9 (takeover 2026-10-03T13:23Z from b7e2; refreshed 13:58Z)
+Round: 51
+Written: 2026-10-03T14:02Z
+Token: f3a9 (takeover 2026-10-03T13:23Z from b7e2; refreshed 14:02Z)
 Knobs: width 2, dispatch foreground, heavy_max 3, helper_max 90m, bg_width 0, cards_per_reader 5 (no change, no proposal).
 
 ## Heading
-- K-08 shop slice built (listing + Vol 0 + GIF placeholder), awaits judge. Vision seat held by keeper.
+- Board grows to 34 rows: merge judged 4 cards into K-26/27/28/29. K-23 built, awaits judge.
 
 ## Done
-- Builder-rows K-08 DONE (chain: needs judge): skills/progit-branching/listing.md (honest: PREP-ONLY, sales 0, placeholder disclosed) + vol0-sample.md + demo/demo.gif (43B placeholder). check 20/1/0, pytest 12 passed. NOT committed (chain).
-- Researcher-vision BLOCKED by keeper: repeat dispatch 7x in 3h, held 3h. No vision change this round.
+- Planner-merge DONE: board K-26 (audit-skip-export, R1) + K-27 (NC tension, R6) + K-28 (PG strip, R4) + K-29 (inputSchema, R3); INDEX merge 13:46Z (4 cards, 4 accepted). pytest 13 passed.
+- Builder K-23 DONE (chain: needs judge): skills/cron-skip-clean/ (SKILL.md name matches dir + script + ref + test, RUN->SKIP->dirty->RUN proven). pytest 13 passed. NOT committed.
 
 ## Checks
-- python -m pytest tests/ -q: 12 passed in 1.98s.
+- python -m pytest tests/ -q: 13 passed in 1.69s.
 - node sprint/check.mjs: 20 pass, 1 warn, 0 fail.
 
 ## Blockers
-- LICENSE TENSION for planner/owner: K-08 listing prices a Pro Git ch.3 (CC BY-NC-SA 3.0) derivative at $10. NC clause may forbid commercial sale. Needs planner row: confirm NC-compatible pricing (free/PWYW?) or swap Vol 1 source to PD/own docs. Do not ship paid until resolved.
-- 014 export/ + K-08 files both await judges (judge-014, judge-K-08). K-22 split + K-23/24/25 open.
-- No researcher-vision for 3h per keeper: next batches use steal/pilot/runner/planner only.
+- Three builder outputs await judges (chain): 014 export/ (K-07), K-08 listing set, K-23 skill. Keeper: judge packets please.
+- K-22 TOP still needs planner split; vision seat held until ~16:31Z.
 
 ## Next
-- Keeper: please name judge-014 + judge-K-08 (or builder-014-verify) next. No vision seat until hold lifts.
+- Keeper: please name judge-014 + judge-K-23 (or builder K-24/K-26) next. No vision seat.
