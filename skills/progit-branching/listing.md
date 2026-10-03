@@ -17,6 +17,14 @@
   skill dir; SKILL.md at root. Other targets: `export/codex|opencode|gemini/`.
 - Try it (15-min check): create a branch, switch, merge `iss53` into `master`,
   delete the merged branch — all from the cheatsheet, no book needed.
+- Status: draft (PREP-ONLY, not shipped).
+- Category: git branching how-to.
+- Tags: git, branching, merge, cheatsheet.
+- Files:
+  - `vol0-sample.md` (792 B, 2026-10-03) — free excerpt, no purchase needed.
+  - `SKILL.md` — skill entry (PREP-ONLY draft).
+  - `references/` — chapter notes backing the cheatsheet.
+  - `demo/demo.gif` — placeholder loop until a real capture lands.
 
 ## Changelog
 
