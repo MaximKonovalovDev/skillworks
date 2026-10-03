@@ -5,6 +5,7 @@ import json
 import os
 import re
 import shutil
+import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -103,6 +104,38 @@ def _check_paths(skilldir: Path, out: Path, dest: Path) -> None:
         )
 
 
+def _write_zip(dest: Path, zip_path: Path) -> list[str]:
+    """Bundle the exported copy as a store-ready ZIP (K-41, STEAL-ZIP).
+
+    SKILL.md sits at the root (arcname ``SKILL.md``, not ``<name>/SKILL.md``) so the
+    archive imports as a skill as-is. Dotfiles (``.lock.json`` et al) and links are
+    skipped; everything else the copy shipped (references/, scripts/, assets/,
+    chapters/, ...) rides along. The ZIP lives beside the exported dir
+    (``out/<target>/<name>.zip``), never inside it, so a later export never copies
+    the archive into itself. Donor idea: yusufkaraaslan/Skill_Seekers
+    ``cli/adaptors/claude.py`` (MIT, read live 2026-10-03); stdlib zipfile only.
+    """
+    names: list[str] = []
+    with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as bundle:
+        for here, dirs, files in os.walk(dest):
+            dirs[:] = sorted(
+                d for d in dirs
+                if not d.startswith(".") and not _is_link(os.path.join(here, d))
+            )
+            for name in sorted(files):
+                if name.startswith("."):
+                    continue
+                full = os.path.join(here, name)
+                if _is_link(full):
+                    continue
+                arc = os.path.relpath(full, dest).replace(os.sep, "/")
+                if arc.startswith(".") or "/." in arc:
+                    continue
+                bundle.write(full, arc)
+                names.append(arc)
+    return names
+
+
 def skill_version(skilldir: Path) -> str:
     """Version from SKILL.md frontmatter (K-18); default 0.1.0 when missing."""
     try:
@@ -143,6 +176,11 @@ def export(skilldir: Path, target: str, out: Path, eval_report: dict | None = No
         "date": datetime.now(timezone.utc).date().isoformat(),
     }
     (dest / ".lock.json").write_text(json.dumps(lock, indent=2), encoding="utf-8")
-    receipt = {"stage": "export", "target": target, "dest": str(dest)}
+    zip_path = out / target / f"{skilldir.name}.zip"
+    if zip_path.exists():
+        zip_path.unlink()
+    members = _write_zip(dest, zip_path)
+    receipt = {"stage": "export", "target": target, "dest": str(dest),
+               "zip": str(zip_path), "zip_files": len(members)}
     print(json.dumps(receipt, indent=2))
     return receipt
