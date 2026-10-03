@@ -1,25 +1,25 @@
-# skillworks handoff - round 1 (token 557c)
+# skillworks handoff - round 2 (token 557c)
 
-Round: 1
-Written: 2026-10-03T01:09Z
+Round: 2
+Written: 2026-10-03T01:17Z
 Token: 557c
 
 ## Heading
-- No Scorecard row moved yet (round 1 start). Weakest rows: R5/R6 at 0%, then R4 at 12%.
+- R4 domain packs moved: K-04 built (2 books to 2 skills, freud 0.50 / progit 0.92), awaiting judge before commit.
 
 ## Done
-- None this round. Prior: T-01..T-05 DONE ff8710f, pytest green (a638ba1).
-- Inbox EB-S7/S8/S9 -> board K-04/K-05/K-06 (2026-10-03).
+- Batch r1: planner-research-merge NOOP (no cards); builder-rows DONE K-04 unjudged, pytest 7 passed.
+- K-04 -> DOING (builder DONE 2026-10-03, judge queued as ready/001).
 
 ## Checks
-- `node sprint/check.mjs` PASS (19 pass, 2 warn, 0 fail).
-- `node C:/Users/me/Desktop/center/vision-check.mjs skillworks` no FAIL (5 pass, 2 warn: 5 parts seed-unswept, 20 steal rows never read).
-- `python -m pytest tests/ -q` 7 passed in 0.61s.
+- `python -m pytest tests/ -q` 7 passed (builder + lead rerun).
+- `node sprint/check.mjs` PASS last run (19 pass, 2 warn).
+- work/ quarantined (freud-dreams, progit-branching), gitignored; skills/ + evals/ uncommitted pending judge PASS.
 
 ## Blockers
-- None. Halt file absent (center `on` cleared it); lock claimed lead#557c.
+- None. Judge one-off ready/001-review-builder-rows-r1.md tops next batch per chain.
 
 ## Next
-- Batch (width 2): planner-research-merge + builder-rows per sprint/queue/batch.md.
-- K-01 TOP: vision-check has no FAIL, planner to confirm close or split into swept Parts rows.
-- K-04 seeds, K-05 steal pattern, K-06 selfdev queued; K-02 first slice for builder.
+- Batch (width 2): planner-rows + pilot-view per sprint/queue/batch.md.
+- On judge PASS: commit skills/freud-dream-psychology, skills/progit-branching, evals/*qa*.jsonl by path with pytest line, mark K-04 DONE with SHA.
+- K-05 steal pattern, K-06 selfdev (rarity-weighted search from K-04 finding), K-01 close.
