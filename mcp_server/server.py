@@ -6,37 +6,133 @@ No dependencies, no network. Scope is honest: search only, no generation.
 """
 from __future__ import annotations
 
+import inspect
 import json
+import os
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 SKILLS = ROOT / "skills"
 
+SKILLS_DIR_ENV_VARS = ("SKILLWORKS_SKILLS_DIR", "SKILLS_DIR")
+
+_CLI_SKILLS_DIR: Path | None = None
+
+
+def _parse_skills_dir_override(argv: list[str]) -> Path | None:
+    for i, arg in enumerate(argv):
+        if arg == "--skills-dir" and i + 1 < len(argv):
+            return Path(argv[i + 1])
+        if arg.startswith("--skills-dir="):
+            return Path(arg.split("=", 1)[1])
+    return None
+
+
+def _skills_dir() -> Path:
+    if _CLI_SKILLS_DIR is not None:
+        return _CLI_SKILLS_DIR
+    for var in SKILLS_DIR_ENV_VARS:
+        val = os.environ.get(var)
+        if val:
+            return Path(val)
+    return SKILLS
+
+CACHE_HINT = {"ttlMs": 3600000, "scope": "public"}
+
+_DESCRIPTIONS = {
+    "query": "Keywords to search skill markdown for (non-empty string).",
+    "skill": "Optional skill name to restrict search to one skill.",
+    "limit": "Max hits to return (integer 1-20, default 5).",
+}
+
 
 def _skills() -> list[str]:
-    if not SKILLS.exists():
+    base = _skills_dir()
+    if not base.exists():
         return []
-    return sorted(p.name for p in SKILLS.iterdir() if (p / "SKILL.md").exists())
+    return sorted(p.name for p in base.iterdir() if (p / "SKILL.md").exists())
 
 
-def _search(query: str, skill: str | None, limit: int = 5) -> list[dict]:
+def _search(query: str, skill: str | None = None, limit: int = 5) -> list[dict]:
+    base = _skills_dir()
     words = [w.lower() for w in query.split() if len(w) > 2]
     names = [skill] if skill else _skills()
     scored = []
     for name in names:
-        for path in sorted((SKILLS / name).rglob("*.md")):
+        for path in sorted((base / name).rglob("*.md")):
             text = path.read_text(encoding="utf-8")
             low = text.lower()
             score = sum(low.count(w) for w in words)
             if score:
-                scored.append((score, name, str(path.relative_to(SKILLS)), text[:300]))
+                scored.append((score, name, str(path.relative_to(base)), text[:300]))
     scored.sort(reverse=True)
     return [
         {"skill": n, "file": f, "score": s, "head": h} for s, n, f, h in scored[:limit]
     ]
 
 
+def _input_schema() -> dict:
+    """Derive skill_search inputSchema from the _search() signature.
+
+    Pattern steal (ideas only, no paste): PrefectHQ/fastmcp @mcp.tool
+    auto-schema (Apache-2.0) — types/required from the function so clients
+    can validate before calling. Range guard for limit is declared here
+    (signature carries no min/max); godot-agent CacheHint shape is separate.
+    """
+    sig = inspect.signature(_search)
+    props: dict = {}
+    required: list = []
+    for name, param in sig.parameters.items():
+        ann = param.annotation
+        base = "string"
+        if ann is int or (getattr(ann, "__origin__", None) is None and ann == int):
+            base = "integer"
+        elif name == "limit":
+            base = "integer"
+        elif name == "query":
+            base = "string"
+        elif name == "skill":
+            base = "string"
+        prop: dict = {"type": base, "description": _DESCRIPTIONS.get(name, name)}
+        if name == "limit":
+            prop.update({"minimum": 1, "maximum": 20, "default": 5})
+        props[name] = prop
+        if param.default is inspect.Parameter.empty:
+            required.append(name)
+    return {"type": "object", "properties": props, "required": required}
+
+
+INPUT_SCHEMA = _input_schema()
+
+
+def _validate_args(args) -> tuple[bool, dict | str]:
+    """Validate tools/call arguments against INPUT_SCHEMA. Returns (ok, cleaned|message)."""
+    if not isinstance(args, dict):
+        return False, "arguments must be an object with query/skill/limit"
+    query = args.get("query")
+    if not isinstance(query, str) or not query.strip():
+        return False, "query is required (non-empty string)"
+    skill = args.get("skill")
+    if skill is not None and not isinstance(skill, str):
+        return False, "skill must be a string when provided"
+    limit = args.get("limit", 5)
+    try:
+        limit = int(limit)  # type: ignore[arg-type]
+    except (TypeError, ValueError):
+        return False, "limit must be integer 1..20"
+    if not 1 <= limit <= 20:
+        return False, "limit must be integer 1..20"
+    return True, {"query": query, "skill": skill, "limit": limit}
+
+
+def _error_envelope(message: str) -> dict:
+    text = json.dumps({"error": message}, ensure_ascii=False)
+    return {
+        "content": [{"type": "text", "text": text}],
+        "isError": True,
+        "is_error": True,
+    }
 def _reply(iid, result=None, error=None) -> None:
     msg: dict = {"jsonrpc": "2.0", "id": iid}
     if error is not None:
@@ -47,7 +143,15 @@ def _reply(iid, result=None, error=None) -> None:
     sys.stdout.flush()
 
 
-def main() -> None:
+def _unknown_skill_message(skill: str) -> str:
+    base = _skills_dir()
+    names = _skills()
+    return f"unknown skill '{skill}'; serving {len(names)} skills from {base}"
+
+
+def main(argv: list[str] | None = None) -> None:
+    global _CLI_SKILLS_DIR
+    _CLI_SKILLS_DIR = _parse_skills_dir_override(list(sys.argv[1:] if argv is None else argv))
     for line in sys.stdin:
         line = line.strip()
         if not line:
@@ -62,13 +166,27 @@ def main() -> None:
         if method == "initialize":
             _reply(iid, {"protocolVersion": "2024-11-05", "serverInfo": {"name": "skillworks", "version": "0.1.0"}})
         elif method == "tools/list":
-            _reply(iid, {"tools": [{"name": "skill_search", "description": "Search built skill markdown by keywords. Use when looking up skill content."}]})
+            tool = {
+                "name": "skill_search",
+                "description": "Search built skill markdown by keywords. Use when looking up skill content.",
+                "inputSchema": INPUT_SCHEMA,
+                "_meta": {"cacheHint": CACHE_HINT},
+            }
+            _reply(iid, {"tools": [tool], "_meta": {"cacheHint": CACHE_HINT}})
         elif method == "tools/call":
             if params.get("name") != "skill_search":
                 _reply(iid, error={"code": -32602, "message": "unknown tool"})
                 continue
             args = params.get("arguments", {}) or {}
-            hits = _search(args.get("query", ""), args.get("skill"), int(args.get("limit", 5)))
+            ok, cleaned = _validate_args(args)
+            if not ok:
+                _reply(iid, _error_envelope(cleaned))  # type: ignore[arg-type]
+                continue
+            assert isinstance(cleaned, dict)
+            if cleaned["skill"] is not None and cleaned["skill"] not in _skills():
+                _reply(iid, _error_envelope(_unknown_skill_message(cleaned["skill"])))
+                continue
+            hits = _search(cleaned["query"], cleaned["skill"], cleaned["limit"])
             _reply(iid, {"content": [{"type": "text", "text": json.dumps(hits, ensure_ascii=False)}]})
         else:
             _reply(iid, error={"code": -32601, "message": "method not found"})

@@ -44,6 +44,7 @@ python -m book2skill audit --skill skills/mybook
 python -m book2skill eval --work work/mybook --skill skills/mybook --qa evals/sample_qa.jsonl
 python -m book2skill export --skill skills/mybook --target claude --out dist
 python mcp_server/server.py   # stdio MCP: skill_search
+python mcp_server/server.py --skills-dir <dir>  # serve skills from elsewhere ($SKILLWORKS_SKILLS_DIR also works)
 ```
 
 ## Seeds
