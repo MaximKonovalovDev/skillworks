@@ -109,3 +109,27 @@ def test_export_gate_refuses_failing_skill(tmp_path: Path) -> None:
         assert "eval gate refused export" in str(exc)
     else:
         raise AssertionError("export should refuse rate 0.333")
+
+
+def test_export_unknown_target_clean_error(tmp_path: Path) -> None:
+    import click
+
+    skill = tmp_path / "skill"
+    skill.mkdir()
+    (skill / "SKILL.md").write_text("---\nname: demo\ndescription: demo\n---\n", encoding="utf-8")
+    out = tmp_path / "dist"
+    runner = CliRunner()
+    result = runner.invoke(
+        main,
+        ["export", "--skill", str(skill), "--target", "bogus", "--out", str(out)],
+    )
+    assert result.exit_code != 0
+    assert "Traceback" not in result.output
+    assert "bogus" in result.output
+    assert "claude" in result.output
+    try:
+        export_mod.export(skill, "bogus", out, eval_report={"rate": 1.0, "total": 1, "passed": 1})
+    except click.UsageError as exc:
+        assert "unknown target bogus" in str(exc)
+    else:
+        raise AssertionError("export should reject target bogus with UsageError")

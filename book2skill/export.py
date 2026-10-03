@@ -5,6 +5,8 @@ import json
 import shutil
 from pathlib import Path
 
+import click
+
 TARGETS = ("claude", "codex", "opencode", "gemini")
 GATE = 0.6
 REPORT_FILENAME = "eval_report.json"
@@ -20,7 +22,7 @@ def load_eval_report(skilldir: Path) -> dict | None:
 
 def export(skilldir: Path, target: str, out: Path, eval_report: dict | None = None) -> dict:
     if target not in TARGETS:
-        raise ValueError(f"unknown target {target}; legal: {sorted(TARGETS)}")
+        raise click.UsageError(f"unknown target {target}; legal: claude|codex|opencode|gemini")
     report = eval_report if eval_report is not None else load_eval_report(skilldir)
     if report is None:
         raise SystemExit(

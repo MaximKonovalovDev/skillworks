@@ -87,7 +87,8 @@ def refresh(work: str) -> None:
 
 @main.command()
 @click.option("--skill", required=True)
-@click.option("--target", required=True, help="claude|codex|opencode|gemini")
+@click.option("--target", required=True, type=click.Choice(export_mod.TARGETS),
+              help="claude|codex|opencode|gemini")
 @click.option("--out", required=True)
 @click.option("--work", default=None, help="work dir to run eval inline, e.g. work/mybook")
 @click.option("--qa", default=None, help="QA jsonl to run eval inline, e.g. evals/mybook_qa.jsonl")
