@@ -89,9 +89,21 @@ def refresh(work: str) -> None:
 @click.option("--skill", required=True)
 @click.option("--target", required=True, help="claude|codex|opencode|gemini")
 @click.option("--out", required=True)
-def export(skill: str, target: str, out: str) -> None:
+@click.option("--work", default=None, help="work dir to run eval inline, e.g. work/mybook")
+@click.option("--qa", default=None, help="QA jsonl to run eval inline, e.g. evals/mybook_qa.jsonl")
+@click.option("--eval-report", "eval_report_path", default=None, help="saved eval report JSON")
+def export(skill: str, target: str, out: str, work: str | None, qa: str | None, eval_report_path: str | None) -> None:
     """Stage 8: copy skill to target layout."""
-    export_mod.export(Path(skill), target, Path(out))
+    import json
+
+    eval_report: dict | None = None
+    if eval_report_path:
+        eval_report = json.loads(Path(eval_report_path).read_text(encoding="utf-8"))
+    elif work or qa:
+        if not (work and qa):
+            raise click.UsageError("--work and --qa must be given together")
+        eval_report = eval_mod.run_eval(Path(work), Path(skill), Path(qa))
+    export_mod.export(Path(skill), target, Path(out), eval_report=eval_report)
 
 
 if __name__ == "__main__":

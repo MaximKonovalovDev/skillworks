@@ -1,10 +1,15 @@
 """Tests: split sizes, frontmatter rule, eval gate math, T-01..T-05 steals."""
+import json
 from pathlib import Path
+
+from click.testing import CliRunner
 
 from book2skill import build as build_mod
 from book2skill import eval as eval_mod
+from book2skill import export as export_mod
 from book2skill import extract as extract_mod
 from book2skill import split as split_mod
+from book2skill.cli import main
 
 
 def test_split_chunk_sizes(tmp_path: Path) -> None:
@@ -70,3 +75,37 @@ def test_grow_qa_from_chapter() -> None:
     assert 1 <= len(items) <= 3
     for item in items:
         assert item["must"] and item["must"][0] in chapter.lower()
+
+
+def test_export_gate_refuses_failing_skill(tmp_path: Path) -> None:
+    work = tmp_path / "work"
+    (work / "chunks").mkdir(parents=True)
+    (work / "chunks" / "0000.txt").write_text("hello world chapter about leases", encoding="utf-8")
+    skill = tmp_path / "skill"
+    skill.mkdir()
+    (skill / "SKILL.md").write_text("---\nname: demo\ndescription: demo\n---\n", encoding="utf-8")
+    qa = tmp_path / "qa.jsonl"
+    qa.write_text(
+        '{"q": "what about leases?", "must": ["leases"]}\n'
+        '{"q": "what about zzzznonexistent?", "must": ["zzzznonexistent"]}\n'
+        '{"q": "what about qqqqmissing?", "must": ["qqqqmissing"]}\n',
+        encoding="utf-8",
+    )
+    out = tmp_path / "dist"
+    runner = CliRunner()
+    result = runner.invoke(
+        main,
+        ["export", "--skill", str(skill), "--target", "claude", "--out", str(out),
+         "--work", str(work), "--qa", str(qa)],
+    )
+    assert result.exit_code != 0
+    assert "eval gate refused export" in result.output
+    assert "fix the skill first" in result.output
+    assert not (out / "claude" / skill.name).exists()
+    # direct unit gate: explicit failing report refuses too
+    try:
+        export_mod.export(skill, "claude", out, eval_report={"rate": 0.333, "total": 3, "passed": 1})
+    except SystemExit as exc:
+        assert "eval gate refused export" in str(exc)
+    else:
+        raise AssertionError("export should refuse rate 0.333")
