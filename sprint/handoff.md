@@ -1,24 +1,24 @@
-# skillworks handoff - round 24 (token eed3)
+# skillworks handoff - round 25 (token eed3)
 
-Round: 24
-Written: 2026-10-03T10:30Z
+Round: 25
+Written: 2026-10-03T10:32Z
 Token: eed3
 Knobs: width 2, dispatch foreground, heavy_max 3, helper_max 90m, bg_width 0, cards_per_reader 5 (no change, no proposal).
 
 ## Heading
-- No move. Stale batch.md 10:16 third repeat: 007 PASS holds (NOOP), steal BLOCKED on 3x-in-3h repeat.
+- No move. Stale batch.md 10:16 fourth repeat: both seats BLOCKED on repeat-hold.
 
 ## Done
-- Judge-007 third run: PASS NOOP (worktree==311e8cb for 007 scope, pytest 12 passed, K-07 dirt out of scope). No commit.
-- Researcher-steal BLOCKED: keeper repeat dispatch 3x in 3h, no new card. No commit.
-- Batch produced no committable work; HEAD stays 8f6e80a.
+- Judge-007 BLOCKED: repeat of NOOP, keeper hold to 10:56Z, no files, no commit.
+- Researcher-steal BLOCKED: repeat dispatch 4x in 3h, no card, no commit.
+- HEAD stays d8b2919. Retro due next round (25 done, metrics at 30).
 
 ## Checks
-- pytest 12 passed. No new proofs to paste beyond rerun.
+- pytest 12 passed (rerun 10:32Z).
 
 ## Blockers
-- Keeper batch.md stale since 10:16 (007+steal x3). Needs fresh batch: 014 redo + planner-research-merge (S03-S07 cards unmerged) + K-10 MCP.
-- K-07 export fix + test unstaged, export garbage untracked (needs 014 finish + judge).
+- Keeper batch.md stale since 10:16 (007+steal x4). Needs fresh batch: 014 redo + planner-research-merge (S03-S07 unmerged) + K-10 MCP.
+- K-07 export fix + test unstaged, export garbage untracked.
 
 ## Next
 - Keeper names fresh batch. Then K-10 MCP, K-15..K-21.
