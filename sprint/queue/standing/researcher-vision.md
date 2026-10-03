@@ -9,3 +9,5 @@ A Parts row: read at least 3 of the best at that part (the named ones plus one r
 A gap: add one line under it: `Proposed (<YYYY-MM-DD>, researcher): <answer> | sources: <links>`. The lead adopts or strikes it.
 
 Card: Goal, Scope (`VISION-TABLES.md` plus one card), Proof (links and the proof output), Stop (L 45 min). End with the RESULT line.
+
+Claims: C:/Users/me/Desktop/skillworks/sprint/queue/claims.txt (read and append exactly this path, never the bare basename).
