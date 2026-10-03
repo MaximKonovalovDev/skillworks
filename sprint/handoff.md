@@ -1,25 +1,25 @@
-# skillworks handoff - round 2 (token 557c)
+# skillworks handoff - round 3 (token 557c)
 
-Round: 2
-Written: 2026-10-03T01:17Z
+Round: 3
+Written: 2026-10-03T01:20Z
 Token: 557c
 
 ## Heading
-- R4 domain packs moved: K-04 built (2 books to 2 skills, freud 0.50 / progit 0.92), awaiting judge before commit.
+- No Scorecard row moved yet. Board grew: 12 READY rows (K-07..K-14 fix weakest R5/R6, gaps, freud deep-dive).
 
 ## Done
-- Batch r1: planner-research-merge NOOP (no cards); builder-rows DONE K-04 unjudged, pytest 7 passed.
-- K-04 -> DOING (builder DONE 2026-10-03, judge queued as ready/001).
+- Batch r2: planner-rows DONE (K-02/K-03 fixed, K-07..K-14 added, 12 READY); pilot-view DONE (4 defect packets 002-005 + notes, pytest 7 passed, MCP handshake good).
+- K-04 still DOING awaiting judge (ready/001). Pilot 004 flags export gate unenforced (0.333 shipped) — honesty gap vs R2.
 
 ## Checks
-- `python -m pytest tests/ -q` 7 passed (builder + lead rerun).
-- `node sprint/check.mjs` PASS last run (19 pass, 2 warn).
-- work/ quarantined (freud-dreams, progit-branching), gitignored; skills/ + evals/ uncommitted pending judge PASS.
+- `python -m pytest tests/ -q` 7 passed.
+- `node sprint/check.mjs` 19 pass, 2 warn, 0 fail (steal map unread, parts seed-unswept).
+- `node C:/Users/me/Desktop/center/vision-check.mjs skillworks` no FAIL (5 pass, 2 warn).
 
 ## Blockers
-- None. Judge one-off ready/001-review-builder-rows-r1.md tops next batch per chain.
+- None. Judge 001 tops next batch per chain; pilot 002-005 ready after.
 
 ## Next
-- Batch (width 2): planner-rows + pilot-view per sprint/queue/batch.md.
-- On judge PASS: commit skills/freud-dream-psychology, skills/progit-branching, evals/*qa*.jsonl by path with pytest line, mark K-04 DONE with SHA.
-- K-05 steal pattern, K-06 selfdev (rarity-weighted search from K-04 finding), K-01 close.
+- Batch (width 2): judge 001-review-builder-rows-r1 + planner-rows per batch.md.
+- On judge PASS: commit K-04 skills+evals by path with pytest line, mark DONE with SHA.
+- Then builders on pilot 002/003 (README one-liners) + 004 (gate enforcement) + K-07 export.
