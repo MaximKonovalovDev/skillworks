@@ -23,3 +23,6 @@ sprint/queue/claims.txt
 sprint/loop-keeper.json
 sprint/loop-keeper.log
 sprint/loop-keeper.cmd.json
+
+# free tools installed inside the repo only (python -m pip install --target .tools/py <pkg>); never committed
+.tools/

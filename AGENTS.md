@@ -16,7 +16,7 @@ Every agent reads this first. Loop `/sprint` (`.opencode/commands/sprint.md`); g
 
 ## Where things are (no src/ folder)
 
-`book2skill/` package (extract, split, index, build, audit, eval, refresh, export, cli), `tests/`, `mcp_server/server.py`, `tools/part_score.py`, `prompts/`, `evals/<skill>_qa.jsonl`, `skills/<name>/`, `team/<part>.md`, `work/` (books, gitignored). `skills/*/export/` is ignored: regenerate, never commit. `sprint/lock.txt` lives only while a lead holds it; `sprint/queue/claims.txt` is created by the first claim. Kernel `tools/part-score.mjs` is `python tools/part_score.py` here; compactions logged in `team/compact-log.md`; `tools/b2s.py` runs the CLI by path. Other repos: `node C:/Users/me/Desktop/center/arsenal.mjs --list` (own: `arsenal.json`). Old text: `archive/` (searches skip; Read by path).
+`book2skill/` package (extract, split, index, build, audit, eval, refresh, export, cli), `tests/`, `mcp_server/server.py`, `tools/part_score.py`, `prompts/`, `evals/<skill>_qa.jsonl`, `skills/<name>/`, `team/<part>.md`, `work/` (books, gitignored). `skills/*/export/` is ignored: regenerate, never commit. `sprint/lock.txt` lives only while a lead holds it; `sprint/queue/claims.txt` is created by the first claim. Kernel `tools/part-score.mjs` is `python tools/part_score.py` here; compactions logged in `team/compact-log.md`; `tools/b2s.py` runs the CLI by path. `packs/<slug>/` holds a pack for sale (listing, Vol 0, price evidence; its ZIP is made into git-ignored `dist/`), `.tools/` free tools installed inside the repo (git-ignored), and the doctor's private lane state lives in `C:/Users/me/.empire/state/skilldoctor/` (never committed). Other repos: `node C:/Users/me/Desktop/center/arsenal.mjs --list` (own: `arsenal.json`). Old text: `archive/` (searches skip; Read by path).
 
 ## Pipeline (operator)
 
@@ -41,3 +41,5 @@ Rules:
 2. Eval gate: rate below 0.6 refuses `export`. Fix the skill, not the test.
 3. Refresh wins over rebuild: no-op when the fingerprint matches.
 4. Every stage writes `work/<name>/receipt.json` with counts.
+5. Export guard (2026-10-03 a nested export crashed the OpenCode server 9 times): `--out` only `dist`, never inside `skills/` or the source folder; after any make or export `Get-ChildItem skills -Recurse -Directory -Filter export` prints nothing and no path passes 240 characters (`book2skill/export.py`, tests `test_export_guard.py` and `test_mcp_export_skip.py`).
+6. This repo is public: no secret, and no other repo's text or numbers, in a committed file; those go to the private state folder above.

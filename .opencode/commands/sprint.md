@@ -17,22 +17,27 @@ row on the board, and the loop goes on. `round` = one round, then hand off.
 final bar), Parts vs the best, Open gaps and the Steal map. The proof
 that the vision is met: `python -m pytest tests/ -q`. Every board row names the Scorecard row it
 moves. While `node C:/Users/me/Desktop/center/vision-check.mjs skillworks` FAILs,
-the vision is the first work: the planner and the vision researcher fill it.
+the vision is the first work: the planner fills it.
 Direction (Maxim 2026-10-03): skillworks is the trainer of the fleet. Its first
-work is skills other repos load (finish bars S1 and S2, the TOP rows of the
+work is skills other repos load (finish bars S1 and S2 count real loads, the TOP rows of the
 board), built from licensed manuals with `python -m book2skill make` to fix the
-loops' measured daily mistakes; the sellable pack (K-44) is the product line.
+loops' measured daily mistakes; the sellable pack (K-44, the fleet pack) is the product line.
+Direction (Maxim 2026-10-04): four lanes, book, doctor, pack and tools, one real thing a round: a skill
+proven live, a tool landed and used, a pack that passes its gate, or a failure class that fell. A round
+that moved nothing writes no handoff commit.
 
 ## 2. Your crew, in batches you send
 
-Standing seats in `sprint/queue/standing/` (seeds: `center/crews/skillworks/`):
-builders on the board rows (`chain: start`), the planner (rows from the vision
-and its gaps), the research merge (judges every card), the vision researcher
-(Scorecard, Parts, gaps), the scout (steals that land on a finish bar, listed in `sprint/steals.md`),
-the pilot (uses the product the way its user would, with captures) and the
-runner (the fast check sweep). Each run claims its rows in
-`sprint/queue/claims.txt` (append; create it if missing) and takes a whole
-slice (up to 5 rows), never a mini task.
+Standing seats in `sprint/queue/standing/` (seeds: `center/crews/skillworks/`), 11 in four lanes:
+the toolsmith (finds the one missing tool and lands it, the kept steal seat), the doctor (fleet
+failures to a red test and a brief), the cure smith (a failure to a proven skill), the book scout and
+the book smith (a licensed book to a distilled skill), the pack maker (proven skills to a pack for the
+factory), the pipeline builder (`book2skill` and the MCP server), the installer (installs, runs the
+skill as a stranger, measures the failure drop), the planner (rows, orders, coach), the pilot (uses the
+product the way its user would) and the runner (the round line). A seat wakes by the lane tag in a READY
+row's What cell (`[TOOL]`, `[DOCTOR]`, `[BOOK]`, `[PIPE]`) or by a token in
+`C:/Users/me/.empire/state/skilldoctor/lanes.json`; with nothing new it does not run. Each run claims its
+rows in `sprint/queue/claims.txt` (append; create it if missing) and takes the slice its seat names.
 
 **The batch.** Every keeper continue and GO names the next batch; it is also in
 `sprint/queue/batch.md`: ready one-offs and chain steps first, then the seats
@@ -106,9 +111,8 @@ keeper yourself.
 | Duty | Cadence | Who | Done when |
 |---|---|---|---|
 | Check | every round | lead | `node sprint/check.mjs` PASS, or its FAIL is the first packet |
-| Vision research | when a part's files changed since its `Swept` date, or 14 days | vision researcher | a Parts row or gap swept, its Scorecard row sourced |
-| Steal | when an open finish bar has fewer than 3 open steals | scout | up to 2 steals for the first open finish bar in `sprint/steals.md`; a builder lands them |
-| Research merge | when new cards exist | planner | cards judged, the best on the board |
+| Tool | when a READY `[TOOL]` row exists, the first 24 h are the tool sprint | toolsmith | one tool landed with its test, an arsenal line and a `sprint/steals.md` line, used on a real item |
+| Round line | when center imports new metrics | runner | the `ROUND` line in `sprint/queue/checks.md`; `PAPERWORK` after it when no number moved |
 | Owner's view | when `book2skill/`, `mcp_server/`, `skills/` or `tools/` changed since the last view | pilot | captures read, findings are rows |
 | Retro | every 5 rounds | lead | one change with its revert trigger |
 
