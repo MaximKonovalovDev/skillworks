@@ -19,7 +19,16 @@ def refresh(workdir: Path) -> dict:
     lock = workdir / ".skillworks.lock"
     current = fingerprint(workdir)
     if lock.exists() and lock.read_text(encoding="utf-8").strip() == current:
-        return {"stage": "refresh", "changed": False}
-    build_index(workdir)
+        receipt = {"stage": "refresh", "changed": False, "fingerprint": current}
+        (workdir / "receipt.json").write_text(json.dumps(receipt, indent=2), encoding="utf-8")
+        return receipt
+    index_receipt = build_index(workdir)
     lock.write_text(current, encoding="utf-8")
-    return {"stage": "refresh", "changed": True}
+    receipt = {
+        "stage": "refresh",
+        "changed": True,
+        "fingerprint": current,
+        "records": index_receipt.get("records", 0),
+    }
+    (workdir / "receipt.json").write_text(json.dumps(receipt, indent=2), encoding="utf-8")
+    return receipt
