@@ -34,9 +34,15 @@ def prompt_version() -> str:
     return m.group(1) if m else "unversioned"
 
 
-def _frontmatter(name: str, description: str) -> str:
+def _frontmatter(name: str, description: str, version: str = "0.1.0",
+                 author: str = "skillworks", tags: list[str] | None = None) -> str:
     safe = "".join(c if c.isalnum() or c == "-" else "-" for c in name.lower()).strip("-")
-    return f"---\nname: {safe}\ndescription: {description}\nlicense: MIT\n---\n"
+    tag_list = tags if tags is not None else []
+    tags_str = "[" + ", ".join(tag_list) + "]"
+    return (
+        f"---\nname: {safe}\ndescription: {description}\n"
+        f"version: {version}\nauthor: {author}\ntags: {tags_str}\nlicense: MIT\n---\n"
+    )
 
 
 def build(workdir: Path, skilldir: Path, name: str, description: str) -> dict:
