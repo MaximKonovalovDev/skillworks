@@ -7,7 +7,20 @@ An LLM pass can enrich notes later; the scaffold is always valid alone.
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
+
+PROMPT_FILE = Path(__file__).resolve().parent.parent / "prompts" / "build-skill.md"
+
+
+def prompt_version() -> str:
+    """Version stamp of the chapter-to-skill prompt fragment (llm pattern)."""
+    try:
+        text = PROMPT_FILE.read_text(encoding="utf-8")
+    except OSError:
+        return "inline"
+    m = re.search(r"^version:\s*(\S+)", text, re.M)
+    return m.group(1) if m else "unversioned"
 
 
 def _frontmatter(name: str, description: str) -> str:
@@ -36,7 +49,21 @@ def build(workdir: Path, skilldir: Path, name: str, description: str) -> dict:
     (skilldir / "glossary.md").write_text("# Glossary\n\nFill terms while reading.\n", encoding="utf-8")
     (skilldir / "patterns.md").write_text("# Patterns\n\nFill reusable patterns while reading.\n", encoding="utf-8")
     (skilldir / "cheatsheet.md").write_text("# Cheatsheet\n\nFill one-page recall while reading.\n", encoding="utf-8")
-    (skilldir / "references").mkdir(exist_ok=True)
-    receipt = {"stage": "build", "skill": str(skilldir), "note_chars": len(notes)}
+    refs = skilldir / "references"
+    refs.mkdir(exist_ok=True)
+    chunks = sorted((workdir / "chunks").glob("*.txt"))
+    (refs / "sources.md").write_text(
+        "# Sources\n\nProgressive disclosure: read SKILL.md first, then only "
+        "the chunk listed here that matches the task.\n\n"
+        + "".join(f"- `{p.name}`\n" for p in chunks),
+        encoding="utf-8",
+    )
+    receipt = {
+        "stage": "build",
+        "skill": str(skilldir),
+        "note_chars": len(notes),
+        "prompt": prompt_version(),
+        "layout": "skill-pack",
+    }
     (workdir / "receipt.json").write_text(json.dumps(receipt, indent=2), encoding="utf-8")
     return receipt

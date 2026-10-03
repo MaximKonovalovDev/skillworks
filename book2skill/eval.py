@@ -12,6 +12,26 @@ from pathlib import Path
 from .index import search
 
 
+def grow_qa(chapter: str, limit: int = 5) -> list[dict]:
+    """Grow source-derived QA from one chapter (dspy-signature pattern: idea only).
+
+    The "signature" is the contract: question answerable from the chapter,
+    must-words quoted verbatim from it. Returns {"q", "must"} items.
+    """
+    import re
+
+    words = re.findall(r"[A-Za-z][A-Za-z-]{4,}", chapter)
+    seen: dict[str, None] = {}
+    for w in words:
+        key = w.lower()
+        if key not in seen:
+            seen[key] = None
+    terms = list(seen)[:limit]
+    return [
+        {"q": f"what does the chapter say about {t}?", "must": [t]} for t in terms
+    ]
+
+
 def run_eval(workdir: Path, skilldir: Path, qa_path: Path) -> dict:
     results = []
     for line in qa_path.read_text(encoding="utf-8").splitlines():
