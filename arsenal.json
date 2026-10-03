@@ -1,0 +1,57 @@
+{
+  "repo": "skillworks",
+  "tools": [
+    {
+      "name": "book2skill",
+      "does": "Books or manuals you own, or public-domain texts, into a tested Agent Skill, one stage per call (extract, split, index, build, audit, eval, refresh, export) with a receipt per stage and an eval gate of 0.6 that refuses export; pass local files, not URLs",
+      "run": ["python", "tools/b2s.py"],
+      "args": [
+        { "name": "stage", "does": "extract | split | index | build | audit | eval | refresh | export", "required": true },
+        { "name": "src", "does": "extract: the source file you own (PDF, EPUB, DOCX, MD, TXT)", "flag": "--in" },
+        { "name": "work", "does": "work dir, e.g. work/mybook (every stage except audit)", "flag": "--work" },
+        { "name": "skill", "does": "skill dir, e.g. skills/mybook (build, audit, eval, export)", "flag": "--skill" },
+        { "name": "name", "does": "build: skill name, a-z0-9- and equal to the skill dir name", "flag": "--name" },
+        { "name": "description", "does": "build: what the skill does and when to use it", "flag": "--description" },
+        { "name": "qa", "does": "eval: the question file, e.g. evals/mybook_qa.jsonl", "flag": "--qa" },
+        { "name": "target", "does": "export: claude | codex | opencode | gemini", "flag": "--target" },
+        { "name": "out", "does": "extract: the work dir to write; export: the output dir", "flag": "--out" }
+      ],
+      "test": ["python", "tools/b2s.py", "--help"],
+      "for": ["autonomous-factory: packs for sale (skillworks finish bar S3)", "Maxim's job work: a manual or doc into a tested skill", "center skill doctor (skillworks bars S1, S2)"],
+      "timeout_s": 300
+    },
+    {
+      "name": "part_score",
+      "does": "One live line per part of skillworks (P1 pipeline, P2 MCP server, P3 seeds, P4 eval gate, P5 shop, workspace) from receipts, eval rates and a local MCP handshake; read-only, no arguments",
+      "run": ["python", "tools/part_score.py"],
+      "test": ["python", "tools/part_score.py"],
+      "for": ["center kernel Grow rule 'Parts' (is skillworks getting better)"],
+      "timeout_s": 120
+    },
+    {
+      "name": "cron_skip_clean",
+      "does": "Skip a run when nothing changed: fingerprints a directory, prints SKIP clean <id> when it matches the state file, else writes the state JSON and prints RUN <id>; no network",
+      "run": ["python", "skills/cron-skip-clean/scripts/cron_skip_clean.py"],
+      "args": [
+        { "name": "watch", "does": "directory to fingerprint", "required": true, "flag": "--watch" },
+        { "name": "state", "does": "state file to read and write (JSON), e.g. state/watch.json", "required": true, "flag": "--state" }
+      ],
+      "test": ["python", "skills/cron-skip-clean/scripts/cron_skip_clean.py", "--help"],
+      "for": ["every loop repo: skip the round when the inputs did not change (saves tokens)", "center"],
+      "timeout_s": 60
+    },
+    {
+      "name": "pipe_dry_run",
+      "does": "Plan a batch before spending: reads every .txt in a directory, estimates tokens (chars // 4 each) against a cap and prints DRY-RUN <n> items spend <t> tokens (cap <c>); writes nothing",
+      "run": ["python", "skills/pipe-run/scripts/pipe_run.py", "--dry-run"],
+      "args": [
+        { "name": "input", "does": "directory of .txt items", "required": true, "flag": "--input" },
+        { "name": "out", "does": "output directory the real run would use (not created in a dry run)", "required": true, "flag": "--out" },
+        { "name": "cap", "does": "maximum tokens of spend, an integer", "required": true, "flag": "--cap" }
+      ],
+      "test": ["python", "skills/pipe-run/scripts/pipe_run.py", "--help"],
+      "for": ["factory batch runs: know the cost before a run", "every loop repo"],
+      "timeout_s": 60
+    }
+  ]
+}

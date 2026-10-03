@@ -27,8 +27,11 @@ export, cli), `tests/`, `mcp_server/server.py`, `tools/part_score.py`,
 regenerate, never commit. `sprint/lock.txt` exists only while a lead holds it;
 `sprint/queue/claims.txt` is created by the first claim (append, create if
 missing). The kernel's `tools/part-score.mjs` is
-`python tools/part_score.py` here; its `team/compact-log.md` does not exist yet
-(create it on the first compaction).
+`python tools/part_score.py` here; each compaction is logged in
+`team/compact-log.md`. `tools/b2s.py` runs the book2skill CLI by file path.
+
+Tools of the other repos: node C:/Users/me/Desktop/center/arsenal.mjs --list (this repo's own: arsenal.json).
+Old text: archive/ (searches skip it; Read by path).
 
 ## Pipeline lanes (operator)
 
