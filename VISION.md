@@ -100,7 +100,7 @@ researcher reads the row read longest ago and writes its date back.
 | S11 | adjacent | anything-to-skill (asale-ai/anything-to-skill) | P1 | refresh lock + audit? | Apache-2.0 (live 2026-10-03) | 2026-10-03 |
 | S12 | adjacent | Skill_Seekers export layouts | R5 | per-target copy layout? | MIT (ideas-only, live 2026-10-03) | 2026-10-03 |
 | S13 | adjacent | godot-agent triple delivery | R3/P5 | skill+CLI+MCP bundle? | MIT (live 2026-10-03) | 2026-10-03 |
-| S14 | adjacent | agentskills.io skill spec | R1 | SKILL.md frontmatter rules? | spec (no code) | never |
+| S14 | adjacent | agentskills.io skill spec | R1 | SKILL.md frontmatter rules? | spec reference-only live 2026-10-03 | 2026-10-03 |
 | S15 | adjacent | MCP Python SDK (stdio) | P2 | handshake + tool schema? | Apache-2.0 | never |
 | S16 | adjacent | Gutenberg catalog + ebooklib/pypdf/docx | P3 | clean text extract? | PD / MIT / Apache | never |
 | S17 | adjacent | Freud/James public-domain texts | P3 | first psychology test books? | public domain | never |
