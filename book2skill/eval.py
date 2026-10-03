@@ -51,5 +51,7 @@ def run_eval(workdir: Path, skilldir: Path, qa_path: Path) -> dict:
     passed = sum(1 for r in results if r["passed"])
     rate = (passed / total) if total else 0.0
     report = {"skill": str(skilldir), "total": total, "passed": passed, "rate": rate}
+    skilldir.mkdir(parents=True, exist_ok=True)
+    (skilldir / "eval_report.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
     print(json.dumps(report, indent=2))
     return report
