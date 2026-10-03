@@ -11,3 +11,15 @@ node_modules/
 
 # book2skill export output, regenerate on demand
 skills/*/export/
+
+# keeper runtime records (the keeper rewrites them every pass; the files stay on disk).
+# A tracked one leaves git with `git rm --cached <path>` once it is clean.
+sprint/queue/done/
+sprint/queue/failed/
+sprint/queue/running/
+sprint/queue/batch.md
+sprint/queue/checks.md
+sprint/queue/claims.txt
+sprint/loop-keeper.json
+sprint/loop-keeper.log
+sprint/loop-keeper.cmd.json

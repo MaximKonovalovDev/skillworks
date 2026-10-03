@@ -20,6 +20,16 @@ public-domain books (Project Gutenberg). No copyrighted books bundled.
 Delivery is triple like godot-agent: bundled skill + CLI + MCP server
 (`mcp_server/` serves skill search over stdio).
 
+## Export targets
+
+`export --target <name>` copies the skill dir unchanged; each target reads
+spec-layout SKILL.md natively.
+
+* `claude` — `~/.claude/skills/<name>/` or project `.claude/skills/<name>/`
+* `codex` — docs/ reference path wired per client
+* `opencode` — `.opencode/skills/<name>/` layout
+* `gemini` — docs/ reference path wired per client
+
 ## Skill layout (agentskills.io spec)
 
 ```

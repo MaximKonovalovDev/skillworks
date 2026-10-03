@@ -1,0 +1,2 @@
+# ripgrep skips these folders (Read by path still works)
+archive/
