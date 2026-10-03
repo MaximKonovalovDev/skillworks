@@ -348,6 +348,11 @@ const rolesIn = (dir) => {
   return out;
 };
 const TODO_DEFAULTS = { status: "pending", priority: "medium" };
+// Navigation rules (center's review of 67,178 tool calls, 2026-10-03): agents look for the claims file at the repo root
+// (14+ misses), and read "No files found" from glob as "the file is missing" (428 empty globs in 48 h): OpenCode's glob runs
+// ripgrep without --hidden and honors .gitignore, so .opencode/, .lanes/, queue/, target/ and logs/ are invisible to it.
+const GLOB_BLIND_HINT = "[loop-keeper] glob does not see hidden folders (.opencode, .lanes) or paths in .gitignore (queue, target, logs), so \"No files found\" does not mean the file is missing. Read the exact path with the read tool, or list it with: Get-ChildItem -Force -Recurse <dir> -Filter <name>.";
+const NOT_FOUND = /Cannot find path|cannot find the path|No such file|ItemNotFound/i;
 const backgroundOn = () => /^(?:1|true)$/i.test(process.env.OPENCODE_EXPERIMENTAL_BACKGROUND_SUBAGENTS ?? process.env.OPENCODE_EXPERIMENTAL ?? "");
 const CD_FIRST = /^\s*cd\s+("[^"]*"|'[^']*'|[^\s;&|]+)\s*(?:&&|;)\s*/;
 const QUOTED_OR_PLAIN = /("(?:[^"`]|`[\s\S])*"|'[^']*')|([^"']+)/g;
@@ -537,6 +542,30 @@ const makeKeeper = async ({ client, worktree, directory }, options) => {
   const calls = ho.calls ?? { since: iso(), backgrounded: 0, todoFilled: 0, routed: 0, resultAsked: 0 };
   const roles = opt.roles ?? (root ? rolesIn(root) : new Set());
   const paidRoles = opt.paidRoles ?? (root ? paidIn(root) : new Set());
+  // The claims file lives in the queue folder (qsub), never at the repo root. A read of the root guess goes to the real file.
+  const claimsPath = () => qsub("claims.txt").replace(/\\/g, "/");
+  const isRootClaims = (p) => {
+    if (typeof p !== "string" || !qdir || !root) return false;
+    const n = p.trim().replace(/\\/g, "/").replace(/^\.\//, "").toLowerCase();
+    const r = String(root).replace(/\\/g, "/").replace(/\/+$/, "").toLowerCase();
+    return (n === "claims.txt" || n === `${r}/claims.txt`) && !existsSync(join(root, "claims.txt"));
+  };
+  // An answer that says "missing" for a reason the agent cannot see gets one line that says where to look.
+  const navHint = (input, output) => {
+    const out = output?.output;
+    if (typeof out !== "string" || out.includes("[loop-keeper]")) return;
+    const args = input.args ?? {};
+    const asked = JSON.stringify(args).replace(/\\\\/g, "/");
+    const empty = input.tool === "glob" && /^No files found/.test(out.trim());
+    const missing = input.tool === "bash" && NOT_FOUND.test(out);
+    let hint = "";
+    if (qdir && /claims\.txt/i.test(asked) && (empty || missing) && !asked.toLowerCase().includes(claimsPath().toLowerCase())) {
+      hint = `[loop-keeper] this repo's claims file is ${claimsPath()} (the queue folder, never the repo root; it does not exist while no helper holds a claim).`;
+    } else if (empty) hint = GLOB_BLIND_HINT;
+    if (!hint) return;
+    output.output = `${out}\n\n${hint}`;
+    calls.navHinted = (calls.navHinted ?? 0) + 1;
+  };
   const shellFix = (command, workdir) => {
     const hit = [];
     let out = command;
@@ -1795,7 +1824,7 @@ Ready work: ${readyItem.id}. Claim only this item; selectors do not authorize sw
     }
     const snap = { alive: iso(), busy: status.session ? busy.has(status.session) : false };
     if (fixes.total) snap.shellFixes = { ...fixes, last: fixLast };
-    if (calls.backgrounded || calls.todoFilled || calls.routed || calls.resultAsked || calls.delegated || calls.queued || calls.packets || calls.foregrounded || calls.timeoutRaised || calls.repeatHeld || calls.paidRouted || calls.heavyQueued || calls.adhocStopped) snap.callFixes = { ...calls };
+    if (calls.backgrounded || calls.todoFilled || calls.routed || calls.resultAsked || calls.delegated || calls.queued || calls.packets || calls.foregrounded || calls.timeoutRaised || calls.repeatHeld || calls.paidRouted || calls.heavyQueued || calls.adhocStopped || calls.claimsRouted || calls.navHinted) snap.callFixes = { ...calls };
     // The queue acts every beat (a stuck helper aborts, free width fills,
     // finished results go out); the census below only runs when a decision
     // dirtied it, so an idle beat costs no session API call and no queue scan.
@@ -2180,6 +2209,11 @@ Ready work: ${readyItem.id}. Claim only this item; selectors do not authorize sw
           }
           return;
         }
+        if (input?.tool === "read" && isRootClaims(args?.filePath)) {
+          args.filePath = claimsPath();
+          calls.claimsRouted = (calls.claimsRouted ?? 0) + 1;
+          return;
+        }
         if (input?.tool === "bash" && typeof args?.command === "string" && BUILD_CMD.test(args.command) && !(Number(args.timeout) >= BUILD_TIMEOUT_MS)) {
           args.timeout = BUILD_TIMEOUT_MS;
           calls.timeoutRaised = (calls.timeoutRaised ?? 0) + 1;
@@ -2207,6 +2241,7 @@ Ready work: ${readyItem.id}. Claim only this item; selectors do not authorize sw
     // A batch helper's result (see takePacket).
     "tool.execute.after": async (input, output) => {
       try {
+        if (input?.tool === "glob" || input?.tool === "bash") navHint(input, output);
         if (input?.tool === "task" && input.callID) adhocRun.delete(input.callID);
         if (input?.tool === "task" && input.callID && fgJobs.has(input.callID)) {
           const out = output?.output;
