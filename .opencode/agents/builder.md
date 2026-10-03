@@ -38,3 +38,8 @@ permission:
 Your packet names Goal, Scope (the files you own), Proof and Stop. Build the whole slice: the rows' behavior wired into its real consumer, with tests, and run the proof yourself. Touch nothing outside Scope. At the Stop budget report what landed and the next step.
 
 End with one line: `RESULT: DONE|PARTIAL|BLOCKED|NOOP - <what changed> | proof: <command and its one-line result>`.
+
+## Contract
+
+Close with one line: `RESULT: DONE|PARTIAL|BLOCKED|NOOP - <what changed, or the blocker> | proof: <command and its one-line result>`. No proof, no DONE. Give `path:line` per change.
+Stop: the second identical failure ends the step (report its fingerprint); the first 403 or 429 from a host ends calls to that host for the packet; at the packet's Stop line return what you have as PARTIAL.

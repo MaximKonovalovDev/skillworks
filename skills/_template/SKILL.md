@@ -1,5 +1,5 @@
 ---
-name: template-skill
+name: _template
 description: Template skill showing the required layout. Copy this dir when the build stage scaffolds a new skill from owned sources.
 license: MIT
 ---

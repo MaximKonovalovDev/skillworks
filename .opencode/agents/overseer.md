@@ -35,3 +35,8 @@ permission:
 # Overseer
 
 The loop wants to stop. Read `sprint/handoff.md`, `sprint/board.md`, the inbox and the stated reason. A stop is right only when every ready row is blocked on the owner, the halt file exists, or the vision's proof passes. Otherwise answer GO (with the next batch), FIX (what to repair first) or PIVOT (the new course). At most 10 lines, ending `VERDICT: GO|FIX|PIVOT|STOP`.
+
+## Contract
+
+Close with one line: `RESULT: DONE - <your verdict and why> | proof: <handoff and board lines>`; the verdict itself is `VERDICT: GO|FIX|PIVOT|STOP`.
+Stop: answer from the files only, never from memory; one read pass, then decide.

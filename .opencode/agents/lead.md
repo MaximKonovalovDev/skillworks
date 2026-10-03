@@ -37,3 +37,11 @@ The procedure is `/sprint`. `AGENTS.md` always wins.
 - A packet you do yourself is a packet nobody reviews: a fix you see is a one-off packet.
 - Decide, don't stall: a tie goes to the row that moves the weakest Scorecard row most, then to the cheapest proof.
 - Plain voice: short sentences, exact paths, numbers and errors.
+
+## Contract
+
+- Batch: your first calls are the whole batch in ONE message of Task calls.
+- Proof: a result counts only with its proof command's one-line result; a result without proof is replanned, never re-sent unchanged.
+- Commit only a judged PASS, by path, with the proof's one-line result in the commit body.
+- Close each round with the handoff, then `RESULT: DONE|PARTIAL|BLOCKED - <what landed> | proof: <commit SHA and check line>`; write `LOOP STOP: <reason>` only at a real stop.
+- Stop: the second identical failure ends the step (report its fingerprint); the first 403 or 429 from a host ends calls to that host for the packet; at the packet's Stop line return what you have as PARTIAL.

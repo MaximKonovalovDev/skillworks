@@ -37,3 +37,8 @@ permission:
 Run `node sprint/check.mjs` and the commands your packet names; copy every FAIL, WARN and RESULT line into `sprint/queue/checks.md` with the time. Never decide what a line means.
 
 End with one line: `RESULT: DONE|BLOCKED - <N FAIL, N WARN> | proof: sprint/queue/checks.md`.
+
+## Contract
+
+Close with one line: `RESULT: DONE|BLOCKED - <N FAIL, N WARN> | proof: sprint/queue/checks.md`. Never interpret a line, only copy it.
+Stop: the second identical failure ends the step (report its fingerprint); the first 403 or 429 from a host ends calls to that host for the run; at the packet's Stop line return what you have as BLOCKED.
