@@ -94,8 +94,8 @@ researcher reads the row read longest ago and writes its date back.
 | S05 | competitor | westonplatter/aps (agentic-prompt-sync) | R5 | AGENTS.md sync across targets? | BSD-3-Clause (live 2026-10-03) | 2026-10-03 |
 | S06 | competitor | obra/superpowers skills framework | R1 | skill layout that agents love? | MIT (live 2026-10-03) | 2026-10-03 |
 | S07 | competitor | mattpocock/skills | R1/R4 | real-engineer skill shape? | MIT (live 2026-10-03) | 2026-10-03 |
-| S08 | competitor | affaan-m/ECC harness | R1 | instincts/memory for skill use? | MIT | never |
-| S09 | competitor | NousResearch/hermes-agent | R3 | agent loop calling skills? | MIT | never |
+| S08 | competitor | affaan-m/ECC harness | R1 | instincts/memory for skill use? | MIT (live 2026-10-03) | 2026-10-03 |
+| S09 | competitor | NousResearch/hermes-agent | R3 | agent loop calling skills? | MIT (live 2026-10-03) | 2026-10-03 |
 | S10 | competitor | book-to-skill pipeline | P1 | chunk + index design? | MIT | never |
 | S11 | adjacent | anything-to-skill | P1 | refresh lock + audit? | MIT | never |
 | S12 | adjacent | Skill_Seekers export layouts | R5 | per-target copy layout? | check live | never |
