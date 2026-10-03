@@ -92,7 +92,7 @@ researcher reads the row read longest ago and writes its date back.
 | S03 | competitor | Skrun skill-as-API | R3 | API vs MCP serving? | MIT (ideas-only, live 2026-10-03) | 2026-10-03 |
 | S04 | competitor | Evos domain skills + eval suite | R2/R4 | how is their eval built? | Apache-2.0 (live 2026-10-03) | 2026-10-03 |
 | S05 | competitor | westonplatter/aps (agentic-prompt-sync) | R5 | AGENTS.md sync across targets? | BSD-3-Clause (live 2026-10-03) | 2026-10-03 |
-| S06 | competitor | obra/superpowers skills framework | R1 | skill layout that agents love? | MIT | never |
+| S06 | competitor | obra/superpowers skills framework | R1 | skill layout that agents love? | MIT (live 2026-10-03) | 2026-10-03 |
 | S07 | competitor | mattpocock/skills | R1/R4 | real-engineer skill shape? | MIT | never |
 | S08 | competitor | affaan-m/ECC harness | R1 | instincts/memory for skill use? | MIT | never |
 | S09 | competitor | NousResearch/hermes-agent | R3 | agent loop calling skills? | MIT | never |
