@@ -10,9 +10,9 @@
       "chunks": 259,
       "qa": "evals/freud-dreams_qa.jsonl",
       "total": 12,
-      "passed": 6,
-      "rate": 0.5,
-      "export": "REFUSED by gate (rate<0.6) -> K-06 search-ranking fodder"
+      "passed": 10,
+      "rate": 0.833,
+      "export": "eligible (>=0.6) after K-09 rarity-weighted rank, re-logged 2026-10-03 (was 0.50 REFUSED -> K-06 fodder)"
     },
     {
       "skill": "skills/progit-branching",
