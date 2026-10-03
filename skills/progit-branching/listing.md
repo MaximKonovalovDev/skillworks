@@ -6,8 +6,9 @@
 
 - Skill: `skills/progit-branching/` (eval 12/12 = 1.0, gate 0.6 passes, ships)
 - Source: Pro Git ch.3 "Git Branching" (CC BY-NC-SA 3.0, progit/progit2).
-  Source text stays in `work/` (gitignored, never committed).
-- Price: $10 Vol 1 (single pack; bundle only after 3 sold Vols per VISION bar).
+  Chapter notes from the source are in `chapters/notes.md` under that same license.
+- Price: free. The source is CC BY-NC-SA 3.0 (NonCommercial), so this pack is never sold;
+  it is shared under the same license with attribution to Pro Git (Scott Chacon, Ben Straub).
 - Sales: **0** (honest counter — stays 0 until a real sale).
 - Vol 0 free sample: [`vol0-sample.md`](vol0-sample.md) — cheatsheet excerpt,
   free to share, no purchase needed.
