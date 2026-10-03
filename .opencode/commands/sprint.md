@@ -59,7 +59,7 @@ for a build) and Goal, Scope, Proof and Stop lines, or the keeper refuses it.
    files, not memory, carry the loop. Turn every open inbox item into a board
    row and tick it with the row ID.
 2. `sprint/halt` exists: write `LOOP STOP: halt file` and stop. Never remove it.
-3. Lock `sprint/lock.txt`: one line `lead#<4 hex> since <UTC>`; the same token
+3. Lock `sprint/lock.txt` (a missing file means free: create it): one line `lead#<4 hex> since <UTC>`; the same token
    all session, also in the handoff's first line. Another fresh token: stop,
    unless `takeover`. Times from `Get-Date -AsUTC -Format "yyyy-MM-ddTHH:mmZ"`.
 4. `node sprint/check.mjs`: a FAIL is this round's first packet.
@@ -87,9 +87,10 @@ for a build) and Goal, Scope, Proof and Stop lines, or the keeper refuses it.
    next. Refresh the lock. `git pull --no-rebase --no-edit origin main`,
    then `git push origin HEAD:main`. Start the next round in the same turn.
 
-**Every 5 rounds, the retro:** read `sprint/queue/checks.md` and the keeper log
-(`empire.mjs metrics` is slow and gets killed by the shell limit; skip it); name
-the worst repeated failure with its number and write one
+**Every 5 rounds, the retro (never in other rounds):** read
+`sprint/queue/checks.md` and the keeper log; run `node C:/Users/me/Desktop/center/empire.mjs
+metrics skillworks` only once, the shell kills it at 2 minutes. Name the worst
+repeated failure with its number and write one
 `PROPOSAL: <file> | <change> | <number now>` handoff line. Center applies at
 most one setup change per repo a day; never change this file, the agents or the
 keeper yourself.
