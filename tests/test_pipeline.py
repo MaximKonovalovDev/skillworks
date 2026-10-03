@@ -111,6 +111,24 @@ def test_export_gate_refuses_failing_skill(tmp_path: Path) -> None:
         raise AssertionError("export should refuse rate 0.333")
 
 
+def test_export_skips_own_output_dir_no_nesting(tmp_path: Path) -> None:
+    """K-07: --out inside the skill dir must not recurse into itself."""
+    skill = tmp_path / "skill"
+    skill.mkdir()
+    (skill / "SKILL.md").write_text("---\nname: demo\ndescription: demo\n---\n", encoding="utf-8")
+    out = skill / "export"
+    report = {"rate": 1.0, "total": 1, "passed": 1}
+    for target in ("claude", "codex"):
+        export_mod.export(skill, target, out, eval_report=report)
+    for target in ("claude", "codex"):
+        dest = out / target / skill.name
+        assert (dest / "SKILL.md").exists()
+        assert list(dest.rglob("export")) == []
+    # re-export over an existing dest still leaves a flat tree
+    export_mod.export(skill, "claude", out, eval_report=report)
+    assert list((out / "claude" / skill.name).rglob("export")) == []
+
+
 def test_export_unknown_target_clean_error(tmp_path: Path) -> None:
     import click
 
