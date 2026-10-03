@@ -1,24 +1,24 @@
-# skillworks handoff - round 61 (token f3a9)
+# skillworks handoff - round 62 (token f3a9)
 
-Round: 61
-Written: 2026-10-03T14:26Z
+Round: 62
+Written: 2026-10-03T14:33Z
 Token: f3a9 (takeover 2026-10-03T13:23Z from b7e2; refreshed 13:49Z)
 Knobs: width 2, dispatch foreground, heavy_max 3, helper_max 90m, bg_width 0, cards_per_reader 5 (no change, no proposal).
 
 ## Heading
-- Owner policy: export/ out of git (fd0febc). K-07 evidence updated, DONE stands on judge proof.
+- Steal map 20/20 read. S19 yields 5 listing cards (K-27-gated); S20 0 cards.
 
 ## Done
-- Owner session commit fd0febc (17:13 +0300): dropped skills/progit-branching/export/ from git + `skills/*/export/` into .gitignore ("nested paths crashed the OpenCode server", "regenerate on demand"). Pulled clean, no conflict.
-- Board K-07 Evidence: DONE stands (judge-017 verified flat x4 on the real tree) + owner policy recorded. K-21 now aligns (canonical committed, views regenerable).
-- Inbox: no open items (all ticked with row IDs).
+- Researcher-steal S19 DONE: VISION.md S19 dated; card research/cards/2026-10-03-S19.md (5 cards: PWYW floor, listing shape, fee note, files block, devlog habit — all docs-only, K-27-gated + 5 rejects). pytest 19 passed.
+- Researcher-steal S20 DONE: VISION.md S20 dated MIT live; card research/cards/2026-10-03-S20.md (0 cards + 5 rejects, gallery owned by K-08 placeholder). pytest 19 passed.
 
 ## Checks
-- Pending re-run after this commit (next round's first job if FAIL).
+- python -m pytest tests/ -q: 19 passed.
+- node sprint/check.mjs: 20 pass, 1 warn, 0 fail.
 
 ## Blockers
-- Builder + vision holds (~3h from ~14:00Z). 15 READY rows wait.
-- S19/S20 last unread steal rows. K-27 NC tension open.
+- S19's 5 cards need planner merge (listing rows, K-27-gated). Builder + vision holds.
+- K-27 NC tension now blocks paid ship AND 5 S19 cards — highest-leverage planner row.
 
 ## Next
-- Keeper: S19/S20 steal to finish the map, or builder-hold status.
+- Keeper: planner-merge (S19/S20) please, or builder-hold status.
