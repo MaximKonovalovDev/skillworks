@@ -7,7 +7,7 @@ temperature: 0.3
 options:
   reasoningEffort: xhigh
 permission:
-  task: deny
+  task: allow
   question: deny
   doom_loop: allow
   edit: allow

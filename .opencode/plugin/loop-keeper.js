@@ -1104,6 +1104,15 @@ const makeKeeper = async ({ client, worktree, directory }, options) => {
   // A plain Task (not a `packet:` job) in the lead's sprint session: callID -> { sid, desc, sub, proof, started, stopped }.
   // helper_max_min covers it too (engine 2026-09-29 20:00Z: the lead sat 72 min on one review Task, 26 packets waiting, 0 running).
   const adhocRun = ho.adhocRun ?? new Map();
+  // Helpers of helpers (Maxim 2026-10-04: "each can dispatch helpers for himself up to 10"): every
+  // agent may send Tasks; a session that is itself a helper (it has a parent) holds at most
+  // SUB_HELPERS_MAX running at once. callID -> parent session id while the Task runs.
+  const SUB_HELPERS_MAX = 10;
+  const subRun = new Map();
+  const subRunning = (sid) => { let n = 0; for (const v of subRun.values()) if (v === sid) n += 1; return n; };
+  const parentOf = async (sid) => {
+    try { return (await client.session.get({ path: { id: sid } }))?.data?.parentID ?? null; } catch { return null; }
+  };
   const repeatKey = (a) => {
     const norm = (s, n) => String(s ?? "").toLowerCase().replace(/\d+/g, "#").replace(/\s+/g, " ").trim().slice(0, n);
     return `${a.subagent_type}|${norm(a.description, 80)}|${norm(a.prompt, 160)}`;
@@ -1853,7 +1862,7 @@ Ready work: ${readyItem.id}. Claim only this item; selectors do not authorize sw
     }
     const snap = { alive: iso(), busy: status.session ? busy.has(status.session) : false };
     if (fixes.total) snap.shellFixes = { ...fixes, last: fixLast };
-    if (calls.backgrounded || calls.todoFilled || calls.routed || calls.resultAsked || calls.delegated || calls.queued || calls.packets || calls.foregrounded || calls.timeoutRaised || calls.repeatHeld || calls.paidRouted || calls.heavyQueued || calls.adhocStopped || calls.claimsRouted || calls.navHinted) snap.callFixes = { ...calls };
+    if (calls.backgrounded || calls.todoFilled || calls.routed || calls.resultAsked || calls.delegated || calls.queued || calls.packets || calls.foregrounded || calls.timeoutRaised || calls.repeatHeld || calls.paidRouted || calls.heavyQueued || calls.adhocStopped || calls.claimsRouted || calls.navHinted || calls.subHelpers || calls.subCapHeld) snap.callFixes = { ...calls };
     // The queue acts every beat (a stuck helper aborts, free width fills,
     // finished results go out); the census below only runs when a decision
     // dirtied it, so an idle beat costs no session API call and no queue scan.
@@ -2145,6 +2154,18 @@ Ready work: ${readyItem.id}. Claim only this item; selectors do not authorize sw
         }
         if (input?.tool === "task" && args) {
           const sprintV = await isSprint(input.sessionID);
+          // A helper sending its own helpers: at most SUB_HELPERS_MAX at once (the 11th waits as a BLOCKED line).
+          if (!sprintV && input.callID && (await parentOf(input.sessionID))) {
+            if (subRunning(input.sessionID) >= SUB_HELPERS_MAX) {
+              args.prompt = `This helper already runs ${SUB_HELPERS_MAX} helpers of its own (the cap). Do nothing else; reply with one line: RESULT: BLOCKED - helper cap ${SUB_HELPERS_MAX} reached, send it after one returns | proof: the keeper`;
+              calls.subCapHeld = (calls.subCapHeld ?? 0) + 1;
+              return log(`${input.sessionID} sub-helper cap: ${SUB_HELPERS_MAX} running, held ${clip(String(args.description ?? ""), 60)}`);
+            }
+            if (subRun.size > 500) subRun.delete(subRun.keys().next().value);
+            subRun.set(input.callID, input.sessionID);
+            calls.subHelpers = (calls.subHelpers ?? 0) + 1;
+            return;
+          }
           // Owner chats are never capped (Maxim 2026-10-03: the cap cut 24 of his fix agents at 15 min).
           if (!sprintV) return;
           const fg = foreground();
@@ -2271,7 +2292,7 @@ Ready work: ${readyItem.id}. Claim only this item; selectors do not authorize sw
     "tool.execute.after": async (input, output) => {
       try {
         if (input?.tool === "glob" || input?.tool === "bash") navHint(input, output);
-        if (input?.tool === "task" && input.callID) adhocRun.delete(input.callID);
+        if (input?.tool === "task" && input.callID) { adhocRun.delete(input.callID); subRun.delete(input.callID); }
         if (input?.tool === "task" && input.callID && fgJobs.has(input.callID)) {
           const out = output?.output;
           return collectForeground(input.callID, (typeof out === "string" ? out : JSON.stringify(out ?? "")).trim());

@@ -8,7 +8,7 @@ options:
   reasoningEffort: xhigh
 permission:
   edit: deny
-  task: deny
+  task: allow
   question: deny
   doom_loop: allow
   bash:

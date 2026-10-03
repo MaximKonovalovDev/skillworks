@@ -8,7 +8,7 @@ steps: 300
 options:
   reasoningEffort: high
 permission:
-  task: deny
+  task: allow
   question: deny
   doom_loop: allow
   edit: allow

@@ -7,7 +7,7 @@ temperature: 0.1
 options:
   reasoningEffort: medium
 permission:
-  task: deny
+  task: allow
   question: deny
   doom_loop: allow
   edit: allow

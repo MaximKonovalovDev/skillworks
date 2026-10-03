@@ -11,7 +11,7 @@ permission:
   "deepwiki_*": allow
   "arxiv_*": allow
   "web-search_*": allow
-  task: deny
+  task: allow
   question: deny
   doom_loop: allow
   webfetch: allow

@@ -45,7 +45,8 @@ for (const role of ["lead", "builder", "judge", "planner", "researcher", "pilot"
   const want = role === "lead" ? "primary" : "subagent";
   if (fm.mode !== want) say("FAIL", `agent ${role}: mode ${fm.mode}, want ${want}`);
   if (!fm.model) say("FAIL", `agent ${role}: no model`);
-  if (role !== "lead" && !/^\s+task:\s*deny\b/m.test(fm.raw)) say("FAIL", `agent ${role}: helpers need task: deny`);
+  // Maxim 2026-10-04: every agent may send helpers (the keeper caps a helper at 10, subagent_depth 2 stops deeper).
+  if (!/^\s+task:\s*allow\b/m.test(fm.raw)) say("FAIL", `agent ${role}: needs task: allow (every agent may send helpers)`);
   if (!/^\s+question:\s*deny\b/m.test(fm.raw)) say("FAIL", `agent ${role}: question: deny missing (nobody answers at night)`);
   if (["judge", "overseer"].includes(role) && !/^\s+edit:\s*deny\b/m.test(fm.raw)) say("FAIL", `agent ${role}: must be read-only (edit: deny)`);
 }
