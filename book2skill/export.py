@@ -2,7 +2,9 @@
 from __future__ import annotations
 
 import json
+import re
 import shutil
+from datetime import datetime, timezone
 from pathlib import Path
 
 import click
@@ -44,6 +46,19 @@ def _own_output_ignore(skilldir: Path, out: Path):
     return _ignore
 
 
+def skill_version(skilldir: Path) -> str:
+    """Version from SKILL.md frontmatter (K-18); default 0.1.0 when missing."""
+    try:
+        text = (skilldir / "SKILL.md").read_text(encoding="utf-8")
+    except OSError:
+        return "0.1.0"
+    if not text.startswith("---"):
+        return "0.1.0"
+    head = text.split("---", 2)[1] if text.count("---") >= 2 else ""
+    m = re.search(r"^version:\s*(\S+)", head, re.M)
+    return m.group(1) if m else "0.1.0"
+
+
 def export(skilldir: Path, target: str, out: Path, eval_report: dict | None = None) -> dict:
     if target not in TARGETS:
         raise click.UsageError(f"unknown target {target}; legal: claude|codex|opencode|gemini")
@@ -62,6 +77,14 @@ def export(skilldir: Path, target: str, out: Path, eval_report: dict | None = No
     if dest.exists():
         shutil.rmtree(dest)
     shutil.copytree(skilldir, dest, ignore=_own_output_ignore(skilldir, out))
+    lock = {
+        "name": skilldir.name,
+        "version": skill_version(skilldir),
+        "eval-rate": rate,
+        "target": target,
+        "date": datetime.now(timezone.utc).date().isoformat(),
+    }
+    (dest / ".lock.json").write_text(json.dumps(lock, indent=2), encoding="utf-8")
     receipt = {"stage": "export", "target": target, "dest": str(dest)}
     print(json.dumps(receipt, indent=2))
     return receipt
