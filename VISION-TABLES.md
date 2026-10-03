@@ -58,6 +58,7 @@ Apache-2.0, BSD, zlib or CC0, license read live.
 
 - G1 Competitors: who are the 3-5 best at what this vision promises, and what
   does each do better today? Evidence: their own pages, releases and numbers.
+Proposed (2026-10-03, researcher): obra/superpowers (MIT, ★294868) owns skill shape/TDD-for-skills; ClawHub (proprietary registry, docs.openclaw.ai/clawhub) owns versioned bundles + scans + lock; ai-evos/agent-skills (Apache-2.0) owns model-graded skill-vs-zero-primed-baseline eval; SkillsGate+skills.sh (MIT, ★1342) owns preview-then-install discovery (dev-only: our domain-pack edge); asale-ai/anything-to-skill (Apache-2.0) owns model-free graded audit | sources: https://github.com/obra/superpowers/blob/main/skills/writing-skills/SKILL.md https://docs.openclaw.ai/clawhub https://github.com/ai-evos/agent-skills/blob/main/shared/eval_framework.py https://github.com/skillsgate/skillsgate https://github.com/asale-ai/anything-to-skill full map: research/cards/2026-10-03-G1.md
 - G2 The bar: what does "done" measure, in numbers, for each part?
 - G3 The edge: where can we be the best, and why can the others not follow?
 
