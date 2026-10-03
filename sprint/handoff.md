@@ -1,22 +1,22 @@
-# skillworks handoff - round 16 (token 557c)
+# skillworks handoff - round 17 (token 557c)
 
-Round: 16
-Written: 2026-10-03T05:59Z
+Round: 17
+Written: 2026-10-03T07:20Z
 Token: 557c
 
 ## Heading
-- No Scorecard move. Keeper batch both NOOP (002 already DONE, 19 READY + vision 0 fail).
+- No Scorecard move. r16 batch both NOOP; K-07 redo interrupted, still open.
 
 ## Done
-- Batch r15: builder-002 NOOP (README line already fixed, pytest 11 passed); planner-rows NOOP (19 READY verified, both checks 0 fail).
-- 014 K-07 redo queued (round 15): rm nested export/ scratch, fix recurse cause, clean x4, no-nesting proof.
+- Batch r15 (round 16): builder-002 NOOP + planner-rows NOOP, committed a5eac33.
+- Next batch interrupted: builder 014-K07-redo got NO result (tool stopped, export/ scratch still in tree + committed in 9c2f7e1); my steal call was malformed (BLOCKED by my own bad prompt, lead error, no helper fault).
 
 ## Checks
-- check.mjs WARN 0 fail; vision-check WARN 0 fail; pytest 11 passed (helper proofs).
+- check.mjs WARN 0 fail; vision-check WARN 0 fail; pytest 11 passed (last full rerun 05:56Z).
 
 ## Blockers
-- None.
+- None. 014 K-07 redo still queued in ready/ for the batch after this one.
 
 ## Next
-- Batch (width 2): builder 014-k07-redo-clean-export (one-off, chain first) + researcher-steal S03 (oldest unread: S03 Skrun, S04 Evos...).
-- Then K-10 MCP, K-15..K-21, K-09 freud ranking, merge.
+- Keeper batch (width 2): builder 003-pilot-readme-eval (already DONE c7608ac, expect NOOP) + researcher-steal (standing seat, oldest-first, expect S03).
+- Then 014 K-07 redo + merge/results.
