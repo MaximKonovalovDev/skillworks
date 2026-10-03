@@ -1,0 +1,17 @@
+pilot-view | pilot-view-r2 | 2026-10-03T01:18Z | sprint/queue/ready/, sprint/notes/
+planner-rows | planner-rows-r2 | 2026-10-03T01:19:05Z | sprint/board.md
+S01 | researcher-steal-r4 | 2026-10-03T01:24Z | research/cards/2026-10-03-S01.md, VISION.md S01 row
+K-04 | 006-repair-builder-rows-r1 | 2026-10-03T02:30Z | evals/progit-branching_qa.jsonl, evals/seeds_qa.jsonl, skills/progit-branching/
+007-review-repair-006 | 007-review-repair-006 | 2026-10-03T01:29:00Z | sprint/queue/ready/007-review-repair-006.md
+MERGE-S01 | planner-research-merge-r5 | 2026-10-03T01:29Z | research/INDEX.md, sprint/board.md, research/cards/2026-10-03-S01.md
+002-pilot-readme-build | 002-pilot-readme-build | 2026-10-03T03:00Z | README.md
+004-pilot-export-gate | 004-pilot-export-gate | 2026-10-03T02:45Z | book2skill/cli.py, book2skill/export.py, tests/test_pipeline.py
+003-pilot-readme-eval | 003-pilot-readme-eval | 2026-10-03T01:39:46Z | README.md
+005-pilot-export-target | 005-pilot-export-target | 2026-10-03T04:41Z | book2skill/export.py, book2skill/cli.py, tests/test_pipeline.py
+pilot-view | pilot-view-r10 | 2026-10-03T01:44Z | sprint/queue/ready/, sprint/notes/
+S02 | researcher-steal-r10 | 2026-10-03T01:44Z | research/cards/2026-10-03-S02.md, VISION.md S02 row
+012-pilot-export-report-persist | 012-report-persist | 2026-10-03T05:00Z | book2skill/eval.py, tests/test_pipeline.py
+MERGE-S02 | planner-research-merge-r11 | 2026-10-03T01:48Z | research/INDEX.md, sprint/board.md, research/cards/2026-10-03-S02.md
+P1 | researcher-vision-r12 | 2026-10-03T01:51Z | VISION.md P1+R1 rows, research/cards/2026-10-03-P1.md
+runner-checks | runner-checks-r13 | 2026-10-03T01:53:37Z | sprint/queue/checks.md
+K-07 | builder-rows-r13 | 2026-10-03T01:54Z | skills/progit-branching/export/

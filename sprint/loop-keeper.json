@@ -1,0 +1,76 @@
+{
+ "repo": "skillworks",
+ "supportedCommands": [
+  "go",
+  "sprint",
+  "stop",
+  "new",
+  "say",
+  "archive"
+ ],
+ "loaded": "2026-10-03T03:53:04.714Z",
+ "code": "2026-10-03T03:53:04.698Z",
+ "reload": "hot",
+ "alive": "2026-10-03T04:08:11.581Z",
+ "busy": true,
+ "queue": {
+  "ready": 12,
+  "running": 0,
+  "waiting": 0,
+  "done": 4,
+  "failed": 0,
+  "standing": {
+   "packets": 7,
+   "running": 0,
+   "resting": 0
+  }
+ },
+ "batch": {
+  "mode": "foreground",
+  "width": 2,
+  "running": 0,
+  "sent": 2,
+  "sentAt": "2026-10-03T03:56:44.599Z",
+  "next": 2
+ },
+ "session": "ses_f00b1947bffefVaE7u4BHEzfmw",
+ "at": "2026-10-03T04:08:11.579Z",
+ "decision": "running",
+ "reason": "busy, last event 0m ago",
+ "continues": 0,
+ "retries": 0,
+ "title": "Skillworks sprint loop from board.md",
+ "todo": null,
+ "helpers": "1 helpers active now, 2 this hour",
+ "callFixes": {
+  "since": "2026-10-03T03:53:04.712Z",
+  "backgrounded": 0,
+  "todoFilled": 0,
+  "routed": 0,
+  "resultAsked": 0,
+  "packets": 2
+ },
+ "lastActivity": "2026-10-03T04:08:12.325Z",
+ "readinessSeen": [
+  [
+   "legacy|planner|research merge (hard judge of the cards)",
+   "{\"body\":\"skillworks crew, research merge seat. Read the research cards filed since the last `Merge:` line in `research/INDEX.md` (skip with `RESULT: NOOP - no new cards`). Drop duplicates, reject a card with no existing home or no runnable proof, score the rest 1-5 on net lines deleted, fit with its home, the strength of its proof and low effort, and accept the best (no quota): each accepted card becomes a board row with baseline, metric and proof. A rejected card stays with one `REJECTED <date>: <why>` line.\\n\\nWrite one `Merge: <UTC> | cards N | accepted A | rejected R | dupes D` line in `research/INDEX.md`. Your reply is at most 15 lines, ending with the RESULT line.\",\"fm\":{\"role\":\"planner\",\"title\":\"research merge (hard judge of the cards)\"}}"
+  ]
+ ],
+ "shellFixes": {
+  "since": "2026-10-03T03:53:04.711Z",
+  "total": 1,
+  "head": 1,
+  "last": [
+   {
+    "at": "2026-10-03T03:58:46.942Z",
+    "from": "git status --short --untracked-files=all | head -n 100; echo \"---CHECKIGNORE---\"; git check-ignore -v work/freud-dream-p...",
+    "to": "git status --short --untracked-files=all | Select-Object -First 100; echo \"---CHECKIGNORE---\"; git check-ignore -v work/..."
+   }
+  ]
+ },
+ "lastCommand": "997c8170-9df0-4ae9-b075-ffeabb1da878",
+ "commandSeen": "2026-10-02T22:13:05.723Z",
+ "command": "sprint: sent GO to the sprint session with 4 facts",
+ "commandAt": "2026-10-03T03:53:34.736Z"
+}
