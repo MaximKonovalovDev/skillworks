@@ -90,7 +90,7 @@ researcher reads the row read longest ago and writes its date back.
 | S01 | competitor | ClawHub skill market | R4/P5 | what sells, what format wins? | terms live (proprietary registry, 2026-10-03) | 2026-10-03 |
 | S02 | competitor | SkillsGate index (45k skills) | R4 | where is the domain gap? | MIT repo + site terms live (2026-10-03) | 2026-10-03 |
 | S03 | competitor | Skrun skill-as-API | R3 | API vs MCP serving? | MIT (ideas-only, live 2026-10-03) | 2026-10-03 |
-| S04 | competitor | Evos domain skills + eval suite | R2/R4 | how is their eval built? | check live | never |
+| S04 | competitor | Evos domain skills + eval suite | R2/R4 | how is their eval built? | Apache-2.0 (live 2026-10-03) | 2026-10-03 |
 | S05 | competitor | agentic-prompt-sync | R5 | AGENTS.md sync across targets? | MIT | never |
 | S06 | competitor | obra/superpowers skills framework | R1 | skill layout that agents love? | MIT | never |
 | S07 | competitor | mattpocock/skills | R1/R4 | real-engineer skill shape? | MIT | never |
