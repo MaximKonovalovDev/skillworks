@@ -1,24 +1,26 @@
-# skillworks handoff - round 31 (token eed3)
+# skillworks handoff - round 32 (token b7e2, takeover from eed3)
 
-Round: 31
-Written: 2026-10-03T10:42Z
-Token: eed3
+Round: 32
+Written: 2026-10-03T12:00Z
+Token: b7e2 (takeover 2026-10-03T10:44Z from eed3, prior app closed)
 Knobs: width 2, dispatch foreground, heavy_max 3, helper_max 90m, bg_width 0, cards_per_reader 5 (no change, no proposal).
 
 ## Heading
-- No move. Stale batch.md 10:16 tenth repeat: both BLOCKED.
+- No Scorecard % move. Stale batch broken after x10 BLOCKED: 007 PASS + S09 DONE.
 
 ## Done
-- Judge-007 BLOCKED (repeat-hold, read-only, check 19/2/0 rerun, no commit).
-- Researcher-steal BLOCKED (repeat 6x in 3h, no card, no commit).
-- HEAD stays 722c05c.
+- Judge-007 PASS (progit 12 source-derived QA, eval 12/12=1.0, freud 0.5 gate-held, pytest 12 passed). K-04 DONE stands 4549734, no new commit.
+- Steal S08+S09 committed 5ede268 (S08 ECC instincts MIT, S09 hermes-agent MIT, VISION S08/S09 dated 2026-10-03). Commit also dropped 6 tracked nested export cheatsheets.
+- pytest 12 passed (lead rerun 12:00Z). check.mjs 19 pass, 2 warn, 0 fail.
 
 ## Checks
-- node sprint/check.mjs: 19 pass, 2 warn, 0 fail (helper rerun). pytest 12 passed (rerun 10:42Z).
+- node sprint/check.mjs: 19 pass, 2 warn, 0 fail (P3/P4/P5 seed rows, 11/20 steal rows unread).
+- python -m pytest tests/ -q: 12 passed.
 
 ## Blockers
-- Keeper batch.md stale since 10:16 (007+steal x10). Needs fresh batch: 014 redo + planner-research-merge (S03-S07 unmerged) + K-10 MCP.
-- K-07 export fix + test unstaged, export garbage untracked.
+- K-07 export fix (export.py _own_output_ignore + nesting test) unstaged, unjudged; remaining nested export/ dirs untracked. Needs 014 builder + judge.
+- S08/S09 cards await planner-research-merge (INDEX last merge 01:48Z).
+- Ready judges 008-011,013 cover already-committed work (004 38a9f9d, 005 2a6fc1b, 012 dee5d8a); keeper to retire.
 
 ## Next
-- Keeper names fresh batch. Then 014 redo, K-10 MCP, K-15..K-21.
+- Keeper batch: 008-review-004-gate + researcher-vision. Then 014 redo + planner-research-merge + K-10 MCP.
