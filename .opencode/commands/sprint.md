@@ -24,7 +24,7 @@ the vision is the first work: the planner and the vision researcher fill it.
 Standing seats in `sprint/queue/standing/` (seeds: `center/crews/skillworks/`):
 builders on the board rows (`chain: start`), the planner (rows from the vision
 and its gaps), the research merge (judges every card), the vision researcher
-(Scorecard, Parts, gaps), the steal researcher (the Steal map, oldest first),
+(Scorecard, Parts, gaps), the scout (steals that land on a finish bar, listed in `sprint/steals.md`),
 the pilot (uses the product the way its user would, with captures) and the
 runner (the fast check sweep). Each run claims its rows in
 `sprint/queue/claims.txt` (append; create it if missing) and takes a whole
@@ -102,7 +102,7 @@ keeper yourself.
 |---|---|---|---|
 | Check | every round | lead | `node sprint/check.mjs` PASS, or its FAIL is the first packet |
 | Vision research | every round | vision researcher | a Parts row or gap swept, its Scorecard row sourced |
-| Steal | every round | steal researcher | the oldest Steal map row read, cards filed |
+| Steal | every round | scout | up to 2 steals for the first open finish bar in `sprint/steals.md`; a builder lands them |
 | Research merge | every round with new cards | planner | cards judged, the best on the board |
 | Owner's view | every 5 rounds | pilot | captures read, findings are rows |
 | Retro | every 5 rounds | lead | one change with its revert trigger |
