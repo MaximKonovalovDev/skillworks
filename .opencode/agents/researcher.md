@@ -10,6 +10,7 @@ permission:
   "github_*": allow
   "deepwiki_*": allow
   "arxiv_*": allow
+  "web-search_*": allow
   task: deny
   question: deny
   doom_loop: allow

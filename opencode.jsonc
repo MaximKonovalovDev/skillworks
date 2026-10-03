@@ -212,6 +212,8 @@
     "question": "deny",
     "github_*": "deny",
     "arxiv_*": "deny",
-    "deepwiki_*": "deny"
+    "deepwiki_*": "deny",
+    "arsenal_*": "deny",
+    "web-search_*": "deny"
   }
 }
