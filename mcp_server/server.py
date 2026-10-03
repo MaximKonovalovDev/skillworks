@@ -132,6 +132,23 @@ def _skills() -> list[str]:
     return sorted(p.name for p in base.iterdir() if (p / "SKILL.md").exists())
 
 
+def _skill_md_files(skill_dir: Path) -> list[Path]:
+    """Canonical markdown of one skill: never its export/ output folder, never a link.
+
+    An export/ copy would answer a search four times, and a link that loops back into the
+    skill makes a plain recursive walk run into paths of thousands of characters (2026-10-03).
+    """
+    isjunction = getattr(os.path, "isjunction", None)
+    found: list[Path] = []
+    for here, dirs, files in os.walk(skill_dir):
+        dirs[:] = [d for d in dirs
+                   if not (Path(here) == skill_dir and d == "export")
+                   and not os.path.islink(os.path.join(here, d))
+                   and not (isjunction and isjunction(os.path.join(here, d)))]
+        found += [Path(here) / f for f in files if f.endswith(".md")]
+    return sorted(found)
+
+
 def _search(query: str, skill: str | None = None, limit: int = 5) -> list[dict]:
     base = _skills_dir()
     words = [w.lower() for w in query.split() if len(w) > 2]
@@ -141,7 +158,7 @@ def _search(query: str, skill: str | None = None, limit: int = 5) -> list[dict]:
         meta = _skill_meta(name)
         gate_rank = 1 if meta["above_gate"] else 0
         installed_rank = 1 if meta["installed"] else 0
-        for path in sorted((base / name).rglob("*.md")):
+        for path in _skill_md_files(base / name):
             text = path.read_text(encoding="utf-8")
             low = text.lower()
             score = sum(low.count(w) for w in words)

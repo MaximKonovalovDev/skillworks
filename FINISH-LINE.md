@@ -13,8 +13,8 @@ Nothing private from other repos is ever committed here.
 | ID | Bar | Proof |
 |---|---|---|
 | S1 | One improved skill adopted by another repo | `lines C:/Users/me/.empire/state/skilldoctor/adopted.csv 1 ,adopted,` |
-| S2 | Improved skills adopted in 5 of the 9 repos | `todo distinct repos among adopted rows in adopted.csv` |
-| S3 | First tested pack for sale, live on a store | `todo the live listing URL of the first pack (factory lists it)` |
+| S2 | Improved skills adopted in 5 of the 9 repos | `cmd python tools/finish_proof.py s2` |
+| S3 | First tested pack for sale, live on a store | `cmd python tools/finish_proof.py s3` |
 | S4 | The MCP server answers and lists every skill | `cmd python -m pytest tests/test_mcp_schema.py tests/test_mcp_skills_dir.py -q` |
 
 ## Rules

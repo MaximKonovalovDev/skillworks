@@ -36,6 +36,12 @@ Old text: archive/ (searches skip it; Read by path).
 ## Pipeline lanes (operator)
 
 ```powershell
+# One command for a manual (a file, a docs folder or a URL): extract, split, index, build, eval, audit.
+# --qa is yours: questions drawn from the failure the skill fixes. --target also exports; it is held
+# while SKILL.md, glossary, patterns or cheatsheet still hold the scaffold text. A SKILL.md an
+# author wrote is never overwritten (--rebuild does). Receipt: work/<name>/make.json.
+python -m book2skill make --in <file|folder|url> --name <name> --description "Use when ..." --qa evals/<name>_qa.jsonl [--glob "about_*.md"] [--target claude]
+# The same, stage by stage:
 python -m book2skill extract --in <src> --out work/<name>
 python -m book2skill split --work work/<name>
 python -m book2skill index --work work/<name>

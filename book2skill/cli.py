@@ -1,4 +1,4 @@
-"""book2skill CLI: extract | split | index | build | audit | eval | refresh | export."""
+"""book2skill CLI: make (all in one) | extract | split | index | build | audit | eval | refresh | export."""
 from __future__ import annotations
 
 from pathlib import Path
@@ -11,6 +11,7 @@ from . import eval as eval_mod
 from . import export as export_mod
 from . import extract as extract_mod
 from . import index as index_mod
+from . import make as make_mod
 from . import refresh as refresh_mod
 
 
@@ -20,11 +21,15 @@ def main() -> None:
 
 
 @main.command()
-@click.option("--in", "src", required=True, help="PDF/EPUB/DOCX/MD/TXT/URL you own")
+@click.option("--in", "src", required=True, help="PDF/EPUB/DOCX/MD/TXT/URL you own, or a docs folder")
 @click.option("--out", "out", required=True, help="work dir, e.g. work/mybook")
-def extract(src: str, out: str) -> None:
+@click.option("--glob", "include", default=None, help="docs folder only: file name or path pattern, e.g. 'about_*.md'")
+def extract(src: str, out: str, include: str | None) -> None:
     """Stage 1: source to text + metadata."""
-    receipt = extract_mod.extract(src, Path(out))
+    try:
+        receipt = extract_mod.extract(src, Path(out), include=include)
+    except ValueError as exc:
+        raise click.UsageError(str(exc)) from None
     click.echo(f"extracted {receipt['chars']} chars ({receipt['kind']})")
 
 
@@ -108,6 +113,27 @@ def export(skill: str, target: str, out: str, work: str | None, qa: str | None, 
             raise click.UsageError("--work and --qa must be given together")
         eval_report = eval_mod.run_eval(Path(work), Path(skill), Path(qa))
     export_mod.export(Path(skill), target, Path(out), eval_report=eval_report)
+
+
+@main.command()
+@click.option("--in", "src", required=True, help="manual to learn from: a file, a docs folder or a URL you own")
+@click.option("--name", required=True, help="skill name, a-z0-9- only; also the default work and skill folder")
+@click.option("--description", required=True, help="what the skill does and when to use it (Use when ...)")
+@click.option("--qa", required=True, help="QA jsonl: questions drawn from the failure the skill fixes")
+@click.option("--work", default=None, help="work dir (default work/<name>)")
+@click.option("--skill", default=None, help="skill dir (default skills/<name>)")
+@click.option("--glob", "include", default=None, help="docs folder only: file name or path pattern, e.g. 'about_*.md'")
+@click.option("--target", "targets", multiple=True, type=click.Choice(export_mod.TARGETS), help="also export (repeat for more)")
+@click.option("--out", "out", default=None, help="export root (default dist)")
+@click.option("--rebuild", is_flag=True, help="overwrite a SKILL.md an author already wrote")
+def make(src: str, name: str, description: str, qa: str, work: str | None, skill: str | None,
+         include: str | None, targets: tuple[str, ...], out: str | None, rebuild: bool) -> None:
+    """One command: extract, split, index, build, eval, audit, and export when --target is given."""
+    try:
+        make_mod.make(src, name, description, Path(qa), work=work, skill=skill, include=include,
+                      targets=targets, out=out, rebuild=rebuild, say=click.echo)
+    except ValueError as exc:
+        raise click.UsageError(str(exc)) from None
 
 
 if __name__ == "__main__":

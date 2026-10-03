@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 import shutil
 from datetime import datetime, timezone
@@ -22,28 +23,84 @@ def load_eval_report(skilldir: Path) -> dict | None:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def _own_output_ignore(skilldir: Path, out: Path):
-    """Ignore function so copytree skips our own output dir (K-07).
+OUTPUT_DIR = "export"   # the usual output folder; git-ignored as skills/*/export/
+# Windows MAX_PATH is 260. On 2026-10-03 the exporter copied a skill into itself and made paths
+# of 200 to 5000 characters, which crashed the OpenCode file watcher 9 times.
+MAX_DEST_PATH = 240
 
-    When --out lives inside the skill dir (e.g. skills/<name>/export),
-    a plain copytree recurses into its own destination and produces
-    export/<target>/<name>/export/... nesting. Skip that top dir.
-    Returns None when out is outside the skill dir (nothing to skip).
+
+def _is_link(path: str) -> bool:
+    """A symlink or a Windows junction: a copy must not follow it (a loop never ends)."""
+    isjunction = getattr(os.path, "isjunction", None)
+    return os.path.islink(path) or bool(isjunction and isjunction(path))
+
+
+def _skip_names(skilldir: Path, out: Path, dest: Path | None = None) -> set[str]:
+    """Top-level names of the skill dir that a copy must leave out (K-07 and the rest of its class).
+
+    The usual output folder, always (an old export/ left in the skill must not ship). The top
+    folder that holds --out or the destination when either sits inside the skill dir. With
+    --out at the skill dir itself, the target folders an earlier export wrote there.
     """
-    try:
-        rel = out.resolve().relative_to(skilldir.resolve())
-    except ValueError:
-        return None
-    top = rel.parts[0] if rel.parts else None
-    if not top or top == ".":
-        return None
+    root = skilldir.resolve()
+    skip = {OUTPUT_DIR}
+    for place in (out, dest):
+        if place is None:
+            continue
+        try:
+            rel = place.resolve().relative_to(root)
+        except ValueError:
+            continue
+        if rel.parts:
+            skip.add(rel.parts[0])
+        elif place is out:
+            skip.update(TARGETS)
+    return skip
+
+
+def _own_output_ignore(skilldir: Path, out: Path, dest: Path | None = None):
+    """Ignore function so copytree never copies our own output or follows a link (K-07).
+
+    Without it, --out inside the skill dir (skills/<name>/export, or the skill dir itself) makes
+    copytree recurse into its own destination: export/<target>/<name>/export/... nesting.
+    """
+    root = skilldir.resolve()
+    skip = _skip_names(skilldir, out, dest)
 
     def _ignore(src: str, names: list[str]) -> list[str]:
-        if Path(src).resolve() == skilldir.resolve():
-            return [n for n in names if n == top]
-        return []
+        hide = [n for n in names if _is_link(os.path.join(src, n))]
+        if Path(src).resolve() == root:
+            hide += [n for n in names if n in skip and n not in hide]
+        return hide
 
     return _ignore
+
+
+def _refuse(why: str) -> None:
+    raise SystemExit(f"export refused: {why}")
+
+
+def _check_paths(skilldir: Path, out: Path, dest: Path) -> None:
+    """Stop before any copy or delete when the paths would eat the source or run past the limit."""
+    src, dst = skilldir.resolve(), dest.resolve()
+    if dst == src:
+        _refuse(f"the destination {dst} is the skill dir itself; copying would delete the source")
+    if dst in src.parents:
+        _refuse(f"the destination {dst} is above the skill dir {src}; clearing it would delete the source")
+    skip = _skip_names(skilldir, out, dest)
+    base = len(str(dst))
+    worst, worst_rel = base, ""
+    for here, dirs, files in os.walk(src):
+        dirs[:] = [d for d in dirs if not _is_link(os.path.join(here, d)) and not (Path(here) == src and d in skip)]
+        for name in files + dirs:
+            rel = os.path.relpath(os.path.join(here, name), src)
+            if base + 1 + len(rel) > worst:
+                worst, worst_rel = base + 1 + len(rel), rel
+    if worst > MAX_DEST_PATH:
+        _refuse(
+            f"{worst} characters at {dst}{os.sep}{worst_rel[:60]}... (limit {MAX_DEST_PATH}); "
+            "a path this long usually means the skill holds a copy of itself"
+        )
 
 
 def skill_version(skilldir: Path) -> str:
@@ -74,9 +131,10 @@ def export(skilldir: Path, target: str, out: Path, eval_report: dict | None = No
             f"eval gate refused export: rate {rate:.3f} below {GATE:.1f}; fix the skill first"
         )
     dest = out / target / skilldir.name
+    _check_paths(skilldir, out, dest)
     if dest.exists():
         shutil.rmtree(dest)
-    shutil.copytree(skilldir, dest, ignore=_own_output_ignore(skilldir, out))
+    shutil.copytree(skilldir, dest, ignore=_own_output_ignore(skilldir, out, dest))
     lock = {
         "name": skilldir.name,
         "version": skill_version(skilldir),

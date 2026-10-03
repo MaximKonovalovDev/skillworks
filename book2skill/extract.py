@@ -1,7 +1,9 @@
 """Extract stage: PDF/EPUB/DOCX/MD/TXT/URL to full_text.txt + metadata.json."""
 from __future__ import annotations
 
+import fnmatch
 import json
+import os
 import re
 import urllib.request
 from pathlib import Path
@@ -44,6 +46,56 @@ def strip_gutenberg_markers(text: str) -> tuple[str, bool]:
             break
     body = "\n".join(lines[start:end]).strip()
     return body, True if (start > 0 or stripped_end) else False
+
+
+# A docs folder (a manual kept as files, e.g. a docs repo checkout) is read file by file.
+DOC_SUFFIXES = (".md", ".mdx", ".markdown", ".rst", ".txt")
+_SKIP_DIRS = {"node_modules", "__pycache__", "export"}
+_FRONT_MATTER = re.compile(r"\A---\r?\n.*?\r?\n---\r?\n", re.S)
+
+
+def _is_link(path: str) -> bool:
+    isjunction = getattr(os.path, "isjunction", None)
+    return os.path.islink(path) or bool(isjunction and isjunction(path))
+
+
+def _read_folder(root: Path, workdir: Path, include: str | None = None) -> tuple[str, dict]:
+    """Every doc file under root in path order, each under a `# file: <path>` line.
+
+    Leaves out hidden folders, node_modules, export/ folders, links (a loop never ends) and the
+    work dir itself when it sits inside root (a second run must not read its own output).
+    include: an fnmatch pattern on the file name or the path under root, e.g. "about_*.md".
+    """
+    root = root.resolve()
+    own = workdir.resolve()
+    parts: list[str] = []
+    skipped_own = 0
+    for here, dirs, files in os.walk(root):
+        keep = []
+        for d in sorted(dirs):
+            full = os.path.join(here, d)
+            if Path(full).resolve() == own:
+                skipped_own += 1
+            elif d.startswith(".") or d in _SKIP_DIRS or _is_link(full):
+                continue
+            else:
+                keep.append(d)
+        dirs[:] = keep
+        for name in sorted(files):
+            if not name.lower().endswith(DOC_SUFFIXES) or name.startswith("."):
+                continue
+            rel = Path(os.path.join(here, name)).relative_to(root).as_posix()
+            if include and not (fnmatch.fnmatch(name, include) or fnmatch.fnmatch(rel, include)):
+                continue
+            body = _read_text_file(Path(here) / name)
+            body = _FRONT_MATTER.sub("", body, count=1).strip()
+            if body:
+                parts.append(f"# file: {rel}\n\n{body}")
+    if not parts:
+        raise ValueError(
+            f"no {'/'.join(DOC_SUFFIXES)} files under {root}" + (f" matching {include!r}" if include else "")
+        )
+    return "\n\n".join(parts), {"files": len(parts), "skipped_own_output": skipped_own}
 
 
 def _read_text_file(path: Path) -> str:
@@ -151,7 +203,7 @@ def _read_docx(path: Path) -> str:
     return "\n".join(parts) if parts else "\n".join(p.text for p in doc.paragraphs)
 
 
-def extract(src: str, workdir: Path, strip_gutenberg: bool = True) -> dict:
+def extract(src: str, workdir: Path, strip_gutenberg: bool = True, include: str | None = None) -> dict:
     workdir.mkdir(parents=True, exist_ok=True)
     if re.match(r"https?://", src):
         req = urllib.request.Request(src, headers={"User-Agent": "skillworks/0.1"})
@@ -165,7 +217,10 @@ def extract(src: str, workdir: Path, strip_gutenberg: bool = True) -> dict:
         path = Path(src)
         suffix = path.suffix.lower()
         pages: int | list | None = None
-        if suffix == ".pdf":
+        if path.is_dir():
+            text, folder_meta = _read_folder(path, workdir, include)
+            kind, strip_gutenberg = "folder", False
+        elif suffix == ".pdf":
             text, pages = _read_pdf(path)
             kind = "pdf"
         elif suffix == ".epub":
@@ -181,6 +236,8 @@ def extract(src: str, workdir: Path, strip_gutenberg: bool = True) -> dict:
         text, stripped = strip_gutenberg_markers(text)
     (workdir / "full_text.txt").write_text(text, encoding="utf-8")
     meta = {"source": src, "kind": kind, "chars": len(text), "stripped": stripped}
+    if kind == "folder":
+        meta.update(folder_meta)
     if pages is not None:
         meta["pages"] = pages
     (workdir / "metadata.json").write_text(json.dumps(meta, indent=2), encoding="utf-8")

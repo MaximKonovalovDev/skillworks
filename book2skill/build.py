@@ -24,6 +24,42 @@ def validate_name(name: str, skilldir: Path) -> None:
         raise ValueError(f"--name '{name}' must match skill dir '{skilldir.name}' (rule: {NAME_RULE})")
 
 
+# The scaffold's placeholder files. A file that still equals its placeholder has no author yet.
+STUB_FILES = {
+    "glossary.md": "# Glossary\n\nFill terms while reading.\n",
+    "patterns.md": "# Patterns\n\nFill reusable patterns while reading.\n",
+    "cheatsheet.md": "# Cheatsheet\n\nFill one-page recall while reading.\n",
+}
+
+
+def _scaffold_body(name: str) -> str:
+    return (
+        f"\n# {name}\n\nBuilt from owned sources. "
+        "Start with `chapters/notes.md`, then `glossary.md`, "
+        "`patterns.md`, `cheatsheet.md`. Use when the trigger "
+        "topic matches this skill description.\n"
+    )
+
+
+def scaffold_leftovers(skilldir: Path) -> list[str]:
+    """Files of the skill that still hold the scaffold's placeholder text (SKILL.md body, glossary, patterns, cheatsheet)."""
+    left = []
+    try:
+        text = (skilldir / "SKILL.md").read_text(encoding="utf-8")
+    except OSError:
+        return ["SKILL.md"]
+    body = re.sub(r"\A---\r?\n.*?\r?\n---\r?\n", "", text, count=1, flags=re.S)
+    if body.replace("\r\n", "\n").strip() == _scaffold_body(skilldir.name).strip():
+        left.append("SKILL.md")
+    for fname, stub in STUB_FILES.items():
+        try:
+            if (skilldir / fname).read_text(encoding="utf-8").replace("\r\n", "\n").strip() == stub.strip():
+                left.append(fname)
+        except OSError:
+            continue
+    return left
+
+
 def prompt_version() -> str:
     """Version stamp of the chapter-to-skill prompt fragment (llm pattern)."""
     try:
@@ -54,19 +90,9 @@ def build(workdir: Path, skilldir: Path, name: str, description: str) -> dict:
     chapters.mkdir(parents=True, exist_ok=True)
     notes = "\n\n".join(heads)
     (chapters / "notes.md").write_text(notes, encoding="utf-8")
-    (skilldir / "SKILL.md").write_text(
-        _frontmatter(name, description)
-        + (
-            f"\n# {name}\n\nBuilt from owned sources. "
-            "Start with `chapters/notes.md`, then `glossary.md`, "
-            "`patterns.md`, `cheatsheet.md`. Use when the trigger "
-            "topic matches this skill description.\n"
-        ),
-        encoding="utf-8",
-    )
-    (skilldir / "glossary.md").write_text("# Glossary\n\nFill terms while reading.\n", encoding="utf-8")
-    (skilldir / "patterns.md").write_text("# Patterns\n\nFill reusable patterns while reading.\n", encoding="utf-8")
-    (skilldir / "cheatsheet.md").write_text("# Cheatsheet\n\nFill one-page recall while reading.\n", encoding="utf-8")
+    (skilldir / "SKILL.md").write_text(_frontmatter(name, description) + _scaffold_body(name), encoding="utf-8")
+    for fname, stub in STUB_FILES.items():
+        (skilldir / fname).write_text(stub, encoding="utf-8")
     refs = skilldir / "references"
     refs.mkdir(exist_ok=True)
     chunks = sorted((workdir / "chunks").glob("*.txt"))
