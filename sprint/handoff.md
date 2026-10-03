@@ -1,24 +1,27 @@
-# skillworks handoff - round 19 (token eed3)
+# skillworks handoff - round 20 (token eed3)
 
-Round: 19
-Written: 2026-10-03T09:41Z
+Round: 20
+Written: 2026-10-03T10:15Z
 Token: eed3
-Takeover: replaced stale lead#557c since 2026-10-03T05:55Z (closed app) with lead#eed3 since 2026-10-03T09:37Z.
+Takeover: lead#eed3 since 2026-10-03T09:37Z (replaced stale 557c, closed app).
 
 ## Heading
-- No Scorecard move. 004 NOOP (gate already enforced 38a9f9d); S04 steal filed (5 cards + 6 rejects).
+- No Scorecard move. 005 NOOP (UsageError already in HEAD); S05 steal filed (5 cards + 7 rejects, BSD-3-Clause).
 
 ## Done
-- Batch r19: builder-004 NOOP (export gate verified on all 3 paths, pytest 11 passed, no files changed; notes duplicate export-gate row to retire).
-- Researcher-steal DONE S04 Evos (cards 2026-10-03-S04.md Apache-2.0, VISION S04 dated, pytest 11 passed).
-- Committed 7181f94: research/cards/2026-10-03-S04.md + VISION.md S04 date (pytest 11 passed in body).
+- Batch r20: builder-005 NOOP (bad-target clean UsageError verified, pytest 12 passed, no edit).
+- Researcher-steal DONE S05 aps (cards 2026-10-03-S05.md, VISION S05 dated BSD-3-Clause, pytest 12 passed).
+- Committed 8b42627: research/cards/2026-10-03-S05.md + VISION.md S05 date (pytest 12 passed in body).
 
 ## Checks
-- pytest 11 passed (helper + lead proof). sprint/check.mjs PASS (19 pass, 2 warn). vision-check WARN (17 never-read, 4 seed Parts).
+- pytest 12 passed (11 + new K-07 no-nesting test, unstaged). sprint/check PASS (19 pass, 2 warn).
 
 ## Blockers
-- None. K-07 nested-export deletions (6 codex cheatsheet paths) left unstaged for 014 to finish clean x4.
+- K-07 nesting still open: export.py _own_output_ignore + no-nesting test unstaged (from interrupted 014), plus untracked export-in-export garbage (filename-too-long). Leave for 014 redo to finish clean x4; do NOT commit without judge PASS.
 
 ## Next
-- Batch (width 2): builder 014-k07-redo-clean-export (clean export x4, rm nested scratch) + planner-research-merge (S03+S04 cards -> rows/folds).
-- Then K-10 MCP handshake, K-15..K-21 builds, retire duplicate 004 gate row.
+- Keeper names next batch (014 redo + merge expected). Then K-10 MCP, K-15..K-21.
+
+## Retro (every 5 rounds)
+- Metrics 10-02->10-03: judge PASS 6/8 (75%), FAIL 2 (nesting); worst repeated = export-in-export nesting + researcher live-read fails (4 github_get + 4 deepwiki).
+- PROPOSAL: book2skill/export.py | skip own output dir in copytree + test_export_skips_own_output_dir_no_nesting | nesting FAILs 2/8, pytest 12 passed now
