@@ -50,6 +50,7 @@ def make(src: str, name: str, description: str, qa: Path, work: Path | None = No
     build_mod.validate_name(name, skill)
     if not Path(qa).is_file():
         raise ValueError(f"--qa {qa} not found: write questions a person or agent drew from the failure this skill fixes, one JSON per line {{\"q\", \"must\"}}")
+    eval_mod.validate_qa(Path(qa))
     _check_places(src, work, skill)
 
     result: dict = {"name": name, "source": src, "skill": str(skill), "work": str(work), "stages": {}}

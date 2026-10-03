@@ -154,6 +154,19 @@ def test_make_refuses_early(tmp_path: Path) -> None:
     assert not (tmp_path / "skills" / "pwsh-demo").exists()  # nothing was built before a refusal
 
 
+def test_make_refuses_wrong_shaped_qa(tmp_path: Path) -> None:
+    docs = _manual(tmp_path)
+    args = _make_args(tmp_path, docs)
+    Path(args[args.index("--qa") + 1]).write_text(
+        '{"question": "how do I chain commands?", "answer": "semicolon", "keywords": ["semicolon"]}\n', encoding="utf-8")
+    result = _run(*args)
+    assert result.exit_code == 2, result.output
+    assert '--qa' in result.output and 'must be {"q", "must"}' in result.output
+    assert "got keys: answer, keywords, question" in result.output
+    assert "Traceback" not in result.output
+    assert not (tmp_path / "skills" / "pwsh-demo").exists()  # refused before anything was built
+
+
 def test_scaffold_leftovers_reads_the_real_scaffold(tmp_path: Path) -> None:
     work = tmp_path / "work"
     (work / "chunks").mkdir(parents=True)
