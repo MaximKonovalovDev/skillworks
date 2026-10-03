@@ -87,7 +87,7 @@ researcher reads the row read longest ago and writes its date back.
 
 | ID | Kind | Sources | Part | Question | License (read live) | Last read |
 |---|---|---|---|---|---|---|
-| S01 | competitor | ClawHub skill market | R4/P5 | what sells, what format wins? | terms live | never |
+| S01 | competitor | ClawHub skill market | R4/P5 | what sells, what format wins? | terms live (proprietary registry, 2026-10-03) | 2026-10-03 |
 | S02 | competitor | SkillsGate index (45k skills) | R4 | where is the domain gap? | terms live | never |
 | S03 | competitor | Skrun skill-as-API | R3 | API vs MCP serving? | check live | never |
 | S04 | competitor | Evos domain skills + eval suite | R2/R4 | how is their eval built? | check live | never |

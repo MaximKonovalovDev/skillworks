@@ -1,0 +1,29 @@
+{
+  "date": "2026-10-03",
+  "row": "K-04",
+  "gate": 0.6,
+  "skills": [
+    {
+      "skill": "skills/freud-dream-psychology",
+      "source": "Gutenberg #66048, Freud, Interpretation of Dreams (public domain)",
+      "chars": 1241682,
+      "chunks": 259,
+      "qa": "evals/freud-dreams_qa.jsonl",
+      "total": 12,
+      "passed": 6,
+      "rate": 0.5,
+      "export": "REFUSED by gate (rate<0.6) -> K-06 search-ranking fodder"
+    },
+    {
+      "skill": "skills/progit-branching",
+      "source": "progit/progit2 ch03-git-branching (CC BY-NC-SA 3.0)",
+      "chars": 62576,
+      "chunks": 13,
+      "qa": "evals/progit-branching_qa.jsonl",
+      "total": 12,
+      "passed": 12,
+      "rate": 1.0,
+      "export": "eligible, not exported (K-04 needs no export)"
+    }
+  ]
+}
