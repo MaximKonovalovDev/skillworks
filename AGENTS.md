@@ -12,11 +12,16 @@ Every agent in this repo reads this first. The loop is `/sprint`
    history. Only the lead commits; helpers never commit or push.
 3. A claim counts only with its proof command's one-line result in the commit
    body. An agent's report alone proves nothing.
-4. Shell is pwsh. Use Glob, Grep, Read, Edit and Write for files.
+4. Use Glob, Grep, Read, Edit and Write for files; shell rules: `## Shell and search`.
 5. Never print or commit a secret. Never kill a process, never remove
    `sprint/halt`.
 6. The owner is never asked mid-loop: a decision only he can make is an OWNER
    row on the board, and the loop goes on.
+
+## Shell and search
+- The shell is pwsh, not bash. UTC time: `Get-Date -AsUTC -Format "yyyy-MM-ddTHH:mmZ"`. No grep, head, tail, wc or sed: use the Grep tool, `Select-Object -First N` or `-Last N`, `(Get-Content f | Measure-Object -Line).Lines`.
+- Code longer than one line: Write it to `$env:TEMP\opencode\<name>.mjs` (or `.py`) and run that file; never a multi-line `node -e` or `python -c`.
+- Glob does not walk into dot folders from the repo root: put `.opencode` or `.lanes` in `path`, not in the pattern. Queue files (claims.txt, ready/, done/) are read by their full path.
 
 ## Where things are (look here first, no src/ folder exists)
 

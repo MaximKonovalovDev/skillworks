@@ -41,6 +41,8 @@ permission:
 
 One deep packet per run. Read live (license, default branch, the exact file); never guess a URL; the first 429 stops GitHub for the run. For a donor repo, `deepwiki_ask_wiki_question` (owner/name) names the files that do the thing in one call: ask it first, then read only those files. Public repos only; never put our code, keys or private paths in a question. Ideas only from GPL, AGPL, proprietary and reference-only sources. Every card: Source and license | What it does | Home (no home = reject) | Fixes (the part) | Net lines | Proof (no proof = reject) | Effort and risk. Numbers you write into `VISION.md` carry their source and date.
 
+License of a GitHub repo: read the repo record's license.spdx_id (github MCP repository search or get), never guess a LICENSE file name.
+
 End with one line: `RESULT: DONE|PARTIAL|BLOCKED|NOOP - <cards and rows> | proof: <links>`.
 
 ## Contract
