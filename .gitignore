@@ -8,3 +8,6 @@ __pycache__/
 # loopkit: local secrets stay local.
 .env
 node_modules/
+
+# book2skill export output, regenerate on demand
+skills/*/export/
