@@ -10,14 +10,14 @@ Stop: S 25 min per hunt pass — file cards + write the Last-read date back, no 
 
 ## Zero-token rules (no tokens spent on browsing)
 
-1. No network calls on a hunt pass: read only local ground — `VISION.md`
+1. No network calls on a hunt pass: read only local ground — `VISION-TABLES.md`
    (Scorecard + Parts + Steal map S01-S20), `research/cards/`, `research/INDEX.md`.
 2. Discover-style queries below are pre-built search strings for the next
    networked sweep (researcher or center discover); a zero-token pass only
    picks the next query, never runs it.
 3. Each pass reads the Steal map row read longest ago (oldest-first, tie-break
    by lowest ID), judges its cards against the Research contract, and writes
-   its Last-read date back to `VISION.md`.
+   its Last-read date back to `VISION-TABLES.md`.
 4. Unknown stays UNKNOWN. No invented URLs or licenses. Duplicates merge into
    one experiment (see `research/INDEX.md` merges).
 
@@ -59,7 +59,7 @@ is ideas-only, never pasted (per the Research contract + center discover rules).
 
 ## Oldest-first read order over the Steal map (20/20 complete)
 
-All 20 rows are dated 2026-10-03 in `VISION.md` today, so oldest-first falls
+All 20 rows are dated 2026-10-03 in `VISION-TABLES.md` today, so oldest-first falls
 back to lowest-ID-first. Next networked sweep starts at the head and writes
 each row's Last-read date back after judging.
 
@@ -90,7 +90,7 @@ Read order (oldest-first): S01, S02, S03, S04, S05, S06, S07, S08, S09, S10, S11
 
 ## S01-S05 status (the K-05 first-5, TRIAGE-2 verified 2026-10-03)
 
-- S01-S05 Last read dated 2026-10-03 in `VISION.md` (Steal map).
+- S01-S05 Last read dated 2026-10-03 in `VISION-TABLES.md` (Steal map).
 - Cards filed + judged: `research/cards/2026-10-03-S01.md` (5 cards, C5 dupe
   folded into K-15), `-S02.md` (C4 fingerprint folds into K-20), `-S03.md`,
   `-S04.md`, `-S05.md` (checksum no-op folds into K-20, SKILL.md-presence stays).

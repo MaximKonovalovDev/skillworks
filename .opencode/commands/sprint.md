@@ -12,8 +12,9 @@ row on the board, and the loop goes on. `round` = one round, then hand off.
 
 ## 1. What this loop is for
 
-`VISION.md`: the final picture, the Scorecard (us against the best, in percent
-of our own final bar), Parts vs the best, Open gaps and the Steal map. The proof
+`VISION.md`: the final picture, what it gives and takes, the finish line.
+`VISION-TABLES.md`: the Scorecard (us against the best, in percent of our own
+final bar), Parts vs the best, Open gaps and the Steal map. The proof
 that the vision is met: `python -m pytest tests/ -q`. Every board row names the Scorecard row it
 moves. While `node C:/Users/me/Desktop/center/vision-check.mjs skillworks` FAILs,
 the vision is the first work: the planner and the vision researcher fill it.
@@ -74,7 +75,7 @@ for a build) and Goal, Scope, Proof and Stop lines, or the keeper refuses it.
    DONE with the SHA. For each BLOCKED or second FAIL decide: replan, split, an
    OWNER row, or a fix one-off. Never redo a helper's work yourself.
 2. **Board.** Put the planner's rows on `sprint/board.md`. Each
-   `Proposed (...)` answer under `VISION.md` Open gaps: adopt it into the vision
+   `Proposed (...)` answer under `VISION-TABLES.md` Open gaps: adopt it into the vision
    or strike it with a reason (the vision check FAILs after a day).
 3. **Crew.** Keep the seats true to the board: rewrite a seat that returned
    NOOP three runs in a row or whose area ran dry; copy a good rewrite into

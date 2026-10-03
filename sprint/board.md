@@ -1,7 +1,7 @@
 # skillworks board
 
 The only work list. Status: TOP, READY, DOING, BLOCKED, OWNER, DONE. A DONE row
-names its commit SHA. Each row names the Scorecard row of `VISION.md` it moves.
+names its commit SHA. Each row names the Scorecard row of `VISION-TABLES.md` it moves.
 
 Archived rows (34 DONE: K-02 K-04 K-05 T-01 T-02 T-03 T-04 T-05 K-07 K-08 K-09 K-10 K-11 K-12 K-14 K-15 K-16 K-17 K-18 K-19 K-20 K-23 K-24 K-25 K-26 K-27 K-28 K-29 K-30 K-31 K-32 K-33 K-34 K-35; and closed K-13, K-21, K-22): full text in `archive/2026-10-03/board-done.md` (searches skip `archive/`, Read it by path before you add a row that may repeat).
 

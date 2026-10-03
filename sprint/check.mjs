@@ -100,8 +100,10 @@ if (!knobs?.knobs?.width?.value) say("FAIL", "knobs: .opencode/knobs.json has no
 else if (String(knobs.knobs.dispatch?.value ?? "foreground") !== "foreground") say("WARN", "knobs: dispatch is not foreground (the owner wants every helper seen live)");
 else say("PASS", `knobs: width ${knobs.knobs.width.value}, foreground batches`);
 
-// 7. The vision: center's checkVision on this repo's VISION.md (scorecard, parts, gaps, steal map).
-const vision = read("VISION.md");
+// 7. The vision: center's checkVision on VISION.md plus VISION-TABLES.md (scorecard, parts, gaps, steal map), joined like center's readVision.
+const visionTop = read("VISION.md");
+const visionTables = read("VISION-TABLES.md");
+const vision = visionTop == null ? null : visionTop + (visionTables == null ? "" : `\n\n${visionTables}`);
 if (vision == null) say("FAIL", "VISION.md missing");
 else {
   let checkVision = null;
