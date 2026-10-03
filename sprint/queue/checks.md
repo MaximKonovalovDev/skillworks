@@ -19,3 +19,14 @@
 ## `node C:/Users/me/Desktop/center/vision-check.mjs skillworks` — 2026-10-03T14:06:12Z — exit 0 (run runner-checks-r1)
 - 2026-10-03T14:06:12Z | [WARN] vision: steal map: 3 of 20 sources never read yet
 - 2026-10-03T14:06:12Z | RESULT WARN: 6 pass, 1 warn, 0 fail
+
+## `node sprint/check.mjs` — 2026-10-03T14:13:11Z — exit 0 (run runner-checks-r2)
+- 2026-10-03T14:13:11Z | [WARN] vision: steal map: 3 of 20 sources never read yet
+- 2026-10-03T14:13:11Z | RESULT WARN: 20 pass, 1 warn, 0 fail
+
+## `python -m pytest tests/ -q` — 2026-10-03T14:13:11Z — exit 0 (run runner-checks-r2)
+- (no FAIL, WARN or RESULT lines; raw tail: `19 passed in 3.40s`)
+
+## `node C:/Users/me/Desktop/center/vision-check.mjs skillworks` — 2026-10-03T14:13:11Z — exit 0 (run runner-checks-r2)
+- 2026-10-03T14:13:11Z | [WARN] vision: steal map: 3 of 20 sources never read yet
+- 2026-10-03T14:13:11Z | RESULT WARN: 6 pass, 1 warn, 0 fail
