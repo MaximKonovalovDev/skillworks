@@ -9,10 +9,11 @@
   "compaction": {
     "auto": true,
     "prune": true,
-    "reserved": 600000,
+    "reserved": 750000,
     "tail_turns": 5,
     "preserve_recent_tokens": 8000
   },
+  "tool_output": { "max_lines": 250, "max_bytes": 25000 },
   "provider": {
     "zen-proxy-muse": {
       "name": "Muse Spark 1.3 Contributor Free via local retry proxy",
