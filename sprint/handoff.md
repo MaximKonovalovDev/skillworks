@@ -1,22 +1,22 @@
-# skillworks handoff - round 17 (token 557c)
+# skillworks handoff - round 18 (token 557c)
 
-Round: 17
-Written: 2026-10-03T07:20Z
+Round: 18
+Written: 2026-10-03T07:28Z
 Token: 557c
 
 ## Heading
-- No Scorecard move. r16 batch both NOOP; K-07 redo interrupted, still open.
+- No Scorecard move. 003 NOOP (already DONE); S03 steal filed (5 cards + 6 rejects).
 
 ## Done
-- Batch r15 (round 16): builder-002 NOOP + planner-rows NOOP, committed a5eac33.
-- Next batch interrupted: builder 014-K07-redo got NO result (tool stopped, export/ scratch still in tree + committed in 9c2f7e1); my steal call was malformed (BLOCKED by my own bad prompt, lead error, no helper fault).
+- Batch r17: builder-003 NOOP (README eval line verified runnable, pytest 11 passed); researcher-steal DONE S03 Skrun (cards 2026-10-03-S03.md, VISION S03 dated, pytest 11 passed).
+- Committing now: research/cards/2026-10-03-S03.md + VISION.md S03 date.
 
 ## Checks
-- check.mjs WARN 0 fail; vision-check WARN 0 fail; pytest 11 passed (last full rerun 05:56Z).
+- pytest 11 passed (helper proof). Checks to rerun at commit.
 
 ## Blockers
-- None. 014 K-07 redo still queued in ready/ for the batch after this one.
+- None.
 
 ## Next
-- Keeper batch (width 2): builder 003-pilot-readme-eval (already DONE c7608ac, expect NOOP) + researcher-steal (standing seat, oldest-first, expect S03).
-- Then 014 K-07 redo + merge/results.
+- Batch (width 2): builder 014-k07-redo-clean-export (retry after interrupt; rm nested export/ scratch incl. committed 9c2f7e1 garbage, clean x4) + planner-research-merge (S03 cards -> rows/folds).
+- Then K-07 judge, K-10 MCP, K-15..K-21 builds.
