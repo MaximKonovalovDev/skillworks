@@ -1,23 +1,23 @@
-# skillworks handoff - round 6 (token 557c)
+# skillworks handoff - round 7 (token 557c)
 
-Round: 6
-Written: 2026-10-03T01:33Z
+Round: 7
+Written: 2026-10-03T01:37Z
 Token: 557c
 
 ## Heading
-- R4 domain packs moved: K-04 DONE 4549734 (2 books to 2 skills, freud 0.50 gate-held / progit 1.0). First Scorecard row moves.
+- R2 honest eval gate moved: 004 enforced the 0.6 gate in the CLI (was dead code); 002 fixed README build line. Both awaiting judge.
 
 ## Done
-- Batch r5: judge 007 VERDICT PASS (12 source-derived progit QA, no stubs, evals match, pytest 7 passed); planner-merge DONE (S01 5 cards -> K-15..K-18, C5 dupe, Merge line 01:30Z).
-- Committed: K-04 skills+evals 4549734 (pytest 7 passed in body); merge INDEX+card+board next commit.
-- Note: repair QA files rode in 6e8d2c8 before re-judge; 007 PASS covers them, no revert needed.
+- Batch r6: 004 DONE (failing 0.333 refused, passing ships, pytest 8 passed with new gate test); 002 DONE (one-line README, old shape exit 2 reproduced, new shape exit 0).
+- Live pytest rerun by lead: 8 passed. Scope clean (README + cli/export + gate test; halt deletion pre-existing).
 
 ## Checks
-- `python -m pytest tests/ -q` 7 passed. `node sprint/check.mjs` 19 pass, 2 warn.
+- `python -m pytest tests/ -q` 8 passed. `node sprint/check.mjs` to rerun at commit.
 
 ## Blockers
-- None.
+- None. Judges 008 (gate) + 009 (README) queued, both top next batch.
 
 ## Next
-- Batch (width 2): builder 004-export-gate (R2 honesty, blocks shippable meaning) + builder 002-readme-build (stranger-15min). Chain: each DONE gets its judge review next round.
-- Then 003 + 005, K-07 export (needs 004 gate first), K-15..K-18 steal builds, K-13/S02 steal.
+- Batch (width 2): judge 008 + judge 009.
+- On PASS: commit 004 (cli/export/tests) + 002 (README) by path with pytest line; mark pilot rows done in board Evidence.
+- Then 003 + 005 builders, K-07 export (gate now enforced), K-15..K-18.
