@@ -45,3 +45,12 @@
 
 ## python -m pytest tests/ -q - 2026-10-03T14:52:00Z - exit 0 (run runner-049 K-12)
 - (no FAIL, WARN or RESULT lines; raw tail: 31 passed in 1.61s)
+
+## `node sprint/check.mjs` — 2026-10-03T15:10:23Z — exit 0 (run runner-checks-r4)
+- 2026-10-03T15:10:23Z | RESULT PASS: 20 pass, 0 warn, 0 fail
+
+## `python -m pytest tests/ -q` — 2026-10-03T15:10:23Z — exit 0 (run runner-checks-r4)
+- (no FAIL, WARN or RESULT lines; raw tail: `32 passed in 5.49s`)
+
+## `node C:/Users/me/Desktop/center/vision-check.mjs skillworks` — 2026-10-03T15:10:23Z — exit 0 (run runner-checks-r4)
+- 2026-10-03T15:10:23Z | RESULT PASS: 6 pass, 0 warn, 0 fail
