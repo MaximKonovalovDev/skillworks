@@ -1,22 +1,23 @@
-# skillworks handoff - round 8 (token 557c)
+# skillworks handoff - round 9 (token 557c)
 
-Round: 8
-Written: 2026-10-03T01:41Z
+Round: 9
+Written: 2026-10-03T01:45Z
 Token: 557c
 
 ## Heading
-- R2 honest eval gate moved: export gate enforced in CLI (004 DONE 38a9f9d). Delivery README fixed (002 DONE 7dfab84).
+- Delivery UX moved: 003 README eval line fixed, 005 export typo clean error (pytest 9 passed). Both awaiting judge.
 
 ## Done
-- Batch r7: judge 008 PASS (gate strict: freud 0.50 refused exit 1 no bundle, progit 1.0 ships exit 0, pytest 8 passed); judge 009 PASS (README one line, old exit 2 / new exit 0, pytest 8 passed).
-- Committed by path with pytest lines: 004 cli/export/tests 38a9f9d; 002 README 7dfab84.
+- Batch r8: 003 DONE (old exit 2 reproduced, new exit 0 rate 1.0, pytest 8 passed); 005 DONE (Choice+UsageError, no Traceback, pytest 9 passed with new test).
+- Lead rerun: pytest 9 passed. Scope clean (README line + cli/export + target test).
 
 ## Checks
-- `python -m pytest tests/ -q` 8 passed. `node sprint/check.mjs` to rerun at next commit.
+- `python -m pytest tests/ -q` 9 passed.
 
 ## Blockers
-- None.
+- None. Judges 010 (README) + 011 (target) queued.
 
 ## Next
-- Batch (width 2): builder 003-readme-eval + builder 005-export-target (both pilot one-offs, XS/S).
-- Then K-07 export x4 targets (gate enforced now), K-10 MCP, K-15..K-18 steal builds, K-13/S02 steal.
+- Batch (width 2): judge 010 + judge 011.
+- On PASS: commit 003 (README) + 005 (cli/export/tests) by path with pytest line.
+- Then K-07 export x4 (gate+targets fixed), K-10 MCP, K-15..K-18, S02 steal, runner sweep.
