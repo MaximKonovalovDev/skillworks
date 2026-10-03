@@ -3,3 +3,5 @@
 Cards live in `research/cards/`. The research merge seat writes one `Merge:` line per run here.
 
 ## Merges
+
+Merge: 2026-10-03T01:30Z | cards 5 | accepted 4 | rejected 0 | dupes 1
