@@ -1244,12 +1244,22 @@ const makeKeeper = async ({ client, worktree, directory }, options) => {
   // times for nothing). Each line names its run; the keeper deletes a run's lines when it ends; the
   // 2 h window (over helper_max_min) only ends the lines of a run the keeper never saw end.
   const claimText = (n, role, id) => `\n\nStanding team run #${n}: you are one of this sprint's standing helpers (run \`${id}\`). When you take an item, first append one line \`<item ID> | ${id} | <UTC> | <the files, folder or crate you will own>\` to ${qsub("claims.txt")} (a shell append works where your edits are scoped); skip an item, and any files, folder or crate, another run claimed there in the last 2 h. The keeper deletes your lines when this run ends; a run that takes nothing writes no line. One item per run, done end to end by the /sprint rules.`;
+  // Every release also drops lines older than that 2 h window: one-off packets' helpers name runs the
+  // keeper cannot match, so their lines never ended (2026-10-03: fp-research 207 dead lines, 20 KB the
+  // helpers read 185 times a day; center's size-check FAILs past 20 dead lines).
+  const CLAIM_TTL_MS = 2 * 60 * 60_000;
+  const claimAt = (line) => {
+    const m = String(line.split("|")[2] ?? "").match(/(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2})(?::(\d{2}))?/);
+    const t = m ? Date.parse(`${m[1]}T${m[2]}:${m[3] ?? "00"}Z`) : NaN;
+    return Number.isFinite(t) ? t : null;
+  };
   const releaseClaims = (id) => {
     const file = qsub("claims.txt");
-    const text = id ? read(file) : null;
+    const text = read(file);
     if (!text) return;
     const lines = text.split(/\r?\n/);
-    const keep = lines.filter((l) => l.split("|")[1]?.trim() !== id);
+    const cut = now() - CLAIM_TTL_MS;
+    const keep = lines.filter((l) => !(id && l.split("|")[1]?.trim() === id) && !((claimAt(l) ?? cut) < cut));
     if (keep.length !== lines.length) try { writeFileSync(file, keep.join("\n")); } catch { /* the 2 h window ends them anyway */ }
   };
   // A finished helper's record (done/ or failed/), its seat's rest, and any chain packet it names.
@@ -1271,6 +1281,7 @@ const makeKeeper = async ({ client, worktree, directory }, options) => {
       const from = join(qsub("running"), `${job.id}.md`);
       queueMove(from, failed ? "failed" : "done", note);
       rmSync(`${from}.json`, { force: true });
+      releaseClaims(job.id); // a line naming the packet goes with it; older strays go by the 2 h window
     }
     return result;
   };
