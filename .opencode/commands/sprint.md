@@ -26,8 +26,8 @@ and its gaps), the research merge (judges every card), the vision researcher
 (Scorecard, Parts, gaps), the steal researcher (the Steal map, oldest first),
 the pilot (uses the product the way its user would, with captures) and the
 runner (the fast check sweep). Each run claims its rows in
-`sprint/queue/claims.txt` and takes a whole slice (up to 5 rows), never a mini
-task.
+`sprint/queue/claims.txt` (append; create it if missing) and takes a whole
+slice (up to 5 rows), never a mini task.
 
 **The batch.** Every keeper continue and GO names the next batch; it is also in
 `sprint/queue/batch.md`: ready one-offs and chain steps first, then the seats
@@ -87,8 +87,9 @@ for a build) and Goal, Scope, Proof and Stop lines, or the keeper refuses it.
    next. Refresh the lock. `git pull --no-rebase --no-edit origin main`,
    then `git push origin HEAD:main`. Start the next round in the same turn.
 
-**Every 5 rounds, the retro:** `node C:/Users/me/Desktop/center/empire.mjs
-metrics skillworks`; name the worst repeated failure with its number and write one
+**Every 5 rounds, the retro:** read `sprint/queue/checks.md` and the keeper log
+(`empire.mjs metrics` is slow and gets killed by the shell limit; skip it); name
+the worst repeated failure with its number and write one
 `PROPOSAL: <file> | <change> | <number now>` handoff line. Center applies at
 most one setup change per repo a day; never change this file, the agents or the
 keeper yourself.

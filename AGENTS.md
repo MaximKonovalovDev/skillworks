@@ -18,6 +18,18 @@ Every agent in this repo reads this first. The loop is `/sprint`
 6. The owner is never asked mid-loop: a decision only he can make is an OWNER
    row on the board, and the loop goes on.
 
+## Where things are (look here first, no src/ folder exists)
+
+`book2skill/` the package (extract, split, index, build, audit, eval, refresh,
+export, cli), `tests/`, `mcp_server/server.py`, `tools/part_score.py`,
+`prompts/`, `evals/<skill>_qa.jsonl`, `skills/<name>/`, `team/<part>.md`,
+`work/` (books, gitignored). Export output `skills/*/export/` is ignored:
+regenerate, never commit. `sprint/lock.txt` exists only while a lead holds it;
+`sprint/queue/claims.txt` is created by the first claim (append, create if
+missing). The kernel's `tools/part-score.mjs` is
+`python tools/part_score.py` here; its `team/compact-log.md` does not exist yet
+(create it on the first compaction).
+
 ## Pipeline lanes (operator)
 
 ```powershell
