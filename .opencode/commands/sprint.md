@@ -18,6 +18,10 @@ final bar), Parts vs the best, Open gaps and the Steal map. The proof
 that the vision is met: `python -m pytest tests/ -q`. Every board row names the Scorecard row it
 moves. While `node C:/Users/me/Desktop/center/vision-check.mjs skillworks` FAILs,
 the vision is the first work: the planner and the vision researcher fill it.
+Direction (Maxim 2026-10-03): skillworks is the trainer of the fleet. Its first
+work is skills other repos load (finish bars S1 and S2, the TOP rows of the
+board), built from licensed manuals with `python -m book2skill make` to fix the
+loops' measured daily mistakes; the sellable pack (K-44) is the product line.
 
 ## 2. Your crew, in batches you send
 
@@ -77,8 +81,9 @@ for a build) and Goal, Scope, Proof and Stop lines, or the keeper refuses it.
 2. **Board.** Put the planner's rows on `sprint/board.md`. Each
    `Proposed (...)` answer under `VISION-TABLES.md` Open gaps: adopt it into the vision
    or strike it with a reason (the vision check FAILs after a day).
-3. **Crew.** Keep the seats true to the board: rewrite a seat that returned
-   NOOP three runs in a row or whose area ran dry; copy a good rewrite into
+3. **Crew.** Keep the seats true to the board. A seat that returns
+   `NOOP - no input changed` is working: leave it, never invent work for it.
+   Rewrite a seat only when its own text is wrong; copy a good rewrite into
    `center/crews/skillworks/`.
 4. **Checks.** A failing check the keeper names is this round's first one-off;
    name in the handoff which packet clears which.
@@ -101,10 +106,10 @@ keeper yourself.
 | Duty | Cadence | Who | Done when |
 |---|---|---|---|
 | Check | every round | lead | `node sprint/check.mjs` PASS, or its FAIL is the first packet |
-| Vision research | every round | vision researcher | a Parts row or gap swept, its Scorecard row sourced |
-| Steal | every round | scout | up to 2 steals for the first open finish bar in `sprint/steals.md`; a builder lands them |
-| Research merge | every round with new cards | planner | cards judged, the best on the board |
-| Owner's view | every 5 rounds | pilot | captures read, findings are rows |
+| Vision research | when a part's files changed since its `Swept` date, or 14 days | vision researcher | a Parts row or gap swept, its Scorecard row sourced |
+| Steal | when an open finish bar has fewer than 3 open steals | scout | up to 2 steals for the first open finish bar in `sprint/steals.md`; a builder lands them |
+| Research merge | when new cards exist | planner | cards judged, the best on the board |
+| Owner's view | when `book2skill/`, `mcp_server/`, `skills/` or `tools/` changed since the last view | pilot | captures read, findings are rows |
 | Retro | every 5 rounds | lead | one change with its revert trigger |
 
 ## 5. Rules code does not enforce
