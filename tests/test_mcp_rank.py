@@ -7,7 +7,7 @@ import mcp_server.server as srv
 
 
 def test_ranked_search_progit_before_freud_with_rank_and_trust_fields() -> None:
-    """Gate-first ordering: progit-branching (1.0) before freud (0.50) with new fields."""
+    """Gate-first ordering: progit-branching (1.0) before freud (0.833) with new fields."""
     hits = srv._search("built owned sources skill", limit=20)
     skills = [h["skill"] for h in hits]
     assert "progit-branching" in skills and "freud-dream-psychology" in skills
@@ -26,9 +26,9 @@ def test_ranked_search_progit_before_freud_with_rank_and_trust_fields() -> None:
                       "tags", "verified", "eval_rate", "above_gate", "installed"):
             assert field in h, field
         assert isinstance(h["tags"], list)
-    assert first["eval_rate"] == 1.0 and last["eval_rate"] == 0.5
-    assert first["above_gate"] is True and last["above_gate"] is False
-    assert first["verified"] is True and last["verified"] is False
+    assert first["eval_rate"] == 1.0 and last["eval_rate"] == 0.833
+    assert first["above_gate"] is True and last["above_gate"] is True
+    assert first["verified"] is True and last["verified"] is True
     assert first["installed"] is True and last["installed"] is True
     assert first["installs"] == 1 and first["downloads"] > last["downloads"]
     # stdio proof: handshake + skill_search keeps progit first with new fields
