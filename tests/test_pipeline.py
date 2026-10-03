@@ -223,3 +223,23 @@ def test_export_unknown_target_clean_error(tmp_path: Path) -> None:
         assert "unknown target bogus" in str(exc)
     else:
         raise AssertionError("export should reject target bogus with UsageError")
+
+
+def test_audit_skips_export_dupes(tmp_path: Path) -> None:
+    """K-26 [AUDIT-SKIP-EXPORT-1001]: audit counts canonical files only, export/ excluded."""
+    from book2skill import audit as audit_mod
+
+    skill = tmp_path / "skill"
+    (skill / "references").mkdir(parents=True)
+    (skill / "SKILL.md").write_text("---\nname: demo\ndescription: demo\n---\nbody text here\n", encoding="utf-8")
+    (skill / "references" / "sources.md").write_text("# Sources\ncanonical\n", encoding="utf-8")
+    base = audit_mod.audit(skill)
+    assert base["total_tokens"] > 0
+    assert len(base["sections"]) == 2
+    # export-like dupes (mirrors skills/<name>/export/<target>/<name>/*.md)
+    dupe = skill / "export" / "claude" / skill.name
+    dupe.mkdir(parents=True)
+    (dupe / "SKILL.md").write_text("---\nname: demo\ndescription: demo\n---\nbody text here\n", encoding="utf-8")
+    (dupe / "extra.md").write_text("# duped export copy\n" * 50, encoding="utf-8")
+    after = audit_mod.audit(skill)
+    assert after == base

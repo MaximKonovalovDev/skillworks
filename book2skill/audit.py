@@ -9,6 +9,11 @@ def audit(skilldir: Path) -> dict:
     rows = []
     total = 0
     for path in sorted(skilldir.rglob("*.md")):
+        # K-26: skip export/ output (mirrors export.py:_own_output_ignore).
+        # Audit counts canonical skill files only; export/<target> dupes
+        # must not inflate token/file counts.
+        if "export" in path.relative_to(skilldir).parts:
+            continue
         chars = len(path.read_text(encoding="utf-8"))
         tokens = chars // 4 + 10
         total += tokens
