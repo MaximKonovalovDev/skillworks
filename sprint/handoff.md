@@ -1,23 +1,22 @@
-# skillworks handoff - round 10 (token 557c)
+# skillworks handoff - round 11 (token 557c)
 
-Round: 10
-Written: 2026-10-03T01:44Z
+Round: 11
+Written: 2026-10-03T01:48Z
 Token: 557c
 
 ## Heading
-- Delivery UX done: 003 DONE c7608ac + 005 DONE 2a6fc1b (pytest 9 passed). All 4 pilot defects cleared.
+- No Scorecard row moved. Pilot verified 002-005 + K-04 MCP as a stranger; found one live gap (012). S02 steal filed.
 
 ## Done
-- Batch r9: judge 010 PASS + judge 011 PASS, both committed by path with pytest lines.
-- Scoreboard: K-04 DONE (R4), 004 gate (R2), 002/003 README + 005 target (delivery). Steal S01 -> K-15..K-18 queued.
+- Batch r10: pilot-view DONE (002/003/004/005 verified fixed, MCP progit 43 + freud 658, filed 012); researcher-steal DONE (S02 5 cards, 2 fold into K-16/K-17, 6 rejects, S02 dated).
+- 012: eval never persists eval_report.json, so README-order export always refuses even after passing eval (only --work/--qa inline passes). Blocks K-07.
 
-## Retro (round 10)
-- Judge PASS 5/6 (83%), 22 commits, fail rate 1.6% (8 errors). Worst repeat: read-missing files earlier (claims.txt x3) — pre-created since; none this window.
-- PROPOSAL: tests/test_pipeline.py | keep gate+target tests as the honesty floor, next honesty test on refresh no-op receipt | pytest 9 now -> 10+ with refresh receipt; revert if a new test flakes twice.
+## Checks
+- `python -m pytest tests/ -q` 9 passed (pilot + steal proofs).
 
 ## Blockers
 - None.
 
 ## Next
-- Batch (width 2): pilot-view (owner's view, every-5-rounds due; verify 002-005 fixes as a stranger) + researcher-steal S02 (SkillsGate index, oldest unread).
-- Then K-07 export x4 (gate+targets fixed), K-10 MCP, K-15..K-18, runner sweep.
+- Batch (width 2): builder 012-report-persist (unblocks README-order export + K-07) + planner-research-merge (S02 cards).
+- Then K-07 export x4, K-10 MCP, K-15..K-18, runner sweep.
