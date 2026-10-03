@@ -63,18 +63,71 @@ def _read_pdf(path: Path) -> tuple[str, int]:
     return "\n".join(pages), len(pages)
 
 
-def _read_epub(path: Path) -> str:
+def _read_epub(path: Path) -> tuple[str, list[dict]]:
+    """Body-subtree text + pagebreak-label map (ideas-only, AGPL never pasted).
+
+    Body-only: parse each document item and read only the <body> subtree,
+    dropping <head> chrome plus in-body <nav>/script/style and nav-typed
+    elements. Page map: scan the body for pagebreak markers
+    (epub:type/type == "pagebreak" or role == "doc-pagebreak"); label
+    falls back text -> aria-label -> title -> doc heading (first
+    non-empty h1..h6) -> id.
+    """
     import ebooklib
     from bs4 import BeautifulSoup
     from ebooklib import epub
 
+    _NAV_TYPES = {"nav", "toc", "landmarks", "page-list"}
+
     book = epub.read_epub(str(path))
     parts: list[str] = []
+    pages: list[dict] = []
     for item in book.get_items():
         if item.get_type() == ebooklib.ITEM_DOCUMENT:
             soup = BeautifulSoup(item.get_content(), "html.parser")
-            parts.append(soup.get_text("\n"))
-    return "\n".join(parts)
+            root = soup.body if soup.body is not None else soup
+            title = ""
+            for tag in ("h1", "h2", "h3", "h4", "h5", "h6"):
+                head = root.find(tag)
+                if head is not None and head.get_text(strip=True):
+                    title = head.get_text(strip=True)
+                    break
+            for el in root.find_all(True):
+                ptype = el.get("epub:type") or el.get("type") or ""
+                if isinstance(ptype, list):
+                    ptype = " ".join(ptype)
+                role = el.get("role") or ""
+                if isinstance(role, list):
+                    role = " ".join(role)
+                if str(ptype).strip().lower() == "pagebreak" or str(role).strip().lower() == "doc-pagebreak":
+                    pid = el.get("id") or ""
+                    if isinstance(pid, list):
+                        pid = " ".join(pid)
+                    pid = str(pid)
+                    aria = el.get("aria-label") or ""
+                    if isinstance(aria, list):
+                        aria = " ".join(aria)
+                    etitle = el.get("title") or ""
+                    if isinstance(etitle, list):
+                        etitle = " ".join(etitle)
+                    label = (
+                        el.get_text(strip=True)
+                        or str(aria).strip()
+                        or str(etitle).strip()
+                        or title
+                        or pid
+                    )
+                    pages.append({"id": pid, "label": label})
+            for bad in root.find_all(["script", "style", "nav"]):
+                bad.decompose()
+            for bad in root.find_all(attrs={"epub:type": True}):
+                val = bad.get("epub:type") or ""
+                if isinstance(val, list):
+                    val = " ".join(val)
+                if str(val).strip().lower() in _NAV_TYPES:
+                    bad.decompose()
+            parts.append(root.get_text("\n"))
+    return "\n".join(parts), pages
 
 
 def _read_docx(path: Path) -> str:
@@ -111,12 +164,13 @@ def extract(src: str, workdir: Path, strip_gutenberg: bool = True) -> dict:
     else:
         path = Path(src)
         suffix = path.suffix.lower()
-        pages: int | None = None
+        pages: int | list | None = None
         if suffix == ".pdf":
             text, pages = _read_pdf(path)
             kind = "pdf"
         elif suffix == ".epub":
-            text, kind = _read_epub(path), "epub"
+            text, epub_pages = _read_epub(path)
+            pages, kind = epub_pages, "epub"
         elif suffix == ".docx":
             text, kind = _read_docx(path), "docx"
         else:

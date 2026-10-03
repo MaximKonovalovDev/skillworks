@@ -225,6 +225,80 @@ def test_export_unknown_target_clean_error(tmp_path: Path) -> None:
         raise AssertionError("export should reject target bogus with UsageError")
 
 
+def test_epub_nav_heavy_body_only(tmp_path: Path) -> None:
+    """K-34 [S16-C1]: nav-heavy EPUB full_text is head/nav-free (body subtree)."""
+    from ebooklib import epub
+
+    src = tmp_path / "navheavy.epub"
+    book = epub.EpubBook()
+    book.set_identifier("navheavy-1")
+    book.set_title("Nav Heavy Fixture")
+    book.set_language("en")
+    doc = epub.EpubHtml(title="Ch1", file_name="ch1.xhtml", lang="en")
+    doc.content = (
+        "<html xmlns:epub='http://www.idpf.org/2007/ops'><head>"
+        "<title>SECRETHEAD-CHROME</title><style>.x{color:red}</style>"
+        "</head><body>"
+        "<nav epub:type='toc'><ol><li><a href='ch1.xhtml'>NAVCHROME-SECRET</a></li></ol></nav>"
+        "<script>var NAVCHROME_SECRET_JS = 1;</script>"
+        "<h1>Body Heading BODYSECRET-HEAD</h1>"
+        "<p>Body paragraph BODYSECRET-TEXT.</p>"
+        "</body></html>"
+    )
+    book.add_item(doc)
+    book.add_item(epub.EpubNcx())
+    book.add_item(epub.EpubNav())
+    book.spine = ["nav", doc]
+    epub.write_epub(str(src), book)
+    work = tmp_path / "work"
+    receipt = extract_mod.extract(str(src), work)
+    text = (work / "full_text.txt").read_text(encoding="utf-8")
+    assert receipt["kind"] == "epub"
+    assert "BODYSECRET-HEAD" in text and "BODYSECRET-TEXT" in text
+    assert "SECRETHEAD-CHROME" not in text
+    assert "NAVCHROME-SECRET" not in text and "NAVCHROME_SECRET_JS" not in text
+    # no pagebreaks here -> empty pages list (K-35 empty-when-none half)
+    assert receipt["pages"] == []
+
+
+def test_epub_pagebreak_label_map(tmp_path: Path) -> None:
+    """K-35 [S16-C2+C3]: pagebreak id/label fallback + pages list in receipt."""
+    from ebooklib import epub
+
+    src = tmp_path / "pagebreak.epub"
+    book = epub.EpubBook()
+    book.set_identifier("pagebreak-1")
+    book.set_title("Pagebreak Fixture")
+    book.set_language("en")
+    doc = epub.EpubHtml(title="Chapter One", file_name="ch1.xhtml", lang="en")
+    doc.content = (
+        "<html xmlns:epub='http://www.idpf.org/2007/ops'><head>"
+        "<title>Pagebreak Fixture</title></head><body>"
+        "<h1>Chapter One</h1><p>First body text.</p>"
+        "<span epub:type='pagebreak' id='p1'>7</span>"
+        "<p>Second body text.</p>"
+        "<span epub:type='pagebreak' id='p2' aria-label='Eight'></span>"
+        "<p>Third body text.</p>"
+        "<span epub:type='pagebreak' id='p3'></span>"
+        "</body></html>"
+    )
+    book.add_item(doc)
+    book.add_item(epub.EpubNcx())
+    book.add_item(epub.EpubNav())
+    book.spine = ["nav", doc]
+    epub.write_epub(str(src), book)
+    work = tmp_path / "work"
+    receipt = extract_mod.extract(str(src), work)
+    assert receipt["kind"] == "epub"
+    assert receipt["pages"] == [
+        {"id": "p1", "label": "7"},
+        {"id": "p2", "label": "Eight"},
+        {"id": "p3", "label": "Chapter One"},  # C3 heading fallback
+    ]
+    text = (work / "full_text.txt").read_text(encoding="utf-8")
+    assert "Chapter One" in text and "First body text." in text
+
+
 def test_audit_skips_export_dupes(tmp_path: Path) -> None:
     """K-26 [AUDIT-SKIP-EXPORT-1001]: audit counts canonical files only, export/ excluded."""
     from book2skill import audit as audit_mod
