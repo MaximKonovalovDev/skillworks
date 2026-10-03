@@ -98,7 +98,7 @@ researcher reads the row read longest ago and writes its date back.
 | S09 | competitor | NousResearch/hermes-agent | R3 | agent loop calling skills? | MIT (live 2026-10-03) | 2026-10-03 |
 | S10 | competitor | book-to-skill pipeline | P1 | chunk + index design? | MIT (live 2026-10-03) | 2026-10-03 |
 | S11 | adjacent | anything-to-skill (asale-ai/anything-to-skill) | P1 | refresh lock + audit? | Apache-2.0 (live 2026-10-03) | 2026-10-03 |
-| S12 | adjacent | Skill_Seekers export layouts | R5 | per-target copy layout? | check live | never |
+| S12 | adjacent | Skill_Seekers export layouts | R5 | per-target copy layout? | MIT (ideas-only, live 2026-10-03) | 2026-10-03 |
 | S13 | adjacent | godot-agent triple delivery | R3/P5 | skill+CLI+MCP bundle? | MIT | never |
 | S14 | adjacent | agentskills.io skill spec | R1 | SKILL.md frontmatter rules? | spec (no code) | never |
 | S15 | adjacent | MCP Python SDK (stdio) | P2 | handshake + tool schema? | Apache-2.0 | never |
