@@ -2376,6 +2376,19 @@ const SELF = (() => { try { return fileURLToPath(import.meta.url); } catch { ret
 const SELF_AT = Math.floor(mtime(SELF) ?? 0);
 export const LoopKeeper = async (input, options) => {
   const opt = options ?? {};
+  // Serve guard: `opencode serve` (:4096) already drives this sprint, so the desktop app's
+  // sidecar server must not drive it a second time. Off unless serve mode is on AND this is
+  // the desktop app's server. Before any state, timers, file writes or hooks.
+  const serveFile = process.env.KEEPER_SERVE_MODE_FILE ?? join(homedir(), ".empire", "state", "serve-mode.json");
+  const execPath = (process.env.KEEPER_EXEC_PATH ?? process.execPath ?? "").toLowerCase().replace(/\\/g, "/");
+  const isDesktop = execPath.includes("@opencode-aidesktop") ||
+    (execPath.includes("/programs/") && execPath.includes("opencode.exe") && !!process.versions?.electron);
+  let serveOn = false;
+  try { serveOn = JSON.parse(readFileSync(serveFile, "utf8"))?.on === true; } catch { serveOn = false; }
+  if (serveOn && isDesktop) {
+    (opt.log ?? console.error)("keeper off: serve mode is on and this is the desktop app's server");
+    return {};
+  }
   const repo = opt.cfg?.repo ?? CFG.repo;
   const every = opt.setInterval ?? setInterval;
   const self = opt.selfFile ?? SELF;
