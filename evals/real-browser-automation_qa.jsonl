@@ -1,0 +1,17 @@
+{"q": "How do I start headless Edge from Node without npm, and which flags do I need?", "must": ["--headless=new", "--remote-debugging-port=0", "--user-data-dir"]}
+{"q": "Where is the debugging port when the remote debugging port is 0?", "must": ["DevToolsActivePort", "line 1 is the port"]}
+{"q": "Why must I close the browser with Browser.close and not kill the process?", "must": ["Browser.close", "Stop-Process", "taskkill"]}
+{"q": "How does the guard stop a page request to a foreign host?", "must": ["Fetch.enable", "BlockedByClient", "browser.blocked"]}
+{"q": "How do I type real keys so the page sees trusted keydown events?", "must": ["Input.dispatchKeyEvent", "isTrusted"]}
+{"q": "How do I click with a real mouse event?", "must": ["Input.dispatchMouseEvent", "mousePressed", "mouseReleased"]}
+{"q": "What is navigator.webdriver under the remote debugging port, and which blink feature flag makes it false?", "must": ["navigator.webdriver", "--disable-blink-features=AutomationControlled"]}
+{"q": "What screen size does headless Chrome report even with a 1280x800 window, and does the user agent say HeadlessChrome?", "must": ["HeadlessChrome", "800x600"]}
+{"q": "How do I wait for the page to load after Page.navigate?", "must": ["Page.loadEventFired", "timeout"]}
+{"q": "Which hosts does the loopback guard allow, and which URLs throw LocalOnlyError?", "must": ["LocalOnlyError", "*.localhost", "data:"]}
+{"q": "Why does Edge on Windows exit right after launch, and how do I find the real browser pid?", "must": ["SystemInfo.getProcessInfo", "exits"]}
+{"q": "Browser.close takes longer than 10 seconds, what do I do?", "must": ["closeTimeout", "--disable-gpu"]}
+{"q": "When do I move to Playwright, and how do I use the installed Edge with channel msedge?", "must": ["channel: 'msedge'", "devDependency"]}
+{"q": "Which CDP method returns the screenshot, and in what encoding?", "must": ["Page.captureScreenshot", "base64"]}
+{"q": "Why does Playwright fill differ from pressSequentially for key events?", "must": ["pressSequentially", "keydown"]}
+{"q": "Does --check-url start a browser, and does it print REFUSE for a foreign host", "must": ["--check-url", "REFUSE"]}
+{"q": "Does Fetch see a WebSocket to a foreign host, and what stops WebSockets?", "must": ["WebSockets, which Fetch cannot see"]}

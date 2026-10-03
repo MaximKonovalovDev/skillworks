@@ -1,0 +1,14 @@
+{"q": "How do I pull in a shared repo that other sessions edit?", "must": ["git pull --no-rebase --no-edit origin master"]}
+{"q": "How do I commit only my own files and nothing staged by someone else?", "must": ["git commit -m", "after `--`"]}
+{"q": "Why is git add -A or git commit -a forbidden here?", "must": ["git add -A", "other sessions"]}
+{"q": "What does the error Your local changes would be overwritten by merge mean and what blocks a pull?", "must": ["would be overwritten by merge", "STAGED"]}
+{"q": "What do I do when the file that blocks the pull is not mine?", "must": ["do not stash", "BLOCKED"]}
+{"q": "Why does git commit say pathspec did not match any file known to git?", "must": ["pathspec", "new, ignored or misspelled"]}
+{"q": "What does nothing to commit mean after committing by path?", "must": ["no changes added to commit", "Not an error"]}
+{"q": "A push is rejected as fetch first or non-fast-forward, what is the fix?", "must": ["non-fast-forward", "fetch first", "Never force"]}
+{"q": "What do I do about a stale index.lock error?", "must": ["index.lock", "Start-Sleep 20"]}
+{"q": "How do I commit a renamed file?", "must": ["two paths", "old.md new.md"]}
+{"q": "How do I abort a merge with a conflict?", "must": ["git merge --abort"]}
+{"q": "Why does git reflog HEAD@{1} fail in PowerShell?", "must": ["Quote it", "HEAD@{1}"]}
+{"q": "Is git stash safe to clear a dirty tree in this repo?", "must": ["git stash", "remove the other session's edit"]}
+{"q": "Which license does the skill carry and may it be sold?", "must": ["CC BY-NC-SA 3.0", "never sold"]}

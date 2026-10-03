@@ -1,0 +1,14 @@
+{
+  "skill": "real-browser-automation",
+  "fingerprint": "f91c8af3448659434ee0d353dc62dcc12d030bc17b411b6726af828cf1b554d9",
+  "date": "2026-10-03T18:56Z",
+  "command": "SKILL_LIVE=1 python -m pytest tests/test_real_browser_automation.py -q",
+  "result": "11 passed in 10.71s",
+  "versions": {
+    "python": "3.13.14",
+    "os": "Windows-10-10.0.19045-SP0",
+    "git": "git version 2.53.0.windows.1",
+    "node": "v24.14.0",
+    "pwsh": "7.6.3"
+  }
+}

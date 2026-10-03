@@ -1,0 +1,16 @@
+{"q": "How do I show the first 20 lines of a file in the pwsh shell?", "must": ["Get-Content", "-TotalCount"]}
+{"q": "What replaces grep -n for searching a file in PowerShell?", "must": ["Select-String", "-Pattern"]}
+{"q": "How do I count the lines of a file without wc?", "must": ["Get-Content", ".Count"]}
+{"q": "How do I get the current UTC time as a string, instead of date -u?", "must": ["Get-Date -AsUTC", "yyyy-MM-ddTHH:mmZ"]}
+{"q": "How do I set an environment variable for one command, like FOO=1 cmd?", "must": ["$env:FOO"]}
+{"q": "How do I throw away output, instead of 2>/dev/null?", "must": ["2>$null", "*> $null"]}
+{"q": "Why does the string name colon done with a dollar variable fail to parse and what is the fix?", "must": ["${name}", "Variable reference"]}
+{"q": "Why must node -e code go in single quotes in PowerShell?", "must": ["single quotes", "node -e"]}
+{"q": "How do I start a server so the tool call does not hang?", "must": ["cmd.exe", "-WindowStyle Hidden", "Get-Content logs/server.log -Tail 20"]}
+{"q": "Why does Start-Process with RedirectStandardOutput still hang the call?", "must": ["RedirectStandardOutput", "pipe"]}
+{"q": "How do I read the exit code of a program?", "must": ["$LASTEXITCODE"]}
+{"q": "What does the error Missing opening paren after keyword for mean?", "must": ["Missing opening", "foreach"]}
+{"q": "How do I read a file that has brackets in its name?", "must": ["-LiteralPath"]}
+{"q": "Does diff a b compare file contents in PowerShell?", "must": ["Compare-Object", "NAMES"]}
+{"q": "How do I run a program whose path has a space in it?", "must": ["call operator"]}
+{"q": "How do I write a here-string and where must the opener and closer be?", "must": ["@'", "'@", "start its line"]}

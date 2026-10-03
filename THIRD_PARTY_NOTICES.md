@@ -31,3 +31,8 @@ before vendoring anything.
   (Apache-2.0), majidmanzarpour/threejs-game-skills (MIT), aigengame/godot-agent
   (MIT) — skill-pack and router patterns; CLI+bundled-skill+MCP triple
   delivery shape from godot-agent.
+* MicrosoftDocs/PowerShell-Docs (CC-BY-4.0 documentation text, MIT code samples, read live 2026-10-03, commit a3de8f2) - the checked source for skills/pwsh-for-bash-writers: quoting, redirection, exit-code and pipeline-chain rules, rewritten in our own words and tested. Changes: rewritten, shortened, every example run.
+* progit/progit2, Pro Git by Scott Chacon and Ben Straub (CC BY-NC-SA 3.0, read live 2026-10-03) - the source for skills/git-one-branch next to skills/progit-branching. The skill text is a derived work under the same licence: attribution, NonCommercial, ShareAlike. It is shared free and never sold.
+* microsoft/playwright docs (Apache-2.0, read live 2026-10-03, tag v1.63.0 commit 1b025d7) - ideas only (auto-waiting, locators first, context isolation, request routing, channel msedge) for skills/real-browser-automation; no text or code copied.
+* ChromeDevTools/devtools-protocol (BSD-3-Clause, read live 2026-10-03, commit d209a9a) - every CDP method, event and parameter name in skills/real-browser-automation checked against json/browser_protocol.json and json/js_protocol.json; no text copied.
+* bevyengine/bevy (MIT OR Apache-2.0) and bevyengine/bevy-website (MIT) - Bevy 0.19.1 API names, file and line evidence, and 0.18-to-0.19 migration facts for skills/bevy-rust-ecs; own words and own code, no code copied; pinned tag v0.19.1, commit b56fc29d3016e641754765244b5ba3f9cc504671.

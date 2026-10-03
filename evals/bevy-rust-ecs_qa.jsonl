@@ -1,0 +1,17 @@
+{"q": "load glb scene asset label root entity ?", "must": ["WorldAssetRoot", "GltfAssetLabel"]}
+{"q": "SceneRoot renamed WorldAssetRoot new name scene root ?", "must": ["WorldAssetRoot", "SceneRoot"]}
+{"q": "AnimationPlayer entity under glb scene root descendants WorldInstanceReady ?", "must": ["WorldInstanceReady", "iter_descendants"]}
+{"q": "skeletal animation clip glb AnimationGraph AnimationGraphHandle player ?", "must": ["AnimationGraph", "AnimationGraphHandle"]}
+{"q": "switch idle run animation clips transitions play ?", "must": ["AnimationTransitions", "transitions.play"]}
+{"q": "keep deterministic sim outside Bevy snapshot resource prev curr ?", "must": ["Snapshots", "prev and curr"]}
+{"q": "offenders renames workspace true exit sim crate bevy dependency check script ?", "must": ["check-sim-outside-bevy.mjs", "exit 1"]}
+{"q": "dynamic linking feature fast dev builds Windows exported symbols ?", "must": ["dynamic_linking", "too many exported symbols"]}
+{"q": "screenshot PNG file exit app primary window save ?", "must": ["Screenshot::primary_window", "save_to_disk"]}
+{"q": "time limit exit code AppExit elapsed ?", "must": ["AppExit", "elapsed_secs"]}
+{"q": "plugin version pin bevy_hanabi release tag compatibility ?", "must": ["plugin-bevy-version.mjs", "release tag"]}
+{"q": "EventReader EventWriter replaced MessageReader MessageWriter ?", "must": ["MessageReader", "MessageWriter"]}
+{"q": "Camera3dBundle gone required components Camera3d spawn ?", "must": ["Camera3d", "required components"]}
+{"q": "interpolate fighter transform sim ticks overstep fixed timestep ?", "must": ["overstep_fraction", "FixedUpdate"]}
+{"q": "pinned tag commit Bevy version ?", "must": ["v0.19.1", "b56fc29d3016e641754765244b5ba3f9cc504671"]}
+{"q": "first Bevy build small PC heavy-build queue ?", "must": ["heavy-build queue", "small PC"]}
+{"q": "rapier3d bevy_rapier physics stays inside ?", "must": ["rapier3d", "bevy_rapier"]}
