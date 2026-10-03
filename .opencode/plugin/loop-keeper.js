@@ -167,6 +167,9 @@ const QUEUE_STUCK_MS = 60 * 60_000; // a queued helper past this is stopped and 
 // Center runs every repo's checks (drift, docs, editors) every few minutes and keeps the results here.
 const CHECKS_FILE = "C:/Users/me/Desktop/center/empire-check.json";
 const CHECKS_FRESH_MS = 2 * 60 * 60_000; // older results say nothing about now
+// Center keeps each repo's lowest open finish bar here (finish-cache.mjs, started by the watchdog pass).
+const FINISH_FILE = join(process.env.EMPIRE_STATE || join(homedir(), ".empire", "state"), "finish.json");
+const FINISH_FRESH_MS = 2 * 60 * 60_000; // an older file says nothing about now: the fact is left out
 const POPPER_GO = "GO (from the popper)";
 // Owner words. "GO NON STOP", "don't stop" and "no stops" mean go, not stop.
 const KEEP_GOING = /\b(?:non[\s-]?stop|no[\s-]+stops?|don'?t\s+stop|do\s+not\s+stop|never\s+stop|without\s+stopping|no\s+pauses?)\b/gi;
@@ -513,6 +516,7 @@ const makeKeeper = async ({ client, worktree, directory }, options) => {
   const startProxy = opt.startProxy ?? startProxyBat;
   const proxyMark = opt.proxyMark ?? join(tmpdir(), "loop-keeper-proxy-start.txt");
   const checksFile = opt.checks ?? CHECKS_FILE;
+  const finishFile = opt.finish ?? FINISH_FILE;
   // A hot reload hands the old body's memory to this one: same sessions, helpers, queue and
   // waiting continues (see retire below).
   const ho = opt.handover ?? {};
@@ -816,6 +820,18 @@ const makeKeeper = async ({ client, worktree, directory }, options) => {
     return `your checks FAIL (center ran them ${ago(now() - at)} ago): ${lines.slice(0, 10).join(" | ")}${lines.length > 10 ? ` | +${lines.length - 10} more` : ""}. ` +
       `A FAIL is this ${cfg.next}'s first packet (your /sprint): ${foreground() ? "write the packet that clears it to the ready queue so it tops the next batch" : "queue or launch the packets that clear it before other work"}, and name in the handoff which packet clears which.`;
   };
+  // The finish line (owner 2026-10-03: every round aims at its repo's finish line): every continue and GO
+  // names this repo's lowest open bar from center's cache. No file, an old file or no entry for this
+  // repo: no fact, never an error.
+  const goalFact = () => {
+    try {
+      const doc = JSON.parse(read(finishFile) ?? "null");
+      const mine = doc?.repos?.[cfg.repo];
+      const at = Date.parse(mine?.at ?? doc?.at ?? "");
+      if (!mine?.open?.id || !mine.open.text || !Number.isInteger(mine.met) || !Number.isInteger(mine.total) || !Number.isFinite(at) || now() - at > FINISH_FRESH_MS) return null;
+      return `Lowest open finish bar: ${clip(mine.open.id, 12)} ${clip(mine.open.text, 220)} (${mine.met} of ${mine.total} met). This batch must move it, or say why not in the handoff.`;
+    } catch { return null; }
+  };
   const stateNotes = (busyNow, local) => {
     const width = knobValue("width");
     const handoffAge = now() - (mtime(here.handoff) ?? now());
@@ -823,6 +839,7 @@ const makeKeeper = async ({ client, worktree, directory }, options) => {
     return {
       checks: checkFails(),
       batch: fg ? batchNote() : null,
+      goal: goalFact(),
       idle: !fg && width && busyNow === 0 ? `no helper is working and your width is ${width}: every Task you launched has returned, so nothing more will land; collect what landed and dispatch the ready list up to it this ${cfg.next} (writers go to the background by themselves; each result wakes you).` : null,
       // A loop paused by its halt file releases its lock (forge 2026-09-27): the GO that resumes it
       // must say so, or its first idle stops it again on "missing lock".
@@ -849,6 +866,7 @@ const makeKeeper = async ({ client, worktree, directory }, options) => {
     const facts = stateNotes(busyNow, local);
     if (facts.checks) notes.push(facts.checks);
     if (facts.batch) notes.push(facts.batch);
+    if (facts.goal) notes.push(facts.goal);
     if (facts.idle) notes.push(facts.idle);
     if (facts.team) notes.push(facts.team);
     if (facts.lock) notes.push(facts.lock);
