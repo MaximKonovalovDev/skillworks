@@ -1,52 +1,28 @@
 # AGENTS: skillworks
 
-Every agent in this repo reads this first. The loop is `/sprint`
-(`.opencode/commands/sprint.md`); the goal is `VISION.md`.
+Every agent reads this first. Loop `/sprint` (`.opencode/commands/sprint.md`); goal `VISION.md`.
 
-1. The files carry the loop: `sprint/board.md` (the work), `sprint/handoff.md`
-   (where the lead is), `sprint/inbox.md` (asks from center and the owner),
-   `VISION.md` (where we are going).
-2. One branch, `main`. Pull before every push
-   (`git pull --no-rebase --no-edit origin main`). Commit your own paths
-   only (`git add <paths>`), never `git add -A`, never force-push, never rewrite
-   history. Only the lead commits; helpers never commit or push.
-3. A claim counts only with its proof command's one-line result in the commit
-   body. An agent's report alone proves nothing.
-4. Use Glob, Grep, Read, Edit and Write for files; shell rules: `## Shell and search`.
-5. Never print or commit a secret. Never kill a process, never remove
-   `sprint/halt`.
-6. The owner is never asked mid-loop: a decision only he can make is an OWNER
-   row on the board, and the loop goes on.
+1. Loop files: `sprint/board.md` (work), `sprint/handoff.md` (lead), `sprint/inbox.md` (asks), `VISION.md` (goal).
+2. One branch `main`: pull first (`git pull --no-rebase --no-edit origin main`); own paths only, never `git add -A`, force-push, or history rewrite. Only the lead commits; helpers never commit or push.
+3. A claim counts only with its proof command's one-line result in the commit body; a report alone proves nothing.
+4. Files via Glob/Grep/Read/Edit/Write; shell per `## Shell and search`.
+5. Never print/commit a secret, kill a process, or remove `sprint/halt`.
+6. Never ask the owner mid-loop: his decision is an OWNER row on the board, loop goes on.
 
 ## Shell and search
-- The shell is pwsh, not bash. UTC time: `Get-Date -AsUTC -Format "yyyy-MM-ddTHH:mmZ"`. No grep, head, tail, wc or sed: use the Grep tool, `Select-Object -First N` or `-Last N`, `(Get-Content f | Measure-Object -Line).Lines`.
-- Code longer than one line: Write it to `$env:TEMP\opencode\<name>.mjs` (or `.py`) and run that file; never a multi-line `node -e` or `python -c`.
-- Glob does not walk into dot folders from the repo root: put `.opencode` or `.lanes` in `path`, not in the pattern. Queue files (claims.txt, ready/, done/) are read by their full path.
+- pwsh, not bash. UTC: `Get-Date -AsUTC -Format "yyyy-MM-ddTHH:mmZ"`. No grep/head/tail/wc/sed: Grep tool, `Select-Object -First/-Last N`, `(Get-Content f | Measure-Object -Line).Lines`.
+- Code over one line goes to `$env:TEMP\opencode\<name>.mjs` (or `.py`) and runs there; never multi-line `node -e`/`python -c`.
+- Glob skips dot folders from root: put `.opencode`/`.lanes` in `path`. Queue files (claims.txt, ready/, done/) by full path.
 
-## Where things are (look here first, no src/ folder exists)
+## Where things are (no src/ folder)
 
-`book2skill/` the package (extract, split, index, build, audit, eval, refresh,
-export, cli), `tests/`, `mcp_server/server.py`, `tools/part_score.py`,
-`prompts/`, `evals/<skill>_qa.jsonl`, `skills/<name>/`, `team/<part>.md`,
-`work/` (books, gitignored). Export output `skills/*/export/` is ignored:
-regenerate, never commit. `sprint/lock.txt` exists only while a lead holds it;
-`sprint/queue/claims.txt` is created by the first claim (append, create if
-missing). The kernel's `tools/part-score.mjs` is
-`python tools/part_score.py` here; each compaction is logged in
-`team/compact-log.md`. `tools/b2s.py` runs the book2skill CLI by file path.
+`book2skill/` package (extract, split, index, build, audit, eval, refresh, export, cli), `tests/`, `mcp_server/server.py`, `tools/part_score.py`, `prompts/`, `evals/<skill>_qa.jsonl`, `skills/<name>/`, `team/<part>.md`, `work/` (books, gitignored). `skills/*/export/` is ignored: regenerate, never commit. `sprint/lock.txt` lives only while a lead holds it; `sprint/queue/claims.txt` is created by the first claim. Kernel `tools/part-score.mjs` is `python tools/part_score.py` here; compactions logged in `team/compact-log.md`; `tools/b2s.py` runs the CLI by path. Other repos: `node C:/Users/me/Desktop/center/arsenal.mjs --list` (own: `arsenal.json`). Old text: `archive/` (searches skip; Read by path).
 
-Tools of the other repos: node C:/Users/me/Desktop/center/arsenal.mjs --list (this repo's own: arsenal.json).
-Old text: archive/ (searches skip it; Read by path).
-
-## Pipeline lanes (operator)
+## Pipeline (operator)
 
 ```powershell
-# One command for a manual (a file, a docs folder or a URL): extract, split, index, build, eval, audit.
-# --qa is yours: questions drawn from the failure the skill fixes. --target also exports; it is held
-# while SKILL.md, glossary, patterns or cheatsheet still hold the scaffold text. A SKILL.md an
-# author wrote is never overwritten (--rebuild does). Receipt: work/<name>/make.json.
+# One command per manual (file, folder, URL): extract, split, index, build, eval, audit. --qa is yours (failure-drawn); --target also exports, held while scaffold text remains. An author's SKILL.md is never overwritten (--rebuild does). Receipt: work/<name>/make.json.
 python -m book2skill make --in <file|folder|url> --name <name> --description "Use when ..." --qa evals/<name>_qa.jsonl [--glob "about_*.md"] [--target claude]
-# The same, stage by stage:
 python -m book2skill extract --in <src> --out work/<name>
 python -m book2skill split --work work/<name>
 python -m book2skill index --work work/<name>
@@ -60,9 +36,8 @@ python mcp_server/server.py
 
 Rules:
 
-0. Only feed sources you own or public-domain texts. Never commit
-   copyrighted books. Gutenberg downloads stay in `work/`, ignored by git.
-1. SKILL.md frontmatter must carry `name` + `description`; name matches dir.
-2. Eval gate: pass rate below 0.6 refuses `export`. Fix the skill, not the test.
-3. Refresh wins over rebuild: `refresh` no-ops when the fingerprint matches.
-4. Receipts: every stage writes `work/<name>/receipt.json` with counts.
+0. Only owned or public-domain sources; never commit copyrighted books; Gutenberg stays in `work/` (ignored).
+1. SKILL.md frontmatter carries `name` + `description`; name matches dir.
+2. Eval gate: rate below 0.6 refuses `export`. Fix the skill, not the test.
+3. Refresh wins over rebuild: no-op when the fingerprint matches.
+4. Every stage writes `work/<name>/receipt.json` with counts.
