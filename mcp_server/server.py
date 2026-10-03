@@ -1,8 +1,9 @@
-"""Minimal stdio MCP server: skill_search over built skills.
+"""Minimal stdio MCP server: skill_search + skill_preview over built skills.
 
 Speaks JSON-RPC over stdio with initialize / tools/list / tools/call.
-Tool: skill_search {query, skill?} — substring rank over skill markdown.
-No dependencies, no network. Scope is honest: search only, no generation.
+Tools: skill_search {query, skill?} — substring rank over skill markdown;
+  skill_preview {skill} — README-then-SKILL.md fallback head for inspect-before-install.
+No dependencies, no network. Scope is honest: search + preview only, no generation.
 """
 from __future__ import annotations
 
@@ -105,6 +106,59 @@ def _input_schema() -> dict:
 
 INPUT_SCHEMA = _input_schema()
 
+PREVIEW_FILES = ("README.md", "SKILL.md")
+PREVIEW_HEAD_CHARS = 2000
+
+_PREVIEW_DESCRIPTIONS = {
+    "skill": "Skill name to preview (non-empty string, must be an installed skill).",
+}
+
+
+def _preview(skill: str) -> dict:
+    """Return inspect-before-install head for one skill.
+
+    README-then-SKILL.md fallback (donor readSkillFile pattern, ideas only):
+    serve README.md when present, else SKILL.md. Vol 0 sample stays a
+    separate skill file; preview points at the install entrypoint.
+    """
+    base = _skills_dir()
+    for candidate in PREVIEW_FILES:
+        path = base / skill / candidate
+        if path.exists():
+            text = path.read_text(encoding="utf-8")
+            return {
+                "skill": skill,
+                "file": candidate,
+                "head": text[:PREVIEW_HEAD_CHARS],
+                "chars": len(text),
+            }
+    return {"skill": skill, "file": "", "head": "", "chars": 0}
+
+
+def _preview_input_schema() -> dict:
+    """Derive skill_preview inputSchema from the _preview() signature."""
+    sig = inspect.signature(_preview)
+    props: dict = {}
+    required: list = []
+    for name, param in sig.parameters.items():
+        props[name] = {"type": "string", "description": _PREVIEW_DESCRIPTIONS.get(name, name)}
+        if param.default is inspect.Parameter.empty:
+            required.append(name)
+    return {"type": "object", "properties": props, "required": required}
+
+
+PREVIEW_INPUT_SCHEMA = _preview_input_schema()
+
+
+def _validate_preview_args(args) -> tuple[bool, dict | str]:
+    """Validate skill_preview arguments against PREVIEW_INPUT_SCHEMA."""
+    if not isinstance(args, dict):
+        return False, "arguments must be an object with skill"
+    skill = args.get("skill")
+    if not isinstance(skill, str) or not skill.strip():
+        return False, "skill is required (non-empty string)"
+    return True, {"skill": skill}
+
 
 def _validate_args(args) -> tuple[bool, dict | str]:
     """Validate tools/call arguments against INPUT_SCHEMA. Returns (ok, cleaned|message)."""
@@ -166,16 +220,35 @@ def main(argv: list[str] | None = None) -> None:
         if method == "initialize":
             _reply(iid, {"protocolVersion": "2024-11-05", "serverInfo": {"name": "skillworks", "version": "0.1.0"}})
         elif method == "tools/list":
-            tool = {
+            search_tool = {
                 "name": "skill_search",
                 "description": "Search built skill markdown by keywords. Use when looking up skill content.",
                 "inputSchema": INPUT_SCHEMA,
                 "_meta": {"cacheHint": CACHE_HINT},
             }
-            _reply(iid, {"tools": [tool], "_meta": {"cacheHint": CACHE_HINT}})
+            preview_tool = {
+                "name": "skill_preview",
+                "description": "Preview one installed skill (README-then-SKILL.md head) before installing. Use to inspect a skill.",
+                "inputSchema": PREVIEW_INPUT_SCHEMA,
+                "_meta": {"cacheHint": CACHE_HINT},
+            }
+            _reply(iid, {"tools": [search_tool, preview_tool], "_meta": {"cacheHint": CACHE_HINT}})
         elif method == "tools/call":
-            if params.get("name") != "skill_search":
+            if params.get("name") not in ("skill_search", "skill_preview"):
                 _reply(iid, error={"code": -32602, "message": "unknown tool"})
+                continue
+            if params.get("name") == "skill_preview":
+                args = params.get("arguments", {}) or {}
+                ok, cleaned = _validate_preview_args(args)
+                if not ok:
+                    _reply(iid, _error_envelope(cleaned))  # type: ignore[arg-type]
+                    continue
+                assert isinstance(cleaned, dict)
+                if cleaned["skill"] not in _skills():
+                    _reply(iid, _error_envelope(_unknown_skill_message(cleaned["skill"])))
+                    continue
+                preview = _preview(cleaned["skill"])
+                _reply(iid, {"content": [{"type": "text", "text": json.dumps(preview, ensure_ascii=False)}]})
                 continue
             args = params.get("arguments", {}) or {}
             ok, cleaned = _validate_args(args)
