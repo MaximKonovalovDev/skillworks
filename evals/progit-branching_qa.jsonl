@@ -1,12 +1,12 @@
-{"must": ["branching", "diverge"], "q": "What does branching mean when you diverge from the main line of development?"}
-{"must": ["hotfix", "merge"], "q": "How is a hotfix branch created from master and merged back with git merge?"}
-{"must": ["fast-forward", "merge"], "q": "When does git merge result in a fast-forward instead of a merge commit?"}
-{"must": ["conflict", "unmerged"], "q": "How do you resolve a merge conflict when git status lists unmerged paths?"}
-{"must": ["branch", "head"], "q": "What does git branch -v show, and what does HEAD pointing to a branch mean?"}
-{"must": ["tracking", "serverfix"], "q": "What is a tracking branch such as serverfix tracking origin/serverfix?"}
-{"must": ["checkout", "tracking"], "q": "How does git checkout --track origin/serverfix set up a tracking branch?"}
-{"must": ["rebase", "pushed"], "q": "Why should you never rebase commits that you have already pushed to a remote?"}
-{"must": ["pushing", "remote"], "q": "How does pushing a local branch share it with a remote for the world?"}
-{"must": ["long-running", "three-way"], "q": "What are long-running branches and how does three-way merge help them?"}
-{"must": ["topic", "rebase"], "q": "How does rebasing a topic branch like server and client replay commits?"}
-{"must": ["workflows", "remote-tracking"], "q": "What branching workflows use remote branches and remote-tracking branches?"}
+{"must": ["diverge from the main line", "killer feature"], "q": "In the Git Branching intro, branching means you diverge from the main line of development; why is Git's branching model its killer feature among VCS tools?"}
+{"must": ["hotfix branch", "git merge"], "q": "How is a hotfix branch created from master and merged back with git merge?"}
+{"must": ["fast-forward", "merge commit"], "q": "When does git merge result in a fast-forward instead of a merge commit?"}
+{"must": ["merge conflict", "unmerged paths"], "q": "How do you resolve a merge conflict when git status lists unmerged paths?"}
+{"must": ["git branch", "head pointing"], "q": "What does git branch -v show, and what does HEAD pointing to a branch mean?"}
+{"must": ["tracking branch", "origin/serverfix"], "q": "What is a tracking branch such as serverfix tracking origin/serverfix?"}
+{"must": ["git checkout", "tracking branch"], "q": "How does git checkout --track origin/serverfix set up a tracking branch?"}
+{"must": ["never rebase", "pushed"], "q": "Why should you never rebase commits that you have already pushed to a remote?"}
+{"must": ["pushing", "remote branches"], "q": "How does pushing a local branch share it through remote branches on a remote?"}
+{"must": ["long-running branches", "three-way merge"], "q": "What are long-running branches and how does three-way merge help them?"}
+{"must": ["topic branch", "replay"], "q": "How does rebasing a topic branch replay commits like server and client?"}
+{"must": ["branching workflows", "remote-tracking branches"], "q": "What branching workflows use remote branches and remote-tracking branches?"}
