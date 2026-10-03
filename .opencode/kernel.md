@@ -1,4 +1,4 @@
-# Loop kernel v2
+# Loop kernel v3
 
 Rules every loop shares. Center owns this file: `node loopkit.mjs update` copies it to every repo as `.opencode/kernel.md`. Never edit a copy. Rules one repo alone has stay in its `/sprint`, `AGENTS.md`; where they differ, the repo wins.
 
@@ -27,7 +27,15 @@ Rules every loop shares. Center owns this file: `node loopkit.mjs update` copies
 - Edit: re-read exact lines just before editing; files are CRLF, copy oldString from the latest read.
 - Research: read `.opencode/repomap.md` first, never list trees; deepwiki once then `gh api`; never guess raw.githubusercontent URLs — `gh api repos/O/R/contents/PATH` or `.../git/trees/HEAD?recursive=1`; rate-limit = authed `gh api`, not search.
 
+## Grow (the point of the loop: agents, skills and repo get better and smaller)
+- Drift first: a FAIL from the repo's checks is the first packet of the next batch. Never tick or close a row over a FAIL. Commit your own paths in the batch you edit them.
+- Parts (only with a part-score tool and `team/`; else skip, never FAIL a missing score): each vision part has a score and a note `team/<part>.md` (tried, moved, failed). The part's builder aims at the score; the judge re-runs it; no rise and no stated reason is a FAIL.
+- Steals: a scout works one part at a time (lowest score first), at most 3 licensed PINs per part, written under "Next steals" in the part's plan. No loose cards. An idea older than 5 days with no spike is archived. Tools and workspace are a part too.
+- Skills: a non-obvious win adds at most 5 lines to the part's skill; a skill line that matches a FAILED note is deleted.
+- Compact: every 5 rounds one compaction (finished rows, duplicate docs, stale ideas, dead code) with gates identical, logged in `team/compact-log.md` (or the handoff).
+- Coach: every 5 rounds, one change to a seat, note or skill, undone if the score did not rise in 3 rounds. Rule sheets: `C:/Users/me/Desktop/center/crews/_shared/` (part-owner, scout, compactor, coach).
+
 ## Stop
 - Ending a turn is not a stop. `[loop-keeper]` messages are not the owner.
 - Stop only for the stop reasons in `/sprint`. Then write the handoff (lock token, what moved with SHAs, blockers, next), say PASS, PARTIAL or BLOCKED, release your lock and end `LOOP STOP: <reason>`.
-- The keeper reviews before a stop is final: follow GO, FIX, PIVOT or STOP.
+- A loop-side stop is final: the keeper sends no review before it (overseer retired 2026-10-02).
