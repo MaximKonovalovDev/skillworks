@@ -24,6 +24,7 @@ before vendoring anything.
   strings (T-04); `prompts/build-skill.md` carries the version stamp.
 * stanfordnlp/dspy (MIT) — signature-compiled QA contract for growing
   source-derived eval sets (T-05); `eval.grow_qa` reimplements the idea.
+* kiasar/gutenberg_cleaner (MIT) — Gutenberg header/footer TEXT_START/END marker-strip idea reimplemented in extract (K-28); no code copied.
 * anthropics/skills + agentskills.io specification — SKILL.md frontmatter
   fields and progressive-disclosure layout (spec-defined, free to implement).
 * Unity-Technologies/skills, gamedev-skills/awesome-gamedev-agent-skills
