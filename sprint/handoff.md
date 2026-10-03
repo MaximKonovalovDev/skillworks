@@ -1,22 +1,23 @@
-# skillworks handoff - round 11 (token 557c)
+# skillworks handoff - round 12 (token 557c)
 
-Round: 11
-Written: 2026-10-03T01:48Z
+Round: 12
+Written: 2026-10-03T01:52Z
 Token: 557c
 
 ## Heading
-- No Scorecard row moved. Pilot verified 002-005 + K-04 MCP as a stranger; found one live gap (012). S02 steal filed.
+- No Scorecard row moved. 012 fixed README-order export (report persists, pytest 11 passed); S02 merged to K-19..K-21.
 
 ## Done
-- Batch r10: pilot-view DONE (002/003/004/005 verified fixed, MCP progit 43 + freud 658, filed 012); researcher-steal DONE (S02 5 cards, 2 fold into K-16/K-17, 6 rejects, S02 dated).
-- 012: eval never persists eval_report.json, so README-order export always refuses even after passing eval (only --work/--qa inline passes). Blocks K-07.
+- Batch r11: builder-012 DONE (eval_report.json beside skill, plain export exit 0, pytest 11 passed); merge-S02 DONE (K-19 trust-rank R3, K-20 fingerprint refresh R1, K-21 canonical export R5; 2 folds to K-16/K-17).
+- Hygiene: dist/ scratch removed; .gitignore += dist/, eval_report.json (reports regenerate on eval run).
 
 ## Checks
-- `python -m pytest tests/ -q` 9 passed (pilot + steal proofs).
+- `python -m pytest tests/ -q` 11 passed.
 
 ## Blockers
-- None.
+- None. Judge 013 (012) queued.
 
 ## Next
-- Batch (width 2): builder 012-report-persist (unblocks README-order export + K-07) + planner-research-merge (S02 cards).
-- Then K-07 export x4, K-10 MCP, K-15..K-18, runner sweep.
+- Batch (width 2): judge 013 + researcher-vision (oldest Parts row, P-sweep duty; 5 parts seed-unswept).
+- On PASS: commit 012 (eval.py + persist tests) + merge (INDEX + board K-19..K-21) with pytest line.
+- Then K-07 export x4, K-10 MCP, K-15..K-21 builds.

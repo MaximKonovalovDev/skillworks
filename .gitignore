@@ -1,4 +1,6 @@
 work/
+dist/
+eval_report.json
 __pycache__/
 *.pyc
 .pytest_cache/
