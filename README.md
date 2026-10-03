@@ -39,7 +39,7 @@ third person with trigger keywords, name matches dir, `a-z0-9-` only.
 python -m book2skill extract --in <book.pdf> --out work/mybook
 python -m book2skill split --work work/mybook
 python -m book2skill index --work work/mybook
-python -m book2skill build --work work/mybook --skill skills/mybook
+python -m book2skill build --work work/mybook --skill skills/mybook --name mybook --description "..."
 python -m book2skill audit --skill skills/mybook
 python -m book2skill eval --skill skills/mybook --qa evals/sample_qa.jsonl
 python -m book2skill export --skill skills/mybook --target claude --out dist
