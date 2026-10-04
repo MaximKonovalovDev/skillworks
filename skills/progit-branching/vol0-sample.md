@@ -1,8 +1,9 @@
 # progit-branching — Vol 0 free sample
 
-Free sample of the `progit-branching` skill pack. Share freely; the full pack
+Free sample of the `progit-branching` skill. Share freely; the full skill
 (`SKILL.md` + `cheatsheet.md` + `glossary.md` + `patterns.md` +
-`chapters/notes.md`) is the paid Vol 1 ($10, 0 sales so far).
+`chapters/notes.md`) is shared free under the same licence (CC BY-NC-SA 3.0,
+NonCommercial, never sold).
 
 ## Try this (from the cheatsheet)
 
