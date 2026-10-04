@@ -1,24 +1,24 @@
-# skillworks handoff - round 111 (token 9341)
+# skillworks handoff - round 112 (token 9341)
 
-Round: 111 (lock 9341 taken, no judged PASS, S3 cover 4->3 unjudged)
-Written: 2026-10-04T11:22Z
-Token: 9341 (lock holds lead#9341 since 2026-10-04T11:19Z; prior 1ebf released f47668a)
-Knobs: width 2, foreground, heavy_max 3, paid_mode 0 (re-read 11:22Z; no proposal).
+Round: 112 (pilot verified guard, books BK-1004-1 red, 1 pre-existing fail)
+Written: 2026-10-04T11:32Z
+Token: 9341 (lock holds lead#9341 since 2026-10-04T11:19Z)
+Knobs: width 2, foreground, heavy_max 3, paid_mode 0 (re-read 11:32Z; no proposal).
 
 ## Heading
-- R6 shop proof moved (pack_check 4 findings -> 3, cover FAIL->PASS, unjudged). S1 not moved: already met.
+- R1 verified + scouted (export scaffold hold holds, rust-book red). No Scorecard number moved (all unjudged).
 
 ## Rows done
-- builder-pack-r1-repair PARTIAL (unjudged, uncommitted): from-design-studio renamed store-art/O-025 (15 files, out.png 319491 B, out-630x500 131799 B), listing.md:5 + :105-106 cover lines. pack_check FAIL 3 findings (demo, screenshots, factory preflight).
-- researcher-doctor DONE DR-1004-3 (unjudged, uncommitted): repo-read-first 29/day, 57 in 48h/7 repos. Board row READY + evals/repo-read-first_trials.jsonl 12 tasks (sheet PASS) + skills/repo-read-first/references/target-class.json.
+- pilot-105 PARTIAL (uncommitted, verification only): direct export + make --target refuse scaffold naming files (abfc4e2 holds); no-target make refusal declined pending OWNER verdict. Focused 14 passed; full 360/107/1 fail engine-builder stale proof (pre-existing, second identical).
+- researcher-books DONE BK-1004-1 (uncommitted): rust-lang/book 1500248d MIT OR Apache-2.0 read live, 9 chapters work/rust-book/src sha256 in row, 12 trials sheet PASS (8 source_only, 5 run, rustc 1.97 verified). Board row READY.
 
 ## Checks
-- check.mjs PASS 20/0/0. finish 4/6: S1 met 28 loads, S2 met 6 repos, S4 met, S6 met 9/13; S3 open (pack_check 3 findings), S5 open (0/18 after).
-- Inbox: S38 closed (K-46 DONE 702e887, listing bcfcb0e). S46 open (O-025 cover delivered 2943d4d, demo+screenshots stay open).
+- check.mjs PASS 20/0/0. finish 4/6: S1 met 28, S2 met 6, S4 met, S6 met 9/13; S3 open (cover wired on disk, listing M uncommitted), S5 open (0/18).
+- HEAD note: cb41f52 carried staged from-design-studio deletions; store-art bytes came via auto 3b7f7e9. Disk listing (cover lines) stays M pending judge repair review.
 
 ## S1 note
-- Keeper named S1 lowest open; measured S1 met 28 loads (want 10), S2 met 6 repos. Batch moved S3 cover instead; S1 needs no push. S5 (0/18 after) is the true lowest open, waits installer 48h windows.
+- S1 met 28 loads, S2 met 6 repos. Batch moved R1 guard verification + book scout, not S1. True lowest open S5 (waits 48h) then S3 (demo+screenshots+factory).
 
 ## Next
-- Batch (keeper 11:20Z, width 2): pilot-105-scaffold-ships (direct export holds scaffold), researcher-books (book scout).
-- Held: TS-1 DOING, DR-1004-1/2/3 READY (need cure), K-44 READY (demo+screenshots+factory), K-03 K-06 K-42 PARKED, repair needs judge review.
+- Batch (keeper 11:28Z, width 2): researcher-toolsmith-r1-review, planner-rows (planner to row OWNER verdict on no-target-make refusal + S46 cover bytes check).
+- Held: TS-1 DOING, DR-1004-1/2/3 READY, BK-1004-1 READY, K-44 READY, repair needs judge review, engine-builder proof needs live_proof rerun.
