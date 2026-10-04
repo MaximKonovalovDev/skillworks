@@ -10,7 +10,7 @@ import json
 import re
 from pathlib import Path
 
-from .extract import strip_gutenberg_markers
+from .extract import TEXT_END_MARKERS, TEXT_START_MARKERS, strip_gutenberg_markers
 
 PROMPT_FILE = Path(__file__).resolve().parent.parent / "prompts" / "build-skill.md"
 
@@ -130,7 +130,49 @@ def strip_gutenberg_boilerplate(text: str) -> tuple[str, bool]:
     """Drop PG blurb lines no marker strip can see; plain prose untouched."""
     lines = text.splitlines()
     kept = [ln for ln in lines if not any(h in ln.lower() for h in _GUTENBERG_LINE_HINTS)]
-    return "\n".join(kept), len(kept) != len(lines)
+    if len(kept) == len(lines):
+        return text, False
+    return "\n".join(kept), True
+
+
+# Canonical PG license-tail openers (K-48 slice 3). The *** END marker often
+# sits past a chunk head (freud 0254.txt line 83) or in an earlier chunk, so
+# the tail chunks (0255-0258, which open mid-sentence on license prose) carry
+# no marker at all. These exact tail phrases are never ordinary book prose.
+_LICENSE_TAIL_HINTS = (
+    "START: FULL LICENSE",
+    "FULL PROJECT GUTENBERG",
+)
+
+# Mirrors extract._START_SCAN_LINES: a START marker only counts as a header
+# when it sits in the chunk's first 600 lines.
+_HEAD_SCAN_LINES = 600
+
+
+def _clean_chunk(full: str) -> tuple[str | None, bool, bool]:
+    """PG header/footer cuts on one chunk's full text (K-48 slice 3).
+
+    Returns (source, cut, tail): source feeds the 600-char head, or None
+    when the chunk is pure PG tail (skip it); cut reports a cut fired; tail
+    tells the caller later chunks are tail too (the PG license always closes
+    the file). Untouched chunks come back as the original string, so
+    marker-free notes stay byte-identical.
+    """
+    lines = full.splitlines()
+    cut = False
+    for i, line in enumerate(lines[:_HEAD_SCAN_LINES]):
+        if any(m in line for m in TEXT_START_MARKERS):
+            lines = lines[i + 1 :]
+            cut = True
+            break
+    for j, line in enumerate(lines):
+        if any(m in line for m in TEXT_END_MARKERS):
+            return "\n".join(lines[:j]), True, True
+    if any(h in full for h in _LICENSE_TAIL_HINTS):
+        return None, True, True
+    if not cut:
+        return full, False, False
+    return "\n".join(lines), True, False
 
 
 def _scaffold_body(name: str) -> str:
@@ -186,8 +228,23 @@ def _frontmatter(name: str, description: str, version: str = "0.1.0",
 def build(workdir: Path, skilldir: Path, name: str, description: str) -> dict:
     validate_name(name, skilldir)
     heads = []
+    pg_cut = False
+    tailed = False
     for path in sorted((workdir / "chunks").glob("*.txt")):
-        heads.append(f"## {path.stem}\n" + path.read_text(encoding="utf-8")[:600])
+        if tailed:
+            pg_cut = True
+            continue
+        full = path.read_text(encoding="utf-8")
+        source, cut, tail = _clean_chunk(full)
+        if cut:
+            pg_cut = True
+        if tail:
+            tailed = True
+            if source is None:
+                continue
+        if source is None:
+            continue
+        heads.append(f"## {path.stem}\n" + source[:600])
     chapters = skilldir / "chapters"
     chapters.mkdir(parents=True, exist_ok=True)
     notes, marked = strip_gutenberg_markers("\n\n".join(heads))
@@ -217,7 +274,7 @@ def build(workdir: Path, skilldir: Path, name: str, description: str) -> dict:
         "stage": "build",
         "skill": str(skilldir),
         "note_chars": len(notes),
-        "notes_stripped": bool(marked or blurbed),
+        "notes_stripped": bool(marked or blurbed or pg_cut),
         "noncommercial": noncommercial,
         "prompt": prompt_version(),
         "layout": "skill-pack",
