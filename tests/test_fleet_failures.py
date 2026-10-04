@@ -204,6 +204,31 @@ def test_scan_exact_window_matches_metrics_entry(tmp_path: Path, monkeypatch) ->
     assert "from" not in ff.scan_db(db, 48, [])  # trailing mode unchanged
 
 
+def test_loads_exact_window_pins_single_day(tmp_path: Path, monkeypatch) -> None:
+    """loads --from/--to pins one day (same fix as scan): the 2026-10-03 sanity
+    check reads one date, not a drifting trailing window."""
+    import time as _time
+    db, _own = _world(tmp_path, monkeypatch)
+    other = tmp_path / "elsewhere"
+    (other / ".git").mkdir(parents=True, exist_ok=True)
+    _session(db, "s2", other)
+    _part(db, "s2", "k0", "skill", "completed", 1, inp={"name": "alpha"})
+    _session(db, "s3", other)
+    _part(db, "s3", "k1", "skill", "completed", 70, inp={"name": "alpha"})
+    import sqlite3 as _sqlite
+    _con = _sqlite.connect(db)
+    _con.execute("update session set time_updated = ? where id = 's2'", (_time.time() * 1000 - 2 * HOUR_MS,))
+    _con.execute("update session set time_updated = ? where id = 's3'", (_time.time() * 1000 - 70 * HOUR_MS,))
+    _con.commit()
+    _con.close()
+    now_ms = _time.time() * 1000
+    day = ff.loads_detail(db, 24, from_ms=now_ms - 3 * HOUR_MS, to_ms=now_ms - 1 * HOUR_MS)
+    assert day == {("alpha", "elsewhere"): 1}
+    old = ff.loads_detail(db, 24, from_ms=now_ms - 71 * HOUR_MS, to_ms=now_ms - 69 * HOUR_MS)
+    assert old == {("alpha", "elsewhere"): 1}  # only the 70 h old row
+    assert ff.loads_detail(db, 24) == {("alpha", "elsewhere"): 1}  # trailing mode unchanged
+
+
 def test_command_line_help_exits_zero() -> None:
     root = Path(__file__).resolve().parent.parent
     assert subprocess.run([sys.executable, str(root / "tools" / "fleet_failures.py"), "--help"],

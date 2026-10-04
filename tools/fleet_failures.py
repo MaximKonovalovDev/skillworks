@@ -289,17 +289,35 @@ def scan_db(db: Path, hours: float, dirs: list[tuple[str, str]], now_ms: float |
         con.close()
 
 
-def loads_detail(db: Path, hours: float = 24, now_ms: float | None = None) -> dict[tuple[str, str], int]:
-    """Skill loads by (skill, repo), same filters as finish_proof.skill_loads."""
+def loads_detail(db: Path, hours: float = 24, now_ms: float | None = None,
+                 from_ms: float | None = None, to_ms: float | None = None) -> dict[tuple[str, str], int]:
+    """Skill loads by (skill, repo), same filters as finish_proof.skill_loads.
+
+    Default is the trailing `hours`. Pass `from_ms`/`to_ms` to count the exact
+    window a sanity date covers (e.g. 2026-10-03), so the 7-or-more pwsh-loads
+    check reads one day instead of a drifting trailing window.
+    """
     skills = fp._skill_names(fp.SKILLS)
     own = fp.ROOT
-    cutoff = (time.time() * 1000 if now_ms is None else now_ms) - hours * 3_600_000
+    if from_ms is not None:
+        lo, hi = from_ms, to_ms
+    else:
+        lo = (time.time() * 1000 if now_ms is None else now_ms) - hours * 3_600_000
+        hi = None
     con = connect_ro(db)
     try:
-        sessions = dict(con.execute("select id, directory from session where time_updated > ?", (cutoff,)))
+        if hi is None:
+            sessions = dict(con.execute("select id, directory from session where time_updated > ?", (lo,)))
+            rows = con.execute(
+                "select session_id, data from part where time_created > ? and data like ?", (lo, '%"tool":"skill"%'))
+        else:
+            sessions = dict(con.execute(
+                "select id, directory from session where time_updated > ? and time_updated <= ?", (lo, hi)))
+            rows = con.execute(
+                "select session_id, data from part where time_created > ? and time_created <= ? and data like ?",
+                (lo, hi, '%"tool":"skill"%'))
         out: dict[tuple[str, str], int] = {}
-        for sid, data in con.execute(
-                "select session_id, data from part where time_created > ? and data like ?", (cutoff, '%"tool":"skill"%')):
+        for sid, data in rows:
             try:
                 part = json.loads(data)
             except ValueError:
@@ -381,10 +399,21 @@ def cmd_loads(a: argparse.Namespace) -> int:
     if not db.is_file():
         print(f"no opencode.db at {db}")
         return 1
-    totals = fp.skill_loads(db, hours=a.hours)
-    detail = loads_detail(db, hours=a.hours)
+    from_ms = parse_ms(a.from_) if a.from_ else None
+    to_ms = parse_ms(a.to) if a.to else None
+    detail = loads_detail(db, hours=a.hours, from_ms=from_ms, to_ms=to_ms)
     for (skill, repo), n in sorted(detail.items()):
         print(f"{n:5d} {skill} {repo}")
+    if from_ms is not None:
+        totals: dict[str, int] = {}
+        for (_skill, repo), n in detail.items():
+            totals[repo] = totals.get(repo, 0) + n
+        seen = ", ".join(f"{r} {n}" for r, n in sorted(totals.items())) or "none"
+        lo_s = datetime.fromtimestamp(from_ms / 1000, timezone.utc).strftime("%Y-%m-%dT%H:%MZ")
+        hi_s = datetime.fromtimestamp(to_ms / 1000, timezone.utc).strftime("%Y-%m-%dT%H:%MZ") if to_ms else "now"
+        print(f"{sum(totals.values())} loads {lo_s} to {hi_s} across {len(totals)} repos: {seen}")
+        return 0
+    totals = fp.skill_loads(db, hours=a.hours)
     seen = ", ".join(f"{r} {n}" for r, n in sorted(totals.items())) or "none"
     print(f"{sum(totals.values())} loads in {a.hours:g} h across {len(totals)} repos: {seen}")
     return 0
@@ -559,6 +588,8 @@ def main(argv: list[str] | None = None) -> int:
     p.set_defaults(fn=cmd_scan)
     p = sub.add_parser("loads", help="skill loads by skill and repo (shares one counter with S1/S2)")
     p.add_argument("--hours", type=float, default=24)
+    p.add_argument("--from", dest="from_", default=None, help="exact window start, ISO-8601 (with --to pins one day)")
+    p.add_argument("--to", default=None, help="exact window end, ISO-8601 (default now)")
     p.set_defaults(fn=cmd_loads)
     p = sub.add_parser("compare", help="before and now for one skill; --before prints the 48 h count")
     p.add_argument("skill")
