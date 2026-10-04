@@ -1,24 +1,25 @@
-# skillworks handoff - round 121 (token 929d)
+# skillworks handoff - round 122 (token b3e7)
 
-Round: 121 (cure repair PARTIAL: repo-read-first re-sealed; planner still held)
-Written: 2026-10-04T12:41Z
-Token: 929d (lock holds lead#929d since 2026-10-04T12:41Z; takeover held from 9341)
-Knobs: width 2, foreground, heavy_max 3, paid_mode 0 (re-read 12:41Z; no proposal).
+Round: 122 (takeover from 929d left by closed app; repair PARTIAL held for judge, planner DONE committed)
+Written: 2026-10-04T12:52Z
+Token: b3e7 (lock holds lead#b3e7 since 2026-10-04T12:42Z; takeover of 929d stated here)
+Knobs: width 2, foreground, heavy_max 3, paid_mode 0 (re-read 12:42Z; no proposal).
 
 ## Heading
-- No Scorecard number moved (1 of 4 stale proofs re-sealed; 3 remain).
+- No Scorecard number moved (repair re-sealed 1 stale proof; 3 stales remain, all out of its scope).
 
 ## Rows done
-- repair PARTIAL (held): repo-read-first live-proof re-sealed grade-then-live; its 4 fleet checks green. Out-of-scope cron/inbox/pipe-run stales untouched, still red.
-- planner BLOCKED again: repeat NOOP, keeper-held.
-- Verified: fleet subset 17 passed 3 failed (cron, inbox, pipe-run stale); check.mjs PASS 20/0/0.
+- planner DONE f3b890a: board K-36..K-41 archived to archive/2026-10-04/board-done.md (30 rows left), P5 note rewritten, coach KEPT e29b768. Gates identical.
+- repair PARTIAL (held, uncommitted): repo-read-first grade-then-live re-sealed, its fingerprint test green. Queued judge one-off sprint/queue/ready/001-cure-r1-repair-review.md for the next batch.
+- Verified: repo-read-first tests green; fleet fingerprint still 3 failed (cron-skip-clean, inbox-file-reader, pipe-run stales); check.mjs PASS 20/0/0.
+- No VISION-TABLES Proposed answers pending; inbox S46 already has K-55.
 
 ## Checks
-- check.mjs PASS 20/0/0. finish 4/6. Full suite not re-run (subset proves the movement).
+- check.mjs PASS 20/0/0. Full pytest not re-run (helpers + lead spot-runs agree: 365 passed, 3 known stales).
 
 ## S1 note
 - S1 met, S2 met. No S1 push needed. Lowest open S5 then S3.
 
 ## Next
-- Await keeper rewrite past 12:30Z batch (repair done, planner held): expect repair-judge review + cure version-bumps for cron/inbox stales.
-- Held: TS-1 DOING, DR-1004-1/2/3/4/5/6 + BK-1004-1/2 + K-55 READY, K-54 OWNER, K-44 READY, K-03 K-06 PARKED.
+- Keeper batch (12:43Z): builder-cure + builder-book, plus the queued repair-judge review.
+- Held: repair files uncommitted pending judge; TS-1 DOING; DR-1004-1/2/3/4/5/6 + BK-1004-1/2 + K-55 READY; K-54 OWNER; K-44 READY; K-03 K-06 PARKED.
