@@ -1,27 +1,31 @@
-# skillworks handoff - round 143 (token c4a1)
+# skillworks handoff - round 144 (token d5ab)
 
-Round: 143 (planner DONE committed 49d2f55)
-Written: 2026-10-04T17:37Z
-Token: c4a1 (lock holds lead#c4a1 since 2026-10-04T16:30Z; takeover stated round 136)
-Knobs: width 2, foreground, heavy_max 3, paid_mode 0 (re-read 17:37Z; no proposal).
+Round: 144 (takeover, no batch helpers)
+Written: 2026-10-04T18:32Z
+Token: d5ab (takeover: replaced lock lead#c4a1 since 2026-10-04T16:30Z left by a closed app; lock now lead#d5ab since 2026-10-04T18:32Z)
+Knobs: width 2, foreground, heavy_max 3, paid_mode 0 (re-read 18:32Z; no proposal).
 
 ## Heading
-- Coach kept, claims pruned. No Scorecard row moved (planner plans by design).
+- No Scorecard row moved (takeover plus planning only; R6 stays 0%, S3 open).
 
 ## Rows done
-- planner DONE committed 49d2f55: coach round 142 judged dd8ae2d KEPT, P5 note rewritten, dead TS-1 pruned from claims, gates identical (check 20/0/0, pytest 2/424 before and after).
-- No new rows: O-001 served by DR-1004-1, O-002 premature while K-44 open, stales owned.
+- K-56 READY added for inbox EB-2026-10-04-S65 (O-033 demo adopt); inbox S65 ticked -> K-56.
+- No judged PASS this round, so no product commit by path.
 
 ## Checks
-- check.mjs PASS 20/0/0. pack_check FAIL 3; s3 open; s1 met 35; s6 met 11/16.
+- check.mjs PASS 20/0/0 (33 rows, 16 open). vision-check PASS 7/0/0.
+- finish 4 of 6: S1 met 36 loads, S2 met 7 repos, S3 open, S4 met, S5 open, S6 met 11/16.
+- pack_check FAIL 3: demo needed, screenshots needed, factory JUDGE FAIL (cover PASS via store-art O-025).
+- pytest 2 failed 424 passed 113 skipped: git-one-branch plus repo-read-first stale live proofs (same as runner 16:59Z).
 
 ## S3 note
-- S3 not moved by this batch: the planner writes rows and judges its own notes, not assets. S3 moves on O-033 demo plus screenshots, gate PASS, installer to factory.
+- O-033 delivered 9e98ece: demo.gif 167382 B 480x288 15s plus out.png 283421 B plus out-630x500.png in from-design-studio/O-033. Listing demo slot still says needed, so pack_check demo FAIL stands. K-56 adopt points at from-design-studio/O-033/demo.gif.
 
 ## Blockers
-- DR-1004-1: reseal chain stopped, seal stands at 4b2b262.
-- BK-1004-1 BLOCKED (source_only lift 0.25); K-54 OWNER; K-03 K-06 PARKED.
-- Held uncommitted: PRICE-EVIDENCE.md, pack listing + p5 lines, DR-1004-10 row plus trials, real-browser proof, repo-read-first trial, rust-book, TPN/p3, orders O-002/O-033.
+- pytest stale proofs first packet next round: git-one-branch, repo-read-first (re-proof, not new work).
+- DR-1004-1 reseal stands; BK-1004-1 BLOCKED source_only lift 0.25; K-54 OWNER; K-03 K-06 PARKED.
+- halt: absent on disk (uncommitted D, HEAD still holds 2026-10-03 pause text). Left untouched, never committed; stale while rounds 135 to 144 proceeded.
 
 ## Next
-- Await keeper batch: O-033 demo plus screenshots, cure smith on DR-1004-10, installer-trial judge.
+- Keeper batch: K-56 demo adopt (listing edit plus pack_check), pytest re-proof one-off, installer-trial judge.
+- Batch.md read 0 tasks this round, so no Task calls sent.
