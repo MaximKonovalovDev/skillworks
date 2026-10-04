@@ -1,4 +1,4 @@
-# Next batch: skillworks (the keeper rewrites this file, 2026-10-04T03:18:27.655Z)
+# Next batch: skillworks (the keeper rewrites this file, 2026-10-04T04:23:34.463Z)
 
 Send every line below as ONE message of 3 Task calls: subagent_type = the role, description = the title, prompt = `packet: <name>` exactly. The keeper puts each packet's text into its call, so all of them run at once, live in your session. Width 3, CPU-heavy at most 3.
 

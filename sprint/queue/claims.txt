@@ -1,2 +1,3 @@
 TS-1
 K-48 | builder-pipeline-r1 | 2026-10-04T03:00Z
+TS-4 | researcher-toolsmith-r3 | 2026-10-04T03:31Z | book2skill/extract.py, book2skill/cli.py, book2skill/make.py, tools/extract_clean.py, tests/test_extract_engines.py, tests/test_pipeline.py
