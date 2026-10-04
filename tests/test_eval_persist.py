@@ -28,7 +28,7 @@ def test_readme_order_eval_then_export(tmp_path: Path) -> None:
     (work / "chunks" / "0000.txt").write_text("hello world chapter about leases", encoding="utf-8")
     skill = tmp_path / "skill"
     skill.mkdir()
-    (skill / "SKILL.md").write_text("---\nname: demo\ndescription: demo\n---\n", encoding="utf-8")
+    (skill / "SKILL.md").write_text("---\nname: demo\ndescription: demo\n---\nAbout leases: renew yearly.\n", encoding="utf-8")
     qa = tmp_path / "qa.jsonl"
     qa.write_text('{"q": "what about leases?", "must": ["leases"]}\n', encoding="utf-8")
     out = tmp_path / "dist"
