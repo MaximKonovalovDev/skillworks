@@ -15,7 +15,9 @@ the tool sprint, so until then no pack counts as tested).
 S5 reads the skill doctor's record, which lives outside this public repo:
 `date,repo,skill,status,before,after` (status: proposed or adopted; before and after are the failure
 class counts of the 48 h before and the 48 h after the install). One adopted row with before above 0
-and after at most half of it meets the bar.
+and after at most half of it meets the bar. Rows of the skills in UP_IS_GOOD count use, where up is good, and never
+meet it. The `after` numbers are measured by tools/adopted_after.py (called here for the real record when a row is due,
+and only from a window in which the repo's loop really ran).
 S6 counts skills whose live proof is current (tests/skill_gates.check_proof) or whose
 references/trial-proof.json holds `runs` 10 or more, `with_rate` 0.8 or more and `lift` 0.3 or more.
 """
@@ -43,6 +45,8 @@ REPOS_NEEDED = 5
 PROVEN_NEEDED = 8
 GATE = 0.6
 LIVE = re.compile(r"^Live listing:\s*(https://\S+)\s*$", re.M)
+# Skills whose adopted rows count USE, not failures (adopted.csv README: up is good). A fall of those is not a cured class.
+UP_IS_GOOD = frozenset({"real-browser-automation", "bevy-rust-ecs"})
 
 
 def _db_path(given: Path | None) -> Path:
@@ -136,7 +140,19 @@ def s3(skills: Path = SKILLS, packs: Path | None = None) -> tuple[bool, str]:
     return False, problem
 
 
-def s5(path: Path = ADOPTED) -> tuple[bool, str]:
+def s5(path: Path = ADOPTED, refresh: bool | None = None) -> tuple[bool, str]:
+    """A failure class fell by half. The `after` numbers are measured here when due (tools/adopted_after.py), for the real
+    record only; a file given on the command line or by a test is read as it is."""
+    note = ""
+    if refresh is None:
+        refresh = path == ADOPTED
+    if refresh:
+        try:
+            import adopted_after
+            _, said = adopted_after.refresh(path, log=path.parent / "after-log.jsonl")
+            note = f"; {said}"
+        except Exception as err:  # the bar must still print: a measuring fault is shown, never hidden
+            note = f"; after-number measuring failed: {type(err).__name__}: {err}"
     try:
         rows = list(csv.reader(path.read_text(encoding="utf-8-sig").splitlines()))
     except OSError:
@@ -149,9 +165,11 @@ def s5(path: Path = ADOPTED) -> tuple[bool, str]:
         except ValueError:
             continue  # no after number yet
         measured += 1
+        if r[2].strip() in UP_IS_GOOD:
+            continue  # these rows count use, where more is good: a fall is no cured failure
         if before > 0 and after * 2 <= before:
             halved.append(f"{r[1].strip()}/{r[2].strip()} {r[4].strip()} -> {r[5].strip()}")
-    return bool(halved), f"{len(halved)} class(es) fell by half (want 1): {', '.join(halved) or 'none'}; {measured} of {len(adopted)} adopted rows have an after number"
+    return bool(halved), f"{len(halved)} class(es) fell by half (want 1): {', '.join(halved) or 'none'}; {measured} of {len(adopted)} adopted rows have an after number{note}"
 
 
 def _live_current(name: str) -> bool:
