@@ -1,9 +1,9 @@
 {
   "skill": "repo-read-first",
-  "fingerprint": "b85e22099f14fe8532182c64a3881bf3f38cb8e56aa2fb6ec29f871b505e771e",
-  "date": "2026-10-04T12:44Z",
+  "fingerprint": "1f89e6f06777ab3d18b1adbfb6f8185566f14aed8777ea31ef10a919102f2b5c",
+  "date": "2026-10-04T21:05Z",
   "command": "SKILL_LIVE=1 python -m pytest tests/test_repo_read_first.py -q",
-  "result": "6 passed in 1.69s",
+  "result": "6 passed in 2.13s",
   "versions": {
     "python": "3.13.14",
     "os": "Windows-10-10.0.19045-SP0",
