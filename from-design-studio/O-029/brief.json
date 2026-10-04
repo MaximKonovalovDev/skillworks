@@ -1,0 +1,74 @@
+{
+  "size": {
+    "w": 794,
+    "h": 1123
+  },
+  "sizes": [
+    {
+      "w": 794,
+      "h": 1123,
+      "name": "a4"
+    }
+  ],
+  "tokens": "tokens.css",
+  "image": "out.png",
+  "dir": "ltr",
+  "page": "page.html",
+  "text": [
+    {
+      "label": "title",
+      "fg": "var(--ink)",
+      "bg": "var(--bg)",
+      "min": 4.5
+    },
+    {
+      "label": "body",
+      "fg": "var(--muted)",
+      "bg": "var(--bg)",
+      "min": 4.5
+    },
+    {
+      "label": "number",
+      "fg": "var(--accent-ink)",
+      "bg": "var(--bg)",
+      "min": 4.5
+    },
+    {
+      "label": "proof",
+      "fg": "var(--ink)",
+      "bg": "var(--bg-2)",
+      "min": 4.5
+    },
+    {
+      "label": "proof-label",
+      "fg": "var(--muted)",
+      "bg": "var(--bg-2)",
+      "min": 4.5
+    },
+    {
+      "label": "cta",
+      "fg": "var(--on-accent)",
+      "bg": "var(--accent)",
+      "min": 4.5
+    }
+  ],
+  "title_box": [
+    0.065,
+    0.07,
+    0.935,
+    0.14
+  ],
+  "title_px": 66,
+  "title": "Fleet Vol 1",
+  "order": "O-029",
+  "product": "page:fleet-vol-1-sheet",
+  "template": "print/one-pager",
+  "palette": "developer",
+  "pdf": [
+    {
+      "page": "page.html",
+      "out": "out.pdf",
+      "pages": 1
+    }
+  ]
+}

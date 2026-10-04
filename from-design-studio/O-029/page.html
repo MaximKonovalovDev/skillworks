@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<!-- templates/print/one-pager/page.html: one A4 page (794x1123 px at 96 dpi), a product or service datasheet. Slots are double-brace UPPER_SNAKE names (defaults in template.json). Colour and type only from tokens.css. Logical CSS only, so DIR=rtl mirrors the page. Print: Edge headless to PDF, one page, real text. -->
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fleet Vol 1</title>
+<link rel="stylesheet" href="tokens.css">
+<style>
+  @page { size: A4; margin: 0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { background: var(--bg); font-family: var(--font-body); }
+  body {
+    --rule: color-mix(in srgb, var(--ink) 15%, var(--bg));
+    --rule-2: color-mix(in srgb, var(--ink) 20%, var(--bg-2));
+    --pad: 52px;
+    width: 210mm; height: 297mm; overflow: hidden;
+    background: var(--bg); color: var(--ink);
+    font-size: 13px; line-height: 1.5;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  html[dir="rtl"] body { font-family: var(--font-hebrew), var(--font-body); }
+  bdi { unicode-bidi: isolate; }
+  .page { display: flex; flex-direction: column; width: 210mm; height: 297mm; overflow: hidden; border-block-start: 6px solid var(--accent); }
+
+  /* top line: what this sheet is, and its revision */
+  .top { display: flex; justify-content: space-between; align-items: center; gap: 24px; padding-inline: var(--pad); padding-block-start: 30px; font-family: var(--font-mono); font-size: 11px; line-height: 1.2; letter-spacing: 0.14em; text-transform: uppercase; }
+  .kicker { display: flex; align-items: center; gap: 9px; color: var(--accent-ink); font-weight: 700; }
+  .kicker::before { content: ""; flex: none; width: 9px; height: 9px; background: var(--accent); }
+  .meta { color: var(--muted); }
+
+  /* header: name, claim, and a small spec table */
+  .head { padding-inline: var(--pad); padding-block: 20px 26px; }
+  h1 { font-family: var(--font-display); font-size: 66px; line-height: 0.98; font-weight: 700; letter-spacing: -0.015em; color: var(--ink); text-wrap: balance; }
+  .lede { display: grid; grid-template-columns: minmax(0, 1fr) 214px; column-gap: 44px; align-items: start; margin-block-start: 18px; }
+  .lede:not(:has(.spec dd bdi:not(:empty))) { grid-template-columns: minmax(0, 1fr); }
+  .claim { max-width: 21em; font-size: 21px; line-height: 1.32; font-weight: 600; color: var(--ink); text-wrap: balance; }
+  .specs { border-block-start: 1px solid var(--rule); }
+  .specs:not(:has(dd bdi:not(:empty))) { display: none; }
+  .spec { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; padding-block: 6px; border-block-end: 1px solid var(--rule); }
+  .spec:has(dd bdi:empty) { display: none; }
+  .spec dt { flex: none; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+  .spec dd { font-size: 12px; line-height: 1.3; font-weight: 600; color: var(--ink); text-align: end; }
+
+  /* the three numbers */
+  .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-inline: var(--pad); border-block-start: 3px solid var(--ink); border-block-end: 1px solid var(--rule); }
+  .stat { padding-block: 18px 16px; padding-inline: 22px; border-inline-start: 1px solid var(--rule); }
+  .stat:first-child { padding-inline-start: 0; border-inline-start: 0; }
+  .stat:last-child { padding-inline-end: 0; }
+  .num { font-family: var(--font-display); font-size: 56px; line-height: 1; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; color: var(--accent-ink); white-space: nowrap; }
+  .lbl { margin-block-start: 9px; max-width: 21em; font-size: 12.5px; line-height: 1.4; color: var(--muted); }
+
+  /* three numbered rows: a label rail and the content */
+  .rows { flex: 1; display: flex; flex-direction: column; justify-content: space-between; padding-block: 26px 14px; counter-reset: sec; }
+  .row { display: grid; grid-template-columns: 124px minmax(0, 1fr); column-gap: 24px; padding-inline: var(--pad); counter-increment: sec; }
+  h2 { font-family: var(--font-display); font-size: 17px; line-height: 1.2; font-weight: 700; color: var(--ink); }
+  h2::before { content: counter(sec, decimal-leading-zero); display: block; margin-block-end: 7px; font-family: var(--font-mono); font-size: 11px; font-weight: 400; letter-spacing: 0.12em; color: var(--muted); }
+
+  .point { display: grid; grid-template-columns: 172px minmax(0, 1fr); column-gap: 20px; padding-block: 9px; border-block-start: 1px solid var(--rule); }
+  .point:last-child { border-block-end: 1px solid var(--rule); }
+  .point h3 { font-size: 14px; line-height: 1.4; font-weight: 700; color: var(--ink); }
+  .point p { font-size: 13px; line-height: 1.5; color: var(--muted); }
+
+  .steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 22px; list-style: none; counter-reset: step; }
+  .step { position: relative; padding-block-start: 40px; counter-increment: step; }
+  .step::before { content: counter(step); position: absolute; inset-block-start: 0; inset-inline-start: 0; display: grid; place-items: center; width: 28px; height: 28px; background: var(--accent); color: var(--on-accent); font-family: var(--font-display); font-size: 15px; font-weight: 700; line-height: 1; }
+  .step::after { content: ""; position: absolute; inset-block-start: 13px; inset-inline: 38px -12px; height: 2px; background: var(--rule); }
+  .step:last-child::after { inset-inline-end: 0; }
+  .step h3 { font-size: 14px; line-height: 1.35; font-weight: 700; color: var(--ink); }
+  .step p { margin-block-start: 4px; font-size: 12.5px; line-height: 1.5; color: var(--muted); }
+
+  .proof-box { padding-block: 16px 15px; padding-inline: 20px; background: var(--bg-2); border-inline-start: 4px solid var(--accent); }
+  .proof-text { font-size: 15px; line-height: 1.4; font-weight: 600; color: var(--ink); text-wrap: balance; }
+  .facts { display: grid; grid-template-columns: 1.35fr 0.8fr 1.2fr; column-gap: 20px; margin-block-start: 14px; padding-block-start: 11px; border-block-start: 1px solid var(--rule-2); }
+  .facts dt { font-family: var(--font-mono); font-size: 10px; line-height: 1.2; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+  .facts dd { margin-block-start: 4px; font-size: 12.5px; line-height: 1.4; color: var(--ink); }
+
+  .fine { padding-inline: var(--pad); font-size: 10.5px; line-height: 1.4; color: var(--muted); }
+  .fine:has(bdi:empty) { display: none; }
+  .rows:has(.fine bdi:empty) { padding-block-end: 26px; }
+
+  /* footer: the offer, and where to reach us */
+  .foot { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 32px; align-items: center; padding-inline: var(--pad); padding-block: 22px 24px; background: var(--accent); color: var(--on-accent); }
+  .offer-k { font-family: var(--font-mono); font-size: 10.5px; line-height: 1.2; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+  .offer-t { margin-block-start: 6px; max-width: 26em; font-size: 18px; line-height: 1.3; font-weight: 700; text-wrap: balance; }
+  .cta { padding-inline-start: 28px; border-inline-start: 1px solid color-mix(in srgb, var(--on-accent) 45%, var(--accent)); text-align: end; }
+  .c1 { font-size: 15px; line-height: 1.3; font-weight: 700; }
+  .c2 { margin-block-start: 3px; font-size: 13px; line-height: 1.3; }
+  .c2:has(bdi:empty) { display: none; }
+
+  /* Hebrew and other rtl scripts: no caps tracking, body face for headings; numerals keep the display face */
+  html[dir="rtl"] :is(h1, h2, .top, .spec dt, .facts dt, .offer-k) { font-family: inherit; letter-spacing: 0; }
+  html[dir="rtl"] :is(.top, .spec dt, .facts dt, .offer-k) { font-size: 11.5px; }
+
+  @media print { html, body { background: var(--bg); } }
+</style>
+</head>
+<body data-oid="sheet.page">
+<main class="page">
+  <div class="top">
+    <span class="kicker"><bdi>Pack sheet</bdi></span>
+    <span class="meta"><bdi>4 October 2026</bdi></span>
+  </div>
+
+  <header class="head">
+    <h1 data-oid="sheet.title"><bdi>Fleet Vol 1</bdi></h1>
+    <div class="lede">
+      <p class="claim" data-oid="sheet.claim"><bdi>Three tested skills for coding agents: PowerShell 7, a real browser over CDP, and Bevy 0.19.1.</bdi></p>
+      <dl class="specs">
+        <div class="spec"><dt><bdi>Version</bdi></dt><dd><bdi>1.0.0</bdi></dd></div>
+        <div class="spec"><dt><bdi>Works with</bdi></dt><dd><bdi>Claude Code, OpenCode</bdi></dd></div>
+        <div class="spec"><dt><bdi>Tested on</bdi></dt><dd><bdi>Windows 10</bdi></dd></div>
+      </dl>
+    </div>
+  </header>
+
+  <section class="stats">
+    <div class="stat"><p class="num"><bdi>3</bdi></p><p class="lbl"><bdi>skills in one zip; each is also its own zip</bdi></p></div>
+    <div class="stat"><p class="num"><bdi>49</bdi></p><p class="lbl"><bdi>bash-to-PowerShell pairs, each run in PowerShell 7.6.3</bdi></p></div>
+    <div class="stat"><p class="num"><bdi>$19</bdi></p><p class="lbl"><bdi>once, with every file listed in manifest.json</bdi></p></div>
+  </section>
+
+  <div class="rows">
+    <section class="row">
+      <h2><bdi>What is inside</bdi></h2>
+      <div class="points">
+        <div class="point"><h3><bdi>pwsh-for-bash-writers</bdi></h3><p><bdi>Fixes agents that type grep, head, tail, sed, awk or &amp;&amp; into PowerShell 7 and watch the call fail.</bdi></p></div>
+        <div class="point"><h3><bdi>real-browser-automation</bdi></h3><p><bdi>A 30 KB Node script with no packages drives your installed Edge or Chrome over the DevTools protocol. Loopback only, three guard layers.</bdi></p></div>
+        <div class="point"><h3><bdi>bevy-rust-ecs</bdi></h3><p><bdi>Fixes old Bevy names that no longer exist. Every Bevy 0.19.1 name has its file and line.</bdi></p></div>
+      </div>
+    </section>
+
+    <section class="row">
+      <h2><bdi>Install</bdi></h2>
+      <ol class="steps">
+        <li class="step"><h3><bdi>Unzip the pack</bdi></h3><p><bdi>Unzip fleet-vol-1.zip. It holds skills/, zips/ and proof/.</bdi></p></li>
+        <li class="step"><h3><bdi>Copy the skills</bdi></h3><p><bdi>Copy the folders in skills/ to the skills folder of Claude Code or OpenCode.</bdi></p></li>
+        <li class="step"><h3><bdi>Check</bdi></h3><p><bdi>Ask the agent which skills it has, or run opencode debug skill --pure.</bdi></p></li>
+      </ol>
+    </section>
+
+    <section class="row">
+      <h2><bdi>Proof</bdi></h2>
+      <div class="proof-box">
+        <p class="proof-text"><bdi>Tests passed for all three skills: 7, 11 and 42. The first two ran real programs; the Bevy tests check its 0.19.1 source.</bdi></p>
+        <dl class="facts">
+          <div><dt><bdi>Method</bdi></dt><dd><bdi>PowerShell 7.6.3, real Edge and Chrome on 127.0.0.1, the Bevy 0.19.1 source tree</bdi></dd></div>
+          <div><dt><bdi>Date</bdi></dt><dd><bdi>3 October 2026</bdi></dd></div>
+          <div><dt><bdi>Source</bdi></dt><dd><bdi>Records in proof/ inside the zip</bdi></dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <p class="fine"><bdi>Written by AI coding agents, then every example and claim was checked by tests. Measured on Windows 10, not tested on Linux or macOS. The Bevy skill was read from source: nothing in it was compiled.</bdi></p>
+  </div>
+
+  <footer class="foot">
+    <div>
+      <p class="offer-k"><bdi>Get it</bdi></p>
+      <p class="offer-t"><bdi>$19 once, on Gumroad. A free sample skill, git-one-branch, shows the style first.</bdi></p>
+    </div>
+    <div class="cta" data-oid="sheet.cta">
+      <p class="c1"><bdi>maxkonova.gumroad.com/l/fleet-pack</bdi></p>
+      <p class="c2"><bdi>github.com/MaximKonovalovDev/skillworks</bdi></p>
+    </div>
+  </footer>
+</main>
+</body>
+</html>
