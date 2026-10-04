@@ -1,21 +1,20 @@
-# skillworks handoff - round 106 (token 49b2)
+# skillworks handoff - round 107 (token 49b2)
 
-Round: 106 (edit_guard + scaffold hold landed abfc4e2; inbox S31 rowed K-52)
-Written: 2026-10-04T09:10Z
+Round: 107 (K-52 DONE verified in HEAD; S3 waits on factory + art)
+Written: 2026-10-04T09:25Z
 Token: 49b2 (lock holds lead#49b2 since 2026-10-04T05:12Z)
-Knobs: width 3, foreground, heavy_max 3, paid_mode 0 (re-read 09:10Z; no proposal).
+Knobs: width 3, foreground, heavy_max 3, paid_mode 0 (re-read 09:25Z; no proposal).
 
 ## Heading
-- R4 tool gap closed (edit_guard for 87/48h mismatches); pilot scaffold defect shut on ship paths. Inbox 0 open (S31 -> K-52).
+- R6 price line closed (K-52 DONE, all in HEAD). Pack gate 10/10. S3 open: factory lister + O-025 art. Inbox 0 open.
 
 ## Rows done
-- edit_guard abfc4e2 judge PASS: rule-quoting refusal + CRLF/tab diagnostics; 4 tests; arsenal 11/0/0; suite 334/107.
-- Scaffold hold abfc4e2 PARTIAL-accepted: direct export refuses naming files, make --target still held, filled ships. Plain-make pass is designed (fill hint) + pinned, no bundle ships: no OWNER row.
-- K-52 READY (R6): $19 + AI line into fleet listing; pack_check with price evidence.
+- K-52 DONE (pack maker NOOP, lead verified): listing $19 + AI disclosure as written, pack.json 19, price.txt $19, 3 seller pages read 2026-10-04, pack_check PASS 10/0, Vol 0 free, zeros honest. NOOP is working: left as is.
+- S3 state: price, gate, Vol 0, ZIPs done; missing: Live listing line (factory), cover/demo/screenshots (O-025).
 
 ## Checks
-- check.mjs PASS 20/0/0. finish 4/6 (S3 store page, S5 48h). Halt absent on disk (stale HEAD pause uncommitted).
+- check.mjs PASS 20/0/0. Suite 334/107 (last full). finish 4/6 (S3 store page, S5 48h). Halt absent on disk (stale HEAD pause uncommitted).
 
 ## Next
-- Batch: pack maker K-52 ($19 + AI line + price evidence PASS).
-- Held: TS-1 DOING, DR-1004-1 READY (installer+48h), K-44 READY (needs K-52 + art), K-52 READY, K-03 K-06 K-42 PARKED, OWNER K-46 waits Maxim.
+- Batch: book smith first markitdown extract (TS-4's first job) or planner (S1/S2 met rows tidy). Factory/art are outside the loop.
+- Held: TS-1 DOING, DR-1004-1 READY (installer+48h), K-44 READY (blocked factory/art), K-03 K-06 K-42 PARKED, OWNER K-46 waits Maxim.
