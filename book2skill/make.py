@@ -76,8 +76,12 @@ def make(src: str, name: str, description: str, qa: Path, work: Path | None = No
     stages["eval"] = {"total": report["total"], "passed": report["passed"], "rate": report["rate"]}
     say(f"eval     {report['passed']}/{report['total']} = {report['rate']:.3f} (gate {export_mod.GATE})")
     audit = _quiet(audit_mod.audit, skill)
-    stages["audit"] = {"files": len(audit["sections"]), "total_tokens": audit["total_tokens"]}
-    say(f"audit    {len(audit['sections'])} files, {audit['total_tokens']} tokens")
+    stages["audit"] = {"files": len(audit["sections"]), "total_tokens": audit["total_tokens"],
+                       "body_tokens": audit.get("body_tokens"), "over_budget": audit.get("over_budget", False)}
+    audit_line = f"audit    {len(audit['sections'])} files, {audit['total_tokens']} tokens"
+    if audit.get("over_budget"):
+        audit_line += f" (over budget: body {audit.get('body_tokens')} > {audit.get('body_budget')})"
+    say(audit_line)
 
     left = build_mod.scaffold_leftovers(skill)
     result["placeholders"] = left
