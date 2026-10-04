@@ -1,0 +1,1 @@
+{"direction":"down","error_regex":"Timeout.*exceeded|ERR_CONNECTION_REFUSED|Ref .* not found in the current page snapshot|Browser is already in use|blocked.*foreign|REFUSE.*not.*127","id":"real-browser-automation-zero-load","tool":"itch-browser|playwright|bash"}
