@@ -1,0 +1,1 @@
+{"direction":"down","error_regex":"pipe-run|over cap|over budget|dry-run.*spend|batch.*cap","id":"pipe-run-zero-load","tool":"skill"}
