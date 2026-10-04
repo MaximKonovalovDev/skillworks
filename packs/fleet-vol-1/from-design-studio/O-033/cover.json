@@ -1,0 +1,64 @@
+{
+  "product": "order:demo-gif-for-fleet-vol-1-a-bad-command-t",
+  "from_repo": "skillworks",
+  "storeName": "Gumroad",
+  "title": "Fleet Vol 1",
+  "pick": "developer",
+  "template": "covers/app-window",
+  "kicker": "demo GIF: a bad command, fixed",
+  "claim": "the error, the skill, the fixed command",
+  "chips": [
+    "PowerShell 7",
+    "grep fails",
+    "Select-String finds it"
+  ],
+  "badge": "$19 once",
+  "fine": "Free Vol 0 sample skill included",
+  "tokens": {
+    "bg": "#0f1320",
+    "bg-2": "#1a2140",
+    "ink": "#f4f6ff",
+    "muted": "#c3cbe8",
+    "accent": "#3f5bf0",
+    "accent-ink": "#9fb0ff",
+    "on-accent": "#ffffff",
+    "chip-bg": "#171c38",
+    "chip-ink": "#f4f6ff",
+    "chip-line": "#4f6bff"
+  },
+  "fonts": {
+    "display": "Consolas, 'Lucida Console', 'Courier New', monospace",
+    "body": "'Segoe UI', Verdana, Arial, sans-serif",
+    "mono": "Consolas, 'Lucida Console', 'Courier New', monospace"
+  },
+  "titlePx": 104,
+  "titlePxCard": 58,
+  "titleWeight": 700,
+  "titleTrack": "-0.04em",
+  "titleWrapWide": [
+    "Fleet",
+    "Vol 1"
+  ],
+  "titleWrapCard": [
+    "Fleet Vol 1"
+  ],
+  "chipR": "10px",
+  "copyW": "52%",
+  "claimW": "560px",
+  "vars": {
+    "shot-zoom": "1",
+    "shot-x": "0%",
+    "shot-y": "0%"
+  },
+  "listing": "C:/Users/me/Desktop/skillworks/packs/fleet-vol-1/listing.md",
+  "toBeat": null,
+  "landing": "packs/fleet-vol-1/from-design-studio/O-033/",
+  "assetsFrom": "factory fleet-pack preview/ screenshot-pairs.png (same Fleet Vol 1 content, buyer-zip pairs table render)",
+  "assets": [
+    {
+      "name": "shot.png",
+      "src": "C:/Users/me/Desktop/autonomous-factory/products/skill-pack/fleet-pack/preview/screenshot-pairs.png",
+      "what": "the customer's own picture screenshot-pairs.png"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+/* designs/O-033/tokens.css: O-033 Fleet Vol 1 (developer). All page color comes from these vars. */
+:root {
+  --bg: #0f1320;
+  --bg-2: #1a2140;
+  --ink: #f4f6ff;
+  --muted: #c3cbe8;
+  --accent: #3f5bf0;
+  --accent-ink: #9fb0ff;
+  --on-accent: #ffffff;
+  --chip-bg: #171c38;
+  --chip-ink: #f4f6ff;
+  --chip-line: #4f6bff;
+  --font-display: Consolas, 'Lucida Console', 'Courier New', monospace;
+  --font-body: 'Segoe UI', Verdana, Arial, sans-serif;
+  --font-mono: Consolas, 'Lucida Console', 'Courier New', monospace;
+  --title-px: 104px;
+  --title-px-card: 58px;
+  --title-weight: 700;
+  --title-track: -0.04em;
+  --copy-w: 52%;
+  --claim-w: 560px;
+  --chip-r: 10px;
+  --shot-zoom: 1;
+  --shot-x: 0%;
+  --shot-y: 0%;
+}

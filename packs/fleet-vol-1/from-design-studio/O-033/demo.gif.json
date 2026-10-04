@@ -1,0 +1,29 @@
+{
+  "tool": "gifcap",
+  "command": [
+    "gifcap.mjs",
+    "--demo",
+    "--out",
+    "designs/O-033/demo.gif"
+  ],
+  "source": "real pwsh session on C:\\Users\\me\\AppData\\Local\\Temp\\gifcap-lBh2OX\\notes.txt (PATH scoped to C:\\Windows\\System32;C:\\Windows; Git usr/bin off so bare grep resolves as on stock Windows)",
+  "out": "C:\\Users\\me\\Desktop\\design-studio\\designs\\O-033\\demo.gif",
+  "real": true,
+  "word": "third",
+  "transcript": {
+    "grep": {
+      "exit": 1,
+      "text": "grep: The term 'grep' is not recognized as a name of a cmdlet, function, script file, or executable program.\nCheck the spelling of the name, or if a path was included, verify that the path is correct and try again."
+    },
+    "select": {
+      "exit": 0,
+      "text": "the third names every bevy call"
+    }
+  },
+  "width": 480,
+  "height": 288,
+  "frames": 30,
+  "duration_s": 15,
+  "bytes": 167382,
+  "created": "2026-10-04T17:34:20Z"
+}

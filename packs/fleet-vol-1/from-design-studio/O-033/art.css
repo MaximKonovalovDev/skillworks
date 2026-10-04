@@ -1,0 +1,37 @@
+  /* covers/app-window: one window, the product's screenshot inside, number stickers on its lower edge.
+     The picture always fills the window. Tune it in cover.json "vars": shot-zoom (1 = the picture's whole width), shot-x and shot-y (which corner stays: 0% 0% = top, reading start). */
+  .stage { background: linear-gradient(135deg, var(--bg) 0%, var(--bg) 36%, var(--bg-2) 100%); }
+  h1 { max-width: var(--claim-w, 560px); }
+  .art .halo { position: absolute; width: 640px; height: 640px; border-radius: 50%; inset-inline-end: -230px; top: 24px; background: color-mix(in srgb, var(--accent) 22%, transparent); }
+  .art .dots { position: absolute; inset: 0; background-image: radial-gradient(color-mix(in srgb, var(--ink) 26%, transparent) 1.6px, transparent 1.8px); background-size: 28px 28px; -webkit-mask-image: linear-gradient(100deg, transparent 8%, rgba(0, 0, 0, 1) 70%); mask-image: linear-gradient(100deg, transparent 8%, rgba(0, 0, 0, 1) 70%); }
+  .art .frame { position: absolute; inset-inline-start: 6px; top: 96px; width: 730px; border-radius: 14px; overflow: hidden; background: var(--chip-bg); border: 2px solid var(--chip-line); box-shadow: 0 34px 64px rgba(0, 0, 0, 0.3), 0 6px 14px rgba(0, 0, 0, 0.18); transform: rotate(-2deg); transform-origin: 0% 50%; }
+  .art .bar { display: flex; align-items: center; gap: 8px; height: 42px; padding-inline: 16px; background: var(--chip-bg); border-bottom: 2px solid var(--chip-line); }
+  .art .bar i { display: block; width: 12px; height: 12px; border-radius: 50%; background: color-mix(in srgb, var(--chip-ink) 28%, var(--chip-bg)); }
+  .art .bar i:first-child { background: var(--accent); }
+  .art .bar .name { margin-inline-start: 10px; font-family: var(--font-mono); font-size: 17px; font-weight: 700; color: var(--chip-ink); }
+  .art .bar .name:empty { display: none; }
+  .art .vp { position: relative; height: 436px; overflow: hidden; background: var(--bg-2); }
+  .art .vp img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: var(--shot-x, 0%) var(--shot-y, 0%); transform: scale(var(--shot-zoom, 1)); transform-origin: var(--shot-x, 0%) var(--shot-y, 0%); }
+  .art .stats { position: absolute; z-index: 2; inset-inline-start: 34px; top: 498px; display: flex; align-items: flex-start; gap: 16px; }
+  .art .stat { padding: 14px 20px 16px; min-width: 150px; border-radius: min(var(--chip-r, 8px), 18px); font-size: 21px; font-weight: 700; line-height: 1.15; white-space: nowrap; box-shadow: 0 16px 30px rgba(0, 0, 0, 0.28); }
+  .art .stat b { display: block; font-family: var(--font-display); font-weight: var(--title-weight, 800); font-size: 68px; line-height: 0.95; letter-spacing: var(--title-track, -0.01em); }
+  .art .stat[data-n=""] { display: none; }
+  .art .s1 { background: var(--accent); color: var(--on-accent); transform: rotate(-4deg); }
+  .art .s2 { background: var(--ink); color: var(--bg); transform: rotate(3deg); margin-top: 40px; }
+  .art .s3 { background: var(--chip-bg); color: var(--chip-ink); border: 2px solid var(--chip-line); transform: rotate(-2deg); margin-top: 8px; }
+  @media (max-width: 800px) {
+    h1 { max-width: none; }
+    .chips { margin-bottom: 9px; }
+    .art .halo { width: 380px; height: 380px; inset-inline-end: -120px; top: -36px; }
+    .art .dots { background-size: 20px 20px; }
+    .art .frame { inset-inline-start: 26px; top: 20px; width: 392px; border-radius: 10px; border-width: 1.5px; transform: rotate(-1.5deg); }
+    .art .bar { height: 25px; gap: 5px; padding-inline: 10px; border-bottom-width: 1.5px; }
+    .art .bar i { width: 7px; height: 7px; }
+    .art .bar .name { font-size: 10px; margin-inline-start: 5px; }
+    .art .vp { height: 250px; }
+    .art .stats { inset-inline-start: auto; inset-inline-end: 24px; top: 14px; flex-direction: column; align-items: flex-end; gap: 9px; }
+    .art .stat { min-width: 96px; padding: 7px 12px 8px; font-size: 13px; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.26); }
+    .art .stat b { font-size: 34px; }
+    .art .s2 { margin-top: 0; margin-inline-end: 22px; }
+    .art .s3 { margin-top: 0; border-width: 1.5px; }
+  }
