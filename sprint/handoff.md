@@ -1,22 +1,22 @@
-# skillworks handoff - round 99 (token 49b2)
+# skillworks handoff - round 100 (token 49b2, retro)
 
-Round: 99 (takeover lead#49b2; TS-5 landed 6eec7d4; DR-1004-1 red test ready for cure)
-Written: 2026-10-04T05:12Z, landed 6eec7d4 after 05:20Z proofs
+Round: 100 (retro; engine-builder landed 86932c9; cure 2nd FAIL decided as split)
+Written: 2026-10-04T06:55Z
 Token: 49b2 (lock holds lead#49b2 since 2026-10-04T05:12Z)
-Knobs: width 3, foreground, heavy_max 3, paid_mode 0 (re-read 05:12Z; no proposal).
+Knobs: width 3, foreground, heavy_max 3, paid_mode 0 (re-read 06:55Z; no proposal).
 
 ## Heading
-- R6 pack gate landed (TS-5 DONE 6eec7d4); Scorecard % unchanged (S3 open until live listing). DR-1004-1 READY gives cure smith its red test. Inbox 0 open.
+- R1 skill proven live (engine-builder 86932c9, s6 9/13); R6 gate 10/10 (37a95fb). DR-1004-1 stays READY for installer + 48h. Inbox 0 open.
 
 ## Rows done
-- TS-5 DONE 6eec7d4: pack_check calls factory audit() read-only on staged copy; 3 S3 steals lines landed; proof test_pack_check 34 passed 1 skipped, arsenal 10 pass, fleet-vol-1 offline RESULT PASS 9 checks, check 20/0/0, suite 306 passed 104 skipped.
-- 024-ts3-repair-review PASS verified (trial 7 passed, arsenal 10/0/0, s6 met 8/12); TS-3 content in HEAD, mark DONE next.
-- DR-1004-1 READY (doctor): builder no-edit 43/108 runs a day; trials sheet 12 PASS, grade FAIL exit 1 red; proposal+order O-001 private, never committed.
+- engine-builder 86932c9: live proven, lint 12/24/24/715 PASS, pairs 12/12, grade 12 runs 1.0/0.4167 lift 0.5833 exit 0, suite 313/107, s6 9/13. TS-3 DONE (repair+review PASS, code in HEAD).
+- Cure 2nd FAIL verdict: row needs 48h halving, unmeasurable same-day. Lead split: skill files land green (twice-rerun), DR-1004-1 stays READY (never closed over FAIL) for installer adoption + adopted_after 48h measure.
+- Pack re-read 37a95fb PASS (gate 10/0, K-44 READY store assets NEEDS). TS-5 DONE 6eec7d4 SHA fixed, check 20/0/0.
 
-## Checks
-- check.mjs PASS 20/0/0. vision-check PASS 7/0/0. finish 4/6 (S1 21 loads, S2 6 repos, S4, S6 met; S3 open, S5 open).
-- Halt absent on disk (HEAD stale pause uncommitted). Trial-proof at-bump restored to 03:08Z. orders.csv + trials + target-class left uncommitted for cure.
+## Retro (round 100)
+- Metrics 06:24Z: judge PASS 44/59 (74.6%); calls failed 1.8%; worst repeats: deepwiki not-found 22 (mitigated in seat text), edit oldString mismatch 8.
+- PROPOSAL: sprint/queue/standing/researcher-toolsmith.md | numbered pre-edit re-read step (CRLF) | edit failures 8/day now; revert if not down in 3 rounds.
 
 ## Next
-- Next batch: builder-cure (DR-1004-1 red to proven skill) + builder-pack (K-44 Fleet Vol 1 fix list from pack_check).
-- Held: TS-1 DOING, TS-3 READY->DONE, K-48 READY 1/6 [PIPE], K-44 READY, K-03 K-06 K-42 PARKED, OWNER K-46 waits Maxim.
+- Batch: installer (engine-builder 12-task stranger run, sheet ready) + pipeline (K-48 1/6 [PIPE]).
+- Held: TS-1 DOING, DR-1004-1 READY (installer+48h), K-48 READY, K-44 READY, K-03 K-06 K-42 PARKED, OWNER K-46 waits Maxim.
