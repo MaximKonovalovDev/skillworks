@@ -1,22 +1,22 @@
-# skillworks handoff - round 100 (token 49b2, retro)
+# skillworks handoff - round 101 (token 49b2)
 
-Round: 100 (retro; engine-builder landed 86932c9; cure 2nd FAIL decided as split)
-Written: 2026-10-04T06:55Z
+Round: 101 (K-48 slice 1 landed c9d94e1; installer delivered engine-builder)
+Written: 2026-10-04T07:30Z
 Token: 49b2 (lock holds lead#49b2 since 2026-10-04T05:12Z)
-Knobs: width 3, foreground, heavy_max 3, paid_mode 0 (re-read 06:55Z; no proposal).
+Knobs: width 3, foreground, heavy_max 3, paid_mode 0 (re-read 07:30Z; no proposal).
 
 ## Heading
-- R1 skill proven live (engine-builder 86932c9, s6 9/13); R6 gate 10/10 (37a95fb). DR-1004-1 stays READY for installer + 48h. Inbox 0 open.
+- R6 honesty slice 1 landed (NC-price gate). Installer: engine-builder --check ok, stranger 1.0/0.4167 PASS, adopted row private. Inbox 0 open.
 
 ## Rows done
-- engine-builder 86932c9: live proven, lint 12/24/24/715 PASS, pairs 12/12, grade 12 runs 1.0/0.4167 lift 0.5833 exit 0, suite 313/107, s6 9/13. TS-3 DONE (repair+review PASS, code in HEAD).
-- Cure 2nd FAIL verdict: row needs 48h halving, unmeasurable same-day. Lead split: skill files land green (twice-rerun), DR-1004-1 stays READY (never closed over FAIL) for installer adoption + adopted_after 48h measure.
-- Pack re-read 37a95fb PASS (gate 10/0, K-44 READY store assets NEEDS). TS-5 DONE 6eec7d4 SHA fixed, check 20/0/0.
+- K-48 slice (1) DONE c9d94e1 judge PASS: build.py NC gate + export enforce + test_build_nc_gate 4 passed; suite 317/107; live_proof re-proven (07:19Z churn fixed sanctioned way); 5 slices open.
+- Installer DONE: shared-folder install + check ok, scratch stranger run, grade PASS same fingerprint, adopted.csv 2026-10-04 engine2040 row (before 4). No defect packets.
+- Cure split stands: DR-1004-1 READY (installer+48h halving via adopted_after).
 
-## Retro (round 100)
-- Metrics 06:24Z: judge PASS 44/59 (74.6%); calls failed 1.8%; worst repeats: deepwiki not-found 22 (mitigated in seat text), edit oldString mismatch 8.
-- PROPOSAL: sprint/queue/standing/researcher-toolsmith.md | numbered pre-edit re-read step (CRLF) | edit failures 8/day now; revert if not down in 3 rounds.
+## Checks
+- check.mjs PASS 20/0/0. Suite 317 passed 107 skipped. finish 4/6 (S3 open store page, S5 open 48h).
+- Halt absent on disk (stale HEAD pause uncommitted). orders.csv + review files uncommitted (keeper/center own them).
 
 ## Next
-- Batch: installer (engine-builder 12-task stranger run, sheet ready) + pipeline (K-48 1/6 [PIPE]).
-- Held: TS-1 DOING, DR-1004-1 READY (installer+48h), K-48 READY, K-44 READY, K-03 K-06 K-42 PARKED, OWNER K-46 waits Maxim.
+- Batch: pipeline slice (2) vol0 $10 line + builder-pack? No: pipeline slice 2 first, then installer re-measure when 48h due.
+- Held: TS-1 DOING, DR-1004-1 READY, K-48 READY 2/6, K-44 READY, K-03 K-06 K-42 PARKED, OWNER K-46 waits Maxim.
