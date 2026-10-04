@@ -11,6 +11,8 @@ from pathlib import Path
 
 import click
 
+from . import build as build_mod
+
 TARGETS = ("claude", "codex", "opencode", "gemini")
 GATE = 0.6
 REPORT_FILENAME = "eval_report.json"
@@ -163,6 +165,7 @@ def export(skilldir: Path, target: str, out: Path, eval_report: dict | None = No
         raise SystemExit(
             f"eval gate refused export: rate {rate:.3f} below {GATE:.1f}; fix the skill first"
         )
+    build_mod.refuse_nc_price(skilldir)  # K-48 slice (1): an NC source never gets a price
     dest = out / target / skilldir.name
     _check_paths(skilldir, out, dest)
     if dest.exists():

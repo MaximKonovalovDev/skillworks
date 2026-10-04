@@ -1,9 +1,9 @@
 {
   "skill": "engine-builder",
-  "fingerprint": "300998834546f61be6587c2e6a2209a4369900c46e150c4427b0bf0971bf6906",
-  "date": "2026-10-04T06:52Z",
+  "fingerprint": "6788c5d2dab05d8ab506779327a11c06da9c91896655644505fdff7cd1c60c79",
+  "date": "2026-10-04T07:26Z",
   "command": "SKILL_LIVE=1 python -m pytest tests/test_engine_builder.py -q",
-  "result": "6 passed in 10.86s",
+  "result": "6 passed in 6.82s",
   "versions": {
     "python": "3.13.14",
     "os": "Windows-10-10.0.19045-SP0",

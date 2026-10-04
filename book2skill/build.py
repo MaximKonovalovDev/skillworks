@@ -18,6 +18,78 @@ NAME_RE = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
 NAME_RULE = "name matches dir, a-z0-9- only"
 
 
+# K-48 slice (1): a NonCommercial source can never get a price. Hints match the
+# Creative-Commons NonCommercial markers (BY-NC, -NC-, NC-SA) and the word
+# itself; ordinary prose ("price", "sold", "$10") never matches.
+NC_HINTS = ("noncommercial", "by-nc", "-nc-", "nc-sa")
+
+# An NC skill's scaffold licence (K-48): the MIT line is for commercial sources only.
+NC_LICENSE = "CC-BY-NC-SA-3.0 (source; NonCommercial, never sold)"
+
+_PRICE_RE = re.compile(r"\$\d")
+
+
+def is_noncommercial_text(text: str) -> bool:
+    """True when the text names a NonCommercial source licence."""
+    low = text.lower()
+    return any(h in low for h in NC_HINTS)
+
+
+def skill_is_noncommercial(skilldir: Path) -> bool:
+    """True when the skill's own files say its source is NonCommercial."""
+    for rel in ("SKILL.md", "references/sources.md"):
+        try:
+            if is_noncommercial_text((skilldir / rel).read_text(encoding="utf-8")):
+                return True
+        except OSError:
+            continue
+    return False
+
+
+def find_price_markers(skilldir: Path) -> list[str]:
+    """Structured price carriers inside the skill (price.txt, pack.json, a listing Price $N line).
+
+    Free-text mentions (a Vol 0 sample line, prose about prices) are not
+    markers: slice (2) removes the paid-Vol-1 line, this gate stops a priced pack.
+    """
+    marks: list[str] = []
+    try:
+        if (skilldir / "price.txt").is_file() and _PRICE_RE.search(
+            (skilldir / "price.txt").read_text(encoding="utf-8")
+        ):
+            marks.append("price.txt names a price")
+    except OSError:
+        pass
+    try:
+        if (skilldir / "pack.json").is_file():
+            data = json.loads((skilldir / "pack.json").read_text(encoding="utf-8"))
+            price = data.get("price_usd")
+            if isinstance(price, (int, float)) and price > 0:
+                marks.append(f"pack.json price_usd {price:g}")
+    except (OSError, ValueError):
+        pass
+    try:
+        if (skilldir / "listing.md").is_file():
+            for line in (skilldir / "listing.md").read_text(encoding="utf-8").splitlines():
+                if line.strip().lower().startswith(("- price", "price")) and _PRICE_RE.search(line):
+                    marks.append(f"listing.md prices it ({line.strip()[:60]})")
+                    break
+    except OSError:
+        pass
+    return marks
+
+
+def refuse_nc_price(skilldir: Path) -> None:
+    """Refuse a price on a NonCommercial source (K-48 slice 1); free NC skills pass."""
+    if skill_is_noncommercial(skilldir):
+        marks = find_price_markers(skilldir)
+        if marks:
+            raise SystemExit(
+                f"export refused: NonCommercial source '{skilldir.name}' can never get a price "
+                f"({'; '.join(marks)}); share it free under the same licence"
+            )
+
+
 def validate_name(name: str, skilldir: Path) -> None:
     """Refuse a --name that breaks the skill naming rule (016)."""
     if not NAME_RE.match(name):
@@ -100,13 +172,14 @@ def prompt_version() -> str:
 
 
 def _frontmatter(name: str, description: str, version: str = "0.1.0",
-                 author: str = "skillworks", tags: list[str] | None = None) -> str:
+                  author: str = "skillworks", tags: list[str] | None = None,
+                  licence: str = "MIT") -> str:
     safe = "".join(c if c.isalnum() or c == "-" else "-" for c in name.lower()).strip("-")
     tag_list = tags if tags is not None else []
     tags_str = "[" + ", ".join(tag_list) + "]"
     return (
         f"---\nname: {safe}\ndescription: {description}\n"
-        f"version: {version}\nauthor: {author}\ntags: {tags_str}\nlicense: MIT\n---\n"
+        f"version: {version}\nauthor: {author}\ntags: {tags_str}\nlicense: {licence}\n---\n"
     )
 
 
@@ -120,15 +193,23 @@ def build(workdir: Path, skilldir: Path, name: str, description: str) -> dict:
     notes, marked = strip_gutenberg_markers("\n\n".join(heads))
     notes, blurbed = strip_gutenberg_boilerplate(notes)
     (chapters / "notes.md").write_text(notes, encoding="utf-8")
-    (skilldir / "SKILL.md").write_text(_frontmatter(name, description) + _scaffold_body(name), encoding="utf-8")
+    noncommercial = is_noncommercial_text(description)
+    licence = NC_LICENSE if noncommercial else "MIT"
+    (skilldir / "SKILL.md").write_text(_frontmatter(name, description, licence=licence) + _scaffold_body(name), encoding="utf-8")
     for fname, stub in STUB_FILES.items():
         (skilldir / fname).write_text(stub, encoding="utf-8")
     refs = skilldir / "references"
     refs.mkdir(exist_ok=True)
     chunks = sorted((workdir / "chunks").glob("*.txt"))
+    sources_note = (
+        "\nLicence: CC BY-NC-SA 3.0 (source) — NonCommercial, never sold; "
+        "share free under the same licence.\n"
+        if noncommercial else ""
+    )
     (refs / "sources.md").write_text(
         "# Sources\n\nProgressive disclosure: read SKILL.md first, then only "
-        "the chunk listed here that matches the task.\n\n"
+        "the chunk listed here that matches the task.\n"
+        + sources_note
         + "".join(f"- `{p.name}`\n" for p in chunks),
         encoding="utf-8",
     )
@@ -137,6 +218,7 @@ def build(workdir: Path, skilldir: Path, name: str, description: str) -> dict:
         "skill": str(skilldir),
         "note_chars": len(notes),
         "notes_stripped": bool(marked or blurbed),
+        "noncommercial": noncommercial,
         "prompt": prompt_version(),
         "layout": "skill-pack",
     }
