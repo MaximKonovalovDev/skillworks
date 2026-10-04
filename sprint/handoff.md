@@ -24,6 +24,10 @@ Knobs: width 3, foreground, heavy_max 3, paid_mode 0 (no change, no proposal).
 - Shared files (cli.py, arsenal.json, steals.md, THIRD_PARTY_NOTICES.md) now carry TS-2 plus TS-3 plus TS-4 lines; they commit only with the next judged PASS that owns them.
 - TS-1 tolerance step ended round 87 (fingerprint 10 vs 12, 2 compacted rows); K-48 slice held at 1 of 6.
 
+## Breach and fix (lead error, no history rewrite)
+- a29a48f swept 31 staged files (helpers had staged their work; bare git commit took all). Unjudged code (TS-1, TS-3, TS-4 tools, K-48 build.py, freud samples, VISION-TABLES lines) landed without judge PASS. Stands as landed; follow-up judges verify behavior forward, FAILs become forward fixes.
+- orders.csv (factory Fleet Vol 2 ops text) must not be public: removed in the fix commit below. Secret scan of a29a48f: clean. Keeper churn files in that commit left to the keeper.
+
 ## Next
 - Keeper to queue: TS-3 repair (researcher, one only) plus TS-4 review (judge) plus next toolsmith row.
 - After: commit TS-3/TS-4 only on PASS; TS-1 and K-48 held per rounds 86-87.
