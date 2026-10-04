@@ -1,0 +1,1 @@
+{"direction":"down","error_regex":"Repository not found|does not point to a file|could not resolve ref","id":"repo-read-first-researcher","tool":"deepwiki_ask_wiki_question|github_get_file_contents"}

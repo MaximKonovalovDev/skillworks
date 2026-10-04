@@ -1,0 +1,12 @@
+{
+  "skill": "repo-read-first",
+  "runs": 12,
+  "with_rate": 0.9167,
+  "without_rate": 0.0,
+  "lift": 0.9167,
+  "spread": 0.9167,
+  "fingerprint": "43cc831907be2108adfb81f73af117e128270b8804395f5778577d79e9ae7adc",
+  "sheet": "evals/repo-read-first_trials.jsonl",
+  "at": "2026-10-04T12:44Z",
+  "ok": true
+}

@@ -1,0 +1,10 @@
+{"must": ["repos", "default branch"], "q": "what proves the repo exists before any file read?"}
+{"must": ["indexed", "fallback"], "q": "what happens when the wiki service reports the repo unindexed?"}
+{"must": ["listing", "contents"], "q": "what comes before reading a file path you did not list?"}
+{"must": ["exact path"], "q": "which path does the contents call read?"}
+{"must": ["pinned", "ref"], "q": "how is the file read pinned instead of assuming trunk?"}
+{"must": ["raw"], "q": "what kind of URL must never be guessed for a file read?"}
+{"must": ["licence"], "q": "what is noted from the repos record before reusing helper lines?"}
+{"must": ["search", "exact path"], "q": "how is the retry helper location confirmed before quoting?"}
+{"must": ["unverified"], "q": "what does the closing report state about gaps?"}
+{"must": ["run_pairs"], "q": "which script checks the twelve pairs before claiming the read is fixed?"}
