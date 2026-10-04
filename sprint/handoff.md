@@ -1,34 +1,35 @@
-# skillworks handoff - round 88 (token b7e2)
+# skillworks handoff - round 90 (token 9f3c)
 
-Round: 88 (batch width 3, all 3 returned; 1 SHA)
-Written: 2026-10-04T03:35Z
-Token: b7e2 (takeover 2026-10-04T02:10Z from stale lock 8c1d; same token all session)
-Knobs: width 3, foreground, heavy_max 3, paid_mode 0 (no change, no proposal).
+Round: 90 (takeover; replaced stale lock lead#b7e2 from a closed app with lead#9f3c, same token all session from here)
+Written: 2026-10-04T04:49Z
+Token: 9f3c (takeover 2026-10-04T04:17Z; prior session closed after round 89)
+Knobs: width 3, foreground, heavy_max 3, paid_mode 0 (re-read 2026-10-04T04:49Z; no proposal).
 
 ## Heading
-- R1 book-to-skill rises: TS-2 distill kit landed (judge PASS, 8 new tests green); TS-3 trial runner failed its ledger gate, TS-4 extractor waits review.
+- Scorecard R1 book-to-skill in hours with receipts moved: TS-4 READY to DONE (clean extractor landed 16c72ad). R2 trial runner ledger repaired, awaits judge re-review.
 
 ## Done (SHAs)
-- 5d68cf2: TS-2 distill kit exclusive files (book2skill/distill.py, book2skill/gates.py, tools/skill_lint.py, prompts/distill-v2.md, tests/test_distill.py 8 passed, tests/skill_gates.py shim; judge PASS, check 20/0/0).
-- Board TS-2 marked DONE with 5d68cf2 in working tree, uncommitted (board carries unjudged rows). steals TS-2 line marked landed 5d68cf2 in working tree, uncommitted (file shared with unjudged lines).
+- 16c72ad board: TS-4 clean extractor with markitdown engine (judge PASS). Paths: book2skill/extract.py, cli.py, make.py, tools/extract_clean.py (new), tests/test_extract_engines.py (new), tests/test_pipeline.py, requirements.txt, arsenal.json, THIRD_PARTY_NOTICES.md, sprint/steals.md, sprint/board.md. Carries deferred TS-2 cli wiring plus arsenal and steals lines per 5d68cf2.
+- Repair DONE (in 16c72ad steals): TS-3 trial ledger relabeled TS-2 versus TS-3, pins and licences intact. TS-3 row stays READY until a judge re-reviews the repair.
 
 ## Checks
-- Lead reran: tests/test_distill.py 8 passed; check.mjs RESULT PASS 20/0/0.
+- node sprint/check.mjs: RESULT PASS 20 pass 0 warn 0 fail (lead reran).
+- node C:/Users/me/Desktop/center/arsenal.mjs --check skillworks: RESULT PASS 10 pass 0 warn 0 fail.
+- Targeted pytest tests/test_extract_engines.py plus test_distill.py plus test_skill_trial.py: 18 passed. Full suite via judge rerun: 303 passed 104 skipped.
+- Export guard: Get-ChildItem skills -Recurse -Directory -Filter export prints nothing. Privacy: no other repo path or number in the committed diff.
 
-## Batch in (all 3 returned)
-- judge toolsmith-r1-review PASS (TS-2). Committed exclusive 6 files as 5d68cf2 by path; cli.py wiring plus arsenal/steals/THIRD_PARTY shared lines land with the next PASS commit.
-- judge toolsmith-r2-review FAIL (TS-3): steals landed SHA missing plus 39-file tree scope. One repair by researcher next; keeper to queue. Nothing committed.
-- researcher-toolsmith DONE TS-4: extract --engine markitdown with repo-local install, ebooklib out, tests/test_extract_engines.py 3 passed, full 303 passed, arsenal 10 pass, Pro Git EPUB 868583c to 930994c with 701 headings and 112 tables and 887 fences. Waits its review; keeper to queue. Nothing committed.
+## Batch sent (width 2 of 3)
+- 022-ts3-repair (researcher): DONE, steals-only edit, all proofs green.
+- 023-ts4-review (judge): VERDICT PASS, 15-line review with rerun numbers and revert.
+- Keeper batch.md rewritten 2026-10-04T04:23Z but names the same stale 3 packets (r1-review, r2-review, toolsmith) already consumed in round 88; not resent. Keeper to re-plan: TS-3 repair review (judge), then toolsmith TS-5 pack gate.
 
-## Blockers
-- Shared files (cli.py, arsenal.json, steals.md, THIRD_PARTY_NOTICES.md) now carry TS-2 plus TS-3 plus TS-4 lines; they commit only with the next judged PASS that owns them.
-- TS-1 tolerance step ended round 87 (fingerprint 10 vs 12, 2 compacted rows); K-48 slice held at 1 of 6.
+## Retro (round 90, every 5th)
+- Worst repeated failure: ledger-SHA paperwork judges disagree on (r1 PASS with pending SHA, r2 FAIL on pending SHA plus tree scope, TS-4 brief had to carve the SHA out explicitly).
+- PROPOSAL: sprint/queue/chain/review.md | pending-SHA ledger is PASS-with-note when the tool files are committed and the SHA lands with the lead commit, never a FAIL | numbers now: 1 PASS, 1 FAIL, 1 carve-out in 3 tool reviews.
 
-## Breach and fix (lead error, no history rewrite)
-- a29a48f swept 31 staged files (helpers had staged their work; bare git commit took all). Unjudged code (TS-1, TS-3, TS-4 tools, K-48 build.py, freud samples, VISION-TABLES lines) landed without judge PASS. Stands as landed; follow-up judges verify behavior forward, FAILs become forward fixes.
-- orders.csv (factory Fleet Vol 2 ops text) must not be public: removed in the fix commit below. Secret scan of a29a48f: clean. Keeper churn files in that commit left to the keeper.
+## Held and left
+- Held: TS-1 DOING (10 vs 12 tolerance, 2 compacted rows proven). K-48 READY at 1 of 6 slices. TS-3 READY (repair landed, needs judge re-review). sprint/halt deletion left untouched in working tree (resume state, never committed by the lead).
+- Left: K-44 and K-48 READY, K-03 K-06 K-42 PARKED, TS-3 READY, TS-5 READY next (toolsmith pack gate), TS-1 DOING, TS-2 and TS-4 DONE.
 
 ## Next
-- Keeper to queue: TS-3 repair (researcher, one only) plus TS-4 review (judge) plus next toolsmith row.
-- After: commit TS-3/TS-4 only on PASS; TS-1 and K-48 held per rounds 86-87.
-- Left: K-44/K-48 READY, K-03/K-06/K-42 PARKED, TS-3 to TS-5 READY, TS-1 DOING, TS-2 DONE.
+- Judge re-review of the TS-3 repair, then toolsmith TS-5. Lead sends that batch on arrival.
