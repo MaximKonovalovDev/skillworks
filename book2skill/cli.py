@@ -7,6 +7,7 @@ import click
 
 from . import audit as audit_mod
 from . import build as build_mod
+from . import distill as distill_mod
 from . import eval as eval_mod
 from . import export as export_mod
 from . import extract as extract_mod
@@ -113,6 +114,31 @@ def export(skill: str, target: str, out: str, work: str | None, qa: str | None, 
             raise click.UsageError("--work and --qa must be given together")
         eval_report = eval_mod.run_eval(Path(work), Path(skill), Path(qa))
     export_mod.export(Path(skill), target, Path(out), eval_report=eval_report)
+
+
+@main.group()
+def distill() -> None:
+    """Distill kit (TS-2): reading packets and the cure-smith gate."""
+
+
+@distill.command(name="plan")
+@click.option("--work", required=True)
+def distill_plan(work: str) -> None:
+    """Group work/chunks into reading packets of at most 6000 tokens."""
+    try:
+        distill_mod.plan(Path(work))
+    except ValueError as exc:
+        raise click.UsageError(str(exc)) from None
+
+
+@distill.command(name="check")
+@click.option("--skill", required=True)
+@click.option("--work", default=None, help="work dir whose chunks locators must resolve to")
+def distill_check(skill: str, work: str | None) -> None:
+    """Gate a distilled skill: budget, no scaffold, locators, pairs, ASCII."""
+    report = distill_mod.check(Path(skill), Path(work) if work else None)
+    if not report["ok"]:
+        raise SystemExit(1)
 
 
 @main.command()

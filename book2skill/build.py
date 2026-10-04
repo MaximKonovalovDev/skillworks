@@ -10,6 +10,8 @@ import json
 import re
 from pathlib import Path
 
+from .extract import strip_gutenberg_markers
+
 PROMPT_FILE = Path(__file__).resolve().parent.parent / "prompts" / "build-skill.md"
 
 NAME_RE = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
@@ -30,6 +32,33 @@ STUB_FILES = {
     "patterns.md": "# Patterns\n\nFill reusable patterns while reading.\n",
     "cheatsheet.md": "# Cheatsheet\n\nFill one-page recall while reading.\n",
 }
+
+
+# Gutenberg boilerplate that survives in stale chunks (K-48). Chunk heads are
+# only 600 chars, so the *** START/END markers usually sit deeper in the
+# chunk while the marker-less blurb ("The Project Gutenberg eBook ...",
+# "This eBook is for the use of anyone ...") rides into notes.md verbatim.
+# These case-insensitive hints match the standard PG header/footer blurb,
+# never ordinary book prose.
+_GUTENBERG_LINE_HINTS = (
+    "project gutenberg",
+    "gutenberg.org",
+    "distributed proofreading",
+    "pgdp.net",
+    "this ebook is for the use of anyone",
+    "at no cost and with almost no restrictions",
+    "you may copy it, give it away or re-use it",
+    "check the laws of the country",
+    "before using this ebook",
+    "most people start at our website",
+)
+
+
+def strip_gutenberg_boilerplate(text: str) -> tuple[str, bool]:
+    """Drop PG blurb lines no marker strip can see; plain prose untouched."""
+    lines = text.splitlines()
+    kept = [ln for ln in lines if not any(h in ln.lower() for h in _GUTENBERG_LINE_HINTS)]
+    return "\n".join(kept), len(kept) != len(lines)
 
 
 def _scaffold_body(name: str) -> str:
@@ -88,7 +117,8 @@ def build(workdir: Path, skilldir: Path, name: str, description: str) -> dict:
         heads.append(f"## {path.stem}\n" + path.read_text(encoding="utf-8")[:600])
     chapters = skilldir / "chapters"
     chapters.mkdir(parents=True, exist_ok=True)
-    notes = "\n\n".join(heads)
+    notes, marked = strip_gutenberg_markers("\n\n".join(heads))
+    notes, blurbed = strip_gutenberg_boilerplate(notes)
     (chapters / "notes.md").write_text(notes, encoding="utf-8")
     (skilldir / "SKILL.md").write_text(_frontmatter(name, description) + _scaffold_body(name), encoding="utf-8")
     for fname, stub in STUB_FILES.items():
@@ -106,6 +136,7 @@ def build(workdir: Path, skilldir: Path, name: str, description: str) -> dict:
         "stage": "build",
         "skill": str(skilldir),
         "note_chars": len(notes),
+        "notes_stripped": bool(marked or blurbed),
         "prompt": prompt_version(),
         "layout": "skill-pack",
     }

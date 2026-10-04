@@ -1,0 +1,12 @@
+{"id": "p01", "kind": "run", "task": "Preview a batch of 3 small .txt files with a generous cap: run the dry-run form and quote the first word of stdout and the exit code.", "must": ["DRY-RUN", "spend"]}
+{"id": "p02", "kind": "run", "task": "Run the same batch for real into an empty out folder and say what record file proves what was priced.", "must": ["RUN", "receipt.json"]}
+{"id": "p03", "kind": "run", "task": "Price the same batch with cap 1 so it must refuse: quote the error line, the exit code, and whether the out folder is created.", "must": ["ERROR over cap", "refused"], "exit": 2}
+{"id": "p04", "kind": "run", "task": "Re-run the batch with the cap set exactly equal to the spend the dry run reported: does it run or refuse? Quote the first word of stdout.", "must": ["RUN"]}
+{"id": "p05", "kind": "run", "task": "Point the dry run at a folder holding one .txt plus one .md plus a subfolder with another .txt: how many items does it price? Quote the count.", "must": ["1 items"]}
+{"id": "p06", "kind": "run", "task": "Dry-run a folder with one .txt holding 3 Hebrew letters and one line break: quote the spend and say what one Hebrew letter costs.", "must": ["spend", "one"]}
+{"id": "p07", "kind": "answer", "task": "What happens when the input folder does not exist: which exit code, and is anything written?", "must": ["ERROR", "nothing written"]}
+{"id": "p08", "kind": "answer", "task": "A dry run whose spend is over the cap: what is the exit code and is anything written?", "must": ["DRY-RUN", "nothing written"]}
+{"id": "p09", "kind": "answer", "task": "What does a second real RUN into the same out folder do to the files already there?", "must": ["overwrites"]}
+{"id": "p10", "kind": "answer", "task": "One item is not UTF-8 text: what error family and exit code does the run end with?", "must": ["UTF-8"]}
+{"id": "p11", "kind": "answer", "task": "The out folder is given as the input folder itself: does the tool run, and what does it print?", "must": ["ERROR"]}
+{"id": "p12", "kind": "answer", "task": "State the per-item token pricing formula including the minimum, and whether subfolders count.", "must": ["chars // 4"]}

@@ -21,6 +21,11 @@
 - Status: draft (PREP-ONLY, not shipped).
 - Category: git branching how-to.
 - Tags: git, branching, merge, cheatsheet.
+- Marketplace (skills-manager shape, own words, honest zeros until listed):
+  - author: skillworks (PREP-ONLY draft, not yet a store author).
+  - repository: none published yet (this repo path only).
+  - stars: 0 (not listed, no stars).
+  - weekly-installs: 0 (not listed, no installs).
 - Files:
   - `vol0-sample.md` (792 B, 2026-10-03) — free excerpt, no purchase needed.
   - `SKILL.md` — skill entry (PREP-ONLY draft).

@@ -63,6 +63,20 @@
       "timeout_s": 120
     },
     {
+      "name": "fleet_failures",
+      "does": "Doctor lane eyes: top failure classes of the fleet from the OpenCode history read-only (scan), skill loads by skill and repo sharing one counter with S1 and S2 (loads), before and now for one skill (compare), lane tokens that move only on new work (lanes), one ROUND line (round-line); writes only to the skill-doctor state folder",
+      "run": ["python", "tools/fleet_failures.py", "scan"],
+      "args": [
+        { "name": "command", "does": "scan | loads | compare | lanes | round-line", "required": true },
+        { "name": "skill", "does": "compare: the skill name, e.g. pwsh-for-bash-writers", "required": false },
+        { "name": "hours", "does": "scan, loads: window in hours (default 48, 24)", "flag": "--hours" },
+        { "name": "db", "does": "opencode.db path (default OPENCODE_DB or the local share file, always opened read-only)", "flag": "--db" }
+      ],
+      "test": ["python", "tools/fleet_failures.py", "--help"],
+      "for": ["center skill doctor: the first patient comes from its output", "skillworks finish bars S1, S2 (loads shares one counter)"],
+      "timeout_s": 300
+    },
+    {
       "name": "pack_check",
       "does": "Gate for a skill pack that is for sale: pack.json and licences (a NonCommercial skill is never in a priced pack), each skill's format, eval gate and live proof, the listing's fields, price and proof lines, the buyer zip (current, safe paths, manifest sha256, one zip per skill with SKILL.md at the root), the free Vol 0 zip, the price evidence pages, and the store assets still needed; prints PASS, FAIL, WARN and NEEDS lines and one RESULT line, exit 0 only on PASS; reads this repo and the evidence pages, writes nothing",
       "run": ["python", "tools/pack_check.py"],

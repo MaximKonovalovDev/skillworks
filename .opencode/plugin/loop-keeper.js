@@ -1167,7 +1167,7 @@ const makeKeeper = async ({ client, worktree, directory }, options) => {
   };
   // A one-off writer packet names its Goal, Scope, Proof and Stop (center 2026-09-27: all 50
   // engine writer packets in 12 h missed one). The words are the dispatch meter's, so a repo's own
-  // names count (owned paths, acceptance, budget). Gates and legacy chain packets are exempt.
+  // names count (owned paths, acceptance, budget). Gates and the chain's own packets are exempt.
   const CARD = {
     Goal: /\bGoal\b|EMPIRE outcome|outcome it moves/i,
     Scope: /\bScope\b|owned paths?|\bOwns?\b|\bOwned\b|only these (?:files|paths)|\bhome\b/i,
@@ -1271,6 +1271,50 @@ const makeKeeper = async ({ client, worktree, directory }, options) => {
     const keep = lines.filter((l) => !(id && l.split("|")[1]?.trim() === id) && !((claimAt(l) ?? cut) < cut));
     if (keep.length !== lines.length) try { writeFileSync(file, keep.join("\n")); } catch { /* the 2 h window ends them anyway */ }
   };
+  // The chain (owner 2026-10-04, "y if useful": the lean keeper of 2026-10-02 had cut it, and judges then ran only when a lead
+  // sent one by hand: design-studio 0 in 4 rounds, forge 4 a day). A helper whose packet carries `chain: start` and ends
+  // `RESULT: DONE` gets ONE review one-off from <queue>/chain/review.md; a review ending `VERDICT: FAIL` gets ONE repair from
+  // chain/repair.md, and the repair's DONE one more review. PASS writes nothing (the lead lands it); NOOP, BLOCKED, PARTIAL, a cut
+  // or failed run, a second FAIL, a BLOCKED verdict and a gate's own seat write nothing either: the lead sees them as before.
+  // Templates are the repo's words with {{id}} {{role}} {{title}} {{record}} (the finished run's record in done/) and {{result}}
+  // (its reply, cut) filled in, plus the run's RESULT/ROW/LANE/FILES lines (the reply's tail is what the cut loses). A repo
+  // without them has no chain, logged once (rename chain/review.md to switch one repo's chain off). One step per name: a step
+  // already waiting in ready/ or running/ is not written again.
+  const chainWarned = new Set();
+  const chainNext = (job, text, record) => {
+    const fm = job.fm ?? {};
+    const step = fm.chain;
+    const last = (re) => [...String(text).matchAll(re)].at(-1)?.[1]?.toUpperCase();
+    let next, attempt = Number(fm.attempt) || 1;
+    if (!qdir || !step || (step === "start" && GATE.test(job.role))) return;
+    if (step === "start" || step === "repair") {
+      if (last(/RESULT:\s*(DONE|PARTIAL|BLOCKED|NOOP)\b/gi) !== "DONE") return;
+      next = "review";
+    } else if (step === "review" && last(/VERDICT:\s*\**\s*(PASS|FAIL|BLOCKED)\b(?!\|)/gi) === "FAIL" && attempt < 2) { next = "repair"; attempt += 1; }
+    else return;
+    const sid = job.sid ?? status.session ?? "-";
+    const tpl = read(join(qsub("chain"), `${next}.md`));
+    if (!tpl) { if (!chainWarned.has(next)) { chainWarned.add(next); log(`${sid} chain: no ${next}.md in ${qsub("chain")}: no ${next} step for this repo`); } return; }
+    const origin = fm.of ?? job.id;
+    const writer = fm.writer ?? job.role;
+    const title = fm.origin_title ?? job.title;
+    const name = `${origin}-${next}${next === "review" && attempt > 1 ? `-${attempt}` : ""}.md`;
+    if (["ready", "running"].some((d) => existsSync(join(qsub(d), name)))) return;
+    const vals = { id: origin, role: writer, title, record, result: clip(text, 4000) };
+    const p = parsePacket(tpl.replace(/\r\n/g, "\n").replace(/\{\{(\w+)\}\}/g, (m, k) => vals[k] ?? m));
+    if (!p || !roleKnown(p)) {
+      if (!chainWarned.has(`${next}!`)) { chainWarned.add(`${next}!`); log(`${sid} chain: ${next}.md has no front matter with role: and title:, or names a role this repo has no agent for`); }
+      return;
+    }
+    const head = { ...p.fm, role: p.role, title: p.title, chain: next, of: origin, writer, attempt, origin_title: title.replace(/\n/g, " ") };
+    delete head.copies;
+    const facts = [...String(text).matchAll(/^[ \t>*`-]*(?:RESULT|VERDICT|ROW|LANE|BRANCH|OWNED|HOME|FILES|CRATE|FLAGS|CHANGED)\b.*$/gim)].slice(-6).map((m) => `\n${clip(m[0], 300)}`).join("");
+    try {
+      mkdirSync(qsub("ready"), { recursive: true });
+      writeFileSync(join(qsub("ready"), name), `---\n${Object.entries(head).map(([k, v]) => `${k}: ${v}`).join("\n")}\n---\n${p.body}\n\nKeeper facts: run ${job.id} (${job.standing ? `seat ${job.standing.slice(0, -3)}, ` : ""}@${job.role}), ${clip(job.title, 100)}.${facts}\n`);
+      log(`${sid} chain: ${job.id} -> ${name.slice(0, -3)} as ${p.role}`);
+    } catch (e) { log(`${sid} chain: ${next} for ${job.id} not written (${e?.message ?? e})`); }
+  };
   // A finished helper's record (done/ or failed/), its seat's rest, and any chain packet it names.
   const finishJob = (job, text, failed) => {
     const result = failed ? "failed" : "completed";
@@ -1292,6 +1336,7 @@ const makeKeeper = async ({ client, worktree, directory }, options) => {
       rmSync(`${from}.json`, { force: true });
       releaseClaims(job.id); // a line naming the packet goes with it; older strays go by the 2 h window
     }
+    if (!failed && !job.stopped) chainNext(job, text, join(qsub("done"), `${job.id}.md`));
     return result;
   };
   const launchQueued = async (sid = status.session) => {
@@ -1430,7 +1475,7 @@ Ready work: ${readyItem.id}. Claim only this item; selectors do not authorize sw
   // (owner 2026-09-27: rustc ate the CPU), one per `serial:`), and the loop sends it as ONE message
   // of Task calls whose prompt is `packet: <name>`. The keeper puts that packet's text and role into
   // the call, so each helper runs live in the loop's session, and its result goes through the same
-  // records, rests and chain (judge, merge, repair) as a queued helper's. A helper past
+  // records, rests and chain (review, repair) as a queued helper's. A helper past
   // `helper_max_min` (90) is stopped so its batch can end; a packet whose batch ended without its
   // result (a stop, a restart) goes back to ready/.
   const PACKET_REF = /^\s*(?:packet|seat):\s*`?([\w.+-]+?)(?:\.md)?`?\s*$/i;

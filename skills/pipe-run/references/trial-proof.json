@@ -1,0 +1,12 @@
+{
+  "skill": "pipe-run",
+  "runs": 12,
+  "with_rate": 1.0,
+  "without_rate": 0.1667,
+  "lift": 0.8333,
+  "spread": 0.8333,
+  "fingerprint": "ab8d78a77a790a2f05267ef6623815cac37da051e27ffbbf39d9a9cc5b40206e",
+  "sheet": "evals/pipe-run_trials.jsonl",
+  "at": "2026-10-04T03:08Z",
+  "ok": true
+}
