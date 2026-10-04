@@ -122,6 +122,19 @@
       "test": ["python", "tools/extract_clean.py", "--help"],
       "for": ["book smith: the first extract keeps headings, tables and code fences", "judge: structure counts per extract"],
       "timeout_s": 600
+    },
+    {
+      "name": "edit_guard",
+      "does": "Refuse a stale edit before it fails: checks a literal oldString (--old-file or stdin) is present exactly in a target file; on a miss exits 1 quoting the re-read rule and prints the closest lines with tabs as \\t and CRLF as \\r; writes nothing",
+      "run": ["python", "tools/edit_guard.py", "--file"],
+      "args": [
+        { "name": "file", "does": "target file to check the oldString against", "flag": "--file" },
+        { "name": "old_string", "does": "literal oldString on the command line (else --old-file or stdin)", "flag": "--old-string" },
+        { "name": "old_file", "does": "file holding the literal oldString", "flag": "--old-file" }
+      ],
+      "test": ["python", "tools/edit_guard.py", "--help"],
+      "for": ["every seat: re-read precisely before editing CRLF files (top failed call: edit oldString not found)"],
+      "timeout_s": 60
     }
   ]
 }

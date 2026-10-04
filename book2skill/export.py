@@ -166,6 +166,9 @@ def export(skilldir: Path, target: str, out: Path, eval_report: dict | None = No
             f"eval gate refused export: rate {rate:.3f} below {GATE:.1f}; fix the skill first"
         )
     build_mod.refuse_nc_price(skilldir)  # K-48 slice (1): an NC source never gets a price
+    left = build_mod.scaffold_leftovers(skilldir)
+    if left:
+        raise SystemExit("export held: " + ", ".join(left) + " still hold the scaffold text; write them first (a pack with placeholder text is not shipped)")
     dest = out / target / skilldir.name
     _check_paths(skilldir, out, dest)
     if dest.exists():
