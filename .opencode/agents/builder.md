@@ -8,6 +8,7 @@ steps: 300
 options:
   reasoningEffort: high
 permission:
+  "arsenal_*": allow
   task: allow
   question: deny
   doom_loop: allow

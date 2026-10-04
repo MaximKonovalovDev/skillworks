@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-03T23:50:30Z",
+  "updated": "2026-10-04T09:40:11Z",
   "knobs": {
     "width": {"value":3,"min":1,"max":30,"step":1,"why":"helpers in one batch"},
     "dispatch": {"value":"foreground","why":"owner 2026-09-28: every helper seen live"},
@@ -19,6 +19,9 @@
     {"at":"2026-10-03T20:14:18Z","knob":"width","from":3,"to":7,"by":"Maxim (raise widths again)"},
     {"at":"2026-10-03T20:52:32Z","knob":"width","from":7,"to":5,"by":"Maxim"},
     {"at":"2026-10-03T22:53:27Z","knob":"paid_mode","from":1,"to":0,"by":"Loop Boss"},
-    {"at":"2026-10-03T23:50:30Z","knob":"width","from":5,"to":3,"by":"Maxim"}
+    {"at":"2026-10-03T23:50:30Z","knob":"width","from":5,"to":3,"by":"Maxim"},
+    {"at":"2026-10-04T09:40:07Z","knob":"mcp:arsenal@lead","from":"deny","to":"allow","by":"Maxim (center chat 2026-10-04)"},
+    {"at":"2026-10-04T09:40:08Z","knob":"mcp:arsenal@builder","from":"deny","to":"allow","by":"Maxim (center chat 2026-10-04)"},
+    {"at":"2026-10-04T09:40:11Z","knob":"mcp:deepwiki.enabled","from":"on","to":"off","by":"Maxim (center chat 2026-10-04)"}
   ]
 }
