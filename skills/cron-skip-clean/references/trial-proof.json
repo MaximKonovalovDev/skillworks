@@ -1,0 +1,12 @@
+{
+  "skill": "cron-skip-clean",
+  "runs": 12,
+  "with_rate": 1.0,
+  "without_rate": 0.0,
+  "lift": 1.0,
+  "spread": 1.0,
+  "fingerprint": "80a3bc5875e8e2685bb3e04835cb91efd632633c6e01576b578fa47a63d38cb8",
+  "sheet": "evals/cron-skip-clean_trials.jsonl",
+  "at": "2026-10-04T20:07Z",
+  "ok": true
+}
