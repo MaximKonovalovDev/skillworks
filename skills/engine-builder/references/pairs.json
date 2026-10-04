@@ -1,0 +1,22 @@
+{
+  "about": "Every pair runs in pwsh 7 in its own scratch copy of the fixture (see scripts/run_pairs.py). bad replays the empty report of the failure class (references/target-class.json): it throws, and the text carries the real no-edit line. good lands or claims the same case: it prints the lane diff or verified paths with the check lines. Edit this file, then run: python skills/engine-builder/scripts/pairs_to_md.py",
+  "fixture": {
+    "task.txt": "packet task\nlane alpha\n",
+    "audit.txt": "audit: PASS\n",
+    "lane/report.txt": "report draft\n"
+  },
+  "pairs": [
+    {"id": "eb-lane-missing", "group": "claim", "bad": "throw 'Changed: none (no edits; lane missing and main-tree edits forbidden)'", "good": "'lane alpha diff PASS created lane and landed fix'", "expect": "lane alpha diff PASS", "bad_error": "Changed: none"},
+    {"id": "eb-present-work", "group": "claim", "bad": "throw 'Changed: none by this session (no edits; work already present)'", "good": "'verified lane/task.txt PASS preserved present work'", "expect": "verified", "bad_error": "no edits"},
+    {"id": "eb-audit-file", "group": "claim", "bad": "throw 'Changed: none (audit still FAILs; no edits made)'", "good": "'fixed audit.txt in lane diff PASS re-ran audit'", "expect": "diff PASS", "bad_error": "Changed: none"},
+    {"id": "eb-small-slice", "group": "claim", "bad": "throw 'nothing to do (no changes; smallest slice not attempted)'", "good": "'test behavior plus failure case diff consumer wired'", "expect": "consumer", "bad_error": "nothing to do"},
+    {"id": "eb-cache-lock", "group": "claim", "bad": "throw 'Changed: none (no edits; shared cache file lock)'", "good": "'retried with FLAGS PASS landed after queue cleared'", "expect": "FLAGS", "bad_error": "no edits"},
+    {"id": "eb-sub-slice", "group": "claim", "bad": "throw 'no changes (capability too big; nothing landed)'", "good": "'landed sub-slice with test diff remains listed for next packet'", "expect": "remains", "bad_error": "no changes"},
+    {"id": "eb-reuse-first", "group": "shape", "bad": "throw 'no edits (new crate added without searching first)'", "good": "'grep found helper reuse in module diff shown'", "expect": "reuse", "bad_error": "no edits"},
+    {"id": "eb-typed-errors", "group": "shape", "bad": "throw 'nothing to do (unwrap left on user input)'", "good": "'typed error Display try operator test expect names invariant'", "expect": "Display", "bad_error": "nothing to do"},
+    {"id": "eb-check-trio", "group": "shape", "bad": "throw 'Changed: none (checks never ran; no edits)'", "good": "'formatter suite linter RESULT PASS FLAGS zero regressions'", "expect": "RESULT", "bad_error": "Changed: none"},
+    {"id": "eb-hot-path", "group": "shape", "bad": "throw 'no changes (hot path still allocates per tick)'", "good": "'reused buffers slices probe measured over tick body'", "expect": "probe", "bad_error": "no changes"},
+    {"id": "eb-dep-flag", "group": "shape", "bad": "throw 'Changed: none (dependency added without feature gate)'", "good": "'small dep behind feature deny check docs row recorded'", "expect": "deny", "bad_error": "Changed: none"},
+    {"id": "eb-report", "group": "shape", "bad": "throw 'no edits (report lists no paths and no results)'", "good": "'paths listed results pasted unverified stated plainly'", "expect": "unverified", "bad_error": "no edits"}
+  ]
+}

@@ -1,0 +1,10 @@
+{"q": "where does the fix land when the lane dir is missing?", "must": ["lane"]}
+{"q": "what does the report carry instead of an empty Changed none?", "must": ["diff"]}
+{"q": "which lines prove the checks passed?", "must": ["PASS"]}
+{"q": "how is present work from another session handled?", "must": ["verified", "preserved"]}
+{"q": "what wires the smallest change to its caller?", "must": ["consumer"]}
+{"q": "what flags unblock the shared build queue?", "must": ["FLAGS"]}
+{"q": "what states the rest when a packet is too big?", "must": ["remains"]}
+{"q": "what finds existing behavior before new code is written?", "must": ["grep", "reuse"]}
+{"q": "what models fallible input without unwrap on user data?", "must": ["Display"]}
+{"q": "what proves the hot path allocates nothing per tick?", "must": ["probe"]}
