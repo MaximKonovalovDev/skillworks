@@ -1,0 +1,10 @@
+{"must": ["Read", "verbatim"], "q": "what is copied verbatim immediately before every edit?"}
+{"must": ["CRLF", "LF"], "q": "what line endings must oldString match exactly?"}
+{"must": ["tabs"], "q": "how are tabs matched instead of retyping them as spaces?"}
+{"must": ["trailing"], "q": "what trailing whitespace must oldString keep?"}
+{"must": ["stale", "fresh"], "q": "what replaces oldString when the first read is stale?"}
+{"must": ["memory"], "q": "why must oldString never be typed from memory?"}
+{"must": ["unique", "surrounding"], "q": "how is a short match widened until it is unique?"}
+{"must": ["Count", "refuse"], "q": "what count check refuses a single edit while matches are many?"}
+{"must": ["replaceAll", "verified"], "q": "when is replaceAll allowed and what count is reported?"}
+{"must": ["unverified"], "q": "what does the closing report state about gaps?"}

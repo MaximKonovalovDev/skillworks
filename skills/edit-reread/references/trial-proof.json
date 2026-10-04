@@ -1,0 +1,12 @@
+{
+  "skill": "edit-reread",
+  "runs": 12,
+  "with_rate": 1.0,
+  "without_rate": 0.3333,
+  "lift": 0.6667,
+  "spread": 0.6667,
+  "fingerprint": "7a647ca96199e8de2c9ab8e5b3b6f611879e505006dc8e4632a15edf491e1bf1",
+  "sheet": "evals/edit-reread_trials.jsonl",
+  "at": "2026-10-04T13:08Z",
+  "ok": true
+}

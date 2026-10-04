@@ -21,7 +21,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 SKILLS = ROOT / "skills"
-FLEET = ["pwsh-for-bash-writers", "git-one-branch", "real-browser-automation", "bevy-rust-ecs", "engine-builder"]
+FLEET = ["pwsh-for-bash-writers", "git-one-branch", "real-browser-automation", "bevy-rust-ecs", "engine-builder", "repo-read-first", "edit-reread"]
 # Source-only files: the pair list and its checker, and the proof that the live tests passed.
 SKIP_FILES = {"live-proof.json", "pairs.json", "run_pairs.py", "pairs_to_md.py"}
 SKIP_DIRS = {"export", "__pycache__", ".pytest_cache"}
