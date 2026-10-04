@@ -2,7 +2,8 @@
 
 Tagline: Three Agent Skills run against real programs: PowerShell 7, a real browser over CDP, Bevy 0.19.
 
-Status: store-ready except the store assets below. Not live: no store page exists yet.
+Status: live on Gumroad since 2026-10-04 (the page answers HTTP 200); the page has no cover image yet and the store assets below are still not made.
+Live listing: https://maxkonova.gumroad.com/l/fleet-pack
 Price: $19
 AI disclosure: generated: the text and scripts of the skills were written by AI coding agents (Claude); every example and claim was then run on real programs and checked by tests. No generated images in the pack.
 Category: Tool
@@ -99,7 +100,7 @@ The records are in `proof/` inside the zip.
 
 ## Store assets
 
-Not made yet. Each one is written as a request; none is faked. A live listing needs all three.
+Not made yet. Each one is written as a request; none is faked. The page went live on 2026-10-04 before they existed (its cover list is empty), so `tools/pack_check.py` fails each one until the file is here.
 
 - cover: needed: PNG for the store cover, 1280x720 (Gumroad) and 630x500 (itch.io), readable at 315 px width. Title "Fleet Vol 1", line "three tested skills for coding agents", three chips "PowerShell 7", "real browser", "Bevy 0.19". Plain design, no generated art.
 - demo: needed: a real screen capture as a GIF, 10 to 20 seconds, under 8 MB: an agent session where `grep -n` on a text file fails with "is not recognized", then the same task with the skill loaded using `Select-String`. No mockup.
@@ -113,3 +114,4 @@ Not made yet. Each one is written as a request; none is faked. A live listing ne
 ## Changelog
 
 - 2026-10-04: version 1.0.0 assembled. Contents tested, listing written, store assets requested.
+- 2026-10-04: live on Gumroad at the Live listing line above; price $19 and the AI disclosure line stay as written.

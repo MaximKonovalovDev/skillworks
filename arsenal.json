@@ -16,7 +16,7 @@
         { "name": "target", "does": "export: claude | codex | opencode | gemini", "flag": "--target" },
         { "name": "out", "does": "extract: the work dir to write; export: the output dir", "flag": "--out" }
       ],
-      "test": ["python", "tools/b2s.py", "--help"],
+      "test": ["python", "tools/arsenal_selftest.py", "book2skill"],
       "for": ["autonomous-factory: packs for sale (skillworks finish bar S3)", "Maxim's job work: a manual or doc into a tested skill", "center skill doctor (skillworks bars S1, S2)"],
       "timeout_s": 300
     },
@@ -36,7 +36,7 @@
         { "name": "watch", "does": "directory to fingerprint", "required": true, "flag": "--watch" },
         { "name": "state", "does": "state file to read and write (JSON), e.g. state/watch.json", "required": true, "flag": "--state" }
       ],
-      "test": ["python", "skills/cron-skip-clean/scripts/cron_skip_clean.py", "--help"],
+      "test": ["python", "tools/arsenal_selftest.py", "cron_skip_clean"],
       "for": ["every loop repo: skip the round when the inputs did not change (saves tokens)", "center"],
       "timeout_s": 60
     },
@@ -49,7 +49,7 @@
         { "name": "out", "does": "output directory the real run would use (not created in a dry run)", "required": true, "flag": "--out" },
         { "name": "cap", "does": "maximum tokens of spend, an integer", "required": true, "flag": "--cap" }
       ],
-      "test": ["python", "skills/pipe-run/scripts/pipe_run.py", "--help"],
+      "test": ["python", "tools/arsenal_selftest.py", "pipe_dry_run"],
       "for": ["factory batch runs: know the cost before a run", "every loop repo"],
       "timeout_s": 60
     },
@@ -132,7 +132,7 @@
         { "name": "old_string", "does": "literal oldString on the command line (else --old-file or stdin)", "flag": "--old-string" },
         { "name": "old_file", "does": "file holding the literal oldString", "flag": "--old-file" }
       ],
-      "test": ["python", "tools/edit_guard.py", "--help"],
+      "test": ["python", "tools/arsenal_selftest.py", "edit_guard"],
       "for": ["every seat: re-read precisely before editing CRLF files (top failed call: edit oldString not found)"],
       "timeout_s": 60
     }

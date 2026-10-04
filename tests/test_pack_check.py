@@ -382,7 +382,10 @@ def test_the_real_pack_files_match_what_the_listing_says() -> None:
     md_pairs = len(re.findall(r"(?m)^### ", (g.SKILLS / "pwsh-for-bash-writers" / "references" / "pairs.md").read_text(encoding="utf-8")))
     assert len(pairs) == md_pairs == 49
     assert "49 bash-to-pwsh pairs" in listing and "49 habits" in (REAL_PACK / "README-buyer.md").read_text(encoding="utf-8")
-    assert not pc.LIVE.search(listing), "going live is the store's step: nobody adds the Live listing line before a page exists"
+    live_line = pc.LIVE.search(listing)
+    assert live_line and live_line.group(1).startswith("https://") and "gumroad.com/l/fleet-pack" in live_line.group(1), "the Gumroad page exists since 2026-10-04: its permalink is the Live listing line"
+    status = re.search(r"(?m)^Status:\s*(.+)$", listing).group(1)
+    assert status.lower().startswith("live") and "not live" not in listing.lower(), "a listing with a Live listing line never says it is not live"
     assert (g.SKILLS / "real-browser-automation" / "scripts" / "cdp.mjs").stat().st_size // 1000 == 30 and "30 KB" in listing
     assert f"${pack['price_usd']:g}" in (REAL_PACK / "price.txt").read_text(encoding="utf-8")
 
@@ -393,9 +396,20 @@ def test_the_real_pack_passes_the_gate_and_the_readme_install_commands_work(tmp_
     pb.build(REAL_PACK, dist)
     r = subprocess.run([sys.executable, str(g.ROOT / "tools" / "pack_check.py"), str(REAL_PACK), "--dist", str(dist), "--offline"],
                        capture_output=True, text=True, encoding="utf-8", errors="replace", stdin=subprocess.DEVNULL, timeout=300)
-    assert r.returncode == 0, r.stdout + r.stderr
     last = r.stdout.strip().splitlines()[-1]
-    assert last.startswith("RESULT PASS: fleet-vol-1") and "3 store assets still needed" in last, last
+    listing = (REAL_PACK / "listing.md").read_text(encoding="utf-8")
+    needed = len(re.findall(r"(?im)^\s*[-*]\s*(?:cover|demo|screenshots)\s*:\s*needed", listing))
+    fail_lines = [ln for ln in r.stdout.splitlines() if ln.startswith("FAIL")]
+    if pc.LIVE.search(listing) and needed:
+        # a live page whose store assets are not made: the gate fails on each of them, and on nothing else but the
+        # staged judge sheet that carries the gate's own outcome
+        assert r.returncode == 1, r.stdout + r.stderr
+        assert sum("store assets:" in ln for ln in fail_lines) == needed, fail_lines
+        assert all("store assets:" in ln or "factory preflight:" in ln for ln in fail_lines), fail_lines
+        assert last.startswith("RESULT FAIL: fleet-vol-1"), last
+    else:
+        assert r.returncode == 0, r.stdout + r.stderr
+        assert last.startswith("RESULT PASS: fleet-vol-1") and fail_lines == [], last
     # the PowerShell block of the README, run against the real zip with a scratch folder as the skills folder
     pwsh = shutil.which("pwsh")
     if pwsh is None:
