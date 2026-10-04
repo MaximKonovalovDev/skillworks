@@ -1,0 +1,28 @@
+{
+  "slug": "fleet-vol-1",
+  "title": "Fleet Vol 1: three tested skills for coding agents",
+  "version": "1.0.0",
+  "price_usd": 19,
+  "skills": [
+    {
+      "name": "pwsh-for-bash-writers",
+      "licence": "CC-BY-4.0 and MIT",
+      "credit": "Rewritten, shortened and tested from the PowerShell documentation: MicrosoftDocs/PowerShell-Docs (CC-BY-4.0 text, MIT code samples), read 2026-10-03, commit a3de8f2. Every example in the skill was run in PowerShell 7."
+    },
+    {
+      "name": "real-browser-automation",
+      "licence": "MIT, Apache-2.0 and BSD-3-Clause",
+      "credit": "Ideas only, no text or code copied, from microsoft/playwright docs (Apache-2.0, tag v1.63.0, commit 1b025d7). Every protocol method, event and parameter name was checked against ChromeDevTools/devtools-protocol (BSD-3-Clause, commit d209a9a). scripts/cdp.mjs is original work."
+    },
+    {
+      "name": "bevy-rust-ecs",
+      "licence": "MIT and Apache-2.0",
+      "credit": "Bevy 0.19.1 API names, file and line evidence and migration facts from bevyengine/bevy (MIT OR Apache-2.0) and bevyengine/bevy-website (MIT), pinned to tag v0.19.1, commit b56fc29d3016e641754765244b5ba3f9cc504671. Own words, no code copied."
+    }
+  ],
+  "vol0": {
+    "name": "git-one-branch",
+    "licence": "CC-BY-NC-SA-3.0",
+    "credit": "Derived from Pro Git by Scott Chacon and Ben Straub (progit/progit2, CC BY-NC-SA 3.0, read 2026-10-03). Attribution, NonCommercial, ShareAlike: free to use and share, never sold."
+  }
+}

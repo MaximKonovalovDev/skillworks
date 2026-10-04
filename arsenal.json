@@ -52,6 +52,17 @@
       "test": ["python", "skills/pipe-run/scripts/pipe_run.py", "--help"],
       "for": ["factory batch runs: know the cost before a run", "every loop repo"],
       "timeout_s": 60
+    },
+    {
+      "name": "pack_check",
+      "does": "Gate for a skill pack that is for sale: pack.json and licences (a NonCommercial skill is never in a priced pack), each skill's format, eval gate and live proof, the listing's fields, price and proof lines, the buyer zip (current, safe paths, manifest sha256, one zip per skill with SKILL.md at the root), the free Vol 0 zip, the price evidence pages, and the store assets still needed; prints PASS, FAIL, WARN and NEEDS lines and one RESULT line, exit 0 only on PASS; reads this repo and the evidence pages, writes nothing",
+      "run": ["python", "tools/pack_check.py"],
+      "args": [
+        { "name": "pack", "does": "pack folder, e.g. packs/fleet-vol-1 (build its zips first with python tools/pack_build.py)", "required": true }
+      ],
+      "test": ["python", "tools/pack_check.py", "--help"],
+      "for": ["factory F6: the buyer-file gate for a skillworks pack before it is listed", "skillworks finish bar S3"],
+      "timeout_s": 120
     }
   ]
 }
