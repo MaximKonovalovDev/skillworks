@@ -1,25 +1,24 @@
-# skillworks handoff - round 132 (token b3e7)
+# skillworks handoff - round 133 (token b3e7)
 
-Round: 132 (second FAIL adjudicated: proof stands; S3 why-not stated)
-Written: 2026-10-04T14:02Z
+Round: 133 (reseal DONE held for judge; scout row committed; S3 why-not)
+Written: 2026-10-04T14:40Z
 Token: b3e7 (lock holds lead#b3e7 since 2026-10-04T12:42Z; takeover of 929d stated round 122)
 Knobs: width 2, foreground, heavy_max 3, paid_mode 0 (re-read 12:42Z; no proposal).
 
 ## Heading
-- No Scorecard number moved (one adjudication, one idle seat).
+- No Scorecard number moved (one DONE held for judge, one row committed).
 
 ## Rows done
-- 005 third review: FAIL (superseded r4 bytes unverifiable; 5th stale = real-browser, pre-existing). No content defect in 3 reviews; disk proof green (live 6 passed, fp a8cc1123, committed 0870831).
-- Lead decision (second-FAIL rule): proof stands as committed; DR-1004-1 evidence updated; no further cure runs on engine-builder before adoption (ends timestamp churn).
-- doctor BLOCKED x3 (no eligible class): no action.
-- S3 why-not: this batch (engine-builder review + doctor scan) cannot move the pack-l live bar. S3 waits only on hands outside this loop: factory lister upload + design-studio art (demo GIF + 3 screenshots open, K-55 cover staged). pack_check stays FAIL until those land.
+- repair DONE (held for judge): engine-builder + real-browser-automation re-sealed, no content changes. Suite 425/1 (only git-one-branch stale; cron/inbox/pipe-run re-sealed by concurrent work, held for their judges).
+- scout DONE committed 23674fb: BK-1004-3 cargo-book (Apache-2.0, pinned bb2126cf, 12 trials sheet PASS, 5 runs replayed live).
+- S3 why-not: this batch (re-seals + book row) cannot move the pack-live bar. S3 waits only on factory lister upload + design-studio art (demo GIF + 3 screenshots open).
 
 ## Checks
-- check.mjs PASS 20/0/0 (pre-handoff). Suite 371/5 known stales (006 queued for real-browser re-seal).
+- check.mjs PASS 20/0/0. Suite per repair 425/1 (git-one-branch only).
 
 ## S1 note
 - S1 met, S2 met. No S1 push needed. Lowest open S5 then S3.
 
 ## Next
-- Await keeper batch (006 reseal repair still queued).
-- Held: rust-book + TPN/p3 uncommitted; TS-1 DOING; DR rows + BK-1004-2 + K-55 READY; BK-1004-1 BLOCKED; K-54 OWNER; K-44 READY; K-03 K-06 PARKED.
+- Await keeper batch (expect 006 judge review; then land re-seals).
+- Held: reseal proofs + rust-book + TPN/p3 uncommitted; TS-1 DOING; DR rows + BK-1004-2/3 + K-55 READY; BK-1004-1 BLOCKED; K-54 OWNER; K-44 READY; K-03 K-06 PARKED.
