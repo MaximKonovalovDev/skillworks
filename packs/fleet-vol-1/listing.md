@@ -2,7 +2,7 @@
 
 Tagline: Three Agent Skills run against real programs: PowerShell 7, a real browser over CDP, Bevy 0.19.
 
-Status: live on Gumroad since 2026-10-04 (the page answers HTTP 200); cover art delivered 2026-10-04 (order O-025, 1280x720 + 630x500 PNGs in this folder), demo and screenshots below are still not made.
+Status: live on Gumroad since 2026-10-04 (the page answers HTTP 200); cover art delivered 2026-10-04 (order O-025, 1280x720 + 630x500 PNGs in store-art/O-025/), demo delivered 2026-10-04 (order O-033, GIF + poster + card in store-art/O-033/), screenshots delivered 2026-10-04 (three real 1280x800 captures in store-art/shots/).
 Live listing: https://maxkonova.gumroad.com/l/fleet-pack
 Price: $19
 AI disclosure: generated: the text and scripts of the skills were written by AI coding agents (Claude); every example and claim was then run on real programs and checked by tests. No generated images in the pack.
@@ -103,12 +103,14 @@ The records are in `proof/` inside the zip.
 
 ## Store assets
 
-Not made yet. Each one is written as a request; none is faked. The page went live on 2026-10-04 before they existed (its cover list is empty), so `tools/pack_check.py` fails each one until the file is here.
+Cover, demo and screenshots are delivered (paths below); none is faked. The page went live on 2026-10-04 before they existed (its cover list is empty), so `tools/pack_check.py` fails each missing one until the file is here.
 
 - cover: store-art/O-025/out.png, store-art/O-025/out-630x500.png
   Delivered 2026-10-04 as order O-025: 1280x720 Gumroad cover and 630x500 itch card, plain design, no generated art.
-- demo: needed: a real screen capture as a GIF, 10 to 20 seconds, under 8 MB: an agent session where `grep -n` on a text file fails with "is not recognized", then the same task with the skill loaded using `Select-String`. No mockup.
-- screenshots: needed: three real PNG captures, 1280x800: the pairs table of `references/pairs.md`, the JSON that `cdp.mjs` prints for `navigator.webdriver`, the old-name table of the Bevy skill.
+- demo: store-art/O-033/demo.gif, store-art/O-033/out.png, store-art/O-033/out-630x500.png
+  Delivered 2026-10-04 as order O-033: a real PowerShell session where `grep -n` fails with "is not recognized", then the same task with the skill loaded using `Select-String`. GIF is 480x288 15 s 167382 B (the brief asked 10 s 1280x720; the render gate makes 480x288, so it is listed as 15 s 480x288, not 1280x720); poster `out.png` 1280x720 and card `out-630x500.png` alongside.
+- screenshots: store-art/shots/shot-pairs.png, store-art/shots/shot-wd.png, store-art/shots/shot-bevy.png
+  Delivered 2026-10-04: three real 1280x800 PNG captures in a real Edge 154 over CDP: the pairs table of `references/pairs.md` (14 of 49 pairs, 64153 B), the JSON that `cdp.mjs --eval` prints for `navigator.webdriver` (`true`, HeadlessChrome/Edg 154, 27523 B), the old-name table of the Bevy skill (22 rows, 0 hits, 61620 B).
 
 ## Files
 
