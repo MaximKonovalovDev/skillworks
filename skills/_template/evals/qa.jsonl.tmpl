@@ -1,0 +1,8 @@
+{"q": "When should an agent load {{name}}?", "must": ["{{slot: a literal phrase from the Use clause of the description}}"]}
+{"q": "How do I run {{name}} from the command line?", "must": ["scripts/{{script}}.py", "--input", "--out"]}
+{"q": "What does the first word of stdout tell me?", "must": ["first word of stdout"]}
+{"q": "What does {{name}} print on success and what is the exit code?", "must": ["{{slot: the success line, as SKILL.md writes it}}", "exit 0"]}
+{"q": "What happens when the input is bad?", "must": ["ERROR", "exit 2", "nothing written"]}
+{"q": "{{slot: a question a user of the first rule would ask}}", "must": ["{{slot: the literal words of the answer in SKILL.md}}"]}
+{"q": "{{slot: a question a user of the second rule would ask}}", "must": ["{{slot: the literal words of the answer in SKILL.md}}"]}
+{"q": "{{slot: what the tool does not do, as a question}}", "must": ["{{slot: the literal words of the answer in SKILL.md}}"]}

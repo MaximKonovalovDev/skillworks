@@ -1,0 +1,45 @@
+"""{{name}}: every claim of SKILL.md run against the real script.
+
+The script is started as a real subprocess with stdin closed (headless: no prompts). The three stock tests (--help runs,
+SKILL.md documents what the script prints, an installed copy runs through pwsh) are written once in tests/skill_stock.py;
+this file calls them and holds the tests of the skill's own work.
+"""
+from pathlib import Path
+
+import pytest
+
+import skill_stock as stock
+from skill_stock import live
+
+ROOT = Path(__file__).resolve().parent.parent
+SKILL = ROOT / "skills" / "{{name}}"
+SCRIPT = SKILL / "scripts" / "{{script}}.py"
+pytestmark = pytest.mark.skipif(not SCRIPT.is_file(), reason="skill not built yet")
+
+# Lines SKILL.md must carry exactly as the script prints them. {{slot: add the success line, written as SKILL.md writes it}}
+NEEDLES = ("ERROR", "exit 2")
+
+
+def run_tool(*args: str):
+    """The script as a subprocess, stdin closed. Use it in the tests of the real work below."""
+    return stock.run_script(SCRIPT, *args)
+
+
+def test_help_runs_without_a_prompt() -> None:
+    stock.help_runs(SCRIPT, "--input", "--out")
+
+
+def test_skill_md_documents_what_the_script_prints() -> None:
+    stock.skill_md_documents(SKILL, NEEDLES)
+
+
+@live
+def test_an_installed_copy_runs_from_another_folder_through_pwsh(tmp_path: Path) -> None:
+    """Install the skill like another repo does, then run it from pwsh from another folder."""
+    copy = stock.installed_copy(tmp_path, "{{name}}", "scripts/{{script}}.py", skills=SKILL.parent)
+    code, said = copy.run("--help")
+    assert code == 0 and "--input" in said
+    copy.assert_nothing_written_elsewhere()
+
+
+# {{slot: the tests of the real work: one test per claim of SKILL.md, each run through run_tool(...); a refused run must write nothing.}}

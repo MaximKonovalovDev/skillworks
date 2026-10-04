@@ -1,9 +1,9 @@
 {
   "skill": "cron-skip-clean",
-  "fingerprint": "3478bf9995bdef20e76957fe8194b2a2c998ba1df0ce3d35049273db324dd877",
-  "date": "2026-10-04T00:57Z",
+  "fingerprint": "1ad6d0bfdee76da4855a78eae580482a78c847defabfa32f4031637d415ed10b",
+  "date": "2026-10-04T14:38Z",
   "command": "SKILL_LIVE=1 python -m pytest tests/test_cron_skip_clean.py -q",
-  "result": "21 passed in 29.52s",
+  "result": "21 passed in 17.82s",
   "versions": {
     "python": "3.13.14",
     "os": "Windows-10-10.0.19045-SP0",

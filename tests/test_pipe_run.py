@@ -5,7 +5,6 @@ one installs a copy the way another repo would and drives it through pwsh.
 """
 import json
 import os
-import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -13,6 +12,7 @@ from pathlib import Path
 import pytest
 
 import skill_gates as g
+import skill_stock as stock
 from skill_gates import live
 
 ROOT = g.ROOT
@@ -198,45 +198,30 @@ def test_a_second_run_into_the_same_out_overwrites_the_items_and_the_receipt(tmp
 
 
 def test_help_runs_without_a_prompt() -> None:
-    r = run_pipe("--help")
-    assert r.returncode == 0 and all(flag in r.stdout for flag in ("--input", "--out", "--cap", "--dry-run"))
+    stock.help_runs(SCRIPT, "--input", "--out", "--cap", "--dry-run")
 
 
 def test_skill_md_documents_what_the_script_prints() -> None:
-    text = (SKILL / "SKILL.md").read_text(encoding="utf-8") + (SKILL / "references" / "cost-model.md").read_text(encoding="utf-8")
-    for needle in ("RUN <n> items spend <S>/<C> tokens", "DRY-RUN <n> items spend <S> tokens (cap <C>)",
-                   "ERROR over cap: spend <S> tokens > cap <C> tokens, refused; nothing written", "exit 2", "UTF-8", "top level"):
-        assert needle in text, needle
+    stock.skill_md_documents(SKILL, ("RUN <n> items spend <S>/<C> tokens", "DRY-RUN <n> items spend <S> tokens (cap <C>)",
+                                     "ERROR over cap: spend <S> tokens > cap <C> tokens, refused; nothing written", "exit 2", "UTF-8", "top level"),
+                             "references/cost-model.md")
 
 
 @live
 def test_an_installed_copy_runs_from_another_folder_through_pwsh(tmp_path: Path) -> None:
     """Install the skill like another repo does, then run it from pwsh with paths that hold spaces."""
-    sys.path.insert(0, str(ROOT / "tools"))
-    import install_fleet_skills as inst
-    skills = tmp_path / "other repo" / "skills"
-    inst.install("pipe-run", skills)
-    assert inst.stale("pipe-run", skills) == []
-    script = skills / "pipe-run" / "scripts" / "pipe_run.py"
+    box = stock.installed_copy(tmp_path, "pipe-run", "scripts/pipe_run.py")
     src = tmp_path / "my items"
     src.mkdir()
     (src / "a.txt").write_text("x" * 400, encoding="utf-8")
     out = tmp_path / "my out"
-    elsewhere = tmp_path / "elsewhere"
-    elsewhere.mkdir()
-    pwsh = shutil.which("pwsh")
-    if pwsh is None:
-        pytest.skip("pwsh 7 is not installed")
 
     def ps(cap: int, *flags: str) -> tuple[int, str]:
-        cmd = f"& '{sys.executable}' '{script}' --input '{src}' --out '{out}' --cap {cap} {' '.join(flags)}; exit $LASTEXITCODE"
-        r = subprocess.run([pwsh, "-NoLogo", "-NoProfile", "-NonInteractive", "-Command", cmd], cwd=elsewhere, capture_output=True,
-                           text=True, encoding="utf-8", errors="replace", stdin=subprocess.DEVNULL, timeout=120)
-        return r.returncode, r.stdout.strip()
+        return box.run("--input", str(src), "--out", str(out), "--cap", str(cap), *flags)
 
     assert ps(50) == (2, "ERROR over cap: spend 100 tokens > cap 50 tokens, refused; nothing written")
     assert not out.exists()
     assert ps(500, "--dry-run") == (0, "DRY-RUN 1 items spend 100 tokens (cap 500)") and not out.exists()
     assert ps(500) == (0, "RUN 1 items spend 100/500 tokens")
     assert (out / "a.txt").read_bytes() == b"x" * 400
-    assert not list(elsewhere.iterdir())
+    box.assert_nothing_written_elsewhere()

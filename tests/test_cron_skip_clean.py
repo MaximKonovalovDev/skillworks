@@ -7,7 +7,6 @@ import hashlib
 import importlib.util
 import json
 import os
-import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -15,6 +14,7 @@ from pathlib import Path
 import pytest
 
 import skill_gates as g
+import skill_stock as stock
 from skill_gates import live
 
 ROOT = g.ROOT
@@ -169,44 +169,29 @@ def test_an_unreadable_file_is_an_error_not_a_traceback(tmp_path: Path, monkeypa
 
 
 def test_help_runs_without_a_prompt() -> None:
-    r = subprocess.run([sys.executable, str(SCRIPT), "--help"], capture_output=True, text=True, encoding="utf-8", errors="replace", stdin=subprocess.DEVNULL, timeout=60)
-    assert r.returncode == 0 and "--watch" in r.stdout and "--state" in r.stdout
+    stock.help_runs(SCRIPT, "--watch", "--state")
 
 
 def test_skill_md_documents_what_the_script_prints() -> None:
-    text = (SKILL / "SKILL.md").read_text(encoding="utf-8") + (SKILL / "references" / "state-format.md").read_text(encoding="utf-8")
-    for needle in ("RUN <fp>", "SKIP clean <fp>", "ERROR", "exit 2", "inside the watch dir"):
-        assert needle in text, needle
+    stock.skill_md_documents(SKILL, ("RUN <fp>", "SKIP clean <fp>", "ERROR", "exit 2", "inside the watch dir"), "references/state-format.md")
 
 
 @live
 def test_an_installed_copy_runs_from_another_folder_through_pwsh(tmp_path: Path) -> None:
     """Install the skill like another repo does, then run it from pwsh with paths that hold spaces and Hebrew letters."""
-    sys.path.insert(0, str(ROOT / "tools"))
-    import install_fleet_skills as inst
-    skills = tmp_path / "other repo" / "skills"
-    inst.install("cron-skip-clean", skills)
-    assert inst.stale("cron-skip-clean", skills) == []
-    script = skills / "cron-skip-clean" / "scripts" / "cron_skip_clean.py"
+    box = stock.installed_copy(tmp_path, "cron-skip-clean", "scripts/cron_skip_clean.py")
     watch = tmp_path / "my watch שלום"
     watch.mkdir()
     (watch / "a.txt").write_text("alpha", encoding="utf-8")
     state = tmp_path / "my state" / "cron.json"
-    elsewhere = tmp_path / "elsewhere"
-    elsewhere.mkdir()
-    pwsh = shutil.which("pwsh")
-    if pwsh is None:
-        pytest.skip("pwsh 7 is not installed")
 
     def ps() -> str:
-        cmd = f"& '{sys.executable}' '{script}' --watch '{watch}' --state '{state}'; exit $LASTEXITCODE"
-        r = subprocess.run([pwsh, "-NoLogo", "-NoProfile", "-NonInteractive", "-Command", cmd], cwd=elsewhere, capture_output=True,
-                           text=True, encoding="utf-8", errors="replace", stdin=subprocess.DEVNULL, timeout=120)
-        assert r.returncode == 0, r.stdout + r.stderr
-        return r.stdout.strip()
+        code, said = box.run("--watch", str(watch), "--state", str(state))
+        assert code == 0, said
+        return said
 
     first, second = ps(), ps()
     assert first.startswith("RUN ") and second == "SKIP clean " + first.split()[-1]
     (watch / "b.txt").write_text("beta", encoding="utf-8")
     assert ps().startswith("RUN ")
-    assert not list(elsewhere.iterdir()), "nothing is written next to where it was started"
+    box.assert_nothing_written_elsewhere()

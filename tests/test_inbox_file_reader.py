@@ -4,7 +4,6 @@ The script is started as a real subprocess with stdin closed (headless: no promp
 one installs a copy the way another repo does and drives it through pwsh.
 """
 import os
-import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -12,6 +11,7 @@ from pathlib import Path
 import pytest
 
 import skill_gates as g
+import skill_stock as stock
 from skill_gates import live
 
 ROOT = g.ROOT
@@ -211,45 +211,30 @@ def test_an_inbox_that_is_not_utf8_text_is_an_error_not_a_traceback(tmp_path: Pa
 
 
 def test_help_runs_without_a_prompt() -> None:
-    r = run_reader("--help")
-    assert r.returncode == 0 and "--inbox" in r.stdout and "--board" in r.stdout
+    stock.help_runs(SCRIPT, "--inbox", "--board")
 
 
 def test_skill_md_documents_what_the_script_prints() -> None:
-    text = (SKILL / "SKILL.md").read_text(encoding="utf-8") + (SKILL / "references" / "isolation.md").read_text(encoding="utf-8")
-    for needle in ("FILED <item> -> <board>", "ERROR refused:", "ERROR inbox missing", "ERROR inbox empty", "not UTF-8", "exit 2", "same file", "- [ ] <item>"):
-        assert needle in text, needle
+    stock.skill_md_documents(SKILL, ("FILED <item> -> <board>", "ERROR refused:", "ERROR inbox missing", "ERROR inbox empty", "not UTF-8", "exit 2",
+                                     "same file", "- [ ] <item>"), "references/isolation.md")
 
 
 @live
 def test_an_installed_copy_runs_from_another_folder_through_pwsh(tmp_path: Path) -> None:
     """Install the skill like another repo does, then run it from pwsh with paths that hold spaces."""
-    sys.path.insert(0, str(ROOT / "tools"))
-    import install_fleet_skills as inst
-    skills = tmp_path / "other repo" / "skills"
-    inst.install("inbox-file-reader", skills)
-    assert inst.stale("inbox-file-reader", skills) == []
-    script = skills / "inbox-file-reader" / "scripts" / "file_one_item.py"
+    copy = stock.installed_copy(tmp_path, "inbox-file-reader", "scripts/file_one_item.py")
     box = tmp_path / "my box"
     box.mkdir()
     inbox, board = box / "empire inbox.md", box / "my board.md"
     inbox.write_bytes("ASK-1 first\nASK-2 second\n".encode("utf-8"))
     board.write_bytes(b"# board\n")
-    elsewhere = tmp_path / "elsewhere"
-    elsewhere.mkdir()
-    pwsh = shutil.which("pwsh")
-    if pwsh is None:
-        pytest.skip("pwsh 7 is not installed")
 
-    def ps(*extra: str) -> tuple[int, str]:
-        cmd = f"& '{sys.executable}' '{script}' --inbox '{inbox}' --board '{board}' {' '.join(extra)}; exit $LASTEXITCODE"
-        r = subprocess.run([pwsh, "-NoLogo", "-NoProfile", "-NonInteractive", "-Command", cmd], cwd=elsewhere, capture_output=True,
-                           text=True, encoding="utf-8", errors="replace", stdin=subprocess.DEVNULL, timeout=120)
-        return r.returncode, r.stdout.strip()
+    def ps() -> tuple[int, str]:
+        return copy.run("--inbox", str(inbox), "--board", str(board))
 
     assert ps() == (0, f"FILED ASK-1 first -> {board}")
     assert ps() == (0, f"FILED ASK-2 second -> {board}")
     code, said = ps()
     assert code == 2 and said.startswith("ERROR inbox empty")
     assert board.read_bytes() == b"# board\n- [ ] ASK-1 first\n- [ ] ASK-2 second\n"
-    assert not list(elsewhere.iterdir())
+    copy.assert_nothing_written_elsewhere()

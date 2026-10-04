@@ -1,0 +1,4 @@
+{"id": "t01", "kind": "run", "task": "{{slot: a task a stranger can run cold with the skill: the command to run and what to quote from its output}}", "must": ["{{slot: a literal the answer must carry}}"], "must_not": ["{{slot: a literal that shows the skill was ignored}}"]}
+{"id": "t02", "kind": "run", "task": "{{slot: a task that must be refused: quote the error line and the exit code}}", "must": ["ERROR"], "exit": 2}
+{"id": "t03", "kind": "answer", "task": "{{slot: a question about the first rule, answerable from SKILL.md alone}}", "must": ["{{slot: a literal the answer must carry}}"], "must_not": ["{{slot: a wrong answer a bare model gives}}"]}
+{"id": "t04", "kind": "answer", "task": "{{slot: a question about what the tool does not do}}", "must": ["{{slot: a literal the answer must carry}}"]}

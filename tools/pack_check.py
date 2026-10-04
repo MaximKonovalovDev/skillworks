@@ -11,7 +11,9 @@ What it checks (the buyer-file gate of the factory, the publish-readiness gate o
   pack.json            slug, semver, price, licences; a NonCommercial skill is never in a priced pack
   skills               each paid skill: format, eval gate, no scaffold text, live proof current
   listing.md           required fields and sections, every skill named with its licence, proof lines equal live-proof.json,
-                       price equal to price.txt and pack.json, AI disclosure, no template text, no private paths
+                       price equal to price.txt and pack.json, AI disclosure, no template text, no private paths,
+                       no open `{{slot: ...}}` of the starter `pack_build.py --starter` writes (README-buyer.md and
+                       vol0-sample.md are checked for open slots too)
   dist/<slug>.zip      current (rebuilt in memory and compared), safe paths, no junk, manifest sha256 matches, each skill
                        also as zips/<name>.zip with SKILL.md at the root, every file a SKILL.md names is inside
   dist/<slug>-vol0.zip the free skill with SKILL.md at the root and its licence notice; never inside the paid zip
@@ -54,8 +56,8 @@ SELLABLE = ("MIT", "Apache-2.0", "BSD-3-Clause", "BSD-2-Clause", "CC-BY-4.0", "I
 TEMPLATE_LEFT = ("{{", "}}", "<what>", "$X.00", "TODO", "TBD", "lorem ipsum", "one line, 60-110 characters")
 PRIVATE = re.compile(r"Users[\\/]me\b|Desktop[\\/]|engine2040|autonomous-factory|fp-research|marketing-studio|jobhunt|design-studio|forge-data|\.empire", re.I)
 JUNK = re.compile(r"(^|/)(\.DS_Store|Thumbs\.db|__pycache__|node_modules|\.git|\.env)(/|$)|\.(pyc|log|tmp|bak)$", re.I)
-SECTIONS = ("what is inside", "requirements", "install", "price evidence", "licences", "proof", "store assets", "free sample")
-FIELDS = ("Status", "Price", "AI disclosure", "Category", "Tags", "Author", "Repository", "Stars", "Weekly installs", "Sales")
+SECTIONS = pack_build.REQUIRED_SECTIONS  # one list of headings and fields: tools/pack_build.py writes the starter from the same constants
+FIELDS = pack_build.LISTING_FIELDS
 ASSET_KINDS = {"cover": 5_000, "demo": 10_000, "screenshots": 5_000}
 IMAGE_MAGIC = (b"\x89PNG\r\n\x1a\n", b"GIF87a", b"GIF89a", b"\xff\xd8\xff")
 
@@ -169,6 +171,23 @@ def check_skills(pack: dict, skills: Path, rep: Report, skill_problems: Callable
             rep.ok(f"skill {name}: format, eval gate, live proof current, no scaffold text")
 
 
+def slot_finding(name: str, slots: list[tuple[int, str]]) -> str:
+    """One finding for the `{{slot: ...}}` lines of a starter that are still open: how many, and the first few."""
+    shown = "; ".join(f"line {n}: {what[:48]}" for n, what in slots[:3])
+    return f"{name}: {len(slots)} open slots to write ({shown}{'; ...' if len(slots) > 3 else ''})"
+
+
+def check_buyer_files(pack_dir: Path, rep: Report) -> None:
+    """The README that ships in the zip and the Vol 0 page must carry no open slot of a starter."""
+    for name in ("README-buyer.md", "vol0-sample.md"):
+        try:
+            slots = pack_build.open_slots((pack_dir / name).read_text(encoding="utf-8"))
+        except OSError:
+            continue
+        if slots:
+            rep.add("FAIL", slot_finding(name, slots))
+
+
 def check_listing(pack_dir: Path, pack: dict, skills: Path, rep: Report) -> tuple[str, bool]:
     path = pack_dir / "listing.md"
     if not path.is_file():
@@ -181,7 +200,11 @@ def check_listing(pack_dir: Path, pack: dict, skills: Path, rep: Report) -> tupl
     missing_sections = [s for s in SECTIONS if not any(k.startswith(s) for k in secs)]
     if missing or missing_sections:
         rep.add("FAIL", "listing.md: missing " + ", ".join([*(f"field {f}:" for f in missing), *(f"section ## {s}" for s in missing_sections)]))
-    left = [t for t in TEMPLATE_LEFT if t.lower() in text.lower()]
+    slots = pack_build.open_slots(text)
+    if slots:
+        rep.add("FAIL", slot_finding("listing.md", slots))
+    bare = pack_build.SLOT_RE.sub("", text).lower()  # slots are reported above; the template words are looked for around them
+    left = [t for t in TEMPLATE_LEFT if t.lower() in bare]
     if left:
         rep.add("FAIL", f"listing.md: template or draft text left ({', '.join(left)})")
     stated = field(text, "Price")
@@ -501,6 +524,7 @@ def check_pack(pack_dir: Path, *, root: Path = ROOT, dist: Path | None = None, o
     skills = root / "skills"
     check_skills(pack, skills, rep, skill_problems)
     listing, live = check_listing(pack_dir, pack, skills, rep)
+    check_buyer_files(pack_dir, rep)
     if listing:
         check_evidence(listing, rep, offline, fetch)
         check_assets(pack_dir, listing, live, rep)
