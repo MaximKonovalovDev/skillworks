@@ -17,16 +17,23 @@ What it checks (the buyer-file gate of the factory, the publish-readiness gate o
   dist/<slug>-vol0.zip the free skill with SKILL.md at the root and its licence notice; never inside the paid zip
   price evidence       3 or more https URLs; 404 or 410 fails, no network warns
   store assets         cover, demo, screenshots: present and big enough, or `needed:` with the request
+  factory preflight    the factory buyer-file gate audit() run read-only on a staged factory-layout copy
+                       (listing/itch.md, listing/price.txt, one buyer zip in dist/, JUDGE.md with our own verdict);
+                       each of its findings is a FAIL. --no-factory skips it.
 """
 from __future__ import annotations
 
 import argparse
 import contextlib
 import hashlib
+import importlib.util
 import io
 import json
+import os
 import re
+import shutil
 import sys
+import tempfile
 import urllib.error
 import urllib.request
 import zipfile
@@ -394,9 +401,99 @@ def check_assets(pack_dir: Path, listing: str, live: bool, rep: Report) -> None:
                 rep.ok(f"store assets: {kind} present ({what})")
 
 
+FACTORY_DIMS = ("value vs bar", "works out of the box", "preview sells it", "license clean", "listing-ready")
+
+
+def find_factory_preflight() -> Path:
+    """The factory buyer-file gate script, read-only. FACTORY_PREFLIGHT wins; else the sibling checkout next to
+    this repo (same pattern as the EMPIRE_JSON default in tools/adopted_after.py)."""
+    given = os.environ.get("FACTORY_PREFLIGHT")
+    if given:
+        return Path(given)
+    return ROOT.parent / "autonomous-factory" / "engine" / "publish_preflight.py"
+
+
+def load_factory_audit(path: Path) -> tuple[Callable | None, str]:
+    """Import audit() from the factory gate without running its CLI (its main() only accepts folders under the
+    factory products/ tree, so a staged copy is audited instead). Returns (audit, reason)."""
+    if not path.is_file():
+        return None, f"not found at {path.name}; set FACTORY_PREFLIGHT to the engine script"
+    engine_dir = str(path.parent)
+    sys.path.insert(0, engine_dir)  # the script does `import verdict` from its own folder
+    try:
+        spec = importlib.util.spec_from_file_location("skillworks_factory_preflight", str(path))
+        if spec is None or spec.loader is None:
+            return None, f"cannot load {path.name}"
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        audit = getattr(mod, "audit", None)
+        if not callable(audit):
+            return None, f"{path.name} has no audit()"
+        return audit, ""
+    except Exception as err:  # noqa: BLE001 - a foreign traceback must not break our gate
+        return None, f"cannot import {path.name} ({err})"
+    finally:
+        with contextlib.suppress(ValueError):
+            sys.path.remove(engine_dir)
+
+
+def judge_text(slug: str, ok: bool) -> str:
+    """Our own verdict sheet for the staged copy: the factory judge_gate() needs VERDICT in the first five lines
+    plus all five /10 dims, so the sheet carries our own gate outcome honestly (PASS only when our checks passed)."""
+    verdict, score = ("PASS", "10/10") if ok else ("FAIL", "0/10")
+    lines = [f"# Pack judge: {slug}", f"VERDICT: {verdict}",
+             f"tools/pack_check.py own checks {'passed' if ok else 'failed'}; scored here for the buyer-file gate.",
+             "", "Scores:"]
+    lines += [f"- {dim}: {score}" for dim in FACTORY_DIMS]
+    return "\n".join(lines) + "\n"
+
+
+def stage_factory_product(pack_dir: Path, pack: dict, dist: Path, tmp: Path, own_ok: bool) -> Path:
+    """A scratch copy laid out like a factory product: listing/itch.md plus listing/price.txt, exactly one buyer
+    zip in dist/, JUDGE.md with our own verdict. Written to tmp (never committed), read back by audit()."""
+    product = tmp / pack["slug"]
+    shutil.rmtree(product, ignore_errors=True)
+    (product / "listing").mkdir(parents=True)
+    (product / "dist").mkdir(parents=True)
+    (product / "listing" / "itch.md").write_text((pack_dir / "listing.md").read_text(encoding="utf-8"), encoding="utf-8")
+    shutil.copy2(pack_dir / "price.txt", product / "listing" / "price.txt")
+    paid = dist / f"{pack['slug']}.zip"
+    shutil.copy2(paid, product / "dist" / paid.name)
+    (product / "JUDGE.md").write_text(judge_text(pack["slug"], own_ok), encoding="utf-8")
+    return product
+
+
+def check_factory_preflight(pack_dir: Path, pack: dict, dist: Path, rep: Report, *,
+                            enabled: bool = True, audit: Callable | None = None) -> None:
+    """Run the factory buyer-file gate audit() on the staged copy; each of its findings is a FAIL. When the gate
+    script is not on this machine the gate warns instead of failing, so the pack still stands on our own checks."""
+    if not enabled:
+        return
+    if audit is None:
+        audit, reason = load_factory_audit(find_factory_preflight())
+        if audit is None:
+            rep.add("WARN", f"factory preflight: buyer-file gate unavailable ({reason}); own checks only")
+            return
+    if not (dist / f"{pack['slug']}.zip").is_file():
+        return  # check_zips already recorded the missing buyer file
+    with tempfile.TemporaryDirectory(prefix="pack-factory-") as tmp:
+        product = stage_factory_product(pack_dir, pack, dist, Path(tmp), rep.count("FAIL") == 0)
+        try:
+            findings = audit(product)
+        except Exception as err:  # noqa: BLE001 - see load_factory_audit
+            rep.add("FAIL", f"factory preflight: audit() raised ({err})")
+            return
+    if findings:
+        for finding in findings:
+            rep.add("FAIL", f"factory preflight: {finding}")
+    else:
+        rep.ok("factory preflight: buyer-file gate PASS (JUDGE.md, listing/price.txt, one buyer zip)")
+
+
 def check_pack(pack_dir: Path, *, root: Path = ROOT, dist: Path | None = None, offline: bool = False,
                skill_problems: Callable[[str], list[str]] = default_skill_problems,
-               fetch: Callable[[str], int] = fetch_status) -> Report:
+               fetch: Callable[[str], int] = fetch_status,
+               factory: bool = True, factory_audit: Callable | None = None) -> Report:
     rep = Report()
     pack = check_manifest(pack_dir, rep)
     if pack is None:
@@ -407,7 +504,9 @@ def check_pack(pack_dir: Path, *, root: Path = ROOT, dist: Path | None = None, o
     if listing:
         check_evidence(listing, rep, offline, fetch)
         check_assets(pack_dir, listing, live, rep)
-    check_zips(pack_dir, pack, skills, dist or root / "dist", rep)
+    resolved = dist or root / "dist"
+    check_zips(pack_dir, pack, skills, resolved, rep)
+    check_factory_preflight(pack_dir, pack, resolved, rep, enabled=factory, audit=factory_audit)
     return rep
 
 
@@ -416,6 +515,7 @@ def main(argv: list[str]) -> int:
     ap.add_argument("pack", help="pack folder, e.g. packs/fleet-vol-1")
     ap.add_argument("--dist", default=None, help="folder that holds the built zips (default dist)")
     ap.add_argument("--offline", action="store_true", help="do not fetch the price evidence pages")
+    ap.add_argument("--no-factory", action="store_true", help="skip the factory buyer-file gate")
     args = ap.parse_args(argv)
     try:
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -425,7 +525,8 @@ def main(argv: list[str]) -> int:
     if not pack_dir.is_dir():
         print(f"RESULT FAIL: {args.pack} is not a folder")
         return 1
-    rep = check_pack(pack_dir, dist=Path(args.dist).resolve() if args.dist else None, offline=args.offline)
+    rep = check_pack(pack_dir, dist=Path(args.dist).resolve() if args.dist else None, offline=args.offline,
+                     factory=not args.no_factory)
     for level, what in rep.lines:
         print(f"{level} {what}")
     fails, needs, warns = rep.count("FAIL"), rep.count("NEEDS"), rep.count("WARN")

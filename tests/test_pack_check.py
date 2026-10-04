@@ -131,7 +131,29 @@ def test_a_good_pack_passes_and_lists_the_assets_it_still_needs(fix: dict) -> No
     assert fails(rep) == [], fails(rep)
     needs = [w for lv, w in rep.lines if lv == "NEEDS"]
     assert len(needs) == 3 and any("cover" in w for w in needs) and any("demo" in w for w in needs) and any("screenshots" in w for w in needs)
-    assert rep.count("WARN") == 1  # price evidence not fetched offline
+    audit, _ = pc.load_factory_audit(pc.find_factory_preflight())
+    assert rep.count("WARN") == (1 if audit else 2)  # price evidence not fetched offline; factory gate warns when absent
+
+
+def test_the_factory_buyer_gate_passes_a_good_pack_on_a_staged_product_layout(fix: dict) -> None:
+    audit, reason = pc.load_factory_audit(pc.find_factory_preflight())
+    if audit is None:
+        pytest.skip(f"factory buyer-file gate unavailable: {reason}")
+    rep = run(fix, factory_audit=audit)
+    assert fails(rep) == [], fails(rep)
+    assert any(w == "factory preflight: buyer-file gate PASS (JUDGE.md, listing/price.txt, one buyer zip)"
+               for lv, w in rep.lines if lv == "PASS")
+
+
+def test_factory_findings_become_pack_failures(fix: dict) -> None:
+    rep = run(fix, factory_audit=lambda product: ["dist/: expected exactly one buyer zip, found 0"])
+    assert any("factory preflight: dist/:" in w for w in fails(rep))
+
+
+def test_an_unavailable_factory_gate_warns_instead_of_failing(fix: dict, tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setenv("FACTORY_PREFLIGHT", str(tmp_path / "nowhere.py"))
+    rep = run(fix)
+    assert fails(rep) == [] and any("buyer-file gate unavailable" in w for lv, w in rep.lines if lv == "WARN")
 
 
 def test_the_buyer_zip_holds_the_skills_each_as_its_own_zip_and_a_manifest_with_sha256(fix: dict) -> None:
@@ -237,7 +259,14 @@ def test_a_private_path_or_another_repos_name_in_the_listing_fails(fix: dict) ->
 
 def test_a_failing_skill_gate_fails_the_pack(fix: dict) -> None:
     rep = run(fix, skill_problems=lambda name: ["live proof: changed since its live tests last passed"] if name == "beta" else [])
-    assert [w for w in fails(rep)] == ["skill beta: live proof: changed since its live tests last passed"]
+    found = fails(rep)
+    assert "skill beta: live proof: changed since its live tests last passed" in found
+    audit, _ = pc.load_factory_audit(pc.find_factory_preflight())
+    if audit is None:
+        assert found == ["skill beta: live proof: changed since its live tests last passed"]
+    else:
+        assert any(w.startswith("factory preflight: independent JUDGE.md PASS is missing") for w in found), \
+            "the staged verdict follows our own gate, so the buyer-file gate echoes a failing pack"
 
 
 def test_a_skill_that_changed_after_the_zip_was_built_makes_the_zip_stale(fix: dict) -> None:
