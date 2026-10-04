@@ -1,0 +1,1 @@
+{"direction":"down","error_regex":"pathspec.*did not match|would be overwritten by merge|fetch first|index\\.lock|nothing to commit","id":"git-one-branch-zero-load","tool":"bash"}
