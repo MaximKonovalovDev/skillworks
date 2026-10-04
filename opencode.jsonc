@@ -207,7 +207,7 @@
     "deepwiki": {
       "type": "remote",
       "url": "https://mcp.deepwiki.com/mcp",
-      "enabled": true,
+      "enabled": false,
       "timeout": 30000
     },
     "github": {
