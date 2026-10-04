@@ -12,8 +12,6 @@
 - Sales: **0** (honest counter — stays 0 until a real sale).
 - Vol 0 free sample: [`vol0-sample.md`](vol0-sample.md) — cheatsheet excerpt,
   free to share, no purchase needed.
-- Demo: ![progit-branching demo](demo/demo.gif) (`demo/demo.gif`, GIF-first;
-  placeholder loop until a real screen capture lands).
 - Install (Claude target): copy `export/claude/progit-branching/` into your
   skill dir; SKILL.md at root. Other targets: `export/codex|opencode|gemini/`.
 - Try it (15-min check): create a branch, switch, merge `iss53` into `master`,
@@ -27,10 +25,9 @@
   - stars: 0 (not listed, no stars).
   - weekly-installs: 0 (not listed, no installs).
 - Files:
-  - `vol0-sample.md` (792 B, 2026-10-03) — free excerpt, no purchase needed.
+  - `vol0-sample.md` (831 B, 2026-10-04) — free excerpt, no purchase needed.
   - `SKILL.md` — skill entry (PREP-ONLY draft).
   - `references/` — chapter notes backing the cheatsheet.
-  - `demo/demo.gif` — placeholder loop until a real capture lands.
 
 ## Changelog
 
