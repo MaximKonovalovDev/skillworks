@@ -225,17 +225,39 @@ def test_export_unknown_target_clean_error(tmp_path: Path) -> None:
         raise AssertionError("export should reject target bogus with UsageError")
 
 
+def _write_epub(path: Path, docs: dict[str, str]) -> None:
+    """Minimal EPUB via stdlib zipfile (TS-4: no ebooklib dependency)."""
+    import zipfile
+
+    items = "".join(
+        f'<item id="d{i}" href="{name}" media-type="application/xhtml+xml"/>'
+        for i, name in enumerate(sorted(docs))
+    )
+    refs = "".join(f'<itemref idref="d{i}"/>' for i in range(len(docs)))
+    opf = (
+        '<?xml version="1.0"?><package version="3.0" xmlns="http://www.idpf.org/2007/opf" unique-identifier="b">'
+        '<metadata xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:title>Fixture</dc:title>'
+        '<dc:identifier id="b">fixture</dc:identifier><dc:language>en</dc:language></metadata>'
+        f"<manifest>{items}</manifest><spine>{refs}</spine></package>"
+    )
+    container = (
+        '<?xml version="1.0"?><container version="1.0" '
+        'xmlns="urn:oasis:names:tc:opendocument:xmlns:container"><rootfiles>'
+        '<rootfile full-path="OEBPS/content.opf" media-type="application/oebps-package+xml"/>'
+        "</rootfiles></container>"
+    )
+    with zipfile.ZipFile(path, "w") as zf:
+        zf.writestr("mimetype", "application/epub+zip")
+        zf.writestr("META-INF/container.xml", container)
+        zf.writestr("OEBPS/content.opf", opf)
+        for name, body in sorted(docs.items()):
+            zf.writestr(f"OEBPS/{name}", body)
+
+
 def test_epub_nav_heavy_body_only(tmp_path: Path) -> None:
     """K-34 [S16-C1]: nav-heavy EPUB full_text is head/nav-free (body subtree)."""
-    from ebooklib import epub
-
     src = tmp_path / "navheavy.epub"
-    book = epub.EpubBook()
-    book.set_identifier("navheavy-1")
-    book.set_title("Nav Heavy Fixture")
-    book.set_language("en")
-    doc = epub.EpubHtml(title="Ch1", file_name="ch1.xhtml", lang="en")
-    doc.content = (
+    _write_epub(src, {"ch1.xhtml": (
         "<html xmlns:epub='http://www.idpf.org/2007/ops'><head>"
         "<title>SECRETHEAD-CHROME</title><style>.x{color:red}</style>"
         "</head><body>"
@@ -244,12 +266,7 @@ def test_epub_nav_heavy_body_only(tmp_path: Path) -> None:
         "<h1>Body Heading BODYSECRET-HEAD</h1>"
         "<p>Body paragraph BODYSECRET-TEXT.</p>"
         "</body></html>"
-    )
-    book.add_item(doc)
-    book.add_item(epub.EpubNcx())
-    book.add_item(epub.EpubNav())
-    book.spine = ["nav", doc]
-    epub.write_epub(str(src), book)
+    )})
     work = tmp_path / "work"
     receipt = extract_mod.extract(str(src), work)
     text = (work / "full_text.txt").read_text(encoding="utf-8")
@@ -263,15 +280,8 @@ def test_epub_nav_heavy_body_only(tmp_path: Path) -> None:
 
 def test_epub_pagebreak_label_map(tmp_path: Path) -> None:
     """K-35 [S16-C2+C3]: pagebreak id/label fallback + pages list in receipt."""
-    from ebooklib import epub
-
     src = tmp_path / "pagebreak.epub"
-    book = epub.EpubBook()
-    book.set_identifier("pagebreak-1")
-    book.set_title("Pagebreak Fixture")
-    book.set_language("en")
-    doc = epub.EpubHtml(title="Chapter One", file_name="ch1.xhtml", lang="en")
-    doc.content = (
+    _write_epub(src, {"ch1.xhtml": (
         "<html xmlns:epub='http://www.idpf.org/2007/ops'><head>"
         "<title>Pagebreak Fixture</title></head><body>"
         "<h1>Chapter One</h1><p>First body text.</p>"
@@ -281,12 +291,7 @@ def test_epub_pagebreak_label_map(tmp_path: Path) -> None:
         "<p>Third body text.</p>"
         "<span epub:type='pagebreak' id='p3'></span>"
         "</body></html>"
-    )
-    book.add_item(doc)
-    book.add_item(epub.EpubNcx())
-    book.add_item(epub.EpubNav())
-    book.spine = ["nav", doc]
-    epub.write_epub(str(src), book)
+    )})
     work = tmp_path / "work"
     receipt = extract_mod.extract(str(src), work)
     assert receipt["kind"] == "epub"

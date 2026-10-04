@@ -25,13 +25,16 @@ def main() -> None:
 @click.option("--in", "src", required=True, help="PDF/EPUB/DOCX/MD/TXT/URL you own, or a docs folder")
 @click.option("--out", "out", required=True, help="work dir, e.g. work/mybook")
 @click.option("--glob", "include", default=None, help="docs folder only: file name or path pattern, e.g. 'about_*.md'")
-def extract(src: str, out: str, include: str | None) -> None:
+@click.option("--engine", default="classic", type=click.Choice(["classic", "markitdown", "auto"]),
+              help="classic keeps plain text; markitdown keeps headings, tables and code fences (PDF/EPUB/DOCX)")
+def extract(src: str, out: str, include: str | None, engine: str) -> None:
     """Stage 1: source to text + metadata."""
     try:
-        receipt = extract_mod.extract(src, Path(out), include=include)
+        receipt = extract_mod.extract(src, Path(out), include=include, engine=engine)
     except ValueError as exc:
         raise click.UsageError(str(exc)) from None
-    click.echo(f"extracted {receipt['chars']} chars ({receipt['kind']})")
+    counts = f"headings {receipt['md_headings']} tables {receipt['md_tables']} fences {receipt['md_fences']}"
+    click.echo(f"extracted {receipt['chars']} chars ({receipt['kind']}, engine {receipt['engine']}; {counts})")
 
 
 @main.command()
@@ -152,12 +155,14 @@ def distill_check(skill: str, work: str | None) -> None:
 @click.option("--target", "targets", multiple=True, type=click.Choice(export_mod.TARGETS), help="also export (repeat for more)")
 @click.option("--out", "out", default=None, help="export root (default dist)")
 @click.option("--rebuild", is_flag=True, help="overwrite a SKILL.md an author already wrote")
+@click.option("--engine", default="classic", type=click.Choice(["classic", "markitdown", "auto"]),
+              help="extract engine: markitdown keeps headings, tables and code fences")
 def make(src: str, name: str, description: str, qa: str, work: str | None, skill: str | None,
-         include: str | None, targets: tuple[str, ...], out: str | None, rebuild: bool) -> None:
+         include: str | None, targets: tuple[str, ...], out: str | None, rebuild: bool, engine: str) -> None:
     """One command: extract, split, index, build, eval, audit, and export when --target is given."""
     try:
         make_mod.make(src, name, description, Path(qa), work=work, skill=skill, include=include,
-                      targets=targets, out=out, rebuild=rebuild, say=click.echo)
+                      targets=targets, out=out, rebuild=rebuild, say=click.echo, engine=engine)
     except ValueError as exc:
         raise click.UsageError(str(exc)) from None
 

@@ -25,8 +25,11 @@ before vendoring anything.
 * stanfordnlp/dspy (MIT) — signature-compiled QA contract for growing
   source-derived eval sets (T-05); `eval.grow_qa` reimplements the idea.
 * kiasar/gutenberg_cleaner (MIT) — Gutenberg header/footer TEXT_START/END marker-strip idea reimplemented in extract (K-28); no code copied.
-* anthropics/skills + agentskills.io specification — SKILL.md frontmatter
-  fields and progressive-disclosure layout (spec-defined, free to implement).
+* anthropics/skills skill-creator scripts/quick_validate.py + package_skill.py (licence: none declared, read live 2026-10-04 via gh api repos/anthropics/skills, pinned commit 8a1541c) - validate-then-package shape for the distill check gate (frontmatter, kebab name, description budget) and the plan-then-check order; ideas only, no code copied.
+* ai-evos/agent-skills `shared/eval_framework.py` (Apache-2.0 repo spdx read live 2026-10-04 via gh api repos/ai-evos/agent-skills, pinned commit 1eda1fe, file blob cdc34c8) + anthropics/skills `skills/skill-creator/scripts/aggregate_benchmark.py` (Apache-2.0 LICENSE.txt in its folder read live 2026-10-04, pinned commit 8a1541c, file blob 3e66e8c1; repo-level licence none declared) — with-skill versus bare-baseline runs with lift between them, and with_skill/without_skill run layouts aggregated into one summary, behind `tools/skill_trial.py` sheet+grade (TS-3); ideas only, no code copied.
+* asale-ai/anything-to-skill src/audit.rs (Apache-2.0, read live 2026-10-04 via gh api repos/asale-ai/anything-to-skill, pinned commit f03d157) - graded-audit idea behind the distill check locator and pairs counts next to the token budgets; ideas only, no code copied.
+* microsoft/markitdown (MIT, licence spdx read live 2026-10-04 via gh api repos/microsoft/markitdown, pinned main 7ccc027) - EPUB/PDF/DOCX converters (packages/markitdown/src/markitdown/converters/_epub_converter.py, _pdf_converter.py) behind `book2skill extract --engine markitdown` (TS-4); library used from .tools/py, no code copied.
+* jsvine/pdfplumber (MIT, licence spdx read live 2026-10-04 via gh api repos/jsvine/pdfplumber, pinned stable 4c64b92) - lattice table recovery and Courier-font code fencing on the markitdown PDF path plus the pypdf-empty fallback in the classic PDF path (TS-4); library used, no code copied.
 * Unity-Technologies/skills, gamedev-skills/awesome-gamedev-agent-skills
   (Apache-2.0), majidmanzarpour/threejs-game-skills (MIT), aigengame/godot-agent
   (MIT) — skill-pack and router patterns; CLI+bundled-skill+MCP triple

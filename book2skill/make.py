@@ -43,7 +43,7 @@ def _quiet(fn, *args, **kwargs):
 
 def make(src: str, name: str, description: str, qa: Path, work: Path | None = None,
          skill: Path | None = None, include: str | None = None, targets: tuple[str, ...] = (),
-         out: Path | None = None, rebuild: bool = False, say=print) -> dict:
+         out: Path | None = None, rebuild: bool = False, say=print, engine: str = "classic") -> dict:
     work = Path(work) if work else Path("work") / name
     skill = Path(skill) if skill else Path("skills") / name
     out = Path(out) if out else Path("dist")
@@ -56,7 +56,7 @@ def make(src: str, name: str, description: str, qa: Path, work: Path | None = No
     result: dict = {"name": name, "source": src, "skill": str(skill), "work": str(work), "stages": {}}
     stages = result["stages"]
 
-    stages["extract"] = extract_mod.extract(src, work, include=include)
+    stages["extract"] = extract_mod.extract(src, work, include=include, engine=engine)
     say(f"extract  {stages['extract']['kind']}, {stages['extract']['chars']} chars"
         + (f", {stages['extract']['files']} files" if "files" in stages["extract"] else ""))
     stages["split"] = split_mod.split(work)

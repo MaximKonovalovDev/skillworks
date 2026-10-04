@@ -86,6 +86,42 @@
       "test": ["python", "tools/pack_check.py", "--help"],
       "for": ["factory F6: the buyer-file gate for a skillworks pack before it is listed", "skillworks finish bar S3"],
       "timeout_s": 120
+    },
+    {
+      "name": "skill_lint",
+      "does": "Distill kit gate for a book-to-skill skill: plan groups work/chunks into reading packets of at most 6000 tokens with chunk locators; check refuses scaffold text, rules without locators, fewer than 10 tested pairs or trials, an SKILL.md body over 2000 tokens, and non-ASCII; exit 1 on any finding",
+      "run": ["python", "tools/skill_lint.py", "check"],
+      "args": [
+        { "name": "skill", "does": "skill dir, e.g. skills/mybook", "flag": "--skill" },
+        { "name": "work", "does": "work dir whose chunks locators must resolve to", "flag": "--work" }
+      ],
+      "test": ["python", "tools/skill_lint.py", "--help"],
+      "for": ["cure smith: the first skill must pass it before it ships", "book smith: distill plan packets for the reading pass", "judge: one-number distill gate"],
+      "timeout_s": 120
+    },
+    {
+      "name": "skill_trial",
+      "does": "Stranger-run trial gate for a skill: sheet prints the task sheet from evals/NAME_trials.jsonl (task text only, grading keys hidden) so a stranger runs it cold; grade scores work/trials/NAME/with.jsonl against without.jsonl by code (must present, must_not absent, run tasks need run output with the expected exit) and writes skills/NAME/references/trial-proof.json with runs, with_rate, without_rate, lift, spread and fingerprint; exit 0 only on 10 or more runs, with_rate 0.8 or more and lift 0.3 or more",
+      "run": ["python", "tools/skill_trial.py", "grade"],
+      "args": [
+        { "name": "skill", "does": "skill name, e.g. pipe-run", "flag": "--skill" },
+        { "name": "trials", "does": "trials dir holding with.jsonl and without.jsonl (default work/trials/NAME/)", "flag": "--trials" }
+      ],
+      "test": ["python", "tools/skill_trial.py", "--help"],
+      "for": ["installer: the stranger run of a new skill, 12 tasks", "judge: one-number trial gate", "skillworks finish bar S6"],
+      "timeout_s": 120
+    },
+    {
+      "name": "extract_clean",
+      "does": "Clean extract of a PDF, EPUB or DOCX you own: markitdown engine keeps headings, pipe tables and fenced code (classic engine is the plain-text fallback); prints chars, kind, engine and heading/table/fence counts",
+      "run": ["python", "tools/extract_clean.py"],
+      "args": [
+        { "name": "src", "does": "the source file you own (PDF, EPUB, DOCX)", "flag": "--in" },
+        { "name": "out", "does": "work dir, e.g. work/mybook", "flag": "--out" }
+      ],
+      "test": ["python", "tools/extract_clean.py", "--help"],
+      "for": ["book smith: the first extract keeps headings, tables and code fences", "judge: structure counts per extract"],
+      "timeout_s": 600
     }
   ]
 }

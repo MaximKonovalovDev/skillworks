@@ -1,12 +1,37 @@
-"""Extract stage: PDF/EPUB/DOCX/MD/TXT/URL to full_text.txt + metadata.json."""
+"""Extract stage: PDF/EPUB/DOCX/MD/TXT/URL to full_text.txt + metadata.json.
+
+Engines (TS-4): --engine classic is the plain-text fallback (pypdf page join,
+zipfile+BeautifulSoup body text, python-docx walk); --engine markitdown keeps
+markdown structure (headings, pipe tables, fenced code) via markitdown
+(Microsoft, MIT) with pdfplumber (MIT) table/code recovery on PDF;
+--engine auto tries markitdown and falls back to classic with a receipt note.
+markitdown lives in .tools/py (git-ignored, installed per TS-4), never
+machine-wide; ebooklib is gone (classic EPUB needs only stdlib zipfile).
+"""
 from __future__ import annotations
 
 import fnmatch
 import json
 import os
 import re
+import sys
 import urllib.request
+import zipfile
 from pathlib import Path
+
+
+def _ensure_local_tools() -> None:
+    """Put this repo's .tools/py first so the vendored markitdown resolves."""
+    root = Path(__file__).resolve().parents[1] / ".tools" / "py"
+    if root.is_dir() and str(root) not in sys.path:
+        sys.path.insert(0, str(root))
+
+
+ENGINES = ("classic", "markitdown", "auto")
+
+# pdfplumber table/code recovery runs only under this page count; above it the
+# markitdown PDF path keeps markitdown text and says so in the receipt.
+_PDF_ENRICH_MAX_PAGES = 150
 
 
 # Gutenberg header/footer markers (idea from kiasar/gutenberg_cleaner, MIT:
@@ -102,41 +127,139 @@ def _read_text_file(path: Path) -> str:
     return path.read_text(encoding="utf-8", errors="replace")
 
 
-def _read_pdf(path: Path) -> tuple[str, int]:
+def _read_pdf_classic(path: Path) -> tuple[str, int]:
     """Per-page text in page order (pdf.js getTextContent pattern: idea only).
 
     Each page's items are read in content-stream order and pages are joined
-    in index order, so the receipt can report per-page counts.
+    in index order, so the receipt can report per-page counts. pdfplumber
+    (MIT) is the fallback when pypdf yields no text at all.
     """
+    _ensure_local_tools()
     from pypdf import PdfReader
 
     reader = PdfReader(str(path))
     pages = [(page.extract_text() or "") for page in reader.pages]
+    if not any(p.strip() for p in pages):
+        try:
+            import pdfplumber
+
+            with pdfplumber.open(str(path)) as pdf:
+                pages = [(page.extract_text() or "") for page in pdf.pages]
+        except Exception:
+            pass
     return "\n".join(pages), len(pages)
 
 
-def _read_epub(path: Path) -> tuple[str, list[dict]]:
-    """Body-subtree text + pagebreak-label map (ideas-only, AGPL never pasted).
+def _md_table_row(cells: list[str]) -> str:
+    cells = [(c or "").strip().replace("\n", " ") for c in cells]
+    return "| " + " | ".join(cells) + " |"
 
-    Body-only: parse each document item and read only the <body> subtree,
-    dropping <head> chrome plus in-body <nav>/script/style and nav-typed
-    elements. Page map: scan the body for pagebreak markers
-    (epub:type/type == "pagebreak" or role == "doc-pagebreak"); label
-    falls back text -> aria-label -> title -> doc heading (first
-    non-empty h1..h6) -> id.
+
+def _pdf_tables_as_markdown(path: Path, max_pages: int) -> tuple[str, int, bool]:
+    """pdfplumber lattice/line tables rendered as pipe rows (jsvine/pdfplumber, MIT).
+
+    Returns (markdown, table_count, skipped). Skipped is True when the document
+    exceeds max_pages; the caller records it instead of stalling a manual.
     """
-    import ebooklib
+    import pdfplumber
+
+    with pdfplumber.open(str(path)) as pdf:
+        if len(pdf.pages) > max_pages:
+            return "", 0, True
+        blocks: list[str] = []
+        count = 0
+        for page in pdf.pages:
+            for table in page.extract_tables() or []:
+                rows = [[c or "" for c in row] for row in table if any((c or "").strip() for c in row)]
+                if not rows:
+                    continue
+                width = max(len(r) for r in rows)
+                rows = [r + [""] * (width - len(r)) for r in rows]
+                blocks.append(_md_table_row(rows[0]))
+                blocks.append("| " + " | ".join(["---"] * width) + " |")
+                blocks.extend(_md_table_row(r) for r in rows[1:])
+                count += 1
+    if not blocks:
+        return "", 0, False
+    return "## Tables\n\n" + "\n".join(blocks), count, False
+
+
+def _pdf_code_as_markdown(path: Path, max_pages: int) -> tuple[str, int, bool]:
+    """Monospaced-font (Courier) lines grouped into fenced blocks via pdfplumber chars."""
+    import pdfplumber
+
+    with pdfplumber.open(str(path)) as pdf:
+        if len(pdf.pages) > max_pages:
+            return "", 0, True
+        out: list[str] = []
+        fences = 0
+        for page in pdf.pages:
+            lines: dict[tuple, list] = {}
+            for ch in page.chars:
+                key = round(float(ch["top"]))
+                lines.setdefault(key, []).append(ch)
+            code_run: list[str] = []
+            for key in sorted(lines):
+                chars = sorted(lines[key], key=lambda c: float(c["x0"]))
+                if not chars:
+                    continue
+                mono = sum(1 for c in chars if "ourier" in str(c.get("fontname", "")))
+                text = "".join(c.get("text", "") for c in chars).rstrip()
+                if text and mono * 2 >= len(chars):
+                    code_run.append(text)
+                elif code_run:
+                    out.append("```\n" + "\n".join(code_run) + "\n```")
+                    fences += 1
+                    code_run = []
+            if code_run:
+                out.append("```\n" + "\n".join(code_run) + "\n```")
+                fences += 1
+    if not out:
+        return "", 0, False
+    return "## Code\n\n" + "\n\n".join(out), fences, False
+
+
+def _read_pdf_markitdown(path: Path) -> tuple[str, dict]:
+    """markitdown text plus pdfplumber table/code recovery (both MIT)."""
+    _ensure_local_tools()
+    from markitdown import MarkItDown
+
+    text = MarkItDown(enable_builtins=True).convert(str(path)).text_content or ""
+    tables_md, table_count, tables_skipped = _pdf_tables_as_markdown(path, _PDF_ENRICH_MAX_PAGES)
+    code_md, fence_count, code_skipped = _pdf_code_as_markdown(path, _PDF_ENRICH_MAX_PAGES)
+    extra = "\n\n".join(b for b in (tables_md, code_md) if b)
+    info = {
+        "pages": _pdf_page_count(path),
+        "table_count": table_count,
+        "tables_skipped": tables_skipped,
+        "code_skipped": code_skipped,
+    }
+    return (text + ("\n\n" + extra if extra else "")).strip(), info
+
+
+def _pdf_page_count(path: Path) -> int:
+    from pypdf import PdfReader
+
+    return len(PdfReader(str(path)).pages)
+
+
+def _read_epub_classic(path: Path) -> tuple[str, list[dict]]:
+    """Flattened body text via stdlib zipfile + BeautifulSoup (no ebooklib).
+
+    Document files in archive order, <body> subtree only, script/style/nav
+    dropped; pagebreak markers (epub:type/type == "pagebreak" or
+    role == "doc-pagebreak") map to id/label pairs, label falling back
+    text -> aria-label -> title -> doc heading -> id.
+    """
     from bs4 import BeautifulSoup
-    from ebooklib import epub
 
     _NAV_TYPES = {"nav", "toc", "landmarks", "page-list"}
-
-    book = epub.read_epub(str(path))
     parts: list[str] = []
     pages: list[dict] = []
-    for item in book.get_items():
-        if item.get_type() == ebooklib.ITEM_DOCUMENT:
-            soup = BeautifulSoup(item.get_content(), "html.parser")
+    with zipfile.ZipFile(path) as zf:
+        names = [n for n in zf.namelist() if n.lower().endswith((".xhtml", ".html", ".htm"))]
+        for name in sorted(names):
+            soup = BeautifulSoup(zf.read(name), "html.parser")
             root = soup.body if soup.body is not None else soup
             title = ""
             for tag in ("h1", "h2", "h3", "h4", "h5", "h6"):
@@ -152,23 +275,10 @@ def _read_epub(path: Path) -> tuple[str, list[dict]]:
                 if isinstance(role, list):
                     role = " ".join(role)
                 if str(ptype).strip().lower() == "pagebreak" or str(role).strip().lower() == "doc-pagebreak":
-                    pid = el.get("id") or ""
-                    if isinstance(pid, list):
-                        pid = " ".join(pid)
-                    pid = str(pid)
-                    aria = el.get("aria-label") or ""
-                    if isinstance(aria, list):
-                        aria = " ".join(aria)
-                    etitle = el.get("title") or ""
-                    if isinstance(etitle, list):
-                        etitle = " ".join(etitle)
-                    label = (
-                        el.get_text(strip=True)
-                        or str(aria).strip()
-                        or str(etitle).strip()
-                        or title
-                        or pid
-                    )
+                    pid = str(el.get("id") or "")
+                    aria = str(el.get("aria-label") or "")
+                    etitle = str(el.get("title") or "")
+                    label = el.get_text(strip=True) or aria.strip() or etitle.strip() or title or pid
                     pages.append({"id": pid, "label": label})
             for bad in root.find_all(["script", "style", "nav"]):
                 bad.decompose()
@@ -180,6 +290,15 @@ def _read_epub(path: Path) -> tuple[str, list[dict]]:
                     bad.decompose()
             parts.append(root.get_text("\n"))
     return "\n".join(parts), pages
+
+
+def _read_epub_markitdown(path: Path) -> tuple[str, dict]:
+    """markitdown EPUB converter (_epub_converter.py, MIT): headings, tables, fences."""
+    _ensure_local_tools()
+    from markitdown import MarkItDown
+
+    text = MarkItDown(enable_builtins=True).convert(str(path)).text_content or ""
+    return text, {}
 
 
 def _read_docx(path: Path) -> str:
@@ -203,10 +322,40 @@ def _read_docx(path: Path) -> str:
     return "\n".join(parts) if parts else "\n".join(p.text for p in doc.paragraphs)
 
 
-def extract(src: str, workdir: Path, strip_gutenberg: bool = True, include: str | None = None) -> dict:
+def _read_docx_markitdown(path: Path) -> str:
+    """markitdown DOCX converter: headings, tables and lists as markdown."""
+    _ensure_local_tools()
+    from markitdown import MarkItDown
+
+    return MarkItDown(enable_builtins=True).convert(str(path)).text_content or ""
+
+
+def md_counts(text: str) -> dict:
+    """Structure counts of extracted markdown: headings, table rows, fences."""
+    lines = text.splitlines()
+    headings = sum(1 for ln in lines if re.match(r"#{1,6} ", ln.strip()))
+    tables = sum(1 for ln in lines if ln.strip().startswith("|") and ln.count("|") >= 2)
+    fences = text.count("```") // 2
+    return {"md_headings": headings, "md_tables": tables, "md_fences": fences}
+
+
+def _use_markitdown(engine: str, suffix: str) -> bool:
+    if engine == "markitdown":
+        return suffix in (".pdf", ".epub", ".docx")
+    if engine == "auto":
+        return suffix in (".pdf", ".epub", ".docx")
+    return False
+
+
+def extract(src: str, workdir: Path, strip_gutenberg: bool = True, include: str | None = None,
+            engine: str = "classic") -> dict:
+    if engine not in ENGINES:
+        raise ValueError(f"--engine {engine} unknown: pick classic, markitdown or auto")
     if not re.match(r"https?://", src) and not Path(src).exists():
         raise ValueError(f"--in {src} not found: give a file or a docs folder")
     workdir.mkdir(parents=True, exist_ok=True)
+    engine_used = "classic"
+    enrich: dict = {}
     if re.match(r"https?://", src):
         req = urllib.request.Request(src, headers={"User-Agent": "skillworks/0.1"})
         with urllib.request.urlopen(req, timeout=60) as resp:  # noqa: S310
@@ -223,13 +372,41 @@ def extract(src: str, workdir: Path, strip_gutenberg: bool = True, include: str 
             text, folder_meta = _read_folder(path, workdir, include)
             kind, strip_gutenberg = "folder", False
         elif suffix == ".pdf":
-            text, pages = _read_pdf(path)
-            kind = "pdf"
+            if _use_markitdown(engine, suffix):
+                try:
+                    text, enrich = _read_pdf_markitdown(path)
+                    pages, kind, engine_used = enrich.pop("pages", 0), "pdf", "markitdown"
+                except Exception as exc:
+                    if engine == "markitdown":
+                        raise ValueError(f"markitdown PDF failed ({exc}); install .tools/py per TS-4") from exc
+                    text, pages = _read_pdf_classic(path)
+                    kind, engine_used = "pdf", "classic-fallback"
+            else:
+                text, pages = _read_pdf_classic(path)
+                kind = "pdf"
         elif suffix == ".epub":
-            text, epub_pages = _read_epub(path)
-            pages, kind = epub_pages, "epub"
+            if _use_markitdown(engine, suffix):
+                try:
+                    text, enrich = _read_epub_markitdown(path)
+                    pages, kind, engine_used = [], "epub", "markitdown"
+                except Exception as exc:
+                    if engine == "markitdown":
+                        raise ValueError(f"markitdown EPUB failed ({exc}); install .tools/py per TS-4") from exc
+                    text, pages = _read_epub_classic(path)
+                    kind, engine_used = "epub", "classic-fallback"
+            else:
+                text, pages = _read_epub_classic(path)
+                kind = "epub"
         elif suffix == ".docx":
-            text, kind = _read_docx(path), "docx"
+            if _use_markitdown(engine, suffix):
+                try:
+                    text, kind, engine_used = _read_docx_markitdown(path), "docx", "markitdown"
+                except Exception as exc:
+                    if engine == "markitdown":
+                        raise ValueError(f"markitdown DOCX failed ({exc}); install .tools/py per TS-4") from exc
+                    text, kind, engine_used = _read_docx(path), "docx", "classic-fallback"
+            else:
+                text, kind = _read_docx(path), "docx"
         else:
             text, kind = _read_text_file(path), "text"
     text = re.sub(r"\n{3,}", "\n\n", text).strip()
@@ -237,11 +414,13 @@ def extract(src: str, workdir: Path, strip_gutenberg: bool = True, include: str 
     if strip_gutenberg:
         text, stripped = strip_gutenberg_markers(text)
     (workdir / "full_text.txt").write_text(text, encoding="utf-8")
-    meta = {"source": src, "kind": kind, "chars": len(text), "stripped": stripped}
+    meta = {"source": src, "kind": kind, "chars": len(text), "stripped": stripped,
+            "engine_requested": engine, "engine": engine_used, **md_counts(text)}
     if kind == "folder":
         meta.update(folder_meta)
     if pages is not None:
         meta["pages"] = pages
+    meta.update({k: v for k, v in enrich.items() if k != "pages"})
     (workdir / "metadata.json").write_text(json.dumps(meta, indent=2), encoding="utf-8")
     receipt = {"stage": "extract", **meta}
     (workdir / "receipt.json").write_text(json.dumps(receipt, indent=2), encoding="utf-8")
