@@ -23,15 +23,19 @@ from book2skill import split as split_mod
 ROOT = Path(__file__).resolve().parent.parent
 SKILLS = ROOT / "skills"
 
-# name -> substrings THIRD_PARTY_NOTICES.md must carry for it
+# name -> substrings THIRD_PARTY_NOTICES.md must carry for it (an empty list: original work, no outside source to credit)
 FLEET_SKILLS = {
     "pwsh-for-bash-writers": ["MicrosoftDocs/PowerShell-Docs"],
     "git-one-branch": ["progit/progit2"],
     "real-browser-automation": ["microsoft/playwright", "devtools-protocol"],
     "bevy-rust-ecs": ["bevyengine/bevy"],
+    "cron-skip-clean": [],
+    "pipe-run": [],
+    "inbox-file-reader": [],
+    "book-to-skill": [],
 }
 # Installed in forge, whose `node scripts/check.mjs` bans some English words.
-FORGE_SAFE = {"pwsh-for-bash-writers", "git-one-branch"}
+FORGE_SAFE = {"pwsh-for-bash-writers", "git-one-branch", "cron-skip-clean", "pipe-run", "inbox-file-reader"}
 
 # Live tests run real programs (pwsh, git, a browser) and are slow; the loops' shell kills a command at 120 s.
 # They run when SKILL_LIVE=1. `python tests/live_proof.py` runs them and records a fingerprint of the skill;

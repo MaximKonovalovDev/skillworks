@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """pipe-run: one-file batch pipeline with a cost cap and dry-run.
 
-Headless, no phone, no network, no prompts. Reads every ``*.txt`` file in
-``--input`` (sorted, so repeatable), estimates spend as ``chars // 4``
-per file (same unit as the audit token estimate), and refuses to write
-anything when spend exceeds ``--cap``. ``--dry-run`` prints the plan and
-changes nothing.
+Headless, no phone, no network, no prompts. Reads every ``*.txt`` file at
+the top level of ``--input`` (sorted, so repeatable), estimates spend as
+``chars // 4`` per file (same unit as the audit token estimate), and
+refuses to write anything when spend exceeds ``--cap``. ``--dry-run``
+prints the plan and changes nothing.
 
 Usage:
     python scripts/pipe_run.py --input <dir> --out <dir> --cap <tokens>
@@ -18,6 +18,8 @@ from __future__ import annotations
 
 import argparse
 import json
+import shutil
+import sys
 from pathlib import Path
 
 
@@ -26,9 +28,16 @@ def estimate(text: str) -> int:
     return max(1, len(text) // 4)
 
 
+def read_item(path: Path) -> str:
+    """The item as UTF-8 text with every line break counted as one character, the same on every system."""
+    text = path.read_bytes().decode("utf-8")
+    return text.replace("\r\n", "\n").replace("\r", "\n")
+
+
 def main() -> int:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")  # a Hebrew name must not crash a pipe set to a legacy code page
     parser = argparse.ArgumentParser(description="batch run with cost cap")
-    parser.add_argument("--input", required=True, help="input dir of *.txt items")
+    parser.add_argument("--input", required=True, help="input dir of *.txt items (top level only)")
     parser.add_argument("--out", required=True, help="output dir (created on RUN only)")
     parser.add_argument("--cap", required=True, type=int, help="max tokens of spend")
     parser.add_argument("--dry-run", action="store_true", help="plan only, write nothing")
@@ -41,9 +50,25 @@ def main() -> int:
     if args.cap < 0:
         print(f"ERROR cap must be >= 0, got {args.cap}")
         return 2
+    out = Path(args.out)
+    if out.resolve() == src.resolve():
+        print(f"ERROR refused: --out is the input dir: {out}")
+        return 2
+    if out.is_file():
+        print(f"ERROR refused: --out is a file: {out}")
+        return 2
 
-    items = sorted(p for p in src.glob("*.txt") if p.is_file())
-    costs = [(p.name, estimate(p.read_text(encoding="utf-8"))) for p in items]
+    items = sorted((p for p in src.iterdir() if p.suffix.lower() == ".txt" and p.is_file()), key=lambda p: p.name)
+    costs = []
+    for path in items:
+        try:
+            costs.append((path.name, estimate(read_item(path))))
+        except UnicodeDecodeError:
+            print(f"ERROR refused: {path.name} is not UTF-8 text; nothing written")
+            return 2
+        except OSError as err:
+            print(f"ERROR refused: cannot read {path.name}: {err.strerror}; nothing written")
+            return 2
     spend = sum(cost for _, cost in costs)
 
     if args.dry_run:
@@ -57,10 +82,9 @@ def main() -> int:
         )
         return 2
 
-    out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
     for path in items:
-        (out / path.name).write_text(path.read_text(encoding="utf-8"), encoding="utf-8")
+        shutil.copyfile(path, out / path.name)
     (out / "receipt.json").write_text(
         json.dumps(
             {"tool": "pipe-run", "items": len(costs), "spend": spend, "cap": args.cap}

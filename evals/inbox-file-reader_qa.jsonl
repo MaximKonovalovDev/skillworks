@@ -1,0 +1,12 @@
+{"q": "How do I file one inbox line onto a board without touching any other file?", "must": ["--inbox", "--board", "FILED <item> -> <board>"]}
+{"q": "What line does the board get for a filed item?", "must": ["- [ ] <item>", "new last line"]}
+{"q": "Which file suffixes are allowed for the inbox and the board?", "must": [".md", ".markdown", ".txt", "any letter case"]}
+{"q": "What happens when I point the board at a python code file?", "must": ["ERROR refused", "outside the allowlist", "exit 2", "nothing written"]}
+{"q": "What if the inbox and the board are the same file?", "must": ["same file", "ERROR refused"]}
+{"q": "What happens when the inbox is missing or has no non-blank line?", "must": ["ERROR inbox missing", "ERROR inbox empty", "board untouched"]}
+{"q": "Does the reader file more than one item per run?", "must": ["One item per run", "run it again for the next line"]}
+{"q": "What happens to the other lines of the inbox and the board?", "must": ["Every other line", "byte for byte"]}
+{"q": "What if the board's last line has no line break?", "must": ["last line without a break", "never joins it"]}
+{"q": "What does it do with an inbox that is not UTF-8 text?", "must": ["not UTF-8 text", "exit 2"]}
+{"q": "Does the reader judge or deduplicate the item?", "must": ["does not judge", "deduplicate"]}
+{"q": "What if the process stops between writing the board and rewriting the inbox?", "must": ["a duplicate, never a loss"]}

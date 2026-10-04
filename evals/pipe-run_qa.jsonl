@@ -1,0 +1,11 @@
+{"q": "How do I check what a batch will cost before running it?", "must": ["--dry-run", "DRY-RUN <n> items spend <S> tokens (cap <C>)"]}
+{"q": "What happens when the batch spend is over the cap?", "must": ["ERROR over cap", "refused; nothing written", "exit 2", "never created"]}
+{"q": "How is the cost of one item priced?", "must": ["chars // 4", "at least 1", "Characters, not bytes"]}
+{"q": "Which files in the input folder count as items?", "must": ["top level", "Subfolders", "any letter case"]}
+{"q": "Does a spend equal to the cap run or get refused?", "must": ["equal to the cap runs", "One token more is refused"]}
+{"q": "What does a successful run write into the out folder?", "must": ["byte for byte", "receipt.json", "RUN <n> items spend <S>/<C> tokens"]}
+{"q": "What happens when an item is not valid UTF-8 text?", "must": ["not UTF-8 text", "nothing written"]}
+{"q": "Can I use the same folder for input and out?", "must": ["--out is the input dir", "refused"]}
+{"q": "Does the dry run exit non-zero when the spend is over the cap?", "must": ["exits 0", "even when", "over the cap"]}
+{"q": "Does pipe-run call a model for me?", "must": ["does not call a model", "receipt.json"]}
+{"q": "What is the receipt json shape?", "must": ["\"tool\": \"pipe-run\"", "\"items\"", "\"spend\"", "\"cap\""]}

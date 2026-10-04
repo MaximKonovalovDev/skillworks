@@ -1,0 +1,14 @@
+{"q": "How do I make a tested skill from a docs folder in one command?", "must": ["tools/b2s.py make", "--in", "--name", "--description", "--qa"]}
+{"q": "What does make print and which line names the files I still have to write?", "must": ["fill", "still hold the scaffold text", "receipt"]}
+{"q": "Is the scaffold that make builds already a skill I can ship?", "must": ["not a skill", "you write the", "placeholder"]}
+{"q": "Why is my export held and what do I do?", "must": ["export held", "exit 1", "placeholder"]}
+{"q": "What shape is a QA file line and when does a question pass?", "must": ["\"must\"", "top 5 chunks", "any letter"]}
+{"q": "What does the eval gate do under 0.6 and may I edit the QA to pass?", "must": ["0.6", "fix the skill, not the test", "never edit the QA"]}
+{"q": "Where do work, skills and dist go when I run it from another repo?", "must": ["relative to the", "--work", "--skill", "--out"]}
+{"q": "Which export folder is allowed and what crashed the OpenCode server?", "must": ["dist", "9 times", "240 characters"]}
+{"q": "How do I check that no nested export folder is left in skills?", "must": ["Get-ChildItem skills -Recurse -Directory -Filter export", "prints nothing"]}
+{"q": "When does make refuse with exit 2?", "must": ["kebab-case", "missing QA file", "inside each other"]}
+{"q": "Which source types can I give and which are left out of a docs folder?", "must": [".epub", ".docx", "node_modules", "links skipped"]}
+{"q": "Does a second refresh reindex when the chunks did not change?", "must": ["unchanged, no-op", "changed, reindexed"]}
+{"q": "What licences may the sources have and what happens to NonCommercial ones?", "must": ["public-domain", "NonCommercial", "never sold"]}
+{"q": "What size budgets must a shipped skill meet?", "must": ["2000 tokens", "14000 tokens", "40 to 1024"]}

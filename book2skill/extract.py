@@ -204,6 +204,8 @@ def _read_docx(path: Path) -> str:
 
 
 def extract(src: str, workdir: Path, strip_gutenberg: bool = True, include: str | None = None) -> dict:
+    if not re.match(r"https?://", src) and not Path(src).exists():
+        raise ValueError(f"--in {src} not found: give a file or a docs folder")
     workdir.mkdir(parents=True, exist_ok=True)
     if re.match(r"https?://", src):
         req = urllib.request.Request(src, headers={"User-Agent": "skillworks/0.1"})

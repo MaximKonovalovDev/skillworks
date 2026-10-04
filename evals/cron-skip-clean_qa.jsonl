@@ -1,0 +1,11 @@
+{"q": "How do I stop a loop round from redoing work when its input folder did not change?", "must": ["--watch", "--state", "SKIP clean"]}
+{"q": "What does the first run of cron_skip_clean print and what does it write?", "must": ["RUN <fp>", "first run", "state file"]}
+{"q": "What is printed when nothing in the watch folder changed, and is anything written?", "must": ["SKIP clean <fp>", "Nothing is written"]}
+{"q": "Where must the state file live relative to the watch folder?", "must": ["outside", "refuses that pair"]}
+{"q": "What happens when the state file is missing, empty or unparseable JSON?", "must": ["unparseable", "counts as dirty", "writes a good file"]}
+{"q": "Does touching a file without changing its bytes make the folder dirty?", "must": ["touch", "same bytes is clean"]}
+{"q": "My work failed after RUN, why does the next tick SKIP and how do I force a rerun?", "must": ["BEFORE your work runs", "delete the state file"]}
+{"q": "What exit code and text does cron_skip_clean give when the watch folder is missing?", "must": ["ERROR watch dir missing", "exit 2"]}
+{"q": "How is the fingerprint computed and how long is it?", "must": ["sha256", "16 hex", "count=<number of files>"]}
+{"q": "How do I use the SKIP answer in a pwsh loop script?", "must": ["$LASTEXITCODE", "-like 'SKIP*'"]}
+{"q": "What happens when a file in the watch folder is locked or unreadable?", "must": ["cannot read", "state untouched"]}
