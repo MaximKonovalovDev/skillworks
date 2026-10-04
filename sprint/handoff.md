@@ -1,22 +1,22 @@
-# skillworks handoff - round 158 (token 664f)
+# skillworks handoff - round 161 (token 664f)
 
-Round: 158 (batch of 1, 1 commit)
-Written: 2026-10-04T20:58Z
-Token: 664f (takeover: replaced lock d43f left by a closed app, 20:51Z)
+Round: 161 (batch of 2, 1 commit)
+Written: 2026-10-04T21:20Z
+Token: 664f (takeover held since 20:51Z)
 Knobs: width 2, foreground, heavy_max 3, paid_mode 0 (re-read 20:51Z; no proposal).
 
 ## Heading
-- Fingerprint gate landed: fleet live-proof stales down to the 2 known owned ones.
+- pytest fully green in HEAD: reseal land 76a62de, fleet 44/44, full 427/113.
 
 ## Rows done
-- gates+reseal land DONE, committed 2c3025c: book2skill/gates.py excludes trial-proof.json from fingerprint, 3 live-proofs resealed (edit-reread, engine-builder, pipe-run), cron-skip-clean trial proof added. Proof: pytest 2 failed 425 passed 113 skipped (only stales git-one-branch, repo-read-first), check.mjs 20/0/0. Judged: 004-reseal-three-skills-review PASS; 003 PARTIAL with lead reseal decision executed.
-- pack-r2-repair-review FAIL (judge, this round): pack_check FAIL->PASS 13/0/0 plus 3 real captures opened and verified, but K-44/K-56 done-when needs pytest green and pytest still has the 2 owned stales. Partly is FAIL. Second FAIL comes to lead: split, not replan.
+- reseal-2-stales-review PASS (judge): 2 live-proofs only plus p5 run line; pytest 427/113, check 20/0/0, pack_check PASS 13. Committed 76a62de with proof body.
+- pilot-view-r4 DONE: stranger run clean (make scaffold held, arsenal 11/0/0, pack_check PASS), no defects, note pilot-108.md.
+- Pack repair NOT landed: its verdict is still FAIL (pytest-green clause). Green HEAD now meets the clause, so queued pack-repair-rereview.md for next batch; land plus K-56 only on PASS.
+- S5 why-not: needs a class halved 48 h after install; installer plus window, never same-day.
 
 ## Blockers
-- 2 pytest stales remain: git-one-branch (DR-1004-7), repo-read-first (DR-1004-3). Queued one-off sprint/queue/ready/reseal-2-stales.md for next batch; pack lands when it is green.
 - DR-1004-1 reseal stands; BK-1004-1 BLOCKED source_only lift 0.25; K-54 OWNER; K-03 K-06 PARKED.
 - halt absent on disk (HEAD holds 2026-10-03 pause text). Untouched, never committed.
 
 ## Next
-- Keeper batch 20:53Z: planner-rows plus runner-round (round 159, sent). reseal-2-stales rests in ready/.
-- Keeper auto-queued builder-pack-r2-repair-repair.md (repair of a repair); retired by lead: second FAIL comes to lead, pack part already judge-verified real, pytest-green belongs to the stale owners.
+- Keeper batch: pack-repair-rereview judge, then pack land plus K-56 on PASS.
