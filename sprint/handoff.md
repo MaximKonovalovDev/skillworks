@@ -1,22 +1,24 @@
-# skillworks handoff - round 162 (token 664f)
+# skillworks handoff - round 163 (token a7c6)
 
-Round: 162 (batch of 2, 2 commits)
-Written: 2026-10-04T21:28Z
-Token: 664f (takeover held since 20:51Z)
-Knobs: width 2, foreground, heavy_max 3, paid_mode 0 (re-read 20:51Z; no proposal).
+Round: 163 (takeover batch 2+1, 1 commit)
+Written: 2026-10-04T21:32Z
+Token: a7c6 (takeover: replaced stale lead#664f left by closed app, disk 21:35Z HEAD 21:28Z)
+Knobs: width 2, foreground, heavy_max 3, paid_mode 0 (no proposal).
 
 ## Heading
-- R6 shop proof moves: Fleet Vol 1 pack_check PASS landed, K-44 plus K-56 DONE.
+- No Scorecard row moved: R6 shop proof stays DONE (K-44 K-56 in 1f46652); round verified green.
 
 ## Rows done
-- pack-repair-rereview PASS (judge, green HEAD): listing slots plus 3 real captures opened, pytest 427/113, check 20/0/0, guards clean. Committed 1f46652 with proof body.
-- K-44 DONE 1f46652, K-56 DONE 1f46652 (done-whens fully met, judge-confirmed).
-- runner-round-r7 DONE: 0 FAIL 0 WARN PAPERWORK (numbers same, state changed by land commits).
-- S5 why-not: needs a class halved 48 h after install; installer plus window, never same-day.
+- judge pack-repair-rereview VERDICT PASS on green HEAD (confirms 1f46652, no new commit).
+- builder-pack NOOP: packs/fleet-vol-1 already RESULT PASS 13/0/0.
+- pilot-view-r5 DONE: stranger-run clean, no new defects, note sprint/notes/pilot-109.md.
+- Proof: pytest 427 passed 113 skipped; check.mjs RESULT PASS 20/0/0; arsenal 11/0/0; pack_check RESULT PASS 13 checks.
+- K-44 DONE 1f46652, K-56 DONE 1f46652 (confirmed, unchanged).
 
 ## Blockers
-- DR-1004-1 reseal stands; BK-1004-1 BLOCKED source_only lift 0.25; K-54 OWNER; K-03 K-06 PARKED; K-55 READY (O-025 cover check).
-- halt absent on disk (HEAD holds 2026-10-03 pause text). Untouched, never committed.
+- DR-1004-1 READY proof stands, needs installer adoption + 48 h window.
+- BK-1004-1 BLOCKED source_only lift 0.25; K-54 OWNER; K-55 READY; K-03 K-06 PARKED.
+- sprint/halt: disk absent, HEAD holds 2026-10-03 pause text. Untouched, never committed.
 
 ## Next
-- Keeper batch: installer adoption for S5 window, doctor/book seats on open rows.
+- Keeper batch now 0 calls (all seats resting/readiness). Doctor/book seats on open rows when tokens fire.
