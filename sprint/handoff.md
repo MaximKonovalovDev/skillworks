@@ -1,25 +1,25 @@
-# skillworks handoff - round 122 (token b3e7)
+# skillworks handoff - round 123 (token b3e7)
 
-Round: 122 (takeover from 929d left by closed app; repair PARTIAL held for judge, planner DONE committed)
-Written: 2026-10-04T12:52Z
-Token: b3e7 (lock holds lead#b3e7 since 2026-10-04T12:42Z; takeover of 929d stated here)
+Round: 123 (cure DONE held for judge, book PARTIAL held for installer; repair-judge queued by keeper)
+Written: 2026-10-04T13:02Z
+Token: b3e7 (lock holds lead#b3e7 since 2026-10-04T12:42Z; takeover of 929d stated round 122)
 Knobs: width 2, foreground, heavy_max 3, paid_mode 0 (re-read 12:42Z; no proposal).
 
 ## Heading
-- No Scorecard number moved (repair re-sealed 1 stale proof; 3 stales remain, all out of its scope).
+- No Scorecard number moved (nothing committed; 2 skills advanced uncommitted, both held).
 
 ## Rows done
-- planner DONE f3b890a: board K-36..K-41 archived to archive/2026-10-04/board-done.md (30 rows left), P5 note rewritten, coach KEPT e29b768. Gates identical.
-- repair PARTIAL (held, uncommitted): repo-read-first grade-then-live re-sealed, its fingerprint test green. Queued judge one-off sprint/queue/ready/001-cure-r1-repair-review.md for the next batch.
-- Verified: repo-read-first tests green; fleet fingerprint still 3 failed (cron-skip-clean, inbox-file-reader, pipe-run stales); check.mjs PASS 20/0/0.
-- No VISION-TABLES Proposed answers pending; inbox S46 already has K-55.
+- cure DONE (held, uncommitted): DR-1004-2 edit-reread proven 10 -> 11, trial 12 runs 1.0/0.3333 lift 0.6667, lint PASS. Keeper wrote chain review sprint/queue/ready/builder-cure-r2-review.md.
+- book PARTIAL (held): BK-1004-1 rust-book distilled (11 rules, 815 tokens, distill check exit 0, sheet 12 tasks PASS), self-grade lift 0.4167 but source_only 0.25; installer stranger run pending, row stays READY.
+- repair-judge picked up: keeper batch queues judge 001-cure-r1-repair-review + researcher-doctor.
+- Verified: check.mjs PASS 20/0/0; helpers agree pytest 372 passed, same 3 stales (cron, inbox, pipe-run).
 
 ## Checks
-- check.mjs PASS 20/0/0. Full pytest not re-run (helpers + lead spot-runs agree: 365 passed, 3 known stales).
+- check.mjs PASS 20/0/0. Full suite not re-run by lead (both helpers report 372/3 same stales).
 
 ## S1 note
 - S1 met, S2 met. No S1 push needed. Lowest open S5 then S3.
 
 ## Next
-- Keeper batch (12:43Z): builder-cure + builder-book, plus the queued repair-judge review.
-- Held: repair files uncommitted pending judge; TS-1 DOING; DR-1004-1/2/3/4/5/6 + BK-1004-1/2 + K-55 READY; K-54 OWNER; K-44 READY; K-03 K-06 PARKED.
+- Send: judge 001-cure-r1-repair-review + researcher-doctor.
+- Held: edit-reread + rust-book + repair files uncommitted pending judge/installer; TS-1 DOING; DR rows + BK-1004-2 + K-55 READY; K-54 OWNER; K-44 READY; K-03 K-06 PARKED.
