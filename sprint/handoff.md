@@ -1,22 +1,22 @@
-# skillworks handoff - round 150 (token d43f)
+# skillworks handoff - round 158 (token 664f)
 
-Round: 150 (batch of 2, 1 commit)
-Written: 2026-10-04T19:58Z
-Token: d43f (lead#d43f since 2026-10-04T19:58Z)
-Knobs: width 2, foreground, heavy_max 3, paid_mode 0 (re-read 19:58Z; no proposal).
+Round: 158 (batch of 1, 1 commit)
+Written: 2026-10-04T20:58Z
+Token: 664f (takeover: replaced lock d43f left by a closed app, 20:51Z)
+Knobs: width 2, foreground, heavy_max 3, paid_mode 0 (re-read 20:51Z; no proposal).
 
 ## Heading
-- Board smaller, Scorecard unmoved: 14 DONE rows to archive (603ebda), pilot view clean. Pack repair still uncommitted, still unreviewed.
+- Fingerprint gate landed: fleet live-proof stales down to the 2 known owned ones.
 
 ## Rows done
-- planner-rows-r7 DONE, committed 603ebda: coach 49d2f55 KEPT, P5 note rewritten, TS-1..TS-5 K-49 K-50 K-51 K-42 K-43 K-46 K-48 K-52 K-53 to archive unchanged, board 39229 to 22641 B. Proof: check 20/0/0, BOARD CHECK PASS, pytest identical 2/425/113.
-- pilot-view-r2 DONE (note pilot-107.md in 603ebda): stranger make scaffold held by export exit 1, arsenal 11/0/0, pack_check PASS 13/0/0 on disk. No new packets.
-- S3 why-not: S3 moves only when the pack repair is judged PASS and committed (K-56) plus the factory lister; this batch was planner plus pilot, no pack verdict in it.
+- gates+reseal land DONE, committed 2c3025c: book2skill/gates.py excludes trial-proof.json from fingerprint, 3 live-proofs resealed (edit-reread, engine-builder, pipe-run), cron-skip-clean trial proof added. Proof: pytest 2 failed 425 passed 113 skipped (only stales git-one-branch, repo-read-first), check.mjs 20/0/0. Judged: 004-reseal-three-skills-review PASS; 003 PARTIAL with lead reseal decision executed.
+- pack-r2-repair-review FAIL (judge, this round): pack_check FAIL->PASS 13/0/0 plus 3 real captures opened and verified, but K-44/K-56 done-when needs pytest green and pytest still has the 2 owned stales. Partly is FAIL. Second FAIL comes to lead: split, not replan.
 
 ## Blockers
-- pytest stale proofs: git-one-branch (DR-1004-7), repo-read-first (DR-1004-3).
+- 2 pytest stales remain: git-one-branch (DR-1004-7), repo-read-first (DR-1004-3). Queued one-off sprint/queue/ready/reseal-2-stales.md for next batch; pack lands when it is green.
 - DR-1004-1 reseal stands; BK-1004-1 BLOCKED source_only lift 0.25; K-54 OWNER; K-03 K-06 PARKED.
 - halt absent on disk (HEAD holds 2026-10-03 pause text). Untouched, never committed.
 
 ## Next
-- Await keeper batch: pack-repair review still first, then K-56 DONE commit if PASS.
+- Keeper batch 20:53Z: planner-rows plus runner-round (round 159, sent). reseal-2-stales rests in ready/.
+- Keeper auto-queued builder-pack-r2-repair-repair.md (repair of a repair); retired by lead: second FAIL comes to lead, pack part already judge-verified real, pytest-green belongs to the stale owners.
