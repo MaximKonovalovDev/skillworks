@@ -17,6 +17,27 @@ TARGETS = ("claude", "codex", "opencode", "gemini")
 GATE = 0.6
 REPORT_FILENAME = "eval_report.json"
 
+# K-53 R5: one build, four copy-layout exports. Same copy path for every
+# target; only the layout root (out/<target>/<name>) differs. SKILL.md stays
+# at the layout root so every target imports as-is; .lock.json marks the
+# build and the ZIP beside the dir is the shippable artifact (K-41 shape).
+# Donor ideas only: Skill_Seekers per-target copy layouts (MIT, read live
+# 2026-10-03); no target-specific forks beyond this table.
+LAYOUTS = {
+    "claude": {"root_file": "SKILL.md", "lock": ".lock.json"},
+    "codex": {"root_file": "SKILL.md", "lock": ".lock.json"},
+    "opencode": {"root_file": "SKILL.md", "lock": ".lock.json"},
+    "gemini": {"root_file": "SKILL.md", "lock": ".lock.json"},
+}
+
+
+def layout_for(target: str) -> dict:
+    """Layout descriptor for one export target (K-53); unknown targets stay a usage error."""
+    try:
+        return LAYOUTS[target]
+    except KeyError:
+        raise click.UsageError(f"unknown target {target}; legal: claude|codex|opencode|gemini") from None
+
 
 def load_eval_report(skilldir: Path) -> dict | None:
     """Resolve the skill's latest eval report, if one was saved beside it."""
@@ -152,8 +173,7 @@ def skill_version(skilldir: Path) -> str:
 
 
 def export(skilldir: Path, target: str, out: Path, eval_report: dict | None = None) -> dict:
-    if target not in TARGETS:
-        raise click.UsageError(f"unknown target {target}; legal: claude|codex|opencode|gemini")
+    layout = layout_for(target)
     report = eval_report if eval_report is not None else load_eval_report(skilldir)
     if report is None:
         raise SystemExit(
@@ -187,6 +207,7 @@ def export(skilldir: Path, target: str, out: Path, eval_report: dict | None = No
         zip_path.unlink()
     members = _write_zip(dest, zip_path)
     receipt = {"stage": "export", "target": target, "dest": str(dest),
-               "zip": str(zip_path), "zip_files": len(members)}
+               "zip": str(zip_path), "zip_files": len(members),
+               "root_file": layout["root_file"]}
     print(json.dumps(receipt, indent=2))
     return receipt
