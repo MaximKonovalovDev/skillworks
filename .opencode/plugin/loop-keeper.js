@@ -1691,7 +1691,7 @@ Ready work: ${readyItem.id}. Claim only this item; selectors do not authorize sw
       }
       const said = msgs.filter((m) => m?.info?.role === "assistant").map(textOf).filter((t) => t.trim()).join("\n").trim().slice(-3000);
       if (!files.size && !said) return null;
-      const block = `\n\n${SALVAGE_MARK}\n## Earlier run cut at the time cap (${iso()})\n\nAn earlier run of this packet was stopped after ${ago(now() - job.started)}. Its work is on disk: read it, keep what is right and go on from there; do not start over.\n` +
+      const block = `\n\n${SALVAGE_MARK}\n## Earlier run was cut (${iso()})\n\nAn earlier run of this packet was stopped after ${ago(now() - job.started)} (time cap, a stop or a restart). Its work is on disk: read it, keep what is right and go on from there; do not start over.\n` +
         (files.size ? `\nFiles it edited: ${[...files].slice(0, 40).map((f) => `\`${f}\``).join(", ")}\n` : "") +
         (said ? `\nIts last words:\n\n${said.replace(/^/gm, "> ")}\n` : "");
       for (const one of job.group ?? [job]) {
@@ -1715,8 +1715,18 @@ Ready work: ${readyItem.id}. Claim only this item; selectors do not authorize sw
     for (const [call, job] of fgJobs) {
       if (now() - job.started > 2 * 60_000 && (await turnOf(job.sid)) === "idle") {
         fgJobs.delete(call);
+        // A stop, a retire or a restart cut the batch (2026-10-04: 122 of 198 cut helpers died in such
+        // clusters): its work goes back with the packet like a cap cut's (a cap cut already wrote it).
+        let kept = null;
+        if (!job.standing && !job.stopped) {
+          try {
+            if (!kids.has(job.sid)) kids.set(job.sid, (await client.session.children({ path: { id: job.sid } }))?.data ?? []);
+            const child = kids.get(job.sid).filter((k) => k?.title === `${job.desc} (@${job.sub ?? job.role} subagent)`).sort((a, b) => (b.time?.created ?? 0) - (a.time?.created ?? 0))[0];
+            if (child?.id) kept = await salvage(job, child.id);
+          } catch { /* the packet still goes back */ }
+        }
         for (const one of job.group ?? [job]) if (!one.standing) { const from = join(qsub("running"), `${one.id}.md`); queueMove(from, "ready"); rmSync(`${from}.json`, { force: true }); } else releaseClaims(one.id);
-        log(`${job.sid} batch: ${job.id} got no result (its batch ended first); ${job.standing ? "the seat runs in a later batch" : "back to ready/"}`);
+        log(`${job.sid} batch: ${job.id} got no result (its batch ended first); ${job.standing ? "the seat runs in a later batch" : `back to ready/${kept ? ` with its work (${kept.files.length} files)` : ""}`}`);
         continue;
       }
       if (job.stopped || now() - job.started <= capOf(job)) continue;
