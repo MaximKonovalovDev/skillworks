@@ -2,7 +2,7 @@
 
 Tagline: Three Agent Skills run against real programs: PowerShell 7, a real browser over CDP, Bevy 0.19.
 
-Status: live on Gumroad since 2026-10-04 (the page answers HTTP 200); the page has no cover image yet and the store assets below are still not made.
+Status: live on Gumroad since 2026-10-04 (the page answers HTTP 200); cover art delivered 2026-10-04 (order O-025, 1280x720 + 630x500 PNGs in this folder), demo and screenshots below are still not made.
 Live listing: https://maxkonova.gumroad.com/l/fleet-pack
 Price: $19
 AI disclosure: generated: the text and scripts of the skills were written by AI coding agents (Claude); every example and claim was then run on real programs and checked by tests. No generated images in the pack.
@@ -83,8 +83,11 @@ one tested, versioned download with its proof files, not for secrecy.
 - `real-browser-automation`: MIT, Apache-2.0 and BSD-3-Clause. The script and text are original (MIT); ideas from the Playwright docs (Apache-2.0); protocol names checked against the DevTools protocol files (BSD-3-Clause).
 - `bevy-rust-ecs`: MIT and Apache-2.0. The text and scripts are original (MIT); facts read from the Bevy source, tag v0.19.1 (MIT OR Apache-2.0).
 - No NonCommercial source is in the paid zip. `git-one-branch` (CC-BY-NC-SA-3.0) is the free Vol 0 only.
-  Source licences re-read live 2026-10-04 (PowerShell-Docs, Playwright Apache-2.0, devtools-protocol BSD-3-Clause,
-  Bevy Apache-2.0; Pro Git stays NonCommercial and free): no source moved to NonCommercial, the pack stands.
+   Source licences re-read live 2026-10-04 via gh api (PowerShell-Docs repo spdx
+   NOASSERTION with CC-BY-4.0 text and MIT code license files, Playwright
+   Apache-2.0, devtools-protocol BSD-3-Clause, Bevy Apache-2.0, Pro Git repo
+   spdx NOASSERTION with CC BY-NC-SA 3.0 license file; Pro Git stays
+   NonCommercial and free): no source moved to NonCommercial, the pack stands.
 
 The full credit lines are in `LICENSES.md` inside the zip.
 
@@ -93,7 +96,7 @@ The full credit lines are in `LICENSES.md` inside the zip.
 Each skill has a live proof: its tests ran against real programs and the skill still matches the fingerprint stored then.
 
 - `pwsh-for-bash-writers`: 2026-10-03, 7 passed (one of them runs all 49 pairs in pwsh 7.6.3).
-- `real-browser-automation`: 2026-10-03, 11 passed (real Edge and Chrome against 127.0.0.1).
+- `real-browser-automation`: 2026-10-04, 11 passed (real Edge and Chrome against 127.0.0.1).
 - `bevy-rust-ecs`: 2026-10-03, 42 passed (names and file lines checked against the 0.19.1 source tree; nothing compiled).
 
 The records are in `proof/` inside the zip.
@@ -102,7 +105,8 @@ The records are in `proof/` inside the zip.
 
 Not made yet. Each one is written as a request; none is faked. The page went live on 2026-10-04 before they existed (its cover list is empty), so `tools/pack_check.py` fails each one until the file is here.
 
-- cover: needed: PNG for the store cover, 1280x720 (Gumroad) and 630x500 (itch.io), readable at 315 px width. Title "Fleet Vol 1", line "three tested skills for coding agents", three chips "PowerShell 7", "real browser", "Bevy 0.19". Plain design, no generated art.
+- cover: store-art/O-025/out.png, store-art/O-025/out-630x500.png
+  Delivered 2026-10-04 as order O-025: 1280x720 Gumroad cover and 630x500 itch card, plain design, no generated art.
 - demo: needed: a real screen capture as a GIF, 10 to 20 seconds, under 8 MB: an agent session where `grep -n` on a text file fails with "is not recognized", then the same task with the skill loaded using `Select-String`. No mockup.
 - screenshots: needed: three real PNG captures, 1280x800: the pairs table of `references/pairs.md`, the JSON that `cdp.mjs` prints for `navigator.webdriver`, the old-name table of the Bevy skill.
 

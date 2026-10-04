@@ -1,0 +1,12 @@
+{
+  "skill": "rust-book",
+  "runs": 12,
+  "with_rate": 1.0,
+  "without_rate": 0.5833,
+  "lift": 0.4167,
+  "spread": 0.4167,
+  "fingerprint": "78da3073f8c2654b1eb394cb3013b25e259199f759d43f9d8efc050ed09dad85",
+  "sheet": "evals/rust-book_trials.jsonl",
+  "at": "2026-10-04T13:25Z",
+  "ok": true
+}
