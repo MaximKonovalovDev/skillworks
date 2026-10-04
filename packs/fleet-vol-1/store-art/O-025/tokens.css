@@ -1,0 +1,29 @@
+/* designs/O-025/tokens.css: O-025 Fleet Vol 1 (clean-developer). All page color comes from these vars. */
+:root {
+  --bg: #101322;
+  --bg-2: #1a2044;
+  --ink: #ffffff;
+  --muted: #c9d2f2;
+  --accent: #3f5bf0;
+  --accent-ink: #9fb0ff;
+  --on-accent: #ffffff;
+  --chip-bg: #171c3d;
+  --chip-ink: #ffffff;
+  --chip-line: #4f6bff;
+  --dim: #8b94c7;
+  --err: #ff7b7b;
+  --ok: #35d07f;
+  --paper: #ffffff;
+  --term: #0b0e1d;
+  --term-line: #2a3266;
+  --font-display: 'Inter','Segoe UI',Arial,sans-serif;
+  --font-body: 'Inter',Verdana,Arial,sans-serif;
+  --font-mono: Consolas,'Courier New',monospace;
+  --title-px: 96px;
+  --title-px-card: 60px;
+  --title-weight: 900;
+  --title-track: -0.02em;
+  --copy-w: 52%;
+  --claim-w: 540px;
+  --chip-r: 10px;
+}

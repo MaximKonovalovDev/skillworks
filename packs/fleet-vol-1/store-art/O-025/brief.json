@@ -1,0 +1,75 @@
+{
+  "title": "Fleet Vol 1",
+  "size": {
+    "w": 1280,
+    "h": 720
+  },
+  "sizes": [
+    {
+      "w": 1280,
+      "h": 720,
+      "name": "landscape"
+    },
+    {
+      "w": 630,
+      "h": 500,
+      "name": "store-card",
+      "title_px": 60,
+      "title_box": [
+        0.04,
+        0.04,
+        0.96,
+        0.3
+      ],
+      "title_longest": 11
+    }
+  ],
+  "dir": "ltr",
+  "tokens": "tokens.css",
+  "page": "page.html",
+  "image": "out.png",
+  "text": [
+    {
+      "label": "title",
+      "fg": "var(--ink)",
+      "bg": "var(--bg)",
+      "min": 4.5
+    },
+    {
+      "label": "subtitle",
+      "fg": "var(--muted)",
+      "bg": "var(--bg)",
+      "min": 4.5
+    },
+    {
+      "label": "cta",
+      "fg": "var(--on-accent)",
+      "bg": "var(--accent)",
+      "min": 4.5
+    },
+    {
+      "label": "chip",
+      "fg": "var(--chip-ink)",
+      "bg": "var(--chip-bg)",
+      "min": 4.5
+    },
+    {
+      "label": "kicker",
+      "fg": "var(--accent-ink)",
+      "bg": "var(--bg)",
+      "min": 3
+    }
+  ],
+  "title_box": [
+    0.056,
+    0.2,
+    0.52,
+    0.5
+  ],
+  "title_px": 96,
+  "title_longest": 11,
+  "order": "O-025",
+  "product": "order:fleet-vol-1-store-art-for-skillworks-cov",
+  "system": "clean",
+  "assets": []
+}

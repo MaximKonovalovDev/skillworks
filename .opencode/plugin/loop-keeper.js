@@ -306,7 +306,7 @@ const heavyOn = () => {
   if (!js || !existsSync(js)) return false;
   return !existsSync(join(process.env.EMPIRE_STATE || join(homedir(), ".empire", "state"), "heavy", "off"));
 };
-const SUPPORTED_COMMANDS = ["go", "sprint", "stop", "new", "say", "archive"];
+const SUPPORTED_COMMANDS = ["go", "sprint", "stop", "new", "say", "archive", "chat"];
 const centerDir = () => {
   const c = REPOS.center?.command;
   return c ? String(c).replace(/\\/g, "/").replace(/\/\.opencode\/commands\/sprint\.md$/, "") : null;
@@ -2070,6 +2070,21 @@ Ready work: ${readyItem.id}. Claim only this item; selectors do not authorize sw
       return `SENT ${out.length - bad.length} of ${out.length}${bad.length ? `; not: ${clip(bad.map((x) => `${x.one}: ${x.r?.reason ?? "refused"}`).join("; "), 200)}` : ""}`;
     } catch (e) { return `NOT SENT: send failed: ${e?.message ?? e}`; }
   };
+  // Chat: one NEW chat in center with a first prompt (2026-10-04, the Loop Boss "Send problems to Muse" button on the
+  // desktop app: the app's server answers 401 to anything outside, the keeper runs inside it). Only the CENTER keeper
+  // handles it. {cmd:"chat", id, title, text, agent?, model?: { providerID, modelID }}. Never a sprint: a plain chat.
+  const handleChat = async (cmd) => {
+    if (!isCenterKeeper()) return "only center";
+    const text = String(cmd.text ?? "").trim();
+    if (!text) return "NOT SENT: need a text";
+    try {
+      const created = (await client.session.create({ body: { title: clip(String(cmd.title ?? "Loop Boss chat"), 80) } }))?.data;
+      if (!created?.id) return "NOT SENT: the chat was not created";
+      const model = cmd.model?.providerID && cmd.model?.modelID ? { providerID: String(cmd.model.providerID), modelID: String(cmd.model.modelID) } : null;
+      await client.session.promptAsync({ path: { id: created.id }, body: { ...(typeof cmd.agent === "string" && cmd.agent ? { agent: cmd.agent } : {}), ...(model ? { model } : {}), parts: [{ type: "text", text }] } });
+      return `CHAT ${created.id}`;
+    } catch (e) { return `NOT SENT: ${e?.message ?? e}`; }
+  };
   const handleArchive = async (cmd, target) => {
     if (!isCenterKeeper()) return "only center";
     if (!opt.archiveChat) {
@@ -2116,6 +2131,7 @@ Ready work: ${readyItem.id}. Claim only this item; selectors do not authorize sw
     if (!SUPPORTED_COMMANDS.includes(action)) return answer("unknown command");
     if (action === "say") return answer(await handleSay(cmd, target));
     if (action === "archive") return answer(await handleArchive(cmd, target));
+    if (action === "chat") return answer(await handleChat(cmd));
     try {
       const info = id ? (await client.session.get({ path: { id } }))?.data : null;
       if (action === "new") return answer(await renew(info ? id : null));
