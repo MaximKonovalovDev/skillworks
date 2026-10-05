@@ -1,24 +1,23 @@
-# skillworks handoff - round 189 (token 5ead)
+# skillworks handoff - round 190 (token 5ead)
 
-Round: 189 (bash-spawn-guard proven 17 to 18; tree fully green)
-Written: 2026-10-05T18:05Z
-Token: 5ead (holds since 13:18Z takeover from 7161, refreshed 18:05Z)
+Round: 190 (read-offset-guard proven 18 to 19; halt file stops loop)
+Written: 2026-10-05T18:25Z
+Token: 5ead (holds since 13:18Z takeover from 7161; released at stop)
 Knobs: width 2, foreground, heavy_max 3, paid_mode 1.
 
 ## Heading
-- R1 fed (bash-spawn-guard proven, halving pending install). No Scorecard row moved.
+- R1 fed (read-offset-guard proven, halving pending install). No Scorecard row moved.
 
 ## Rows done
-- ba7f476 DR-1005-6 DONE judge PASS: bash-spawn-guard proven 17 to 18, live 6 passed, trial 1.0/0.0 lift 1.0.
-- cd6c8c4 proofs refresh (16 live-proof + 1 trial-proof, fingerprint-identical) plus removed judge-scratch eval_report.json that broke task-abort-guard's gate.
-- c764580 board marks DR-1005-6 DONE ba7f476. Check PASS 20/0/0. Full pytest 489 passed 134 skipped green.
-- Doctor rests (3 identical BLOCKED, step ended).
+- adb27ab DR-1005-8 DONE judge PASS: read-offset-guard proven 18 to 19, live 6 passed, trial 1.0/0.0 lift 1.0. FLEET duplicate task-abort-guard removed in same commit.
+- 9a3fb02 board marks DR-1005-8 DONE adb27ab. Check PASS 20/0/0. Full pytest 496 passed 137 skipped green.
+- Session totals (rounds 182-190): 9 landings (board fix, 2 red rows, 5 inbox rows, 2 tools, 7 skills, proofs refresh), all judged PASS, all pushed.
 
 ## Held, not committed
-- Keeper/batch/claims/loop-keeper/knobs churn, ready deletions, halt deletion, pilot-112 note. Untouched.
+- Keeper/batch/claims/loop-keeper/knobs/repomap churn, ready deletions, pilot-112 note. Untouched. Halt file untouched.
 
 ## Checks
-- node sprint/check.mjs RESULT PASS 20/0/0. python -m pytest tests/ -q 489 passed 134 skipped (lead ran).
+- node sprint/check.mjs RESULT PASS 20/0/0. python -m pytest tests/ -q 496 passed 137 skipped (lead ran).
 - Export-guard clean. No outside text.
 
 ## S5
@@ -26,7 +25,8 @@ Knobs: width 2, foreground, heavy_max 3, paid_mode 1.
 
 ## Blockers
 - BK-1004-1 BLOCKED source_only lift 0.25; K-54 OWNER; K-03 K-06 PARKED.
+- sprint/halt present (Loop Boss 17:14Z): finish round, write handoff, stop.
 
 ## Next
-- Seat guard fix packet: eval reruns must not leave untracked files in skills/ (broke a gate twice now).
-- Keeper batch: installer stranger run, book lanes (BK-1005-1, BK-1005-2), DR-1005-8 cure low priority.
+- On resume: installer stranger run, book lanes BK-1005-1 BK-1005-2, seat guard (no untracked files in skills/).
+- Lock 5ead released (file removed); next lead takes a free lock.
