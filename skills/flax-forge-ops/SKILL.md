@@ -1,6 +1,7 @@
 ---
 name: flax-forge-ops
 description: Operate the Forge AI game factory and Flax MCP bridge: gateway lanes, batch queues, MCP proxy, build and verify lanes. Use when working with Forge gateway, Flax tools, or factory sidecars.
+version: 0.1.0
 license: MIT
 ---
 

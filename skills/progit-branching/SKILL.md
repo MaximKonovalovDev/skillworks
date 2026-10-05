@@ -1,6 +1,7 @@
 ---
 name: progit-branching
 description: Pro Git branching (CC BY-NC-SA 3.0): branches, merging, workflows, rebasing, remote branches. Use when creating, merging, or rebasing Git branches.
+version: 0.1.0
 license: CC-BY-NC-SA-3.0 (source; NonCommercial, never sold)
 ---
 

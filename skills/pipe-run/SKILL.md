@@ -1,6 +1,7 @@
 ---
 name: pipe-run
 description: Price a batch of text files and refuse it before anything is written when it would spend more than a token cap, with a dry run to preview the spend. Use before a headless batch job over a folder of .txt items (a model run, a bulk rewrite, a scan) when an over-budget run must stop first; RUN under the cap, refuse over it, DRY-RUN to see the number.
+version: 0.1.0
 license: MIT
 ---
 

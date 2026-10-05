@@ -1,6 +1,7 @@
 ---
 name: freud-dream-psychology
 description: Freud Interpretation of Dreams (public domain): dream-work, manifest and latent content, condensation and displacement. Use when analyzing dreams or discussing psychoanalytic interpretation.
+version: 0.1.0
 license: MIT
 ---
 

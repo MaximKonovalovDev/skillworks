@@ -1,6 +1,7 @@
 ---
 name: bevy-rust-ecs
 description: Bevy 0.19.1 for a coding agent that builds a viewer crate drawing a deterministic sim - ECS app basics, loading a glTF or glb fighter, skeletal animation with AnimationPlayer and AnimationGraph, snapshot resources, dynamic linking, screenshots, plugin version pins. Use when writing or fixing Bevy code, editing a Cargo.toml bevy dependency, or when a Bevy tutorial from 0.12 to 0.16 does not compile on bevy 0.19.
+version: 0.1.0
 license: MIT OR Apache-2.0 (Bevy source), MIT (scaffold)
 ---
 

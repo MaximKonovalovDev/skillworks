@@ -1,6 +1,7 @@
 ---
 name: find-vol1
 description: Use when a task might fit a Fleet Vol 1 skill and you must answer which one fits plus its install command. Routes shell, browser, Bevy and shared-repo git tasks to the right Vol 1 skill, or says none fits.
+version: 0.1.0
 license: MIT
 ---
 

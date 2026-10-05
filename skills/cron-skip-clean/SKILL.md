@@ -1,6 +1,7 @@
 ---
 name: cron-skip-clean
 description: Skip a scheduled, looped or watched run when its input folder did not change, so unchanged work is not paid for twice. Use before a cron tick, loop round or watcher re-processes a folder; the script fingerprints the folder and prints RUN when it changed (or on the first run) and SKIP clean when it did not.
+version: 0.1.0
 license: MIT
 ---
 

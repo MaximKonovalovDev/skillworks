@@ -1,6 +1,7 @@
 ---
 name: inbox-file-reader
 description: File exactly one inbox line onto a board file and touch nothing else, with a path allowlist so code files can never be read or written. Use for autonomous triage of one inbox item into a board or inbox markdown file when everything else, especially code, must stay untouched; FILED on success, refused outside the allowlist.
+version: 0.1.0
 license: MIT
 ---
 

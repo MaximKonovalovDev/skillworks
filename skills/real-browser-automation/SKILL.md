@@ -1,6 +1,7 @@
 ---
 name: real-browser-automation
 description: Drives the installed headless Edge or Chrome from Node 24 over the Chrome DevTools protocol (CDP) with only the built-in WebSocket and fetch, against 127.0.0.1 only. Use when a bot, test or journey must be a real browser (real clicks and keys, navigator.webdriver, a beacon the browser itself sends) and before adding Playwright.
+version: 0.1.0
 license: Apache-2.0 (Playwright notes), BSD-3-Clause (protocol), MIT (scaffold)
 ---
 

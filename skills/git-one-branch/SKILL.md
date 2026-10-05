@@ -1,6 +1,7 @@
 ---
 name: git-one-branch
 description: Use before any git pull, commit, push, merge or branch step in a repo that other sessions edit at the same time. One branch, pull with --no-rebase, commit only your own paths, never add -A, commit -a, rebase, amend, stash, force-push or checkout -- on files you did not write. Also covers a pull refused by dirty files, "pathspec did not match", "nothing to commit", a rejected push and index.lock. Derived from Pro Git (CC BY-NC-SA 3.0): free use and sharing only, never sold.
+version: 0.1.0
 license: CC-BY-NC-SA-3.0 (derived from Pro Git; free use and sharing only, never sold)
 ---
 

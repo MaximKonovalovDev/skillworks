@@ -1,6 +1,7 @@
 ---
 name: book-to-skill
 description: Turn a manual, book or docs folder you may use into a tested Agent Skill with the skillworks book2skill pipeline. One command (make) extracts, splits, indexes, builds, evals and audits it, and exports only after the skill text is really written. Use when asked to build, refresh or export an Agent Skill from a PDF, EPUB, DOCX, markdown or text source, or to check a skill against the eval gate before it ships.
+version: 0.1.0
 license: MIT
 ---
 

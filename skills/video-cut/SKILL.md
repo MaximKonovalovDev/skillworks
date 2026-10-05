@@ -1,6 +1,7 @@
 ---
 name: video-cut
 description: Turn clips plus music into a beat cut, 3 vertical shorts, and captions. Use when the buyer wants a finished short-form pack from raw footage.
+version: 0.1.0
 license: MIT
 ---
 

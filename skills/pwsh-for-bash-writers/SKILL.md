@@ -1,6 +1,7 @@
 ---
 name: pwsh-for-bash-writers
 description: Use before writing ANY shell command on this Windows PC. The shell is PowerShell 7 (pwsh), not bash, so grep, head, tail, wc, sed, awk, find, date -u, time, VAR=value, $(...), heredocs, 2>/dev/null, for/do/done and && after a statement fail. Gives the tested pwsh form of each, the quoting rules, exit codes, and how to start a server without hanging the tool call.
+version: 0.1.0
 license: CC-BY-4.0 (PowerShell-Docs text), MIT (PowerShell-Docs code samples, this skill's scripts)
 ---
 
