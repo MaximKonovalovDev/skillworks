@@ -1,32 +1,32 @@
-# skillworks handoff - round 182 (token 5ead)
+# skillworks handoff - round 183 (token 5ead)
 
-Round: 182 (takeover; board check FAIL to PASS; DR-1005-6 red row)
-Written: 2026-10-05T14:16Z
-Token: 5ead (holds since 13:18Z takeover from 7161 left by closed app, refreshed 14:16Z)
+Round: 183 (5 inbox rows; DR-1005-8 red PARTIAL)
+Written: 2026-10-05T14:32Z
+Token: 5ead (holds since 13:18Z takeover from 7161, refreshed 14:32Z)
 Knobs: width 2, foreground, heavy_max 3, paid_mode 1.
 
 ## Heading
-- No Scorecard row moved (runner PAPERWORK). R1 fed: DR-1005-6 red row for the cure smith.
+- No Scorecard row moved. Board fed: 5 READY rows from inbox plus 1 red row.
 
 ## Rows done
-- 78d1a14 board PIPE-112-1 status DONE with SHA 9498c85. Check FAIL (bad status, then DONE without SHA) to PASS 20/0/0.
-- de70642 DR-1005-6 bash-spawn-guard red: 29 ChildProcess.kill in 48 h across 7 repos, sheet 12 tasks RESULT PASS, grade RESULT FAIL no arms yet. Files: evals/bash-spawn-guard_trials.jsonl, skills/bash-spawn-guard/references/target-class.json.
-- pilot-view NOOP: product token 40781faa matches HEAD, nothing to re-view.
+- b0f731c planner DONE: BK-1005-1 (S45 book split, R1), TS-6 (S46 eval, R2), DR-1005-7 (S47 RED registry, R1, S5 fix), TS-7 (S48 installer, R3), BK-1005-2 (S49 Bevy supply, R4). All 5 inbox items ticked.
+- b0f731c doctor PARTIAL DR-1005-8 read-offset-guard: 18 offset-out-of-range in 48 h, 5 repos, sheet 12 RESULT PASS, grade RESULT FAIL no arms. Under-bar dry fallback (9/day vs 10/day); cure priority low.
+- Doctor skipped pwsh-for-bash-writers 20 loads UP and git-one-branch 3 loads UP: open rows DR-1005-1 DR-1004-7 already cover them.
 
 ## Held, not committed
 - sprint/queue/claims.txt churn, keeper/batch/loop-keeper.json, orders.csv, halt deletion, sprint/notes/pilot-112.md. Untouched.
+- Private briefs in skilldoctor state. Never committed.
 
 ## Checks
-- node sprint/check.mjs RESULT PASS 20/0/0 (lead ran 14:16Z at de70642).
-- pytest last green 436 passed 116 skipped at 13:41Z (runner, state 97ce17c); not rerun after de70642 (red sheet only, no SKILL.md yet).
-- sheet: tasks 12 RESULT PASS; grade: RESULT FAIL no arms yet (doctor proof).
+- node sprint/check.mjs RESULT PASS 20/0/0 (planner, doctor, lead 14:32Z at b0f731c).
+- No GPL text in committed files (ranger donor idea only, trials generic).
+- pytest not rerun after b0f731c (red sheets only, no SKILL.md yet).
 
 ## S5
-- Still needs a class halved in 48 h after install. No after number yet. Installer wakes on adoption.
+- DR-1005-7 (RED baseline plus trials registry) is the S5 fix row. Still no after number.
 
 ## Blockers
 - BK-1004-1 BLOCKED source_only lift 0.25; K-54 OWNER; K-03 K-06 PARKED.
-- 5 open inbox items EB-2026-10-05-S45 to S49 have no board rows yet. Planner token 1063d026 (5 open inbox items). Planner packet next.
 
 ## Next
-- Keeper batch: planner inbox rows S45-S49, then cure DR-1005-6.
+- Keeper batch: cure DR-1005-6 (bash-spawn-guard trials) and DR-1005-7 RED work first; DR-1005-8 low priority.
