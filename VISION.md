@@ -20,3 +20,9 @@ Card (every steal): Source (repo@sha `path:line` or URL) and license | What it
 does | Home (an existing file here; no home = reject) | Fixes (the part) | Net
 lines | Proof (no proof = reject) | Effort S/M/L and risk. The toolsmith lands the
 steal as a tool, a test and a ledger line in `sprint/steals.md`; no card is filed.
+
+## Intake (buyable path)
+
+- [ ] Book in -> skill pack (`python -m book2skill make`, eval >= 0.6).
+- [ ] MCP test (`skill_search` answers over stdio).
+- [ ] Gumroad list step (listing + price + Vol 0 live).
