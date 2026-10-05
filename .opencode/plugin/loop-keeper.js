@@ -134,6 +134,18 @@ const REPOS = {
     state: "C:/Users/me/Desktop/skillworks/sprint/loop-keeper.json", cmd: "C:/Users/me/Desktop/skillworks/sprint/loop-keeper.cmd.json",
     knobs: "C:/Users/me/Desktop/skillworks/.opencode/knobs.json", command: "C:/Users/me/Desktop/skillworks/.opencode/commands/sprint.md",
   },
+  "sound-studio": {
+    lock: "C:/Users/me/Desktop/sound-studio/sprint/lock.txt", halt: "C:/Users/me/Desktop/sound-studio/sprint/halt",
+    handoff: "C:/Users/me/Desktop/sound-studio/sprint/handoff.md", inbox: "C:/Users/me/Desktop/sound-studio/sprint/inbox.md",
+    state: "C:/Users/me/Desktop/sound-studio/sprint/loop-keeper.json", cmd: "C:/Users/me/Desktop/sound-studio/sprint/loop-keeper.cmd.json",
+    knobs: "C:/Users/me/Desktop/sound-studio/.opencode/knobs.json", command: "C:/Users/me/Desktop/sound-studio/.opencode/commands/sprint.md",
+  },
+  "asset-vault": {
+    lock: "C:/Users/me/Desktop/asset-vault/sprint/lock.txt", halt: "C:/Users/me/Desktop/asset-vault/sprint/halt",
+    handoff: "C:/Users/me/Desktop/asset-vault/sprint/handoff.md", inbox: "C:/Users/me/Desktop/asset-vault/sprint/inbox.md",
+    state: "C:/Users/me/Desktop/asset-vault/sprint/loop-keeper.json", cmd: "C:/Users/me/Desktop/asset-vault/sprint/loop-keeper.cmd.json",
+    knobs: "C:/Users/me/Desktop/asset-vault/.opencode/knobs.json", command: "C:/Users/me/Desktop/asset-vault/.opencode/commands/sprint.md",
+  },
 };
 const CFG = {
   repo: "skillworks",
