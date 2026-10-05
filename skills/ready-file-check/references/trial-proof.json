@@ -1,0 +1,12 @@
+{
+  "skill": "ready-file-check",
+  "runs": 12,
+  "with_rate": 1.0,
+  "without_rate": 0.0,
+  "lift": 1.0,
+  "spread": 1.0,
+  "fingerprint": "6fe084b3d622fd3fcd4355cd41b1fd90f8e1744fd57cce1f31341b22d5818f15",
+  "sheet": "evals/ready-file-check_trials.jsonl",
+  "at": "2026-10-05T15:44Z",
+  "ok": true
+}

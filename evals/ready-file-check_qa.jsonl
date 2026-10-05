@@ -1,0 +1,10 @@
+{"must": ["list", "folder"], "q": "what is listed first before any ready file is read?"}
+{"must": ["batch", "doc"], "q": "what names the live packets to take?"}
+{"must": ["claims", "file"], "q": "what is read to skip claimed queue items?"}
+{"must": ["done", "folder"], "q": "what is checked to skip consumed items?"}
+{"must": ["existence", "check"], "q": "what runs before each read so a loop never crashes?"}
+{"must": ["skip", "gracefully"], "q": "how is a missing ready file handled?"}
+{"must": ["sequence", "one"], "q": "how many queue items run at a time?"}
+{"must": ["report", "diff"], "q": "what does the run report list at the end?"}
+{"must": ["PASS", "check"], "q": "what proves a list-first run finished cleanly?"}
+{"must": ["consumed", "skip"], "q": "what happens to packets the done folder already holds?"}
