@@ -1,0 +1,10 @@
+{"must": ["count", "clamp", "offset"], "q": "how is a guessed offset clamped into range?"}
+{"must": ["count", "lines", "length"], "q": "what is counted before any offset is used?"}
+{"must": ["tail", "end", "past"], "q": "what happens on a one-past-the-end offset?"}
+{"must": ["step", "limit", "lines"], "q": "how is a file walked in order?"}
+{"must": ["limit", "small", "read"], "q": "what bound does every read carry?"}
+{"must": ["head", "jump", "length"], "q": "where does an unknown file get learned before a jump?"}
+{"must": ["again", "changes", "count"], "q": "when are the lines counted again?"}
+{"must": ["report", "RESULT", "PASS"], "q": "what does a finished read report?"}
+{"must": ["section", "offset", "limit"], "q": "how is one section read inside the length?"}
+{"must": ["limit", "Min", "end"], "q": "how is the limit shrunk at the end of the file?"}
