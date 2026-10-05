@@ -1,0 +1,115 @@
+# evals/g17-trial.yaml
+# G-17 promptfoo trial harness proof (TS-6 eval row context).
+#
+# Promptfoo pattern: named providers (before = bare baseline, after =
+# skill-equipped) plus prompts plus one case list with assertions, the same
+# before/after shape as tools/skill_trial.py grades (with/without arms) and
+# tools/eval_score.py reports (lift with its stderr). The runner is
+# tools/g17-promptfoo.py (stdlib only, offline, no model calls, no network):
+# it scores the frozen before/after fixtures by code and exits CI PASS/FAIL.
+#
+# Each case maps to the repo's trial-sheet shape (id + kind + task + must +
+# must_not). `before` is the bare-baseline answer, `after` the
+# skill-equipped answer. 12 tasks: 3 easy controls both arms pass
+# (g01, g05, g09), 8 the skill arm alone passes, 1 hard fail neither
+# passes (g12, the failure_score demo). Expect with_rate 11/12,
+# without_rate 3/12, lift 0.6667.
+suite: g17-trial
+pattern: promptfoo
+providers:
+  - id: before
+    label: bare baseline (without skill)
+  - id: after
+    label: skill-equipped (with skill)
+prompts:
+  - "Answer the task bare, no skill: {{task}}"
+  - "Answer the task using the skill: {{task}}"
+thresholds:
+  min_runs: 12
+  min_with_rate: 0.8
+  min_lift: 0.3
+cases:
+  - id: g01
+    kind: answer
+    task: "What does the report carry beside each score?"
+    must: [reasoning]
+    must_not: []
+    before: "Each score carries a reasoning string naming what was found."
+    after: "Each score carries a reasoning string naming what was found or missed."
+  - id: g02
+    kind: answer
+    task: "What credit does a near miss earn?"
+    must: [partial, 0.5]
+    must_not: []
+    before: "A near miss earns full credit."
+    after: "A near miss earns partial credit of 0.5."
+  - id: g03
+    kind: answer
+    task: "What share do hard fails get in the aggregate?"
+    must: [failure_score]
+    must_not: []
+    before: "Hard fails are ignored in the totals."
+    after: "Hard fails are counted as failure_score next to the classic rate."
+  - id: g04
+    kind: answer
+    task: "What error bar rides beside every aggregate?"
+    must: [stderr]
+    must_not: []
+    before: "Every aggregate prints a bare mean with no error bar."
+    after: "Every aggregate prints the mean plus the stderr of the mean."
+  - id: g05
+    kind: answer
+    task: "What two arms does the trial run?"
+    must: [with]
+    must_not: []
+    before: "Run one arm with the skill and one bare arm without it."
+    after: "Run the with arm skill-equipped and the without arm bare, then take the lift."
+  - id: g06
+    kind: answer
+    task: "How is lift computed between the arms?"
+    must: [difference, paired]
+    must_not: []
+    before: "Lift is the average score of both arms."
+    after: "Lift is the mean paired difference of with minus without per task."
+  - id: g07
+    kind: answer
+    task: "What proves a report matches its sheet?"
+    must: [fingerprint]
+    must_not: []
+    before: "Reports are matched by date."
+    after: "Reports carry a sha256 fingerprint of the canonical sheet."
+  - id: g08
+    kind: answer
+    task: "Where does the harness run?"
+    must: [offline]
+    must_not: []
+    before: "The harness calls the model live over the network."
+    after: "The harness runs offline with stdlib only, no model calls, no network."
+  - id: g09
+    kind: answer
+    task: "What is printed per arm?"
+    must: [rate]
+    must_not: []
+    before: "Print the pass rate for each arm."
+    after: "Print the pass rate per arm plus lift with its stderr."
+  - id: g10
+    kind: answer
+    task: "What fails a task besides missing words?"
+    must: [must_not]
+    must_not: []
+    before: "Forbidden words are allowed anywhere."
+    after: "A task fails when any must_not word appears in the answer."
+  - id: g11
+    kind: answer
+    task: "What is reported besides the averages?"
+    must: [spread]
+    must_not: []
+    before: "Only the averages are reported."
+    after: "Report the spread of tasks where the arms disagree."
+  - id: g12
+    kind: answer
+    task: "Quote the exact stderr formula."
+    must: [Bessel, sqrt, variance]
+    must_not: []
+    before: "The error bar is the standard deviation."
+    after: "The error bar is the standard error of the mean."
