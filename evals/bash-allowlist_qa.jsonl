@@ -1,0 +1,10 @@
+{"must": ["single", "pipe"], "q": "how does a single call avoid a formatting pipe?"}
+{"must": ["diff", "apply"], "q": "how is a diff checked with no apply from the shell?"}
+{"must": ["output", "directly"], "q": "how is tool output read directly with no pipe?"}
+{"must": ["health", "body"], "q": "how is a health call read with no convert pipe?"}
+{"must": ["Read", "lines"], "q": "how does the Read tool report the lines?"}
+{"must": ["Edit", "tree"], "q": "how does the Edit tool leave the tree alone?"}
+{"must": ["Grep", "matches"], "q": "how does the Grep tool report matches?"}
+{"must": ["Glob", "listing"], "q": "how does the Glob tool report the listing?"}
+{"must": ["sequence", "single"], "q": "how are single calls sequenced instead of chained?"}
+{"must": ["report", "PASS"], "q": "what does the run report list at the end?"}
