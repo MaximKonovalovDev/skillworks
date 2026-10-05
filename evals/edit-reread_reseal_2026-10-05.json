@@ -1,0 +1,35 @@
+{
+  "repair": "002",
+  "rows": [
+    "DR-1004-2",
+    "DR-1004-4"
+  ],
+  "at": "2026-10-05T19:08Z",
+  "skills": {
+    "edit-reread": {
+      "skill": "edit-reread",
+      "runs": 12,
+      "with_rate": 1.0,
+      "without_rate": 0.3333,
+      "lift": 0.6667,
+      "spread": 0.6667,
+      "fingerprint": "7a647ca96199e8de2c9ab8e5b3b6f611879e505006dc8e4632a15edf491e1bf1",
+      "sheet": "evals/edit-reread_trials.jsonl",
+      "at": "2026-10-05T19:08Z",
+      "ok": true
+    },
+    "edit-unique": {
+      "skill": "edit-unique",
+      "runs": 12,
+      "with_rate": 1.0,
+      "without_rate": 0.0,
+      "lift": 1.0,
+      "spread": 1.0,
+      "fingerprint": "ac0d616d900625c51af6a3e341f2a9bf58c554dc7d17bb477e87430a0ed941df",
+      "sheet": "evals/edit-unique_trials.jsonl",
+      "at": "2026-10-05T19:08Z",
+      "ok": true
+    }
+  },
+  "ok": true
+}
