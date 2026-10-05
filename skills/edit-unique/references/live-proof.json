@@ -1,0 +1,14 @@
+{
+  "skill": "edit-unique",
+  "fingerprint": "a6db84bfbb25e2cd53a4d2cc48782f8f13b1fef8ef7c036246547403e4e29230",
+  "date": "2026-10-05T11:31Z",
+  "command": "SKILL_LIVE=1 python -m pytest tests/test_edit_unique.py -q",
+  "result": "6 passed in 2.05s",
+  "versions": {
+    "python": "3.13.14",
+    "os": "Windows-10-10.0.19045-SP0",
+    "git": "git version 2.53.0.windows.1",
+    "node": "v24.14.0",
+    "pwsh": "7.6.3"
+  }
+}

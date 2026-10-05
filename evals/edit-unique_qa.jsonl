@@ -1,0 +1,10 @@
+{"must": ["Read", "surrounding", "unique"], "q": "what is read with three surrounding lines until the match is unique?"}
+{"must": ["card", "anchor", "status"], "q": "how is a repeated status line anchored on its card title?"}
+{"must": ["row id", "board"], "q": "what row id lines are included for a board fragment?"}
+{"must": ["heading", "section"], "q": "what section body is included for a repeated heading?"}
+{"must": ["import", "block"], "q": "what block lines surround a one-line import edit?"}
+{"must": ["sentence", "wider"], "q": "how is a copied sentence re-read with wider lines?"}
+{"must": ["Count", "refuse"], "q": "what count check refuses a single edit while matches are many?"}
+{"must": ["replaceAll", "verified"], "q": "when is replaceAll allowed and what count is reported?"}
+{"must": ["neighbor", "anchor"], "q": "how does a unique neighbor anchor the match?"}
+{"must": ["unverified"], "q": "what does the closing report state about gaps?"}

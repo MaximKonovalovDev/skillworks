@@ -1,0 +1,12 @@
+{
+  "skill": "edit-unique",
+  "runs": 12,
+  "with_rate": 1.0,
+  "without_rate": 0.0,
+  "lift": 1.0,
+  "spread": 1.0,
+  "fingerprint": "ac0d616d900625c51af6a3e341f2a9bf58c554dc7d17bb477e87430a0ed941df",
+  "sheet": "evals/edit-unique_trials.jsonl",
+  "at": "2026-10-05T11:27Z",
+  "ok": true
+}
