@@ -1,0 +1,12 @@
+{
+  "skill": "task-scope",
+  "runs": 12,
+  "with_rate": 1.0,
+  "without_rate": 0.0,
+  "lift": 1.0,
+  "spread": 1.0,
+  "fingerprint": "0f9284184dbc68457c95394a2ec5f0f195d5ed0527572de9efb6375605736390",
+  "sheet": "evals/task-scope_trials.jsonl",
+  "at": "2026-10-05T14:52Z",
+  "ok": true
+}

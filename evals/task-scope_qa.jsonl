@@ -1,0 +1,10 @@
+{"must": ["claim", "sequence"], "q": "what is claimed before dispatch and how is the rest sequenced?"}
+{"must": ["claims file", "skip"], "q": "how does the claims file decide which item to skip?"}
+{"must": ["running", "superseded"], "q": "how are running runs listed so the superseded one is kept?"}
+{"must": ["bounded", "join"], "q": "how is the batch bounded and when is it joined?"}
+{"must": ["slice", "receipt"], "q": "how is long work cut into a slice with a receipt?"}
+{"must": ["round state", "eligible"], "q": "what round state check proves the next dispatch is eligible?"}
+{"must": ["resume", "receipt"], "q": "how does a long repair resume from the last receipt?"}
+{"must": ["idempotent", "same result"], "q": "how does an idempotent rerun give the same result?"}
+{"must": ["RESULT", "unverified"], "q": "what does the closing RESULT report state about unverified gaps?"}
+{"must": ["stop line", "lane token"], "q": "what stop line and lane token gate a new dispatch?"}
