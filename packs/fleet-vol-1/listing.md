@@ -83,7 +83,7 @@ one tested, versioned download with its proof files, not for secrecy.
 - `real-browser-automation`: MIT, Apache-2.0 and BSD-3-Clause. The script and text are original (MIT); ideas from the Playwright docs (Apache-2.0); protocol names checked against the DevTools protocol files (BSD-3-Clause).
 - `bevy-rust-ecs`: MIT and Apache-2.0. The text and scripts are original (MIT); facts read from the Bevy source, tag v0.19.1 (MIT OR Apache-2.0).
 - No NonCommercial source is in the paid zip. `git-one-branch` (CC-BY-NC-SA-3.0) is the free Vol 0 only.
-   Source licences re-read live 2026-10-04 via gh api (PowerShell-Docs repo spdx
+   Source licences re-read live 2026-10-05 via gh api (PowerShell-Docs repo spdx
    NOASSERTION with CC-BY-4.0 text and MIT code license files, Playwright
    Apache-2.0, devtools-protocol BSD-3-Clause, Bevy Apache-2.0, Pro Git repo
    spdx NOASSERTION with CC BY-NC-SA 3.0 license file; Pro Git stays
