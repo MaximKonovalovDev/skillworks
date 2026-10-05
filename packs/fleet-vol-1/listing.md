@@ -96,8 +96,8 @@ The full credit lines are in `LICENSES.md` inside the zip.
 Each skill has a live proof: its tests ran against real programs and the skill still matches the fingerprint stored then.
 
 - `pwsh-for-bash-writers`: 2026-10-05, 7 passed (one of them runs all 49 pairs in pwsh 7.6.3).
-- `real-browser-automation`: 2026-10-04, 11 passed (real Edge and Chrome against 127.0.0.1).
-- `bevy-rust-ecs`: 2026-10-03, 42 passed (names and file lines checked against the 0.19.1 source tree; nothing compiled).
+- `real-browser-automation`: 2026-10-05, 11 passed (real Edge and Chrome against 127.0.0.1).
+- `bevy-rust-ecs`: 2026-10-05, 42 passed (names and file lines checked against the 0.19.1 source tree; nothing compiled).
 
 The records are in `proof/` inside the zip.
 
