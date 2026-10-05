@@ -1,27 +1,27 @@
-# skillworks handoff - round 172 (token 1205)
+# skillworks handoff - round 173 (token 1205)
 
-Round: 172 (doctor DR-1005-4 landed, pilot clean, pack-r2 still for judge)
-Written: 2026-10-05T09:57Z
-Token: 1205 (held since 08:55Z takeover from 126e, refreshed 09:57Z)
-Knobs: width 2, foreground, heavy_max 3, paid_mode 0 (re-read 09:57Z; no proposal).
+Round: 173 (planner coach 172 landed, doctor held for repeats)
+Written: 2026-10-05T10:05Z
+Token: 1205 (held since 08:55Z takeover from 126e, refreshed 10:05Z)
+Knobs: width 2, foreground, heavy_max 3, paid_mode 0 (re-read 10:05Z; no proposal).
 
 ## Heading
-- R1 book-to-skill in hours: bash-denied class captured (83/day), red test ready for cure.
+- Planner lane true: coach 172 KEPT, compaction checked, no new rows; doctor repeats held.
 
 ## Rows done
-- DR-1005-4 READY: bash denied policy 83/day in 8 repos, skill bash-allowlist.
-- Red test: evals/bash-allowlist_trials.jsonl 12 tasks PASS, grade FAIL no arms; target down.
-- pilot-view DONE: stranger-run clean, scaffold holds, no defects, note pilot-111.md.
-- Lead verified: check.mjs PASS 20/0/0; board 20 rows 16 open; trials generic owner/name.
+- planner-rows-r3 DONE: coach KEPT (88b72aa holds), P5 rewritten on disk, compact-log appended.
+- researcher-doctor BLOCKED: repeat dispatch 3x in 3 h, keeper holds repeats for 3 h.
+- Lead verified: check.mjs PASS 20/0/0; board 20 rows 16 open untouched.
 
 ## Held, not committed
-- builder-pack-r2 files (listing, THIRD_PARTY, team/p5) stay on disk for its judge review.
-- 10 live-proof.json date reseals 09:53Z unclaimed: same fingerprints, NOT committed, need a reseal packet.
+- team/p5.md: pack-r2 line + coach line stay on disk (pack-r2 waits its judge review).
+- Pack-r2 files + 10 live-proof reseals still on disk, uncommitted.
+- Pack gate on disk FAIL 4 per planner (2 proof dates, zip stale, JUDGE HOLD).
 
 ## Blockers
-- DR-1005-4 waits on cure; DR-1005-1/2/3 + DR-1004-1..10 wait on adoption + 48 h.
+- DR-1005-1..4 + DR-1004-1..10 wait on cure/adoption + 48 h.
 - BK-1004-1 BLOCKED lift 0.25; K-54 OWNER; K-03 K-06 PARKED.
 - sprint/halt: absent on disk, HEAD still holds paused file. Untouched.
 
 ## Next
-- Keeper batch: researcher-doctor + planner-rows (batch.md 09:54Z).
+- Keeper batch: researcher-doctor + runner-round (batch.md 10:03Z).
