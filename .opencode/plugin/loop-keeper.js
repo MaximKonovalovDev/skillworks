@@ -217,11 +217,23 @@ const intentOf = (text) => {
   return "chat";
 };
 const isTransient = (e) => !!e && !HARD_ERRORS.has(e.name) && (e.data?.isRetryable === true ||
-  TRANSIENT_STATUS.has(e.data?.statusCode) || TRANSIENT_TEXT.test(String(e.data?.message ?? "")));
+  TRANSIENT_STATUS.has(e.data?.statusCode) || TRANSIENT_TEXT.test(String(e.data?.message ?? "")) ||
+  // Core redispatch (Maxim 2026-10-05: batch dies take hours): a bare provider APIError with no
+  // body is a blip, not a verdict. Retry it like any transient instead of stopping the loop.
+  (e.name === "APIError" && !e.data));
 // Endless helper retry (Maxim 2026-10-05): a Task/queue result that carries only a transient
 // backend message ("backend is temporarily overloaded. Please retry", rate limit, 429/5xx,
 // network) is not a failure: it goes back to ready/ and runs again until the backend chills.
 const isTransientText = (s) => TRANSIENT_TEXT.test(String(s ?? ""));
+// Core redispatch (Maxim 2026-10-05): zero-report infra kills redispatch like transients.
+// Matches Task-cancelled / MessageAborted / session error / bare APIError / got-no-result /
+// aborted / terminated / pool-busy text with no RESULT line: back to ready/, never failed/.
+const REDISPATCH_TEXT = /task[^.\n]{0,20}cancell?ed|messageaborted|session error:\s*(?:APIError|Backend|MessageAborted)|assistant error:\s*APIError|backend error|transport|other side closed|UND_ERR|terminated|aborted|got no result|no result|no report|pool busy|blocking waiting for file lock/i;
+const isRedispatchableText = (s) => {
+  const t = String(s ?? "");
+  if (/\bRESULT:\s*(?:DONE|PARTIAL|BLOCKED|NOOP)\b/i.test(t)) return false;
+  return isTransientText(t) || REDISPATCH_TEXT.test(t);
+};
 const tokensOf = (m) => {
   const t = m?.info?.tokens;
   return t ? t.total || (t.input ?? 0) + (t.output ?? 0) + (t.cache?.read ?? 0) + (t.cache?.write ?? 0) : 0;
@@ -1675,10 +1687,12 @@ Ready work: ${readyItem.id}. Claim only this item; selectors do not authorize sw
     return { id: jobs.map((j) => j.id).join("+"), role: jobs[0].role, title: `${jobs[0].title} (+${jobs.length - 1} more)`, started: now(), fm: jobs[0].fm, sid, group: jobs, text };
   };
   const collectForeground = (call, text, failed) => {
-    // Endless transient retry (Maxim 2026-10-05): backend overload is not a failure.
-    // A batch result that carries only a transient message and no RESULT line goes back
-    // to ready/ and runs again until the backend chills, instead of failed/.
-    if (!failed && isTransientText(text) && !/\bRESULT:\s*(?:DONE|PARTIAL|BLOCKED|NOOP)\b/i.test(String(text))) {
+    // Endless transient retry (Maxim 2026-10-05) + core redispatch (Maxim 2026-10-05: 1 dead
+    // helper must not cost hours): backend overload AND zero-report infra kills (Task cancelled,
+    // session error, bare APIError, got-no-result, pool busy) with no RESULT line go back to
+    // ready/ and run again, with a redispatch counter, instead of failed/.
+    const problem = failed || text;
+    if (!failed && isRedispatchableText(problem)) {
       const job = fgJobs.get(call);
       if (job) {
         fgJobs.delete(call);
@@ -1693,7 +1707,8 @@ Ready work: ${readyItem.id}. Claim only this item; selectors do not authorize sw
           }
         }
         job.transientRetries = (job.transientRetries ?? 0) + 1;
-        log(`${job.sid} batch: ${job.id} transient (${clip(text, 80)}): back to ready/ for endless retry #${job.transientRetries}, until the backend chills`);
+        job.redispatches = (job.redispatches ?? 0) + 1;
+        log(`${job.sid} batch: ${job.id} redispatchable (${clip(problem, 80)}): back to ready/ for endless retry #${job.transientRetries} (redispatch #${job.redispatches}), until it reports`);
         return;
       }
     }
@@ -1744,6 +1759,7 @@ Ready work: ${readyItem.id}. Claim only this item; selectors do not authorize sw
         fgJobs.delete(call);
         // A stop, a retire or a restart cut the batch (2026-10-04: 122 of 198 cut helpers died in such
         // clusters): its work goes back with the packet like a cap cut's (a cap cut already wrote it).
+        // Core redispatch: count it, so a batch that loses 1 helper resends it next batch instead of waiting hours.
         let kept = null;
         if (!job.standing && !job.stopped) {
           try {
@@ -1753,7 +1769,8 @@ Ready work: ${readyItem.id}. Claim only this item; selectors do not authorize sw
           } catch { /* the packet still goes back */ }
         }
         for (const one of job.group ?? [job]) if (!one.standing) { const from = join(qsub("running"), `${one.id}.md`); queueMove(from, "ready"); rmSync(`${from}.json`, { force: true }); } else releaseClaims(one.id);
-        log(`${job.sid} batch: ${job.id} got no result (its batch ended first); ${job.standing ? "the seat runs in a later batch" : `back to ready/${kept ? ` with its work (${kept.files.length} files)` : ""}`}`);
+        job.redispatches = (job.redispatches ?? 0) + 1;
+        log(`${job.sid} batch: ${job.id} got no result (its batch ended first); ${job.standing ? "the seat runs in a later batch" : `back to ready/ for redispatch #${job.redispatches}${kept ? ` with its work (${kept.files.length} files)` : ""}`}`);
         continue;
       }
       if (job.stopped || now() - job.started <= capOf(job)) continue;
@@ -1786,9 +1803,9 @@ Ready work: ${readyItem.id}. Claim only this item; selectors do not authorize sw
       } catch { /* the next beat tries again */ }
     }
   };
-  // Endless transient retry (Maxim 2026-10-05): a queued helper that died on backend
-  // overload goes back to ready/ and runs again until the backend chills. Standing seats
-  // just release their claims: the seat runs again by itself. Returns true when requeued.
+  // Endless transient retry (Maxim 2026-10-05) + core redispatch: a queued helper that died on
+  // backend overload OR zero-report infra kill goes back to ready/ and runs again until it reports.
+  // Standing seats just release their claims: the seat runs again by itself. Returns true when requeued.
   const requeueQueued = (child, why) => {
     const job = queueRunning.get(child);
     if (!job) return false;
@@ -1802,14 +1819,15 @@ Ready work: ${readyItem.id}. Claim only this item; selectors do not authorize sw
       releaseClaims(job.id);
     }
     job.transientRetries = (job.transientRetries ?? 0) + 1;
-    log(`${status.session} queue: ${job.id} transient (${why}): back to ready/ for endless retry #${job.transientRetries}, until the backend chills`);
+    job.redispatches = (job.redispatches ?? 0) + 1;
+    log(`${status.session} queue: ${job.id} redispatchable (${why}): back to ready/ for endless retry #${job.transientRetries} (redispatch #${job.redispatches}), until it reports`);
     return true;
   };
   const collectQueued = async (child, failed) => {
     const job = queueRunning.get(child);
     if (!job) return;
-    // A caller that already knows the error is transient requeues without reading messages.
-    if (failed && isTransientText(failed) && !/\bRESULT:\s*(?:DONE|PARTIAL|BLOCKED|NOOP)\b/i.test(String(failed))) {
+    // A caller that already knows the error is redispatchable requeues without reading messages.
+    if (failed && isRedispatchableText(failed)) {
       requeueQueued(child, clip(failed, 80));
       return;
     }
@@ -1821,17 +1839,25 @@ Ready work: ${readyItem.id}. Claim only this item; selectors do not authorize sw
       const last = msgs.findLast((m) => m.info?.role === "assistant");
       text = textOf(last).trim();
       if (!failed && last?.info?.error) failed = describe(last.info.error);
-      // Transient backend overload read from the helper's last error: not a failure.
-      if (last?.info?.error && isTransient(last.info.error)) {
+      // Redispatchable helper death read from its last error: not a failure (bare APIError included).
+      if (last?.info?.error && (isTransient(last.info.error) || last.info.error.name === "APIError")) {
         queueRunning.set(child, job);
         snapDirty = false;
         requeueQueued(child, describe(last.info.error));
         return;
       }
-      if (!failed && isTransientText(text) && !/\bRESULT:\s*(?:DONE|PARTIAL|BLOCKED|NOOP)\b/i.test(text)) {
+      if (!failed && isRedispatchableText(text)) {
         queueRunning.set(child, job);
         snapDirty = false;
-        requeueQueued(child, clip(text, 80) || "transient backend message");
+        requeueQueued(child, clip(text, 80) || "redispatchable backend message");
+        return;
+      }
+      // Zero-report death: no text, no error object, no RESULT — the helper vaporized (pre-start
+      // cancel, Task-cancelled with no hook). Back to ready/ with a counter, never failed/.
+      if (!failed && !text) {
+        queueRunning.set(child, job);
+        snapDirty = false;
+        requeueQueued(child, "zero-report death, no text and no error");
         return;
       }
     } catch (e) { failed = failed ?? `result unreadable (${e?.message ?? e})`; }
@@ -2496,13 +2522,17 @@ Ready work: ${readyItem.id}. Claim only this item; selectors do not authorize sw
       }
       const st = state.get(id);
       // A queued helper ended: its result goes back to the loop, its width takes the next packet.
-      // Transient backend overload never fails it: back to ready/ for an endless retry (Maxim 2026-10-05).
+      // Redispatchable death (transient overload OR zero-report infra kill) never fails it:
+      // back to ready/ for an endless retry (Maxim 2026-10-05 core fix).
       if (queueRunning.has(id) && (type === "session.error" || (type === "session.idle"))) {
         busy.delete(id);
-        if (type === "session.error" && (isTransient(props.error) || isTransientText(props.error?.data?.message) || isTransientText(describe(props.error ?? {})))) {
-          requeueQueued(id, describe(props.error ?? {}) || "transient backend overload");
-          await launchQueued();
-          return;
+        if (type === "session.error") {
+          const errText = describe(props.error ?? {});
+          if (isTransient(props.error) || (props.error?.name === "APIError") || isRedispatchableText(props.error?.data?.message) || isRedispatchableText(errText)) {
+            requeueQueued(id, errText || "redispatchable helper death");
+            await launchQueued();
+            return;
+          }
         }
         await collectQueued(id, type === "session.error" ? `session error${props.error?.name ? `: ${props.error.name}` : ""}` : undefined);
         await launchQueued();
