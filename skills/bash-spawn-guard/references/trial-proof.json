@@ -1,0 +1,12 @@
+{
+  "skill": "bash-spawn-guard",
+  "runs": 12,
+  "with_rate": 1.0,
+  "without_rate": 0.0,
+  "lift": 1.0,
+  "spread": 1.0,
+  "fingerprint": "8734a8e82e0d1b267cd5b7b1d0c9c5784cd4ec54ac86ea05cac1ad8e5a1e3841",
+  "sheet": "evals/bash-spawn-guard_trials.jsonl",
+  "at": "2026-10-05T17:35Z",
+  "ok": true
+}

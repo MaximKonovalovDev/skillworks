@@ -1,0 +1,10 @@
+{"must": ["receipt", "poll", "timeout"], "q": "how does a receipt poll with a timeout replace a detached start with no receipt?"}
+{"must": ["background", "receipt", "timeout"], "q": "where does a verbose install run instead of one foreground call?"}
+{"must": ["slice", "chunk", "timeout"], "q": "how is a full suite sliced so one chunk runs alone?"}
+{"must": ["file", "timeout"], "q": "where does inline code go before it runs?"}
+{"must": ["single", "timeout", "limit"], "q": "how are two chained checks sequenced as single calls?"}
+{"must": ["background", "timeout", "receipt"], "q": "what replaces a sleep poll in the foreground?"}
+{"must": ["timeout", "limit"], "q": "how is a short status check bounded?"}
+{"must": ["report", "RESULT", "PASS"], "q": "what does the run report list at the end?"}
+{"must": ["receipt", "PASS", "diff"], "q": "what proves a bounded run finished cleanly?"}
+{"must": ["diff", "checks"], "q": "what is reported after a bounded run finishes?"}
