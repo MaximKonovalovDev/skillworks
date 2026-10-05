@@ -1,0 +1,2 @@
+{"run": "001", "at": "2026-10-05T21:40Z", "repo": "skillworks", "skill": "pipe-run", "phase": "red", "failures": 10, "shells": 0, "change": "without-skill arm: 10 of 12 trial runs fail (without_rate 0.1667, grade PASS 2026-10-05)"}
+{"run": "002", "at": "2026-10-05T21:40Z", "repo": "skillworks", "skill": "pipe-run", "phase": "green", "failures": 0, "shells": 0, "change": "with-skill arm: 0 of 12 trial runs fail (with_rate 1.0, lift 0.8333, trial-proof fp ab8d78a7)"}
