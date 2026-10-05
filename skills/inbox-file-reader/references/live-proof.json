@@ -1,9 +1,9 @@
 {
   "skill": "inbox-file-reader",
-  "fingerprint": "6badc70227e90061fb59dce03e96fe491f1fcd50b26a9e2748d28c5caad9529e",
-  "date": "2026-10-05T17:08Z",
+  "fingerprint": "ccb1cbd8f20e83d1384d1d4e6e15e3ebe408740b9ad1d6adc850d4fe09b54a5f",
+  "date": "2026-10-05T21:55Z",
   "command": "SKILL_LIVE=1 python -m pytest tests/test_inbox_file_reader.py -q",
-  "result": "27 passed in 9.37s",
+  "result": "27 passed in 20.85s",
   "versions": {
     "python": "3.13.14",
     "os": "Windows-10-10.0.19045-SP0",
