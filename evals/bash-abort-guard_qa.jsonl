@@ -1,0 +1,10 @@
+{"must": ["timeout", "background"], "q": "how does a background wait with a timeout replace a foreground wait?"}
+{"must": ["timeout", "receipt"], "q": "how is a receipt polled on a short loop with a bound?"}
+{"must": ["slice", "chunk"], "q": "how is a suite sliced so one chunk runs alone?"}
+{"must": ["temp", "file"], "q": "where does inline code go before it runs?"}
+{"must": ["limit", "output"], "q": "how is scan output limited so a call never floods?"}
+{"must": ["heavy", "background"], "q": "where does a heavy build run and what is read instead?"}
+{"must": ["sequence", "single"], "q": "how are two chained checks sequenced as single calls?"}
+{"must": ["report", "RESULT"], "q": "what does the run report list at the end?"}
+{"must": ["timeout", "slice"], "q": "what bounds every call and what size does work run in?"}
+{"must": ["receipt", "PASS"], "q": "what proves a bounded run finished cleanly?"}

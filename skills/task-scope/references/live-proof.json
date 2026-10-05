@@ -1,9 +1,9 @@
 {
   "skill": "task-scope",
   "fingerprint": "f9637907df68158b4f55b0c4decfbffbe47cbcaa6348be4ce21b464e8dac5773",
-  "date": "2026-10-05T14:52Z",
+  "date": "2026-10-05T15:05Z",
   "command": "SKILL_LIVE=1 python -m pytest tests/test_task_scope.py -q",
-  "result": "6 passed in 2.58s",
+  "result": "6 passed in 2.44s",
   "versions": {
     "python": "3.13.14",
     "os": "Windows-10-10.0.19045-SP0",
