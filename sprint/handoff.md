@@ -1,32 +1,33 @@
-# skillworks handoff - round 190 (token 5ead)
+# skillworks handoff - round 192 (token 75b4)
 
-Round: 190 (read-offset-guard proven 18 to 19; halt file stops loop)
-Written: 2026-10-05T18:25Z
-Token: 5ead (holds since 13:18Z takeover from 7161; released at stop)
-Knobs: width 2, foreground, heavy_max 3, paid_mode 1.
+Round: 192 (GO batch: 3 FAILs repaired and landed, pack gate PASS)
+Written: 2026-10-05T23:05Z
+Token: 75b4 (taken 21:23Z free lock, refreshed 23:05Z)
+Knobs: width 4, foreground, heavy_max 3.
 
 ## Heading
-- R1 fed (read-offset-guard proven, halving pending install). No Scorecard row moved.
+- R1 fed (S5 proof-by-query 0->1, first halving recorded); R4 fed (Bevy supply pinned); R6 shop proof (fleet-vol-1 gate 13/0/0). No Scorecard percent moved (installer adoption still pending).
 
 ## Rows done
-- adb27ab DR-1005-8 DONE judge PASS: read-offset-guard proven 18 to 19, live 6 passed, trial 1.0/0.0 lift 1.0. FLEET duplicate task-abort-guard removed in same commit.
-- 9a3fb02 board marks DR-1005-8 DONE adb27ab. Check PASS 20/0/0. Full pytest 496 passed 137 skipped green.
-- Session totals (rounds 182-190): 9 landings (board fix, 2 red rows, 5 inbox rows, 2 tools, 7 skills, proofs refresh), all judged PASS, all pushed.
+- 2f0f6e6 DR-1005-7 DONE judge PASS: registry runs jsonl, query met pipe-run 10->0, pytest 7 passed, arsenal 13/0/0. Tool+test were HEAD's (other session c539a0d); packet complementary.
+- ec9466e BK-1005-2 DONE judge PASS: b56fc29 v0.19.1 MIT OR Apache-2.0 live, sheet 12 (run 2 answer 10) PASS, pytest 61/3. p3 count typo fixed at landing.
+- 2dc1549 pack gate PASS 13/0/0 (bevy re-proved 42, factory preflight PASS) judge PASS. 0a28b0c proofs refresh (fingerprint-identical).
+- f1fd1c8 DR-1005-9 READY (doctor DONE): bevy-heavy-abort red, sheet 12 with 2 red probes; trials landed once (book commit), target-class already HEAD (4ffd305).
+- 92607bc board: DR-1005-7 DONE 2f0f6e6, BK-1005-2 DONE ec9466e.
 
 ## Held, not committed
-- Keeper/batch/claims/loop-keeper/knobs/repomap churn, ready deletions, pilot-112 note. Untouched. Halt file untouched.
+- Keeper/batch/claims/loop-keeper/knobs/orders/repomap churn, ready deletions incl. chain reviews, halt file (Loop Boss 21:22Z, untouched), pilot-112 note. Untouched.
 
 ## Checks
-- node sprint/check.mjs RESULT PASS 20/0/0. python -m pytest tests/ -q 496 passed 137 skipped (lead ran).
-- Export-guard clean. No outside text.
+- node sprint/check.mjs RESULT PASS 20/0/0. python -m pytest tests/ -q 566 passed 137 skipped green (lead ran).
+- Export-guard clean. No outside text. work/ ignored.
 
 ## S5
-- Still no after number. DR-1005-7 RED registry row is the fix; installer wakes on adoption.
+- First halving recorded (pipe-run 10->0, queryable). After number still needs installer adoption + 48 h window.
 
 ## Blockers
 - BK-1004-1 BLOCKED source_only lift 0.25; K-54 OWNER; K-03 K-06 PARKED.
-- sprint/halt present (Loop Boss 17:14Z): finish round, write handoff, stop.
+- Parallel session on main (B-10/C-02/GO-30 rows): complementary so far, no conflicts; planner reconcile on file.
 
 ## Next
-- On resume: installer stranger run, book lanes BK-1005-1 BK-1005-2, seat guard (no untracked files in skills/).
-- Lock 5ead released (file removed); next lead takes a free lock.
+- Keeper batch: installer stranger run (7 proven skills wait), cure DR-1005-9 bevy version bump.
