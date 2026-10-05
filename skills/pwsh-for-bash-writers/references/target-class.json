@@ -1,0 +1,1 @@
+{"direction":"down","error_regex":"matches parameter name '(String|Match|Path|NoNewline)'|The term '.+=' is not recognized|ParserError.*Line","id":"pwsh-cmdlet-params","tool":"bash"}
