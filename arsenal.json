@@ -135,6 +135,19 @@
       "test": ["python", "tools/arsenal_selftest.py", "edit_guard"],
       "for": ["every seat: re-read precisely before editing CRLF files (top failed call: edit oldString not found)"],
       "timeout_s": 60
+    },
+    {
+      "name": "skill_registry",
+      "does": "Pinned skill installer: freeze writes manifest (skills with versions) plus lock (per-file sha256 plus repo HEAD source pin); install converges a dir from the lock (--check exits 1 on any diff); registry writes registry.json (eval_rate plus source pin per skill) and validate checks it; offline, stdlib only",
+      "run": ["python", "tools/skill_registry.py", "freeze"],
+      "args": [
+        { "name": "skills", "does": "skills dir to freeze, e.g. skills", "flag": "--skills" },
+        { "name": "manifest", "does": "manifest file to write, e.g. manifest.json", "flag": "--manifest" },
+        { "name": "lock", "does": "lock file to write (freeze) or read (install)", "flag": "--lock" }
+      ],
+      "test": ["python", "-m", "pytest", "tests/test_skill_registry.py", "-q"],
+      "for": ["installer: one repo installs from the lock with an empty diff (skillworks finish bar R3)", "judge: registry validates"],
+      "timeout_s": 120
     }
   ]
 }
