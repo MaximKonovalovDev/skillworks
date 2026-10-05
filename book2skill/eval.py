@@ -22,15 +22,15 @@ _SKIP_DIRS = {"demo", "export"}
 
 def _check_item(item: object, qa_path: Path, lineno: int) -> None:
     """Refuse a QA line that is not a {"q", "must"} item."""
-    if (
-        not isinstance(item, dict)
-        or "q" not in item
-        or "must" not in item
-        or not isinstance(item["q"], str)
-        or not isinstance(item["must"], list)
-    ):
-        got = ", ".join(sorted(item.keys())) if isinstance(item, dict) else type(item).__name__
+    if not isinstance(item, dict):
+        raise ValueError(f"--qa {qa_path} line {lineno} must be {{\"q\", \"must\"}} (got {type(item).__name__})")
+    if "q" not in item or "must" not in item:
+        got = ", ".join(sorted(item.keys()))
         raise ValueError(f"--qa {qa_path} line {lineno} must be {{\"q\", \"must\"}} (got keys: {got})")
+    if not isinstance(item["q"], str):
+        raise ValueError(f"--qa {qa_path} line {lineno} \"q\" must be a question string (got {type(item['q']).__name__})")
+    if not isinstance(item["must"], list):
+        raise ValueError(f"--qa {qa_path} line {lineno} \"must\" must be a list of words (got {type(item['must']).__name__})")
 
 
 def validate_qa(qa_path: Path) -> None:
