@@ -1,9 +1,9 @@
 {
   "skill": "bash-spawn-guard",
   "fingerprint": "2995b5fb9db2ce92f648ef1fa633bd1275e5edccb9dce2635ed1928ba0838015",
-  "date": "2026-10-05T17:35Z",
+  "date": "2026-10-05T23:01Z",
   "command": "SKILL_LIVE=1 python -m pytest tests/test_bash_spawn_guard.py -q",
-  "result": "6 passed in 2.05s",
+  "result": "6 passed in 3.19s",
   "versions": {
     "python": "3.13.14",
     "os": "Windows-10-10.0.19045-SP0",
