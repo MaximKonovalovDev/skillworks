@@ -1,9 +1,9 @@
 {
   "skill": "pwsh-for-bash-writers",
   "fingerprint": "d2852e4c2c2ec9d10ddbe1ed8404a809bbe10ffd775917f35b165d197d587837",
-  "date": "2026-10-05T15:05Z",
+  "date": "2026-10-05T17:08Z",
   "command": "SKILL_LIVE=1 python -m pytest tests/test_pwsh_for_bash_writers.py -q",
-  "result": "7 passed in 16.65s",
+  "result": "7 passed in 16.43s",
   "versions": {
     "python": "3.13.14",
     "os": "Windows-10-10.0.19045-SP0",
