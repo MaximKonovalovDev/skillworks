@@ -1,2 +1,2 @@
-imported | runner-round-r1 | 2026-10-04T17:13Z | sprint/queue/checks.md
-pack.token | builder-pack-r1 | 2026-10-04T17:22Z | packs/fleet-vol-1
+doctor.token | researcher-doctor-r4 | 2026-10-04T20:05Z | doctor.token lanes.json state-dir evals work/trials
+imported | runner-round-r7 | 2026-10-04T21:16Z | sprint/queue/checks.md
