@@ -15,9 +15,10 @@
  // the keeper stops it: LOOP STOP means stop. Strict STOP_LINE plus the toolless
 // and stall counters guard against a lazy or false stop; the watchdog's GO
 // resumes a loop that stopped by itself.
-// Transient failures (rate limit, 5xx, network, retry proxy down) are retried
-// after 2, 5, 10 and 20 minutes, then it stops. A down proxy with no proxy
-// process is started once per 15 minutes from the owner's Desktop bat.
+// Transient failures (rate limit, 5xx, network, retry proxy down, backend
+// overloaded) retry endlessly after 2, 5, 10 and 20 minutes, then every 20
+// minutes until the backend chills: never a stop (Maxim 2026-10-05). A down
+// proxy with no proxy process is started once per 15 minutes from the owner's Desktop bat.
 // A full context (overflow, or a 400 on a context over 600k tokens) is
 // compacted once on the loop's model, then the continue goes out.
 // Ralph pattern (2026-10-02): at the continue point, when the lead session's
@@ -146,7 +147,7 @@ const CFG = {
 };
 // ---- identical below this line in every repo ----
 const GAP_MS = 20_000;
-const BACKOFF_MS = [2, 5, 10, 20].map((m) => m * 60_000); // transient failure retries, then stop
+const BACKOFF_MS = [2, 5, 10, 20].map((m) => m * 60_000); // transient failure retries forever: 2, 5, 10, 20m, then 20m (Maxim 2026-10-05: never drop on backend overload)
 const WATCH_MS = 60_000; // snapshot for the popper and empire-scan
 const CMD_POLL_MS = 3_000; // popper command file check (one stat)
 const CMD_MAX_AGE_MS = 2 * 60_000; // older popper commands are ignored
@@ -217,6 +218,10 @@ const intentOf = (text) => {
 };
 const isTransient = (e) => !!e && !HARD_ERRORS.has(e.name) && (e.data?.isRetryable === true ||
   TRANSIENT_STATUS.has(e.data?.statusCode) || TRANSIENT_TEXT.test(String(e.data?.message ?? "")));
+// Endless helper retry (Maxim 2026-10-05): a Task/queue result that carries only a transient
+// backend message ("backend is temporarily overloaded. Please retry", rate limit, 429/5xx,
+// network) is not a failure: it goes back to ready/ and runs again until the backend chills.
+const isTransientText = (s) => TRANSIENT_TEXT.test(String(s ?? ""));
 const tokensOf = (m) => {
   const t = m?.info?.tokens;
   return t ? t.total || (t.input ?? 0) + (t.output ?? 0) + (t.cache?.read ?? 0) + (t.cache?.write ?? 0) : 0;
@@ -870,7 +875,7 @@ const makeKeeper = async ({ client, worktree, directory }, options) => {
     if (facts.idle) notes.push(facts.idle);
     if (facts.team) notes.push(facts.team);
     if (facts.lock) notes.push(facts.lock);
-    if (d.retry) notes.push(`the last turn failed (${d.retry}), retry ${st.retries} of ${BACKOFF_MS.length}: check what it left half done first.`);
+    if (d.retry) notes.push(`the last turn failed (${d.retry}), retry ${st.retries} (endless, backend chill retry): check what it left half done first.`);
     if (st.toolless > 0) notes.push(`${st.toolless} of ${MAX_TOOLLESS} turns in a row without a tool call: do real work or write the LOOP STOP line.`);
     if (st.stall > 0) notes.push(`${st.stall} of ${MAX_STALL} continues without a handoff or lock update: rewrite the handoff and refresh the lock this turn.`);
     if (facts.handoff) notes.push(facts.handoff);
@@ -980,10 +985,10 @@ const makeKeeper = async ({ client, worktree, directory }, options) => {
       if (delay) return wait(id, st, d, delay, "waiting", `every seat rests and nothing is ready: continue #${st.continues + 1} in ${Math.round(delay / 60_000)}m, when the first seat's rest ends`);
     }
     if (!d.retry) return wait(id, st, d, GAP_MS, "waiting", `continue #${st.continues + 1} in ${GAP_MS / 1000}s`);
-    if (st.retries >= BACKOFF_MS.length) return stop(id, st, `${d.retry}; gave up after ${BACKOFF_MS.length} retries`);
-    const delay = BACKOFF_MS[st.retries];
+    // Endless (Maxim 2026-10-05): transient backend overload never stops the loop; 2, 5, 10, 20m, then 20m forever.
+    const delay = BACKOFF_MS[Math.min(st.retries, BACKOFF_MS.length - 1)];
     st.retries += 1;
-    return wait(id, st, d, delay, "retrying", `${d.retry}; retry ${st.retries} of ${BACKOFF_MS.length} in ${Math.round(delay / 60_000)}m`);
+    return wait(id, st, d, delay, "retrying", `${d.retry}; retry ${st.retries} (endless) in ${Math.round(delay / 60_000)}m`);
   };
   const send = async (id, st, d) => {
     await reload();
@@ -1670,6 +1675,28 @@ Ready work: ${readyItem.id}. Claim only this item; selectors do not authorize sw
     return { id: jobs.map((j) => j.id).join("+"), role: jobs[0].role, title: `${jobs[0].title} (+${jobs.length - 1} more)`, started: now(), fm: jobs[0].fm, sid, group: jobs, text };
   };
   const collectForeground = (call, text, failed) => {
+    // Endless transient retry (Maxim 2026-10-05): backend overload is not a failure.
+    // A batch result that carries only a transient message and no RESULT line goes back
+    // to ready/ and runs again until the backend chills, instead of failed/.
+    if (!failed && isTransientText(text) && !/\bRESULT:\s*(?:DONE|PARTIAL|BLOCKED|NOOP)\b/i.test(String(text))) {
+      const job = fgJobs.get(call);
+      if (job) {
+        fgJobs.delete(call);
+        snapDirty = true;
+        for (const one of job.group ?? [job]) {
+          if (one.standing) releaseClaims(one.id);
+          else {
+            const from = join(qsub("running"), `${one.id}.md`);
+            queueMove(from, "ready");
+            try { rmSync(`${from}.json`, { force: true }); } catch { /* best effort */ }
+            releaseClaims(one.id);
+          }
+        }
+        job.transientRetries = (job.transientRetries ?? 0) + 1;
+        log(`${job.sid} batch: ${job.id} transient (${clip(text, 80)}): back to ready/ for endless retry #${job.transientRetries}, until the backend chills`);
+        return;
+      }
+    }
     const job = fgJobs.get(call);
     if (!job) return;
     snapDirty = true; // a batch result landed
@@ -1759,9 +1786,33 @@ Ready work: ${readyItem.id}. Claim only this item; selectors do not authorize sw
       } catch { /* the next beat tries again */ }
     }
   };
+  // Endless transient retry (Maxim 2026-10-05): a queued helper that died on backend
+  // overload goes back to ready/ and runs again until the backend chills. Standing seats
+  // just release their claims: the seat runs again by itself. Returns true when requeued.
+  const requeueQueued = (child, why) => {
+    const job = queueRunning.get(child);
+    if (!job) return false;
+    queueRunning.delete(child);
+    snapDirty = true;
+    if (job.standing) releaseClaims(job.id);
+    else {
+      const from = join(qsub("running"), `${job.id}.md`);
+      queueMove(from, "ready");
+      try { rmSync(`${from}.json`, { force: true }); } catch { /* best effort */ }
+      releaseClaims(job.id);
+    }
+    job.transientRetries = (job.transientRetries ?? 0) + 1;
+    log(`${status.session} queue: ${job.id} transient (${why}): back to ready/ for endless retry #${job.transientRetries}, until the backend chills`);
+    return true;
+  };
   const collectQueued = async (child, failed) => {
     const job = queueRunning.get(child);
     if (!job) return;
+    // A caller that already knows the error is transient requeues without reading messages.
+    if (failed && isTransientText(failed) && !/\bRESULT:\s*(?:DONE|PARTIAL|BLOCKED|NOOP)\b/i.test(String(failed))) {
+      requeueQueued(child, clip(failed, 80));
+      return;
+    }
     snapDirty = true; // a queued result landed
     queueRunning.delete(child);
     let text = "";
@@ -1770,6 +1821,19 @@ Ready work: ${readyItem.id}. Claim only this item; selectors do not authorize sw
       const last = msgs.findLast((m) => m.info?.role === "assistant");
       text = textOf(last).trim();
       if (!failed && last?.info?.error) failed = describe(last.info.error);
+      // Transient backend overload read from the helper's last error: not a failure.
+      if (last?.info?.error && isTransient(last.info.error)) {
+        queueRunning.set(child, job);
+        snapDirty = false;
+        requeueQueued(child, describe(last.info.error));
+        return;
+      }
+      if (!failed && isTransientText(text) && !/\bRESULT:\s*(?:DONE|PARTIAL|BLOCKED|NOOP)\b/i.test(text)) {
+        queueRunning.set(child, job);
+        snapDirty = false;
+        requeueQueued(child, clip(text, 80) || "transient backend message");
+        return;
+      }
     } catch (e) { failed = failed ?? `result unreadable (${e?.message ?? e})`; }
     // The loop gets the result before the chain's next step is written (the old order).
     const result = failed ? "failed" : "completed";
@@ -2396,7 +2460,9 @@ Ready work: ${readyItem.id}. Claim only this item; selectors do not authorize sw
         if (input?.tool === "task" && input.callID) { adhocRun.delete(input.callID); subRun.delete(input.callID); }
         if (input?.tool === "task" && input.callID && fgJobs.has(input.callID)) {
           const out = output?.output;
-          return collectForeground(input.callID, (typeof out === "string" ? out : JSON.stringify(out ?? "")).trim());
+          const errText = output?.error ? ` ${typeof output.error === "string" ? output.error : (output.error.message ?? JSON.stringify(output.error))}` : "";
+          const text = `${typeof out === "string" ? out : JSON.stringify(out ?? "")}${errText}`.trim();
+          return collectForeground(input.callID, text);
         }
         if (input?.tool === "task" && input.callID && adhocCalls.has(input.callID)) {
           const key = adhocCalls.get(input.callID);
@@ -2430,8 +2496,14 @@ Ready work: ${readyItem.id}. Claim only this item; selectors do not authorize sw
       }
       const st = state.get(id);
       // A queued helper ended: its result goes back to the loop, its width takes the next packet.
+      // Transient backend overload never fails it: back to ready/ for an endless retry (Maxim 2026-10-05).
       if (queueRunning.has(id) && (type === "session.error" || (type === "session.idle"))) {
         busy.delete(id);
+        if (type === "session.error" && (isTransient(props.error) || isTransientText(props.error?.data?.message) || isTransientText(describe(props.error ?? {})))) {
+          requeueQueued(id, describe(props.error ?? {}) || "transient backend overload");
+          await launchQueued();
+          return;
+        }
         await collectQueued(id, type === "session.error" ? `session error${props.error?.name ? `: ${props.error.name}` : ""}` : undefined);
         await launchQueued();
         await deliverQueued();
