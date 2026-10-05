@@ -141,12 +141,24 @@
       "does": "Pinned skill installer: freeze writes manifest (skills with versions) plus lock (per-file sha256 plus repo HEAD source pin); install converges a dir from the lock (--check exits 1 on any diff); registry writes registry.json (eval_rate plus source pin per skill) and validate checks it; offline, stdlib only",
       "run": ["python", "tools/skill_registry.py", "freeze"],
       "args": [
-        { "name": "skills", "does": "skills dir to freeze, e.g. skills", "flag": "--skills" },
-        { "name": "manifest", "does": "manifest file to write, e.g. manifest.json", "flag": "--manifest" },
-        { "name": "lock", "does": "lock file to write (freeze) or read (install)", "flag": "--lock" }
+        {"name": "skills", "does": "skills dir to freeze, e.g. skills", "flag": "--skills"},
+        {"name": "manifest", "does": "manifest file to write, e.g. manifest.json", "flag": "--manifest"},
+        {"name": "lock", "does": "lock file to write (freeze) or read (install)", "flag": "--lock"}
       ],
       "test": ["python", "-m", "pytest", "tests/test_skill_registry.py", "-q"],
       "for": ["installer: one repo installs from the lock with an empty diff (skillworks finish bar R3)", "judge: registry validates"],
+      "timeout_s": 120
+    },
+    {
+      "name": "eval_score",
+      "does": "Eval upgrades for one skill: grades its QA file with weighted partial credit (1.0 full, 0.5 partial, 0.0 hard fail, each with a reasoning string) plus failure_score, and its trial arms as lift with stderr; one shared mean-plus-stderr metric drives every error bar; writes one JSON report with rate, weighted_rate and lift stderr; offline, stdlib only",
+      "run": ["python", "tools/eval_score.py", "report"],
+      "args": [
+        {"name": "skill", "does": "skill name, e.g. pipe-run", "flag": "--skill"},
+        {"name": "out", "does": "report path (default work/eval-score/<skill>-eval-score.json, kept out of skills/ so live-proof fingerprints never move)", "flag": "--out"}
+      ],
+      "test": ["python", "-m", "pytest", "tests/test_eval_score.py", "-q"],
+      "for": ["judge: one skill report carries rate plus weighted_rate plus lift stderr (skillworks finish bar R2)", "cure smith: tell a near miss (0.5) from a hard fail (0.0) before rewriting"],
       "timeout_s": 120
     }
   ]
