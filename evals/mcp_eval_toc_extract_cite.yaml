@@ -1,0 +1,87 @@
+# evals/mcp_eval_toc_extract_cite.yaml
+# MCP eval for the list_chapters scaffold (mcp_server/fastmcp_scaffold.py).
+# Shape ideas only from lastmile-ai/mcp-eval (Apache-2.0): named cases, each
+# with a tool call plus assertions. No donor code. No network, no auth.
+# Each case maps to QA rows in the repo's *_qa.jsonl shape (q + must).
+# The runner (tests/test_fastmcp_scaffold.py) builds `fixture` into a temp
+# dir, substitutes it for <fixture>, calls list_chapters, checks `assert`.
+suite: mcp-toc-extract-cite
+tool: list_chapters
+target: mcp_server.fastmcp_scaffold
+fixture:
+  desc: 3-chapter unpacked EPUB; spine order (ch2, ch3, ch1) differs from file order.
+  files:
+    META-INF/container.xml: |
+      <?xml version="1.0" encoding="utf-8"?>
+      <container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container">
+        <rootfiles>
+          <rootfile full-path="OEBPS/content.opf" media-type="application/oebps-package+xml"/>
+        </rootfiles>
+      </container>
+    OEBPS/content.opf: |
+      <?xml version="1.0" encoding="utf-8"?>
+      <package xmlns="http://www.idpf.org/2007/opf" version="3.0" unique-identifier="bid">
+        <metadata xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:title>Demo Book</dc:title></metadata>
+        <manifest>
+          <item id="c1" href="Text/ch1.xhtml" media-type="application/xhtml+xml"/>
+          <item id="c2" href="Text/ch2.xhtml" media-type="application/xhtml+xml"/>
+          <item id="c3" href="Text/ch3.xhtml" media-type="application/xhtml+xml"/>
+          <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
+        </manifest>
+        <spine toc="ncx">
+          <itemref idref="c2"/>
+          <itemref idref="c3"/>
+          <itemref idref="c1"/>
+        </spine>
+      </package>
+    OEBPS/toc.ncx: |
+      <?xml version="1.0" encoding="utf-8"?>
+      <ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1">
+        <navMap>
+          <navPoint id="n1"><navLabel><text>First</text></navLabel><content src="Text/ch1.xhtml"/></navPoint>
+          <navPoint id="n2"><navLabel><text>Second</text></navLabel><content src="Text/ch2.xhtml"/></navPoint>
+          <navPoint id="n3"><navLabel><text>Third</text></navLabel><content src="Text/ch3.xhtml"/></navPoint>
+        </navMap>
+      </ncx>
+    OEBPS/Text/ch1.xhtml: |
+      <?xml version="1.0" encoding="utf-8"?>
+      <html xmlns="http://www.w3.org/1999/xhtml"><head><title>First</title></head><body><h1>First</h1><p>Opening chapter sets up the demo book.</p></body></html>
+    OEBPS/Text/ch2.xhtml: |
+      <?xml version="1.0" encoding="utf-8"?>
+      <html xmlns="http://www.w3.org/1999/xhtml"><head><title>Second</title></head><body><h1>Second</h1><p>Branching means you diverge from the main line of development, and that is the killer feature of this demo book.</p></body></html>
+    OEBPS/Text/ch3.xhtml: |
+      <?xml version="1.0" encoding="utf-8"?>
+      <html xmlns="http://www.w3.org/1999/xhtml"><head><title>Third</title></head><body><h1>Third</h1><p>Closing chapter cites every section it quotes.</p></body></html>
+cases:
+  - name: toc-lists-in-order
+    goal: TOC lists chapters in spine (reading) order, not file order.
+    qa:
+      q: List the chapters of the demo EPUB in reading order.
+      must: [Second, Third, First]
+    call:
+      tool: list_chapters
+      args: {epub_dir: <fixture>}
+    assert:
+      order: [OEBPS/Text/ch2.xhtml, OEBPS/Text/ch3.xhtml, OEBPS/Text/ch1.xhtml]
+  - name: extract-one-section
+    goal: The listed href opens the section text carrying the cited phrases.
+    qa:
+      q: What does the second chapter say about branching?
+      must: [killer feature, diverge from the main line]
+    call:
+      tool: list_chapters
+      args: {epub_dir: <fixture>}
+    assert:
+      read_index: 0
+      must_contain: [killer feature, diverge from the main line]
+  - name: cite-spots-check
+    goal: Every chapter entry carries citation spots (href + title).
+    qa:
+      q: Does every chapter entry carry a citation spot?
+      must: [href, title]
+    call:
+      tool: list_chapters
+      args: {epub_dir: <fixture>}
+    assert:
+      min_chapters: 3
+      require_href_and_title: true
