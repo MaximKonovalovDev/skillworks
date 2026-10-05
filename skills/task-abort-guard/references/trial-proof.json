@@ -1,0 +1,12 @@
+{
+  "skill": "task-abort-guard",
+  "runs": 12,
+  "with_rate": 1.0,
+  "without_rate": 0.0,
+  "lift": 1.0,
+  "spread": 1.0,
+  "fingerprint": "5aabbd95d212d3cbd657c6111f27af916986d4575d55ee0e134f1def3bc11602",
+  "sheet": "evals/task-abort-guard_trials.jsonl",
+  "at": "2026-10-05T17:24Z",
+  "ok": true
+}

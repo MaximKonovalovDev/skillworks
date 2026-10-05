@@ -1,0 +1,10 @@
+{"must": ["dispatch", "timeout"], "q": "how is one task dispatched with a timeout?"}
+{"must": ["sequence", "timeout"], "q": "how are the rest sequenced after one task?"}
+{"must": ["background", "timeout"], "q": "how does a background wait replace a foreground wait?"}
+{"must": ["receipt", "timeout"], "q": "how is a receipt polled on a short loop?"}
+{"must": ["slice", "chunk"], "q": "how is a write sliced into one chunk?"}
+{"must": ["limit", "read"], "q": "how is a read limited to a few lines?"}
+{"must": ["reread", "hunk"], "q": "what happens before an edit changes one hunk?"}
+{"must": ["narrow", "pattern"], "q": "how is a search narrowed to one folder?"}
+{"must": ["report", "PASS"], "q": "what does the run report list at the end?"}
+{"must": ["diff", "checks"], "q": "what proves a bounded run finished cleanly?"}
