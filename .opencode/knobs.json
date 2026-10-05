@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-05T12:16Z",
+  "updated": "2026-10-05T18:57:04Z",
   "knobs": {
     "width": {"value":2,"min":1,"max":30,"step":1,"why":"helpers in one batch"},
     "dispatch": {"value":"foreground","why":"owner 2026-09-28: every helper seen live"},
@@ -28,6 +28,8 @@
     {"at":"2026-10-05T07:48:25Z","knob":"width","from":1,"to":2,"by":"Maxim"},
     {"at":"2026-10-05T08:57:57Z","knob":"paid_mode","from":1,"to":0,"by":"Loop Boss"},
     {"at":"2026-10-05T11:55:25Z","knob":"paid_mode","from":0,"to":1,"by":"Maxim"},
-    {"at":"2026-10-05T12:16Z","knob":"cards_per_reader","from":5,"to":null,"by":"center fixer (S72: 0 readers, dead knob removed)"}
+    {"at":"2026-10-05T12:16Z","knob":"cards_per_reader","from":5,"to":null,"by":"center fixer (S72: 0 readers, dead knob removed)"},
+    {"at":"2026-10-05T14:44:29Z","knob":"paid_mode","from":1,"to":0,"by":"Maxim"},
+    {"at":"2026-10-05T18:57:04Z","knob":"paid_mode","from":0,"to":1,"by":"Maxim"}
   ]
 }

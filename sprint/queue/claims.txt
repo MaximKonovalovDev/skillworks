@@ -1,2 +1,16 @@
-doctor.token | researcher-doctor-r4 | 2026-10-04T20:05Z | doctor.token lanes.json state-dir evals work/trials
-imported | runner-round-r7 | 2026-10-04T21:16Z | sprint/queue/checks.md
+pilot-112-view | pilot-112-qa-shape-message | 2026-10-05T11:56Z | book2skill/eval.py, tests/test_qa_shape_message.py
+pilot-112-stale-zip | pilot-112-stale-zip | 2026-10-05T11:55Z | packs/fleet-vol-1/pack.json, packs/fleet-vol-1/listing.md, dist/fleet-vol-1.zip
+planner.token | planner-rows-r4 | 2026-10-05T12:15Z | sprint/board.md team/coach.md team/p5.md team/compact-log.md sprint/queue/claims.txt
+PIPE-112-1 | pipe-112-1-fix | 2026-10-05T12:22Z | packs/fleet-vol-1/pack.json, packs/fleet-vol-1/vol0-sample.md, dist/fleet-vol-1.zip (prior pilot-112-stale-zip 11:55Z claim was a finished read-only pilot run, no active edit)
+PIPE-112-1 | pipe-112-1-fix | 2026-10-05T13:05Z | packs/fleet-vol-1/pack.json, dist/fleet-vol-1.zip (revert uncommitted 10-05 date drift to HEAD 10-04, rebuild dist)
+DR-1005-6 | doctor-spawn-kill | 2026-10-05T14:12Z | evals/bash-spawn-guard_trials.jsonl, skills/bash-spawn-guard/references/target-class.json
+DR-1005-8 | doctor-read-offset | 2026-10-05T14:29Z | evals/read-offset-guard_trials.jsonl, skills/read-offset-guard/references/target-class.json
+TS-7 | toolsmith-ts7 | 2026-10-05T14:34Z | tools/skill_registry.py, tests/test_skill_registry.py
+DR-1004-10 | doctor-task-scope | 2026-10-05T14:35Z | evals/task-scope_trials.jsonl, skills/task-scope/references/target-class.json
+TS-6 | toolsmith-ts6 | 2026-10-05T14:56Z | tools/eval_score.py, tests/test_eval_score.py
+DR-1005-2 | doctor-bash-abort | 2026-10-05T15:00Z | evals/bash-abort-guard_trials.jsonl, skills/bash-abort-guard/references/target-class.json
+DR-1005-3 | doctor-ready-file | 2026-10-05T15:40Z | evals/ready-file-check_trials.jsonl, skills/ready-file-check/references/target-class.json
+DR-1005-4 | doctor-allowlist | 2026-10-05T16:08Z | evals/bash-allowlist_trials.jsonl, skills/bash-allowlist/references/target-class.json
+DR-1005-5 | doctor-task-abort | 2026-10-05T16:55Z | evals/task-abort-guard_trials.jsonl, skills/task-abort-guard/references/target-class.json
+DR-1005-6 | builder-cure | 2026-10-05T17:27Z | evals/bash-spawn-guard_trials.jsonl, skills/bash-spawn-guard/SKILL.md (prior doctor-spawn-kill 14:12Z claim aged out 3h+)
+DR-1005-8 | builder-cure | 2026-10-05T17:50Z | evals/read-offset-guard_trials.jsonl, skills/read-offset-guard/SKILL.md (prior doctor-read-offset 14:29Z claim aged out 3h+)

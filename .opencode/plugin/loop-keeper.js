@@ -146,6 +146,12 @@ const REPOS = {
     state: "C:/Users/me/Desktop/asset-vault/sprint/loop-keeper.json", cmd: "C:/Users/me/Desktop/asset-vault/sprint/loop-keeper.cmd.json",
     knobs: "C:/Users/me/Desktop/asset-vault/.opencode/knobs.json", command: "C:/Users/me/Desktop/asset-vault/.opencode/commands/sprint.md",
   },
+  "video-studio": {
+    lock: "C:/Users/me/Desktop/video-studio/sprint/lock.txt", halt: "C:/Users/me/Desktop/video-studio/sprint/halt",
+    handoff: "C:/Users/me/Desktop/video-studio/sprint/handoff.md", inbox: "C:/Users/me/Desktop/video-studio/sprint/inbox.md",
+    state: "C:/Users/me/Desktop/video-studio/sprint/loop-keeper.json", cmd: "C:/Users/me/Desktop/video-studio/sprint/loop-keeper.cmd.json",
+    knobs: "C:/Users/me/Desktop/video-studio/.opencode/knobs.json", command: "C:/Users/me/Desktop/video-studio/.opencode/commands/sprint.md",
+  },
 };
 const CFG = {
   repo: "skillworks",

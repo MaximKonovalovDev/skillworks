@@ -1,5 +1,5 @@
 # repomap: skillworks
-_generated 2026-10-05T05:21:05.292Z | 8075 files mapped | 97 hot (commits, last 14d) | cap 25KB_
+_generated 2026-10-05T17:50:56.894Z | 8296 files mapped | 123 hot (commits, last 14d) | cap 25KB_
 
 ## tree
 - `.env` - 1 file
@@ -18,7 +18,7 @@ _generated 2026-10-05T05:21:05.292Z | 8075 files mapped | 97 hot (commits, last 
 - `arsenal.json` - 1 file
 - `book2skill/` - 28 files
 - `dist/` - 9 files
-- `evals/` - 29 files
+- `evals/` - 44 files
 - `from-design-studio/` - 12 files
 - `mcp_server/` - 2 files
 - `opencode.jsonc` - 1 file
@@ -27,16 +27,35 @@ _generated 2026-10-05T05:21:05.292Z | 8075 files mapped | 97 hot (commits, last 
 - `prompts/` - 2 files
 - `requirements.txt` - 1 file
 - `research/` - 15 files
-- `skills/` - 134 files
-- `sprint/` - 16 files
+- `skills/` - 235 files
+- `sprint/` - 20 files
 - `team/` - 8 files
-- `tests/` - 98 files
-- `tools/` - 29 files
-- `work/` - 596 files
+- `tests/` - 126 files
+- `tools/` - 33 files
+- `work/` - 665 files
 
 ## symbols (hot first, xN = commits last 14d)
-### `.opencode/plugin/loop-keeper.js` x15 (174KB)
+### `.opencode/plugin/loop-keeper.js` x16 (175KB)
 - `const LoopKeeper`
+### `book2skill/gates.py` x11 (9.6KB)
+- `def frontmatter`
+- `def body_of`
+- `def body_tokens`
+- `def skill_files`
+- `def skill_text`
+- `def _strip_code_spans`
+- `def forge_english_hits`
+- `def check_format`
+- `def check_sources`
+- `def check_eval`
+- `def test_file_for`
+- `def fingerprint`
+- `def check_proof`
+### `tools/install_fleet_skills.py` x10 (4.2KB)
+- `def payload`
+- `def stale`
+- `def install`
+- `def main`
 ### `book2skill/export.py` x9 (8.5KB)
 - `def layout_for`
 - `def load_eval_report`
@@ -112,27 +131,13 @@ _generated 2026-10-05T05:21:05.292Z | 8075 files mapped | 97 hot (commits, last 
 - `def md_counts`
 - `def _use_markitdown`
 - `def extract`
-### `book2skill/eval.py` x4 (6.2KB)
+### `book2skill/eval.py` x5 (6.5KB)
 - `def _check_item`
 - `def validate_qa`
 - `def grow_qa`
 - `def skill_answer_texts`
 - `def _rank`
 - `def run_eval`
-### `book2skill/gates.py` x4 (9.4KB)
-- `def frontmatter`
-- `def body_of`
-- `def body_tokens`
-- `def skill_files`
-- `def skill_text`
-- `def _strip_code_spans`
-- `def forge_english_hits`
-- `def check_format`
-- `def check_sources`
-- `def check_eval`
-- `def test_file_for`
-- `def fingerprint`
-- `def check_proof`
 ### `book2skill/make.py` x4 (5.3KB)
 - `def _inside`
 - `def _check_places`
@@ -271,11 +276,6 @@ _generated 2026-10-05T05:21:05.292Z | 8075 files mapped | 97 hot (commits, last 
 - `def _live_current`
 - `def _trial_passes`
 - `def s6`
-- `def main`
-### `tools/install_fleet_skills.py` x3 (4.0KB)
-- `def payload`
-- `def stale`
-- `def install`
 - `def main`
 ### `tools/pack_check.py` x3 (29KB)
 - `class Report`
@@ -442,6 +442,27 @@ _generated 2026-10-05T05:21:05.292Z | 8075 files mapped | 97 hot (commits, last 
 ### `book2skill/refresh.py` x1 (1.1KB)
 - `def fingerprint`
 - `def refresh`
+### `skills/bash-abort-guard/scripts/pairs_to_md.py` x1 (2.3KB)
+- `def render`
+- `def main`
+### `skills/bash-abort-guard/scripts/run_abort.py` x1 (5.5KB)
+- `def scratch_root`
+- `def run_pairs`
+- `def main`
+### `skills/bash-allowlist/scripts/pairs_to_md.py` x1 (2.4KB)
+- `def render`
+- `def main`
+### `skills/bash-allowlist/scripts/run_allow.py` x1 (5.5KB)
+- `def scratch_root`
+- `def run_pairs`
+- `def main`
+### `skills/bash-spawn-guard/scripts/pairs_to_md.py` x1 (2.4KB)
+- `def render`
+- `def main`
+### `skills/bash-spawn-guard/scripts/run_spawn.py` x1 (5.5KB)
+- `def scratch_root`
+- `def run_pairs`
+- `def main`
 ### `skills/bevy-rust-ecs/scripts/check-sim-outside-bevy.mjs` x1 (12KB)
 - `function isBevyName`
 - `function statements`
@@ -461,6 +482,13 @@ _generated 2026-10-05T05:21:05.292Z | 8075 files mapped | 97 hot (commits, last 
 - `def scratch_root`
 - `def run_pairs`
 - `def main`
+### `skills/edit-unique/scripts/pairs_to_md.py` x1 (2.3KB)
+- `def render`
+- `def main`
+### `skills/edit-unique/scripts/run_unique.py` x1 (5.5KB)
+- `def scratch_root`
+- `def run_pairs`
+- `def main`
 ### `skills/engine-builder/scripts/pairs_to_md.py` x1 (2.3KB)
 - `def render`
 - `def main`
@@ -475,6 +503,13 @@ _generated 2026-10-05T05:21:05.292Z | 8075 files mapped | 97 hot (commits, last 
 ### `skills/pwsh-for-bash-writers/scripts/run_pairs.py` x1 (6.1KB)
 - `def stripped_path`
 - `def missing_tools`
+- `def run_pairs`
+- `def main`
+### `skills/ready-file-check/scripts/pairs_to_md.py` x1 (2.3KB)
+- `def render`
+- `def main`
+### `skills/ready-file-check/scripts/run_ready.py` x1 (5.5KB)
+- `def scratch_root`
 - `def run_pairs`
 - `def main`
 ### `skills/real-browser-automation/scripts/cdp.mjs` x1 (29KB)
@@ -493,6 +528,20 @@ _generated 2026-10-05T05:21:05.292Z | 8075 files mapped | 97 hot (commits, last 
 - `def render`
 - `def main`
 ### `skills/repo-read-first/scripts/run_pairs.py` x1 (5.5KB)
+- `def scratch_root`
+- `def run_pairs`
+- `def main`
+### `skills/task-abort-guard/scripts/pairs_to_md.py` x1 (2.4KB)
+- `def render`
+- `def main`
+### `skills/task-abort-guard/scripts/run_task.py` x1 (5.5KB)
+- `def scratch_root`
+- `def run_pairs`
+- `def main`
+### `skills/task-scope/scripts/pairs_to_md.py` x1 (2.3KB)
+- `def render`
+- `def main`
+### `skills/task-scope/scripts/run_scope.py` x1 (5.5KB)
 - `def scratch_root`
 - `def run_pairs`
 - `def main`
@@ -542,6 +591,36 @@ _generated 2026-10-05T05:21:05.292Z | 8075 files mapped | 97 hot (commits, last 
 - `def test_audit_flags_an_over_budget_body`
 - `def test_audit_grades_description_name_and_links`
 - `def test_make_prints_over_budget_on_a_big_fixture`
+### `tests/test_bash_abort_guard.py` x1 (3.3KB)
+- `def _load`
+- `def doc`
+- `def results`
+- `def test_pair_file_is_well_formed`
+- `def test_pairs_md_is_current`
+- `def test_every_rule_line_carries_a_source`
+- `def test_every_pair_behaves_as_written`
+- `def test_the_harness_can_fail`
+- `def test_error_fragments_come_from_real_failures`
+### `tests/test_bash_allowlist.py` x1 (3.4KB)
+- `def _load`
+- `def doc`
+- `def results`
+- `def test_pair_file_is_well_formed`
+- `def test_pairs_md_is_current`
+- `def test_every_rule_line_carries_a_source`
+- `def test_every_pair_behaves_as_written`
+- `def test_the_harness_can_fail`
+- `def test_error_fragments_come_from_real_failures`
+### `tests/test_bash_spawn_guard.py` x1 (3.3KB)
+- `def _load`
+- `def doc`
+- `def results`
+- `def test_pair_file_is_well_formed`
+- `def test_pairs_md_is_current`
+- `def test_every_rule_line_carries_a_source`
+- `def test_every_pair_behaves_as_written`
+- `def test_the_harness_can_fail`
+- `def test_error_fragments_come_from_real_failures`
 ### `tests/test_bevy_rust_ecs.py` x1 (19KB)
 - `def node`
 - `def ws`
@@ -630,6 +709,16 @@ _generated 2026-10-05T05:21:05.292Z | 8075 files mapped | 97 hot (commits, last 
 - `def test_every_pair_behaves_as_written`
 - `def test_the_harness_can_fail`
 - `def test_error_fragments_come_from_real_failures`
+### `tests/test_edit_unique.py` x1 (3.3KB)
+- `def _load`
+- `def doc`
+- `def results`
+- `def test_pair_file_is_well_formed`
+- `def test_pairs_md_is_current`
+- `def test_every_rule_line_carries_a_source`
+- `def test_every_pair_behaves_as_written`
+- `def test_the_harness_can_fail`
+- `def test_error_fragments_come_from_real_failures`
 ### `tests/test_engine_builder.py` x1 (3.3KB)
 - `def _load`
 - `def doc`
@@ -640,67 +729,5 @@ _generated 2026-10-05T05:21:05.292Z | 8075 files mapped | 97 hot (commits, last 
 - `def test_every_pair_behaves_as_written`
 - `def test_the_harness_can_fail`
 - `def test_error_fragments_come_from_real_failures`
-### `tests/test_eval_grades_skill.py` x1 (4.6KB)
-- `def _work_with_answers`
-- `def _skill_with_answers`
-- `def _qa`
-- `def test_eval_passes_when_the_skill_answers`
-- `def test_eval_fails_when_the_skill_is_gutted_but_chunks_answer`
-- `def test_skill_text_beats_shop_copy_and_missing_files`
-- `def test_gate_arithmetic_untouched`
-### `tests/test_export_guard.py` x1 (5.7KB)
-- `def _skill`
-- `def _no_nesting`
-- `def test_out_inside_skill_every_target`
-- `def test_stale_export_folder_is_not_shipped`
-- `def test_source_that_is_the_destination_is_refused_and_kept`
-- `def test_destination_above_the_source_is_refused`
-- `def _link_dir`
-- `def test_looping_link_is_not_followed`
-- `def test_path_past_the_limit_is_refused_before_any_copy`
-- `def test_normal_export_still_copies_everything`
-### `tests/test_export_lock.py` x1 (1.5KB)
-- `def test_export_writes_lock_per_target`
-### `tests/test_export_scaffold_hold.py` x1 (2.2KB)
-- `def test_direct_export_holds_a_pure_scaffold_and_ships_once_written`
-### `tests/test_export_targets.py` x1 (3.8KB)
-- `def _skill`
-- `def test_layouts_cover_all_targets`
-- `def test_target_yields_importable_layout`
-- `def test_gate_refused_for_every_target`
-- `def test_scaffold_held_for_every_target`
-### `tests/test_export_zip.py` x1 (4.2KB)
-- `def _skill`
-- `def _check_zip`
-- `def test_claude_export_yields_importable_zip`
-- `def test_zip_for_every_target`
-- `def test_gate_refusal_writes_no_zip`
-- `def test_out_inside_skill_never_nests_zip`
-- `def test_progit_branching_claude_zip`
-### `tests/test_extract_engines.py` x1 (6.4KB)
-- `def _markitdown_available`
-- `def _write_epub`
-- `def _esc`
-- `def _write_pdf`
-- `def _counts_line`
-- `def test_epub_markitdown_keeps_table_and_code`
-- `def test_pdf_markitdown_keeps_table_and_code`
-- `def test_extract_rejects_unknown_engine`
-### `tests/test_fleet_skills.py` x1 (1.3KB)
-- `def _built`
-- `def test_fleet_skill_format`
-- `def test_fleet_skill_sources_and_notices`
-- `def test_fleet_skill_eval_gate`
-- `def test_fleet_skill_matches_its_last_live_proof`
-### `tests/test_gen_run_pairs.py` x1 (5.7KB)
-- `def cli`
-- `def scratch_root`
-- `def test_the_four_copies_are_byte_for_byte_what_the_one_source_makes`
-- `def test_the_shared_code_is_in_the_source_once_and_only_the_variant_lines_differ`
-- `def test_a_drifted_copy_fails_the_check_and_the_generator_puts_it_back`
-- `def test_a_missing_copy_counts_as_drift_and_is_written`
-- `def test_a_crlf_checkout_is_not_drift`
-- `def test_each_copy_imports_only_the_standard_library_so_a_skill_folder_copied_alone_works`
-- `def test_a_generated_copy_runs_alone_in_a_folder_with_no_repo_around_it`
 
-_3040 cold files dropped to fit cap_
+_3060 cold files dropped to fit cap_
