@@ -96,7 +96,7 @@ def test_the_stage_commands_one_by_one(project: Path) -> None:
     (project / "big.txt").write_text("word " * 2400, encoding="utf-8")  # 12000 characters
     work, skill = "work/big", "skills/big"
     r = b2s(project, "extract", "--in", "big.txt", "--out", work)
-    assert r.returncode == 0 and re.fullmatch(r"extracted \d+ chars \(text\)", r.stdout.strip()), r.stdout + r.stderr
+    assert r.returncode == 0 and re.fullmatch(r"extracted \d+ chars \(text[^)]*\)", r.stdout.strip()), r.stdout + r.stderr
     assert b2s(project, "split", "--work", work).stdout.strip() == "split into 3 chunks"
     assert sorted(p.name for p in (project / work / "chunks").iterdir()) == ["0000.txt", "0001.txt", "0002.txt"]
     assert len((project / work / "chunks" / "0000.txt").read_text(encoding="utf-8")) == 5000, "5000 characters, 200 overlap"
