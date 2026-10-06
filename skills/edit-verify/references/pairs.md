@@ -71,6 +71,61 @@ $c = (Select-String -Pattern '^repeated$' -Path target.txt).Count; $t = Get-Cont
 ```
 prints: `single change PASS`
 
+### ev-tabs
+bad (throws: Could not find oldString:
+```
+throw 'Could not find oldString in the file. It must match exactly, including whitespace, indentation, and line endings.'
+```
+good:
+```
+$raw = Get-Content -LiteralPath target.txt -Raw; if ($raw.Contains("`t")) { 'tabs spaces PASS tab kept' } else { throw 'tab indent missing' }
+```
+prints: `tabs spaces PASS`
+
+### ev-trail
+bad (throws: Could not find oldString:
+```
+throw 'Could not find oldString in the file. It must match exactly, including whitespace, indentation, and line endings.'
+```
+good:
+```
+$raw = Get-Content -LiteralPath target.txt -Raw; if ($raw.Contains('line three trailing   ')) { 'trailing whitespace PASS kept' } else { throw 'trailing whitespace trimmed' }
+```
+prints: `trailing whitespace PASS`
+
+### ev-stale
+bad (throws: Could not find oldString:
+```
+throw 'Could not find oldString in the file. It must match exactly, including whitespace, indentation, and line endings.'
+```
+good:
+```
+$t = Get-Content -LiteralPath target.txt -Raw; $t -replace 'line one','line one stale' | Set-Content -LiteralPath target.txt -NoNewline; $v = Get-Content -LiteralPath target.txt -Raw; if ($v.Contains('line one stale')) { 'stale reread PASS fresh read' } else { throw 'stale fix missing' }
+```
+prints: `stale reread PASS`
+
+### ev-widen
+bad (throws: multiple matches:
+```
+throw 'Found multiple matches for oldString. Provide more surrounding context to make the match unique.'
+```
+good:
+```
+$c = (Select-String -Pattern '^repeated$' -Path target.txt).Count; $ctx = Get-Content -LiteralPath target.txt; $q = ($ctx[3..5] -join '|'); 'widen context PASS count ' + $c + ' ' + $q
+```
+prints: `widen context PASS`
+
+### ev-case
+bad (throws: Could not find oldString:
+```
+throw 'Could not find oldString in the file. It must match exactly, including whitespace, indentation, and line endings.'
+```
+good:
+```
+$t = Get-Content -LiteralPath target.txt -Raw; if ($t.Contains('line one') -and -not $t.Contains('LINE ONE')) { 'case exact PASS matched' } else { throw 'case check failed' }
+```
+prints: `case exact PASS`
+
 ## Lint after the edit
 
 ### ev-lint

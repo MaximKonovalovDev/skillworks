@@ -14,3 +14,8 @@ Each fragment below is a substring of the real `bad_text` of the named pair. The
 - `no changed paths`: report with no paths and no results. Pair `ev-report`
 - `scaffold text remains`: unverified rules with no source. Pair `ev-noscaffold`
 - `pairs never ran`: class claimed fixed with run_verify never executed. Pair `ev-proof`
+- `Could not find oldString`: tab-indented line matched with spaces. Pair `ev-tabs`
+- `Could not find oldString`: trailing spaces trimmed from oldString. Pair `ev-trail`
+- `Could not find oldString`: file changed after the read, stale oldString retried. Pair `ev-stale`
+- `multiple matches`: short line in two places, widened with six surrounding lines. Pair `ev-widen`
+- `Could not find oldString`: wrong-case oldString typed from memory. Pair `ev-case`

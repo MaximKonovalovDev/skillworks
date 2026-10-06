@@ -1,7 +1,7 @@
 ---
 name: edit-verify
 description: Use when an edit lands but nothing proves it: re-read the edited lines, run the lint check, and report the diff plus checks before closing.
-version: 0.1.0
+version: 0.2.0
 author: skillworks
 tags: [editor, verify]
 license: MIT
@@ -25,6 +25,11 @@ failure class is `references/target-class.json`.
 - Read the diff hunks with `git diff <file>` plus `git diff --stat` before closing and confirm the single intended change [src: references/pairs.md#ev-diff]
 - Refuse the no-op with `Get-Content <file>`: identical oldString and newString means verify the file already holds the wanted text [src: references/pairs.md#ev-noop]
 - Count first with `(Select-String -Pattern <old> <file>).Count` and land a single change only, never force a short match [src: references/pairs.md#ev-single]
+- Match tabs vs spaces with ``Select-String -Pattern "`t" <file>`` and copy the exact indent into oldString [src: references/pairs.md#ev-tabs]
+- Keep trailing whitespace exact with `Get-Content -Raw <file>` and never trim the oldString [src: references/pairs.md#ev-trail]
+- Re-read after any outside write with `Get-Content -LiteralPath <file>` when the file may have changed since the last read [src: references/pairs.md#ev-stale]
+- Widen a short hit with six surrounding lines from `Get-Content <file>` until the match is one place [src: references/pairs.md#ev-widen]
+- Match case exactly with `Select-String -Pattern <old> <file>` and never change the case of oldString [src: references/pairs.md#ev-case]
 
 ## Lint after the edit (close green, never red)
 
