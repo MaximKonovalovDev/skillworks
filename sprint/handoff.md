@@ -1,33 +1,34 @@
-# skillworks handoff - round 211 (token 4ed1)
+# skillworks handoff - round 216 (token a3f9)
 
-Round: 211 (4th batch collected, triple PASS landed)
-Written: 2026-10-06T10:55Z
-Token: 4ed1 (held since 2026-10-06T09:15Z)
+Round: 216 (cure PASS landed d9e06fb, pilot needs one-off fix)
+Written: 2026-10-06T11:30Z
+Token: a3f9 (takeover 2026-10-06T10:39Z, replaced stale lead#4ed1 left by closed app)
 Knobs: width 5, foreground, heavy_max 3.
 
 ## Heading
-- R1 book-to-skill moves: 2 new proven skills landed. Pack gate holds PASS.
+- R1 book-to-skill moves: task-scope v1.1.0 proven, trial lift 1.0. Pack gate holds PASS.
 
 ## Rows done
-- Book judge PASS: BK-1006-1 pwsh-docs DONE 11b7858, distill ok, grade lift 1.0.
-- Cure judge PASS: DR-1006-1 fetch-github-first DONE 2f6f3c0, live 6, lint PASS, lift 1.0.
-- Pack repair judge PASS: buyer check live, gate PASS. Files held for r2 serialization.
-- Planner NOOP. Pack r2 DONE gate PASS, awaits review.
-- Board: BK-1006-1 DONE 11b7858, DR-1006-1 DONE 2f6f3c0 committed 168c9f6.
+- DR-1006-2 cure repair judge PASS with note: trial FAIL to PASS, live proven. Committed d9e06fb (8 files). Row stays READY, class-halve pending adoption plus 48 h.
+- O-005 READY added for inbox S37 (R3). Inbox S37 ticked.
 
-## Held, not committed
-- Shared credit lines THIRD plus p3 plus listing plus p5 held: unjudged r2 touched same files.
-- Scaffold leftovers in fetch tree: one-off 030 queued, not shipped.
+## Decisions
+- Pilot-114 review-2 FAIL: gate weakened to match typo (needle `(MIT` vs line `(MIT,`). Correct fix is the line, not the gate. One-off 031 queued (2 lines, 2 files).
+- Pack r2 step ENDED (second paperwork FAIL, fingerprint gate 13/13 before==after). Held Try-it plus credits ride pilot landing.
 
 ## Checks
-- node sprint/check.mjs RESULT PASS 20/0/0.
-- live_proof fetch-github-first proven 6 passed, distill pwsh-docs ok:true.
+- Lead verified: skill_trial grade 12 runs 1.0/0.0 lift 1.0 RESULT PASS, live_proof proven 6 passed, check 20/0/0.
+- pytest still RED single: seat-guard untracked helper pre-commit. Clears when pilot files land.
 
 ## S3/S5
 - S3: pack gate PASS stands. S5: 9 classes met stands.
 
-## Blockers
-- K-54 OWNER verdict pending. BK-1004-1 BLOCKED source_only lift 0.25. K-03 K-06 PARKED.
+## Held, not committed
+- Pilot files (helper plus gates plus THIRD plus 4 reseals) plus listing Try-it. D sprint/halt uncommitted.
 
 ## Next
-- Await keeper GO: pack r2 review, cure DR-1006-2, book follow-ups, installer stranger runs.
+- Batch: builder 031-gate-needle-typo, then judge review, then land pilot set.
+- Installer stranger runs once pytest green.
+
+## Retro
+- Not a 5th round. No proposal.
