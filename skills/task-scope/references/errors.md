@@ -14,3 +14,8 @@ Each fragment below is a substring of the real `bad_text` of the named pair. The
 - `Task cancelled`: long repair with no receipt. Pair `ts-resume`
 - `Task cancelled`: rerun duplicates work. Pair `ts-idempotent`
 - `Task cancelled`: run with no result reported. Pair `ts-report`
+- `Task cancelled`: same description dispatched twice in one session. Pair `ts-dupdesc`
+- `Task cancelled`: six parallel runs at once with stragglers. Pair `ts-onefan`
+- `Task cancelled`: land batch fired at once with stragglers. Pair `ts-landbatch`
+- `Task cancelled`: orchestrator wide fan-out with stragglers. Pair `ts-orchseq`
+- `Task cancelled`: same description dispatched twice, second cancelled as duplicate. Pair `ts-descclaim`

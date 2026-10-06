@@ -71,6 +71,28 @@ $q = Get-Content -LiteralPath queue.txt | Select-Object -First 1; 'claims file s
 ```
 prints: `claims file skip eligible first diff checks PASS`
 
+### ts-dupdesc
+bad (throws: Task cancelled):
+```
+throw 'Task cancelled on task same description dispatched twice in one session'
+```
+good:
+```
+$ls = Get-Content -LiteralPath claims.txt; if ($ls -match 'item one') { 'never repeat description skip duplicate diff checks PASS already dispatched' } else { Set-Content -LiteralPath claims.txt -Value 'item one'; 'never repeat description skip duplicate diff checks PASS claimed' }
+```
+prints: `never repeat description skip duplicate diff checks PASS`
+
+### ts-descclaim
+bad (throws: Task cancelled):
+```
+throw 'Task cancelled on task same description dispatched twice second cancelled as duplicate'
+```
+good:
+```
+Set-Content -LiteralPath claims.txt -Value 'item two'; 'description check skip dispatched diff checks PASS claimed recorded'
+```
+prints: `description check skip dispatched diff checks PASS`
+
 ## Bound the fan-out
 
 ### ts-fanout
@@ -94,6 +116,39 @@ good:
 $b = 1..2 | ForEach-Object { "scout $_" }; 'bounded join before next diff checks PASS running joined'
 ```
 prints: `bounded join before next diff checks PASS`
+
+### ts-onefan
+bad (throws: Task cancelled):
+```
+throw 'Task cancelled on task six parallel runs at once stragglers cancelled'
+```
+good:
+```
+$c = Get-Content -LiteralPath queue.txt | Select-Object -First 1; Set-Content -LiteralPath claims.txt -Value $c; 1..3 | ForEach-Object { $_ } | Out-Null; 'one item per run join before next diff checks PASS claimed joined'
+```
+prints: `one item per run join before next diff checks PASS`
+
+### ts-landbatch
+bad (throws: Task cancelled):
+```
+throw 'Task cancelled on task land batch fired at once stragglers cancelled'
+```
+good:
+```
+$b = 1..3 | ForEach-Object { "land $_" }; 'land batch bounded three joined diff checks PASS running joined'
+```
+prints: `land batch bounded three joined diff checks PASS`
+
+### ts-orchseq
+bad (throws: Task cancelled):
+```
+throw 'Task cancelled on task orchestrator wide fan-out stragglers cancelled'
+```
+good:
+```
+$c = Get-Content -LiteralPath queue.txt | Select-Object -First 1; Set-Content -LiteralPath claims.txt -Value $c; 'orchestrator sequence one claim diff checks PASS claimed sequenced'
+```
+prints: `orchestrator sequence one claim diff checks PASS`
 
 ## Slice long work
 

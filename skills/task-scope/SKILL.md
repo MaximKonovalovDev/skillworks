@@ -1,7 +1,7 @@
 ---
 name: task-scope
-description: Use when dispatching subagent task runs that come back Task cancelled with stragglers duplicates or lost work
-version: 1.0.0
+description: Use when fanning out parallel subagent task runs: claim one item per run, join each batch before the next
+version: 1.1.0
 author: skillworks
 tags: [orchestration]
 license: MIT (skill text and scripts, original work)
@@ -19,6 +19,8 @@ The full bad and good runs are `references/pairs.md`, the machine list is `refer
 - Read the claims file with `Get-Content claims.txt` and skip anything claimed in the last 2 h [src: references/pairs.md#ts-duplicate]
 - List running runs with `Get-Content running.txt` first and never re-dispatch live work [src: references/pairs.md#ts-running]
 - Check round state with `Get-Content round.txt` and dispatch only when the lane token names new work [src: references/pairs.md#ts-eligible]
+- Never dispatch the same description twice in one session with `Set-Content claims.txt`: check the claims file for already-dispatched descriptions, not just queue items [src: references/pairs.md#ts-dupdesc]
+- Record every dispatched description with `Set-Content claims.txt` and skip it when it appears again [src: references/pairs.md#ts-descclaim]
 
 ## Bound the fan-out (no straggler cancels)
 
@@ -26,6 +28,9 @@ The full bad and good runs are `references/pairs.md`, the machine list is `refer
 - Claim one queue item with `Select-Object -First 1` then sequence the rest [src: references/pairs.md#ts-single]
 - Pick the next item with `Get-Content queue.txt` after skipping claimed ones [src: references/pairs.md#ts-pick]
 - Run a small batch with `ForEach-Object` bounded and join it before the next batch [src: references/pairs.md#ts-batch]
+- Fan out parallel runs with `Select-Object -First 1` claiming one item per run and join before the next batch [src: references/pairs.md#ts-onefan]
+- Fire a land batch with `ForEach-Object` bounded to three and join it before the next batch [src: references/pairs.md#ts-landbatch]
+- Sequence an orchestrator fan-out with `Select-Object -First 1` claiming one item then the rest in order [src: references/pairs.md#ts-orchseq]
 
 ## Slice long work (no lost cancels)
 
