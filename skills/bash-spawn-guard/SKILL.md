@@ -1,7 +1,7 @@
 ---
 name: bash-spawn-guard
 description: Use when a long shell call, suites run, detached launch, or chained checks might hit Unknown ChildProcess.kill
-version: 1.1.0
+version: 1.2.0
 author: skillworks
 tags: [shell]
 license: MIT (skill text and scripts, original work)
@@ -41,6 +41,11 @@ The full bad and good runs are `references/pairs.md`, the machine list is `refer
 - Never double-poll a `Start-Process shim` with `Start-Sleep 3` use `bounded wait receipt` plus poll [src: references/pairs.md#bs-shim]
 - Never chain `detect checks redirects` piped to tail run `single check file timeout` alone [src: references/pairs.md#bs-detect]
 - Never run `npm run suites` bare run `one file timeout limit` from a file [src: references/pairs.md#bs-suites]
+- Never sleep-poll a `Start-Sleep 45 redeploy` with no receipt use `bounded wait receipt` plus poll [src: references/pairs.md#bs-redeploy]
+- Never run a full `cargo test heavy` in one call run `slice one chunk timeout` alone [src: references/pairs.md#bs-cargo]
+- Never double-run `node test full` piped with no slice run `single file timeout` alone [src: references/pairs.md#bs-nodetest]
+- Never chain `triple detect plus board` grep in one call run `single check file timeout` alone [src: references/pairs.md#bs-detect3]
+- Never chain `proof plus check` scans in one call run `single check timeout` alone [src: references/pairs.md#bs-proofchain]
 
 ## When a call is killed
 

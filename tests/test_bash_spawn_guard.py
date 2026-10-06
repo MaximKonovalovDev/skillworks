@@ -117,3 +117,30 @@ def test_three_dispatch_bad_cases_fail_bare_and_pass_bounded(results: dict) -> N
         assert "ChildProcess.kill" in bad_text, f"{pair_id}: bare run did not throw the kill line: {bad_text.strip()[:160]!r}"
         assert results[pair_id]["bad_ok"] is True, f"{pair_id}: bare side should fail with the named line"
         assert results[pair_id]["good_ok"] is True, f"{pair_id}: bounded side should print {bounded_report!r}"
+
+
+@live
+@needs_pwsh
+def test_new_five_pairs_fail_bare_and_pass_bounded(results: dict) -> None:
+    """Judge repair cure-r5: 3 bad cases from THIS packet's 5 new pairs (bs-redeploy,
+    bs-cargo, bs-nodetest), run once WITHOUT the skill (bare) and once WITH it (bounded).
+    Fails on v1.1.0 pairs.json (ids missing -> KeyError); passes on v1.2.0.
+
+    Pasted live outputs from scripts/run_spawn.py (pwsh 7, 2026-10-06):
+    - bs-redeploy WITHOUT: "RuntimeException: Unknown: ChildProcess.kill on Start-Sleep 45
+      plus redeploy lane poll with no receipt" (throws); WITH: "bounded wait receipt PASS redeployed".
+    - bs-cargo WITHOUT: "RuntimeException: Unknown: ChildProcess.kill on full cargo test
+      heavy build in one shell call" (throws); WITH: "slice one chunk timeout PASS built".
+    - bs-nodetest WITHOUT: "RuntimeException: Unknown: ChildProcess.kill on double node test
+      full run piped with no slice" (throws); WITH: "single file timeout PASS tested".
+    """
+    cases = {
+        "bs-redeploy": "bounded wait receipt PASS redeployed",
+        "bs-cargo": "slice one chunk timeout PASS built",
+        "bs-nodetest": "single file timeout PASS tested",
+    }
+    for pair_id, bounded_report in cases.items():
+        bad_text = results[pair_id]["bad_text"]
+        assert "ChildProcess.kill" in bad_text, f"{pair_id}: bare run did not throw the kill line: {bad_text.strip()[:160]!r}"
+        assert results[pair_id]["bad_ok"] is True, f"{pair_id}: bare side should fail with the named line"
+        assert results[pair_id]["good_ok"] is True, f"{pair_id}: bounded side should print {bounded_report!r}"

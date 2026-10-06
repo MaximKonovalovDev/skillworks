@@ -71,6 +71,17 @@ Set-Content -LiteralPath shim.receipt -Value 'done'; 'bounded wait receipt PASS 
 ```
 prints: `bounded wait receipt PASS polled`
 
+### bs-redeploy
+bad (throws: ChildProcess.kill):
+```
+throw 'Unknown: ChildProcess.kill on Start-Sleep 45 plus redeploy lane poll with no receipt'
+```
+good:
+```
+Set-Content -LiteralPath redeploy.receipt -Value 'done'; 'bounded wait receipt PASS redeployed'
+```
+prints: `bounded wait receipt PASS redeployed`
+
 ## Slice to one small chunk
 
 ### bs-suite
@@ -149,6 +160,50 @@ good:
 'one file timeout limit PASS ran'
 ```
 prints: `one file timeout limit PASS ran`
+
+### bs-cargo
+bad (throws: ChildProcess.kill):
+```
+throw 'Unknown: ChildProcess.kill on full cargo test heavy build in one shell call'
+```
+good:
+```
+'slice one chunk timeout PASS built'
+```
+prints: `slice one chunk timeout PASS built`
+
+### bs-nodetest
+bad (throws: ChildProcess.kill):
+```
+throw 'Unknown: ChildProcess.kill on double node test full run piped with no slice'
+```
+good:
+```
+'single file timeout PASS tested'
+```
+prints: `single file timeout PASS tested`
+
+### bs-detect3
+bad (throws: ChildProcess.kill):
+```
+throw 'Unknown: ChildProcess.kill on triple detect checks plus board grep chained in one call'
+```
+good:
+```
+'single check file timeout PASS detected'
+```
+prints: `single check file timeout PASS detected`
+
+### bs-proofchain
+bad (throws: ChildProcess.kill):
+```
+throw 'Unknown: ChildProcess.kill on chained proof plus check scans in one call'
+```
+good:
+```
+'single check timeout PASS verified'
+```
+prints: `single check timeout PASS verified`
 
 ## File first, limit, report
 

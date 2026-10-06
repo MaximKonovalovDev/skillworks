@@ -19,3 +19,8 @@ Each fragment below is a substring of the real `bad_text` of the named pair. The
 - `ChildProcess.kill`: Start-Process shim plus Start-Sleep 3 plus double poll. Pair `bs-shim`
 - `ChildProcess.kill`: chained detect checks with redirects piped tail. Pair `bs-detect`
 - `ChildProcess.kill`: npm run suites bare with no slice. Pair `bs-suites`
+- `ChildProcess.kill`: Start-Sleep 45 plus redeploy lane poll with no receipt. Pair `bs-redeploy`
+- `ChildProcess.kill`: full cargo test heavy build in one shell call. Pair `bs-cargo`
+- `ChildProcess.kill`: double node test full run piped with no slice. Pair `bs-nodetest`
+- `ChildProcess.kill`: triple detect checks plus board grep chained in one call. Pair `bs-detect3`
+- `ChildProcess.kill`: chained proof plus check scans in one call. Pair `bs-proofchain`
