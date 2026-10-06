@@ -1,30 +1,29 @@
-# skillworks handoff - round 205 (token 75b4)
+# skillworks handoff - round 206 (token 75b4)
 
-Round: 205 (BK-1004-3 cargo-book proven; proof-stale fixed same round)
-Written: 2026-10-06T04:05Z
-Token: 75b4 (held since 2026-10-05T23:35Z, refreshed 04:05Z)
+Round: 206 (installer: cargo-book global + bash-abort-guard reinstall)
+Written: 2026-10-06T04:20Z
+Token: 75b4 (held since 2026-10-05T23:35Z, refreshed 04:20Z)
 Knobs: width 5, foreground, heavy_max 3.
 
 ## Heading
-- R1 fed (cargo-book proven: manifests/features/profiles). No Scorecard percent moved.
+- Installer lane complete (9 of 9 proven skills global, all match source). No Scorecard percent moved yet.
 
 ## Rows done
-- 7588cf7 BK-1004-3 DONE judge PASS: live 12 passed, trial 1.0/0.0 lift 1.0, eval 10/10, bb2126cf Apache-2.0 live.
-- 670d4ef proof refresh: files kept changing after the 03:14Z proof (landing edits), gate caught it, re-proved 12 passed, test green.
-- Board BK-1004-3 DONE 7588cf7. Full pytest 579 passed 140 skipped green.
+- Installer DONE: cargo-book global copy exit 0 (trial 1.0/0.0); bash-abort-guard reinstalled, copy matches again. After-numbers: 0 fillable, 8 due rows wait. No repo commit.
+- 3 repairs refused eleventh time (ancestors). Doctor rests.
 
 ## Held, not committed
 - Keeper/batch/claims/loop-keeper/knobs/orders churn, ready reviews, date-only proof churn. Untouched.
 
 ## Checks
-- node sprint/check.mjs RESULT PASS 20/0/0 (round 204; delta since is skill + proof only, suite re-ran green).
+- node sprint/check.mjs RESULT PASS 20/0/0.
 
 ## S3/S5
 - S3: factory/store + Maxim waves (pack gate PASS stands).
-- S5: 8 skills global; 1 HALVED; 8 rows wait.
+- S5: 9 skills global; 1 HALVED; 8 rows wait.
 
 ## Blockers
 - BK-1004-1 BLOCKED source_only lift 0.25; K-54 OWNER; K-03 K-06 PARKED.
 
 ## Next
-- Cure version-bumps (DR-1004-5/6/7/8/9, DR-1005-1) or installer after-numbers when windows fill.
+- All install lanes done; installer rests until 36/48 h windows. Cure version-bumps or book next slice on keeper batch.
