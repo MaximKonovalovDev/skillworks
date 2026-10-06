@@ -1,29 +1,32 @@
-# skillworks handoff - round 206 (token 75b4)
+# skillworks handoff - round 207 (token e7a4)
 
-Round: 206 (installer: cargo-book global + bash-abort-guard reinstall)
-Written: 2026-10-06T04:20Z
-Token: 75b4 (held since 2026-10-05T23:35Z, refreshed 04:20Z)
+Round: 207 (takeover + 1 batch, halt stop)
+Written: 2026-10-06T03:50Z
+Token: e7a4 (held since 2026-10-06T03:39Z, takeover from 75b4 left by closed app)
 Knobs: width 5, foreground, heavy_max 3.
 
 ## Heading
-- Installer lane complete (9 of 9 proven skills global, all match source). No Scorecard percent moved yet.
+- Takeover done (75b4 -> e7a4). No Scorecard percent moved yet. Repairs await judge.
 
 ## Rows done
-- Installer DONE: cargo-book global copy exit 0 (trial 1.0/0.0); bash-abort-guard reinstalled, copy matches again. After-numbers: 0 fillable, 8 due rows wait. No repo commit.
-- 3 repairs refused eleventh time (ancestors). Doctor rests.
+- Repairs DONE unjudged, no commit: book bv-b03 run 3 answer 9, pytest 579 passed 140 skipped. cure steals landed 2f0f6e6, query met pipe-run 10->0. pack listing dates 2026-10-06, pack_check PASS 13/0/0.
+- Installer DONE: engine-builder global reinstall, copy matches, trial 1.0/0.4167 lift 0.5833. No repo commit.
+- Doctor BLOCKED working: scan 107 edit-stale top, loads 37 in 48h, only pwsh 3+ loads UP with DR-1005-1 open. No new row.
+- Inbox -> board: S84 -> O-003 READY R2, S85 -> O-004 READY R1.
 
 ## Held, not committed
-- Keeper/batch/claims/loop-keeper/knobs/orders churn, ready reviews, date-only proof churn. Untouched.
+- All repair diffs plus live-proof churn plus keeper queue churn. Judge reviews ready: review-2 x3 top next batch.
 
 ## Checks
 - node sprint/check.mjs RESULT PASS 20/0/0.
 
 ## S3/S5
-- S3: factory/store + Maxim waves (pack gate PASS stands).
-- S5: 9 skills global; 1 HALVED; 8 rows wait.
+- S3: pack gate PASS stands per repair proof.
+- S5: 8 adopted rows wait, age-gated.
 
 ## Blockers
+- sprint/halt restored from HEAD: paused by Maxim 2026-10-05T17:14Z, finish round, write handoff, stop.
 - BK-1004-1 BLOCKED source_only lift 0.25; K-54 OWNER; K-03 K-06 PARKED.
 
 ## Next
-- All install lanes done; installer rests until 36/48 h windows. Cure version-bumps or book next slice on keeper batch.
+- Resume removes halt. Next batch: 3 judge reviews (book/cure/pack review-2) then installer lanes.
