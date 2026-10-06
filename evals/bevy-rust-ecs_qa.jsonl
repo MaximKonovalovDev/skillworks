@@ -15,3 +15,8 @@
 {"q": "pinned tag commit Bevy version ?", "must": ["v0.19.1", "b56fc29d3016e641754765244b5ba3f9cc504671"]}
 {"q": "first Bevy build small PC heavy-build queue ?", "must": ["heavy-build queue", "small PC"]}
 {"q": "rapier3d bevy_rapier physics stays inside ?", "must": ["rapier3d", "bevy_rapier"]}
+{"q": "viewer crate build aborted queued wait heavy-build queue rule ?", "must": ["Never abort the queued wait", "heavy-build queue"]}
+{"q": "bare cargo command viewer crate queue every viewer build ?", "must": ["Never run a bare cargo command", "queue every viewer build"]}
+{"q": "first viewer build how long wait do other tasks meanwhile ?", "must": ["30 to 60 minutes", "do other tasks meanwhile"]}
+{"q": "viewer build flags locked pooled target dir sccache incremental ?", "must": ["--locked", "pooled", "--target-dir"]}
+{"q": "queued viewer check first long test empty output re-queue ?", "must": ["then the long test", "re-queue a run that ends with empty output"]}
