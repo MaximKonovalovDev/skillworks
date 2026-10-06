@@ -1,0 +1,10 @@
+{"must": ["retry", "backoff", "narrow"], "q": "how is a busy websearch backend retried?"}
+{"must": ["once", "retry", "backoff"], "q": "how many retries follow a backend busy status?"}
+{"must": ["narrow", "fewer", "scope"], "q": "what changes on the retry query?"}
+{"must": ["single", "chain", "fallback"], "q": "how are chained searches replaced?"}
+{"must": ["guard", "result", "shape"], "q": "what is checked before the result is read?"}
+{"must": ["change", "shape", "repeat"], "q": "what replaces the identical failing call?"}
+{"must": ["bound", "wait", "single"], "q": "what bound does every search carry?"}
+{"must": ["fallback", "retry", "path"], "q": "what follows the one retry when it misses?"}
+{"must": ["RESULT", "retry", "shape"], "q": "what does a finished search report?"}
+{"must": ["backoff", "once", "PASS"], "q": "what does a good retry print?"}

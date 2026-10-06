@@ -1,0 +1,12 @@
+{
+  "skill": "websearch-retry",
+  "runs": 12,
+  "with_rate": 1.0,
+  "without_rate": 0.0,
+  "lift": 1.0,
+  "spread": 1.0,
+  "fingerprint": "f3933a1241ba91a509ef9ab79d4ebb48cbb49e899d4c739a2c132f0ad99b0f06",
+  "sheet": "evals/websearch-retry_trials.jsonl",
+  "at": "2026-10-06T20:17Z",
+  "ok": true
+}
