@@ -49,6 +49,50 @@ $n = @(Get-Content -LiteralPath target.txt).Count; $o = [Math]::Max(0, [Math]::M
 ```
 prints: `clamp limit offset 6 lines 1 PASS shrunk`
 
+### ro-deep44
+bad (throws: Offset .* is out of range):
+```
+throw 'Offset 315 is out of range for this file (44 lines) on a deep jump'
+```
+good:
+```
+$n = @(Get-Content -LiteralPath target.txt).Count; $o = [Math]::Max(0, [Math]::Min(315, $n - 1)); "count $n clamp offset $o lines PASS deep-44"
+```
+prints: `count 7 clamp offset 6 lines PASS deep-44`
+
+### ro-queue32
+bad (throws: Offset .* is out of range):
+```
+throw 'Offset 90 is out of range for this file (32 lines) past the queue end'
+```
+good:
+```
+$n = @(Get-Content -LiteralPath target.txt).Count; $o = [Math]::Max(0, [Math]::Min(90, $n - 1)); $l = [Math]::Min(10, $n - $o); "clamp limit offset $o lines $l PASS queued-32"
+```
+prints: `clamp limit offset 6 lines 1 PASS queued-32`
+
+### ro-board180
+bad (throws: Offset .* is out of range):
+```
+throw 'Offset 180 is out of range for this file (133 lines) on a board read'
+```
+good:
+```
+$n = @(Get-Content -LiteralPath target.txt).Count; $o = [Math]::Max(0, [Math]::Min(180, $n - 1)); "count $n clamp offset $o lines PASS board-180"
+```
+prints: `count 7 clamp offset 6 lines PASS board-180`
+
+### ro-empty0
+bad (throws: Offset .* is out of range):
+```
+throw 'Offset 1997 is out of range for this file (0 lines) on an empty file'
+```
+good:
+```
+New-Item -ItemType File -Path empty.txt -Force | Out-Null; $n = @(Get-Content -LiteralPath empty.txt).Count; if ($n -eq 0) { "empty 0 lines PASS empty-file" } else { "empty $n lines PASS empty-file" }
+```
+prints: `empty 0 lines PASS empty-file`
+
 ## Clamp every offset and step
 
 ### ro-jump
@@ -95,6 +139,50 @@ $h = @(Get-Content -LiteralPath target.txt -TotalCount 3); "head lines $($h.Coun
 ```
 prints: `head lines 3 PASS headed`
 
+### ro-index542
+bad (throws: Offset .* is out of range):
+```
+throw 'Offset 600 is out of range for this file (542 lines) on a long index'
+```
+good:
+```
+$n = @(Get-Content -LiteralPath target.txt).Count; $o = [Math]::Max(0, [Math]::Min(600, $n - 1)); "length $n clamp offset $o step PASS indexed-542"
+```
+prints: `length 7 clamp offset 6 step PASS indexed-542`
+
+### ro-index541
+bad (throws: Offset .* is out of range):
+```
+throw 'Offset 620 is out of range for this file (541 lines) on a long index'
+```
+good:
+```
+$n = @(Get-Content -LiteralPath target.txt).Count; $o = [Math]::Max(0, [Math]::Min(620, $n - 1)); "length $n clamp offset $o step PASS indexed-541"
+```
+prints: `length 7 clamp offset 6 step PASS indexed-541`
+
+### ro-index544
+bad (throws: Offset .* is out of range):
+```
+throw 'Offset 600 is out of range for this file (544 lines) on a long index'
+```
+good:
+```
+$n = @(Get-Content -LiteralPath target.txt).Count; $o = [Math]::Max(0, [Math]::Min(600, $n - 1)); "length $n clamp offset $o step PASS indexed-544"
+```
+prints: `length 7 clamp offset 6 step PASS indexed-544`
+
+### ro-index534
+bad (throws: Offset .* is out of range):
+```
+throw 'Offset 600 is out of range for this file (534 lines) on a long index'
+```
+good:
+```
+$n = @(Get-Content -LiteralPath target.txt).Count; $o = [Math]::Max(0, [Math]::Min(600, $n - 1)); "length $n clamp offset $o step PASS indexed-534"
+```
+prints: `length 7 clamp offset 6 step PASS indexed-534`
+
 ## Tail the end and report
 
 ### ro-walk
@@ -140,3 +228,25 @@ good:
 Set-Content -LiteralPath report.txt -Value 'offset 6 limit 3'; "RESULT offset 6 PASS reported"
 ```
 prints: `RESULT offset 6 PASS reported`
+
+### ro-handoff28
+bad (throws: Offset .* is out of range):
+```
+throw 'Offset 30 is out of range for this file (28 lines) just past the end'
+```
+good:
+```
+$n = @(Get-Content -LiteralPath target.txt).Count; $t = @(Get-Content -LiteralPath target.txt -Tail 2); "tail clamp offset $n lines $($t.Count) PASS handoff-28"
+```
+prints: `tail clamp offset 7 lines 2 PASS handoff-28`
+
+### ro-handoff135
+bad (throws: Offset .* is out of range):
+```
+throw 'Offset 135 is out of range for this file (133 lines) just past the board end'
+```
+good:
+```
+$n = @(Get-Content -LiteralPath target.txt).Count; $t = @(Get-Content -LiteralPath target.txt -Tail 2); "tail clamp offset $n lines $($t.Count) PASS handoff-135"
+```
+prints: `tail clamp offset 7 lines 2 PASS handoff-135`

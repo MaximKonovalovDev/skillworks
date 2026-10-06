@@ -1,10 +1,10 @@
-# Sources and licences (verified 2026-10-05)
+# Sources and licences (verified 2026-10-06)
 
 The skill text and every pair are written fresh. Nothing is copied from another repository.
 
 - Origin: https://github.com/MaximKonovalovDev/skillworks (this repository, `skills/read-offset-guard/`).
-- Licence: MIT. Verified 2026-10-05: the repository `LICENSE` file is the MIT licence, copyright Maxim Konovalov.
-- Failure class: the doctor lane's 48 h failure scan (`python tools/fleet_failures.py scan`), class `read-offset` in `skills/read-offset-guard/references/target-class.json` (18 Offset out of range read errors in 48 h across 5 repos, row DR-1005-8, scanned 2026-10-05T14:35Z; replayed live 2026-10-05: `Offset 100 is out of range for this file (1 lines)` on a 1-line file at offset 100). Own MIT corpus, read live 2026-10-05.
+- Licence: MIT. Verified 2026-10-06: the repository `LICENSE` file is the MIT licence, copyright Maxim Konovalov.
+- Failure class: the doctor lane's 48 h failure scan (`python tools/fleet_failures.py scan`), class `read-offset` in `skills/read-offset-guard/references/target-class.json` (33 Offset out of range read errors in 48 h, row DR-1006-5, scanned 2026-10-06T17:17Z; replayed live 2026-10-06: `Offset 60 is out of range for this file (3 lines)` on a 3-line scratch file at offset 60). Own MIT corpus, read live 2026-10-06. Version bump 1.1.0 adds 5 pairs from the newest failures (315/44, 90/32, 600/542, 620/541, 30/28); version bump 1.2.0 adds 5 pairs from the newest failures (180/133, 600/544, 1997/0 empty, 135/133, 600/534); no pair that passes was deleted.
 - Licensed manual for the receipts: the two own MIT notes passed to `python -m book2skill make --in <folder> --name read-offset-guard` (count-first-clamp plus tail-and-recount, own words, read live 2026-10-05; receipt `work/read-offset-guard/make.json`). The ranger pager (ranger/ranger, GPL-3.0) informed the clamp idea only; no donor code or text copied.
 - Measured on this PC, not taken from a page: the pair results (`pairs.json`, pwsh 7), each bad side throwing the real Offset out of range line of `target-class.json`.
 - Every statement in `SKILL.md` is run against the real pairs by `tests/test_read_offset_guard.py`.
