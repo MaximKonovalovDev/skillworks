@@ -1,0 +1,10 @@
+{"must": ["queue", "unclaimed", "first"], "q": "what comes first before any dispatch?"}
+{"must": ["evidence", "changed", "verify"], "q": "what is verified before any batch?"}
+{"must": ["eligible", "seat", "once"], "q": "when does a standing seat dispatch?"}
+{"must": ["single", "listing", "stop"], "q": "how many listings run after a hold?"}
+{"must": ["fallback", "changed", "list"], "q": "what follows when no unclaimed work exists?"}
+{"must": ["RESULT", "report", "listing"], "q": "how does a finished keeper run close?"}
+{"must": ["Keeper readiness hold", "queue"], "q": "what error names an empty dispatch?"}
+{"must": ["pairs.md", "pairs.json", "run_keeper.py"], "q": "where are the tested keeper runs?"}
+{"must": ["target-class.json"], "q": "where is the keeper failure class recorded?"}
+{"must": ["errors.md"], "q": "what names the cause of a keeper hold?"}

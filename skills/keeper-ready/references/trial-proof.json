@@ -1,0 +1,12 @@
+{
+  "skill": "keeper-ready",
+  "runs": 12,
+  "with_rate": 1.0,
+  "without_rate": 0.0,
+  "lift": 1.0,
+  "spread": 1.0,
+  "fingerprint": "272887018a4f59a56831bcfa8aba43040c0f24b9104b1df48253aef10b74a4bc",
+  "sheet": "evals/keeper-ready_trials.jsonl",
+  "at": "2026-10-06T21:26Z",
+  "ok": true
+}
