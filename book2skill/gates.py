@@ -64,6 +64,9 @@ FLEET_SKILLS = {
     "websearch-retry": [],
     "repomap-guard": [],
     "edit-identical": [],
+    "keeper-ready": [],
+    "read-abort-guard": [],
+    "edit-abort-guard": [],
 }
 # Installed in forge, whose `node scripts/check.mjs` bans some English words.
 FORGE_SAFE = {"pwsh-for-bash-writers", "git-one-branch", "cron-skip-clean", "pipe-run", "inbox-file-reader"}
