@@ -1,0 +1,763 @@
+{
+  "about": "Every pair runs with real cargo 1.97.1 in its own fresh scratch directory (see scripts/cargo_book.py). good prints the output shown; bad fails with the real cargo error named. All fixtures are dependency-free and run with CARGO_NET_OFFLINE=1.",
+  "pairs": [
+    {
+      "bad": {
+        "fixture": {
+          "empty/.keep": ""
+        },
+        "steps": [
+          {
+            "argv": [
+              "cargo",
+              "run"
+            ],
+            "cwd": "empty",
+            "expect": [
+              "could not find",
+              "Cargo.toml"
+            ],
+            "expect_exit": 101
+          }
+        ]
+      },
+      "good": {
+        "steps": [
+          {
+            "argv": [
+              "cargo",
+              "new",
+              "hello_world"
+            ],
+            "expect": [
+              "Creating binary"
+            ],
+            "expect_exit": 0
+          },
+          {
+            "argv": [
+              "cargo",
+              "run"
+            ],
+            "cwd": "hello_world",
+            "expect": [
+              "Hello, world!",
+              "Finished"
+            ],
+            "expect_exit": 0
+          }
+        ]
+      },
+      "group": "start",
+      "id": "cb-p01",
+      "title": "new binary package and first run"
+    },
+    {
+      "bad": {
+        "steps": [
+          {
+            "argv": [
+              "cargo",
+              "new",
+              "hello_world"
+            ],
+            "expect": [
+              "Creating binary"
+            ],
+            "expect_exit": 0
+          },
+          {
+            "argv": [
+              "cargo",
+              "build"
+            ],
+            "cwd": "hello_world",
+            "expect": [
+              "Finished"
+            ],
+            "expect_exit": 0
+          },
+          {
+            "argv": [
+              "cargo",
+              "update",
+              "nosuch"
+            ],
+            "cwd": "hello_world",
+            "expect": [
+              "did not match any packages"
+            ],
+            "expect_exit": 101
+          }
+        ]
+      },
+      "good": {
+        "steps": [
+          {
+            "argv": [
+              "cargo",
+              "new",
+              "hello_world"
+            ],
+            "expect": [
+              "Creating binary"
+            ],
+            "expect_exit": 0
+          },
+          {
+            "argv": [
+              "cargo",
+              "build"
+            ],
+            "cwd": "hello_world",
+            "expect": [
+              "Compiling hello_world",
+              "Finished"
+            ],
+            "expect_exit": 0
+          },
+          {
+            "assert_contains": {
+              "file": "hello_world/Cargo.lock",
+              "fragments": [
+                "name = \"hello_world\"",
+                "version = \"0.1.0\""
+              ]
+            }
+          },
+          {
+            "argv": [
+              "cargo",
+              "update"
+            ],
+            "cwd": "hello_world",
+            "expect": [
+              "Locking 0 packages"
+            ],
+            "expect_exit": 0
+          }
+        ]
+      },
+      "group": "start",
+      "id": "cb-p02",
+      "title": "lockfile pins the exact revision"
+    },
+    {
+      "bad": {
+        "steps": [
+          {
+            "argv": [
+              "cargo",
+              "new",
+              "--lib",
+              "mylib"
+            ],
+            "expect": [
+              "Creating library"
+            ],
+            "expect_exit": 0
+          },
+          {
+            "write": {
+              "mylib/src/lib.rs": "fn add(a: i32, b: i32) -> i32 { a + b }\n#[cfg(test)]\nmod tests {\n    use super::*;\n    #[test]\n    fn test_add() {\n        assert_eq!(add(2, 2), 5);\n    }\n}\n"
+            }
+          },
+          {
+            "argv": [
+              "cargo",
+              "test"
+            ],
+            "cwd": "mylib",
+            "expect": [
+              "FAILED",
+              "0 passed; 1 failed"
+            ],
+            "expect_exit": 101
+          }
+        ]
+      },
+      "good": {
+        "steps": [
+          {
+            "argv": [
+              "cargo",
+              "new",
+              "--lib",
+              "mylib"
+            ],
+            "expect": [
+              "Creating library"
+            ],
+            "expect_exit": 0
+          },
+          {
+            "write": {
+              "mylib/src/lib.rs": "fn add(a: i32, b: i32) -> i32 { a + b }\n#[cfg(test)]\nmod tests {\n    use super::*;\n    #[test]\n    fn test_add() {\n        assert_eq!(add(2, 2), 4);\n    }\n}\n"
+            }
+          },
+          {
+            "argv": [
+              "cargo",
+              "test"
+            ],
+            "cwd": "mylib",
+            "expect": [
+              "1 passed"
+            ],
+            "expect_exit": 0
+          }
+        ]
+      },
+      "group": "fix",
+      "id": "cb-p03",
+      "title": "failing assert then the one-line fix"
+    },
+    {
+      "bad": {
+        "steps": [
+          {
+            "argv": [
+              "cargo",
+              "new",
+              "hello_world"
+            ],
+            "expect": [
+              "Creating binary"
+            ],
+            "expect_exit": 0
+          },
+          {
+            "argv": [
+              "cargo",
+              "build",
+              "--profile",
+              "nosuch"
+            ],
+            "cwd": "hello_world",
+            "expect": [
+              "not defined"
+            ],
+            "expect_exit": 101
+          }
+        ]
+      },
+      "good": {
+        "steps": [
+          {
+            "argv": [
+              "cargo",
+              "new",
+              "hello_world"
+            ],
+            "expect": [
+              "Creating binary"
+            ],
+            "expect_exit": 0
+          },
+          {
+            "argv": [
+              "cargo",
+              "build",
+              "--release"
+            ],
+            "cwd": "hello_world",
+            "expect": [
+              "release",
+              "optimized"
+            ],
+            "expect_exit": 0
+          },
+          {
+            "assert_exists": [
+              "hello_world/target/release/hello_world.exe"
+            ]
+          }
+        ]
+      },
+      "group": "profile",
+      "id": "cb-p04",
+      "title": "release profile and its artifact directory"
+    },
+    {
+      "bad": {
+        "fixture": {
+          "Cargo.toml": "[workspace]\nmembers = [\"ghost\"]\nresolver = \"2\"\n"
+        },
+        "steps": [
+          {
+            "argv": [
+              "cargo",
+              "build",
+              "--workspace"
+            ],
+            "expect": [
+              "failed to read",
+              "ghost"
+            ],
+            "expect_exit": 101
+          }
+        ]
+      },
+      "good": {
+        "fixture": {
+          "Cargo.toml": "[workspace]\nmembers = [\"a\", \"b\"]\nresolver = \"2\"\n"
+        },
+        "steps": [
+          {
+            "write": {
+              "a/Cargo.toml": "[package]\nname = \"a\"\nversion = \"0.1.0\"\nedition = \"2024\"\n\n[dependencies]\n",
+              "a/src/main.rs": "fn main() {\n    println!(\"a\");\n}\n",
+              "b/Cargo.toml": "[package]\nname = \"b\"\nversion = \"0.1.0\"\nedition = \"2024\"\n\n[dependencies]\n",
+              "b/src/main.rs": "fn main() {\n    println!(\"b\");\n}\n"
+            }
+          },
+          {
+            "argv": [
+              "cargo",
+              "build",
+              "--workspace"
+            ],
+            "expect": [
+              "Compiling a",
+              "Compiling b",
+              "Finished"
+            ],
+            "expect_exit": 0
+          },
+          {
+            "assert_exists": [
+              "Cargo.lock"
+            ]
+          }
+        ]
+      },
+      "group": "workspace",
+      "id": "cb-p05",
+      "title": "virtual workspace builds every member"
+    },
+    {
+      "bad": {
+        "steps": [
+          {
+            "argv": [
+              "cargo",
+              "new",
+              "feat"
+            ],
+            "expect": [
+              "Creating binary"
+            ],
+            "expect_exit": 0
+          },
+          {
+            "write": {
+              "feat/Cargo.toml": "[package]\nname = \"feat\"\nversion = \"0.1.0\"\nedition = \"2024\"\n\n[features]\nextra = []\n",
+              "feat/src/main.rs": "fn main() {\n    #[cfg(feature = \"extra\")]\n    println!(\"extra on\");\n    #[cfg(not(feature = \"extra\"))]\n    println!(\"basic\");\n}\n"
+            }
+          },
+          {
+            "argv": [
+              "cargo",
+              "run",
+              "-q",
+              "--features",
+              "nosuch"
+            ],
+            "cwd": "feat",
+            "expect": [
+              "does not contain this feature"
+            ],
+            "expect_exit": 101
+          }
+        ]
+      },
+      "good": {
+        "steps": [
+          {
+            "argv": [
+              "cargo",
+              "new",
+              "feat"
+            ],
+            "expect": [
+              "Creating binary"
+            ],
+            "expect_exit": 0
+          },
+          {
+            "write": {
+              "feat/Cargo.toml": "[package]\nname = \"feat\"\nversion = \"0.1.0\"\nedition = \"2024\"\n\n[features]\nextra = []\n",
+              "feat/src/main.rs": "fn main() {\n    #[cfg(feature = \"extra\")]\n    println!(\"extra on\");\n    #[cfg(not(feature = \"extra\"))]\n    println!(\"basic\");\n}\n"
+            }
+          },
+          {
+            "argv": [
+              "cargo",
+              "run",
+              "-q"
+            ],
+            "cwd": "feat",
+            "expect": [
+              "basic"
+            ],
+            "expect_exit": 0
+          },
+          {
+            "argv": [
+              "cargo",
+              "run",
+              "-q",
+              "--features",
+              "extra"
+            ],
+            "cwd": "feat",
+            "expect": [
+              "extra on"
+            ],
+            "expect_exit": 0
+          }
+        ]
+      },
+      "group": "feature",
+      "id": "cb-p06",
+      "title": "plain run versus the feature flag"
+    },
+    {
+      "bad": {
+        "steps": [
+          {
+            "argv": [
+              "cargo",
+              "new",
+              "nobin"
+            ],
+            "expect": [
+              "Creating binary"
+            ],
+            "expect_exit": 0
+          },
+          {
+            "write": {
+              "nobin/Cargo.toml": "[package]\nname = \"nobin\"\nversion = \"0.1.0\"\nedition = \"2024\"\nautobins = false\n\n[dependencies]\n"
+            }
+          },
+          {
+            "argv": [
+              "cargo",
+              "build"
+            ],
+            "cwd": "nobin",
+            "expect": [
+              "no targets specified in the manifest"
+            ],
+            "expect_exit": 101
+          }
+        ]
+      },
+      "good": {
+        "steps": [
+          {
+            "argv": [
+              "cargo",
+              "new",
+              "hello_world"
+            ],
+            "expect": [
+              "Creating binary"
+            ],
+            "expect_exit": 0
+          },
+          {
+            "argv": [
+              "cargo",
+              "build"
+            ],
+            "cwd": "hello_world",
+            "expect": [
+              "Compiling hello_world",
+              "Finished"
+            ],
+            "expect_exit": 0
+          }
+        ]
+      },
+      "group": "target",
+      "id": "cb-p07",
+      "title": "auto-discovery finds src/main.rs"
+    },
+    {
+      "bad": {
+        "steps": [
+          {
+            "argv": [
+              "cargo",
+              "new",
+              "cfgdemo"
+            ],
+            "expect": [
+              "Creating binary"
+            ],
+            "expect_exit": 0
+          },
+          {
+            "argv": [
+              "cargo",
+              "build",
+              "--config",
+              "this is not toml ==="
+            ],
+            "cwd": "cfgdemo",
+            "expect": [
+              "key with no value"
+            ],
+            "expect_exit": 101
+          }
+        ]
+      },
+      "good": {
+        "steps": [
+          {
+            "argv": [
+              "cargo",
+              "new",
+              "cfgdemo"
+            ],
+            "expect": [
+              "Creating binary"
+            ],
+            "expect_exit": 0
+          },
+          {
+            "write": {
+              ".keep": "",
+              "cfgdemo/.cargo/config.toml": "[build]\ntarget-dir = \"tdir-custom\"\n"
+            }
+          },
+          {
+            "argv": [
+              "cargo",
+              "build"
+            ],
+            "cwd": "cfgdemo",
+            "expect": [
+              "Finished"
+            ],
+            "expect_exit": 0
+          },
+          {
+            "assert_absent": [
+              "cfgdemo/target"
+            ]
+          },
+          {
+            "assert_exists": [
+              "cfgdemo/tdir-custom/debug/cfgdemo.exe"
+            ]
+          }
+        ]
+      },
+      "group": "config",
+      "id": "cb-p08",
+      "title": "project config redirects the target directory"
+    },
+    {
+      "bad": {
+        "steps": [
+          {
+            "argv": [
+              "cargo",
+              "new",
+              "hello_world"
+            ],
+            "expect": [
+              "Creating binary"
+            ],
+            "expect_exit": 0
+          },
+          {
+            "absent": [
+              "unoptimized + debuginfo"
+            ],
+            "argv": [
+              "cargo",
+              "build",
+              "--release"
+            ],
+            "cwd": "hello_world",
+            "expect": [
+              "optimized"
+            ],
+            "expect_exit": 0
+          }
+        ]
+      },
+      "good": {
+        "steps": [
+          {
+            "argv": [
+              "cargo",
+              "new",
+              "hello_world"
+            ],
+            "expect": [
+              "Creating binary"
+            ],
+            "expect_exit": 0
+          },
+          {
+            "argv": [
+              "cargo",
+              "build"
+            ],
+            "cwd": "hello_world",
+            "expect": [
+              "Finished `dev` profile [unoptimized + debuginfo]"
+            ],
+            "expect_exit": 0
+          }
+        ]
+      },
+      "group": "profile",
+      "id": "cb-p09",
+      "title": "plain build uses the dev profile"
+    },
+    {
+      "bad": {
+        "fixture": {
+          "empty/.keep": ""
+        },
+        "steps": [
+          {
+            "argv": [
+              "cargo",
+              "build"
+            ],
+            "cwd": "empty",
+            "expect": [
+              "could not find",
+              "Cargo.toml"
+            ],
+            "expect_exit": 101
+          }
+        ]
+      },
+      "good": {
+        "steps": [
+          {
+            "argv": [
+              "cargo",
+              "new",
+              "hello_world"
+            ],
+            "expect": [
+              "Creating binary"
+            ],
+            "expect_exit": 0
+          },
+          {
+            "assert_contains": {
+              "file": "hello_world/Cargo.toml",
+              "fragments": [
+                "[package]",
+                "name = \"hello_world\""
+              ]
+            }
+          },
+          {
+            "argv": [
+              "cargo",
+              "build"
+            ],
+            "cwd": "hello_world",
+            "expect": [
+              "Finished"
+            ],
+            "expect_exit": 0
+          }
+        ]
+      },
+      "group": "start",
+      "id": "cb-p10",
+      "title": "manifest identity and the missing-manifest error"
+    },
+    {
+      "good": {
+        "fixture": {
+          "Cargo.toml": "[workspace]\nmembers = [\"app\", \"helper\", \"shared\"]\nresolver = \"2\"\n",
+          "app/Cargo.toml": "[package]\nname = \"app\"\nversion = \"0.1.0\"\nedition = \"2024\"\n\n[dependencies]\nshared = { path = \"../shared\", features = [\"alpha\"] }\n",
+          "app/src/main.rs": "fn main() {\n    println!(\"{}\", shared::who());\n}\n",
+          "helper/Cargo.toml": "[package]\nname = \"helper\"\nversion = \"0.1.0\"\nedition = \"2024\"\n\n[dependencies]\nshared = { path = \"../shared\", features = [\"beta\"] }\n",
+          "helper/src/main.rs": "fn main() {\n    println!(\"{}\", shared::who());\n}\n",
+          "shared/Cargo.toml": "[package]\nname = \"shared\"\nversion = \"0.1.0\"\nedition = \"2024\"\n\n[dependencies]\n\n[features]\nalpha = []\nbeta = []\n",
+          "shared/src/lib.rs": "#[cfg(feature = \"alpha\")]\npub fn who() -> &'static str {\n    \"alpha\"\n}\n#[cfg(all(feature = \"beta\", not(feature = \"alpha\")))]\npub fn who() -> &'static str {\n    \"beta\"\n}\n#[cfg(not(any(feature = \"alpha\", feature = \"beta\")))]\npub fn who() -> &'static str {\n    \"plain\"\n}\n"
+        },
+        "steps": [
+          {
+            "argv": [
+              "cargo",
+              "build",
+              "--workspace"
+            ],
+            "count": {
+              "fragment": "Compiling shared",
+              "times": 1
+            },
+            "expect": [
+              "Compiling app",
+              "Compiling helper",
+              "Compiling shared",
+              "Finished"
+            ],
+            "expect_exit": 0
+          },
+          {
+            "assert_exists": [
+              "Cargo.lock"
+            ]
+          }
+        ]
+      },
+      "group": "feature",
+      "id": "cb-p11",
+      "title": "feature union builds the shared crate once"
+    },
+    {
+      "good": {
+        "fixture": {
+          "Cargo.toml": "[workspace]\nmembers = [\"m\"]\nresolver = \"2\"\n",
+          ".cargo/config.toml": "[build]\ntarget-dir = \"tdir-root\"\n",
+          "m/Cargo.toml": "[package]\nname = \"m\"\nversion = \"0.1.0\"\nedition = \"2024\"\n\n[dependencies]\n",
+          "m/src/main.rs": "fn main() {\n    println!(\"m\");\n}\n",
+          "m/.cargo/config.toml": "[build]\ntarget-dir = \"tdir-member\"\n"
+        },
+        "steps": [
+          {
+            "argv": [
+              "cargo",
+              "build",
+              "--workspace"
+            ],
+            "expect": [
+              "Compiling m",
+              "Finished"
+            ],
+            "expect_exit": 0
+          },
+          {
+            "assert_absent": [
+              "tdir-member"
+            ]
+          },
+          {
+            "assert_exists": [
+              "tdir-root/debug/m.exe"
+            ]
+          }
+        ]
+      },
+      "group": "workspace",
+      "id": "cb-p12",
+      "title": "member config files are not read"
+    }
+  ]
+}

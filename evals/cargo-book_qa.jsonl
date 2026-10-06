@@ -1,0 +1,10 @@
+{"must": ["Cargo.toml", "Cargo.lock"], "q": "When does an agent need the cargo-book skill for a Rust build?"}
+{"must": ["cargo update", "Cargo.lock"], "q": "What pins exact revisions, and which commands opt into newer libraries?"}
+{"must": ["union", "additive", "--features extra"], "q": "How do requested features combine on a shared crate, what rule must they obey, and which flag selects one?"}
+{"must": ["opt-level = 0", "opt-level = 3"], "q": "What are the dev and release defaults for optimization level?"}
+{"must": ["[workspace]", "members", "resolver"], "q": "What makes a manifest virtual, and how are members and the resolver declared?"}
+{"must": [".cargo/config.toml", "lowest priority"], "q": "Which config files does Cargo read outward from the build directory, and which wins?"}
+{"must": ["autobins", "src/main.rs"], "q": "Which manifest keys switch off target auto-discovery, and what layout needs no declaration?"}
+{"must": ["FAILED", "0 passed; 1 failed"], "q": "What does a failing unit test print, and what is the exit code?"}
+{"must": ["target/release/", "optimized"], "q": "Where does the release artifact land, and what does its Finished line say?"}
+{"must": ["cargo run", "Hello, world!"], "q": "Which command builds and runs the binary, and what does it print?"}
