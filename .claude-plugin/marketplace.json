@@ -1,0 +1,18 @@
+{
+  "name": "skillworks-free-vol0",
+  "owner": {
+    "name": "MaximKonovalovDev",
+    "url": "https://github.com/MaximKonovalovDev/skillworks"
+  },
+  "licence": "CC-BY-NC-SA-3.0",
+  "proof": "https://github.com/MaximKonovalovDev/skillworks/blob/main/skills/git-one-branch/references/live-proof.json",
+  "skills": [
+    {
+      "name": "git-one-branch",
+      "version": "0.1.0",
+      "licence": "CC-BY-NC-SA-3.0",
+      "source": "./skills/git-one-branch",
+      "proof": "skills/git-one-branch/references/live-proof.json"
+    }
+  ]
+}
