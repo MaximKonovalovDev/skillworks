@@ -1,33 +1,33 @@
-# skillworks handoff - round 210 (token 4ed1)
+# skillworks handoff - round 211 (token 4ed1)
 
-Round: 210 (3rd batch collected)
-Written: 2026-10-06T10:30Z
+Round: 211 (4th batch collected, triple PASS landed)
+Written: 2026-10-06T10:55Z
 Token: 4ed1 (held since 2026-10-06T09:15Z)
 Knobs: width 5, foreground, heavy_max 3.
 
 ## Heading
-- No Scorecard percent moved yet. Two skills built this round, both await judge.
+- R1 book-to-skill moves: 2 new proven skills landed. Pack gate holds PASS.
 
 ## Rows done
-- Pack repair DONE: 15-min buyer check live in listing, pack_check PASS. Awaits review.
-- Doctor DONE DR-1006-2: task-cancelled 42 a day, red test sheet PASS. Committed a292466.
-- Cure DONE: fetch-github-first proven 20 to 21, live 6 passed, trial lift 1.0. Awaits review.
-- Book DONE: pwsh-docs distilled, grade lift 1.0. Awaits review. Scout NOOP licences match.
-- Inbox S28 rowed DSP-1006-1 second dispatcher, owner planner.
+- Book judge PASS: BK-1006-1 pwsh-docs DONE 11b7858, distill ok, grade lift 1.0.
+- Cure judge PASS: DR-1006-1 fetch-github-first DONE 2f6f3c0, live 6, lint PASS, lift 1.0.
+- Pack repair judge PASS: buyer check live, gate PASS. Files held for r2 serialization.
+- Planner NOOP. Pack r2 DONE gate PASS, awaits review.
+- Board: BK-1006-1 DONE 11b7858, DR-1006-1 DONE 2f6f3c0 committed 168c9f6.
 
 ## Held, not committed
-- fetch-github-first plus pwsh-docs trees plus pack listing plus keeper churn. No secret, no export dirs.
+- Shared credit lines THIRD plus p3 plus listing plus p5 held: unjudged r2 touched same files.
+- Scaffold leftovers in fetch tree: one-off 030 queued, not shipped.
 
 ## Checks
 - node sprint/check.mjs RESULT PASS 20/0/0.
-- skill_trial sheet task-scope 12 RESULT PASS, pwsh-docs 12 PASS, fetch-github-first 12 PASS.
+- live_proof fetch-github-first proven 6 passed, distill pwsh-docs ok:true.
 
 ## S3/S5
-- S3: pack gate PASS stands.
-- Round line PAPERWORK: proven moved 21 to 23 via fleet landings, loads 41 to 42.
+- S3: pack gate PASS stands. S5: 9 classes met stands.
 
 ## Blockers
 - K-54 OWNER verdict pending. BK-1004-1 BLOCKED source_only lift 0.25. K-03 K-06 PARKED.
 
 ## Next
-- Next batch sent same turn: 3 judge reviews plus planner plus pack maker.
+- Await keeper GO: pack r2 review, cure DR-1006-2, book follow-ups, installer stranger runs.
