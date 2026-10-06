@@ -14,3 +14,8 @@ Each fragment below is a substring of the real `bad_text` of the named pair. The
 - `prevents you from using this specific tool call`: guessed repo read from the shell. Pair `ba-sha`
 - `prevents you from using this specific tool call`: test run chained to formatting. Pair `ba-log`
 - `prevents you from using this specific tool call`: long run with no result reported. Pair `ba-report`
+- `powershell -NoProfile`: nested shell chained to listing and formatting. Pair `ba-nested`
+- `blocked path`: edit itself denied, stop and paste the patch. Pair `ba-blocked`
+- `Start-Sleep`: sleep-prefixed health poll piped to convert. Pair `ba-sleep`
+- `node -e`: inline code chained to echo and formatting. Pair `ba-inline`
+- `tools/lanes.mjs`: helper piped to formatting. Pair `ba-lanes`

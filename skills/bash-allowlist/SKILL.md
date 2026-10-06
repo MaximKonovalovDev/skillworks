@@ -1,7 +1,7 @@
 ---
 name: bash-allowlist
 description: Use when a bash shell call comes back prevents you from using this specific tool call after a pipe or shell git reach
-version: 1.0.0
+version: 1.1.0
 author: skillworks
 tags: [shell]
 license: MIT (skill text and scripts, original work)
@@ -33,6 +33,14 @@ The full bad and good runs are `references/pairs.md`, the machine list is `refer
 - Check the repo first with `gh api repos` pinned ref and report the sha [src: references/pairs.md#ba-sha]
 - Run one test command alone and read the log after with `Get-Content log.txt` [src: references/pairs.md#ba-log]
 - Report the run with `Set-Content report.txt` listing the call, diff, checks, and PASS [src: references/pairs.md#ba-report]
+
+## Fresh shapes (v1.1.0)
+
+- Never launch a nested shell with `powershell -NoProfile` chained to listing, run one single call with no nested shell [src: references/pairs.md#ba-nested]
+- When the edit itself is denied report the `blocked path` with the exact patch text and make no further call [src: references/pairs.md#ba-blocked]
+- Poll health with `Invoke-RestMethod` alone, never prefix with sleep nor pipe through convert [src: references/pairs.md#ba-sleep]
+- Never chain inline code with `node -e`, write longer code to a temp file and run one single call [src: references/pairs.md#ba-inline]
+- Never pipe a helper with `node tools/lanes.mjs` through formatting, run one single call with no pipe [src: references/pairs.md#ba-lanes]
 
 ## When a call is denied
 

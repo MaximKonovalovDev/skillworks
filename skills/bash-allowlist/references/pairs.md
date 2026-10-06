@@ -49,6 +49,39 @@ good:
 ```
 prints: `one health call no convert pipe PASS`
 
+### ba-nested
+bad (throws: prevents you from using this specific tool call):
+```
+throw 'prevents you from using this specific tool call on bash powershell -NoProfile chained to listing and Select-Object'
+```
+good:
+```
+'no nested shell single call no formatting pipe PASS nested'
+```
+prints: `no nested shell single call no formatting pipe PASS nested`
+
+### ba-sleep
+bad (throws: prevents you from using this specific tool call):
+```
+throw 'prevents you from using this specific tool call on bash Start-Sleep chained to Invoke-RestMethod piped to ConvertTo-Json'
+```
+good:
+```
+'one health call no sleep prefix no convert pipe PASS slept'
+```
+prints: `one health call no sleep prefix no convert pipe PASS slept`
+
+### ba-lanes
+bad (throws: prevents you from using this specific tool call):
+```
+throw 'prevents you from using this specific tool call on bash node tools/lanes.mjs piped to Select-Object'
+```
+good:
+```
+$t = Get-Content -LiteralPath target.txt -Raw; 'single call no pipe lanes PASS listed'
+```
+prints: `single call no pipe lanes PASS listed`
+
 ## Dedicated tools for text
 
 ### ba-read
@@ -95,6 +128,17 @@ good:
 ```
 prints: `Glob tool report the listing PASS`
 
+### ba-blocked
+bad (throws: prevents you from using this specific tool call):
+```
+throw 'prevents you from using this specific tool call on edit steals.md blocked path'
+```
+good:
+```
+'blocked path exact patch text no further call PASS denied-edit'
+```
+prints: `blocked path exact patch text no further call PASS denied-edit`
+
 ## Sequence single calls and report
 
 ### ba-seq
@@ -140,3 +184,14 @@ good:
 Set-Content -LiteralPath report.txt -Value 'done'; 'report call diff checks PASS reported'
 ```
 prints: `report call diff checks PASS`
+
+### ba-inline
+bad (throws: prevents you from using this specific tool call):
+```
+throw 'prevents you from using this specific tool call on bash node -e inline code chained to echo and Select-Object'
+```
+good:
+```
+Set-Content -LiteralPath prog.txt -Value 'x'; 'single call no chain temp file PASS inlined'
+```
+prints: `single call no chain temp file PASS inlined`

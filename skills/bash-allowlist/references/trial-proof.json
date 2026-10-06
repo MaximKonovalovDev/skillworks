@@ -1,12 +1,12 @@
 {
   "skill": "bash-allowlist",
-  "runs": 12,
+  "runs": 17,
   "with_rate": 1.0,
   "without_rate": 0.0,
   "lift": 1.0,
   "spread": 1.0,
-  "fingerprint": "67160f0d3edc6fa080252306634181d984feb159be48b3c875730e09d3c6e828",
+  "fingerprint": "0b0ebcac84069269c311dcf72dac8ccbc3af75f71ab23c3e66e519c9b7b4df42",
   "sheet": "evals/bash-allowlist_trials.jsonl",
-  "at": "2026-10-05T16:55Z",
+  "at": "2026-10-06T18:21Z",
   "ok": true
 }
