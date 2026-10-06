@@ -1,0 +1,1 @@
+{"direction":"down","error_regex":"4(03|04) (api.github.com|github.com|raw.githubusercontent.com)","id":"fetch-github-first-webfetch","tool":"webfetch"}
