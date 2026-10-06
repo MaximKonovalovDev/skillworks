@@ -1,16 +1,12 @@
-pilot-112-view | pilot-112-qa-shape-message | 2026-10-05T11:56Z | book2skill/eval.py, tests/test_qa_shape_message.py
-pilot-112-stale-zip | pilot-112-stale-zip | 2026-10-05T11:55Z | packs/fleet-vol-1/pack.json, packs/fleet-vol-1/listing.md, dist/fleet-vol-1.zip
-planner.token | planner-rows-r4 | 2026-10-05T12:15Z | sprint/board.md team/coach.md team/p5.md team/compact-log.md sprint/queue/claims.txt
-PIPE-112-1 | pipe-112-1-fix | 2026-10-05T12:22Z | packs/fleet-vol-1/pack.json, packs/fleet-vol-1/vol0-sample.md, dist/fleet-vol-1.zip (prior pilot-112-stale-zip 11:55Z claim was a finished read-only pilot run, no active edit)
-PIPE-112-1 | pipe-112-1-fix | 2026-10-05T13:05Z | packs/fleet-vol-1/pack.json, dist/fleet-vol-1.zip (revert uncommitted 10-05 date drift to HEAD 10-04, rebuild dist)
-DR-1005-6 | doctor-spawn-kill | 2026-10-05T14:12Z | evals/bash-spawn-guard_trials.jsonl, skills/bash-spawn-guard/references/target-class.json
-DR-1005-8 | doctor-read-offset | 2026-10-05T14:29Z | evals/read-offset-guard_trials.jsonl, skills/read-offset-guard/references/target-class.json
-TS-7 | toolsmith-ts7 | 2026-10-05T14:34Z | tools/skill_registry.py, tests/test_skill_registry.py
-DR-1004-10 | doctor-task-scope | 2026-10-05T14:35Z | evals/task-scope_trials.jsonl, skills/task-scope/references/target-class.json
-TS-6 | toolsmith-ts6 | 2026-10-05T14:56Z | tools/eval_score.py, tests/test_eval_score.py
-DR-1005-2 | doctor-bash-abort | 2026-10-05T15:00Z | evals/bash-abort-guard_trials.jsonl, skills/bash-abort-guard/references/target-class.json
-DR-1005-3 | doctor-ready-file | 2026-10-05T15:40Z | evals/ready-file-check_trials.jsonl, skills/ready-file-check/references/target-class.json
-DR-1005-4 | doctor-allowlist | 2026-10-05T16:08Z | evals/bash-allowlist_trials.jsonl, skills/bash-allowlist/references/target-class.json
-DR-1005-5 | doctor-task-abort | 2026-10-05T16:55Z | evals/task-abort-guard_trials.jsonl, skills/task-abort-guard/references/target-class.json
-DR-1005-6 | builder-cure | 2026-10-05T17:27Z | evals/bash-spawn-guard_trials.jsonl, skills/bash-spawn-guard/SKILL.md (prior doctor-spawn-kill 14:12Z claim aged out 3h+)
-DR-1005-8 | builder-cure | 2026-10-05T17:50Z | evals/read-offset-guard_trials.jsonl, skills/read-offset-guard/SKILL.md (prior doctor-read-offset 14:29Z claim aged out 3h+)
+task-scope | pilot-installer | 2026-10-06T02:11Z | skills/task-scope (global install + check)
+bash-abort-guard | pilot-installer | 2026-10-06T02:13Z | skills/bash-abort-guard (global install + check)
+ready-file-check | pilot-installer | 2026-10-06T02:15Z | skills/ready-file-check (global install + check)
+bash-allowlist | pilot-installer | 2026-10-06T02:18Z | skills/bash-allowlist (global install + check)
+task-abort-guard | pilot-installer | 2026-10-06T02:21Z | skills/task-abort-guard (global install + check)
+bash-spawn-guard | pilot-installer | 2026-10-06T02:28Z | skills/bash-spawn-guard (global install + check)
+read-offset-guard | pilot-installer | 2026-10-06T02:30Z | skills/read-offset-guard (global install + check)
+bevy-rust-ecs | pilot-installer | 2026-10-06T02:39Z | skills/bevy-rust-ecs (global install + check)
+BK-1005-1 | builder-book | 2026-10-06T06:00Z | book2skill/split_chapters.py, tests/test_split_chapters.py (chapter-aware split + docs)
+BK-1004-3 | builder-book | 2026-10-06T02:55Z | skills/cargo-book, tests/test_cargo_book.py, evals/cargo-book_qa.jsonl, tools/install_fleet_skills.py, book2skill/gates.py, THIRD_PARTY_NOTICES.md, team/p3.md
+cargo-book | pilot-installer | 2026-10-06T03:36Z | skills/cargo-book (global install + check)
+bash-abort-guard-reinstall | pilot-installer | 2026-10-06T03:36Z | skills/bash-abort-guard (global reinstall + check)
