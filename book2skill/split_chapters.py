@@ -1,4 +1,10 @@
-"""Chapter-aware split: headings become chapter files (BK-1005-1).
+"""Chapter-aware split: headings become chapter files (BK-1005-1, EB-2026-10-05-S45).
+
+Hunt basis (read live 2026-10-05, ideas only, no code copied): virgiliojr94
+book-to-skill (MIT) plus asale-ai anything-to-skill (Apache-2.0) plus obra
+superpowers (MIT) beat the 5k-char split. Take: fixed artifact SKILL plus
+chapters plus glossary plus patterns plus cheatsheet with token budgets,
+chapter detector with distinct count and 80-char title cap.
 
 Reads ``workdir/full_text.txt``, finds Markdown (``#``) and AsciiDoc (``==``)
 headings outside fenced blocks, and emits the fixed skill shape: SKILL.md
@@ -6,6 +12,11 @@ plus ``chapters/<nn>-<slug>.md`` plus glossary.md, patterns.md, cheatsheet.md.
 Each chapter file holds a short head excerpt (like build.py chunk heads) so
 the skill stays inside the token budgets in gates.py. Frontmatter and stubs
 are reused from build.py: one home per concern, no second copy.
+
+Wiring: call ``split_chapters(work, skill, name, description)`` directly for a
+heading-structured source (progit sample: chapters match headings). The
+classic ``split.split`` 5k-char chunks stay untouched: the index/eval path
+pins them (test_split_chunk_sizes). Sources stay in git-ignored work/.
 """
 from __future__ import annotations
 
