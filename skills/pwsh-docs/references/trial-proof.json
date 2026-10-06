@@ -1,0 +1,12 @@
+{
+  "skill": "pwsh-docs",
+  "runs": 12,
+  "with_rate": 1.0,
+  "without_rate": 0.0,
+  "lift": 1.0,
+  "spread": 1.0,
+  "fingerprint": "2c9f963b79f097ab17dd7b5312aa8e081762d87bdf40f619fdde9574f6192ab7",
+  "sheet": "evals/pwsh-docs_trials.jsonl",
+  "at": "2026-10-06T10:29Z",
+  "ok": true
+}
