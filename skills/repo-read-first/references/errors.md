@@ -14,3 +14,8 @@ Each fragment below is a substring of the real `bad_text` of the named pair. The
 - `does not point to a file`: a helper reused with no licence note and no confirmed path. Pair `rr-g04`
 - `does not point to a file`: the retry helper location guessed, never confirmed. Pair `rr-g05`
 - `Repository not found`: the report lists no record, no ref, and no results. Pair `rr-g06`
+- `Request timed out`: the contents call guessed without a repos record and timed out. Pair `rr-b07`
+- `failed to get reference for branch`: the read assumed a default branch without the repos record. Pair `rr-b08`
+- `does not point to a file`: a nested path guessed without a directory listing. Pair `rr-b09`
+- `Repository not found`: a third repo asked without calling the repos record. Pair `rr-b10`
+- `404`: a guessed raw host URL on the main branch that does not exist. Pair `rr-b11`

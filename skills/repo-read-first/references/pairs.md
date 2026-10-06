@@ -71,6 +71,61 @@ good:
 ```
 prints: `directory listing`
 
+### rr-b07
+bad (throws: Request timed out):
+```
+throw 'MCP error -32603: Request timed out reading owner/name file guide.md (contents call guessed without a repos record)'
+```
+good:
+```
+'repos record checked contents call pinned ref retry PASS'
+```
+prints: `pinned ref`
+
+### rr-b08
+bad (throws: failed to get reference for branch):
+```
+throw 'failed to resolve git reference: failed to get reference for branch "main" (assumed default without reading the repos record)'
+```
+good:
+```
+'repos record default branch resolve ref read PASS'
+```
+prints: `default branch`
+
+### rr-b09
+bad (throws: does not point to a file):
+```
+throw 'Failed to get file contents. The path does not point to a file or directory (guessed nested path docs/api/helpers.md never listed)'
+```
+good:
+```
+'directory listing exact path contents PASS read file next'
+```
+prints: `directory listing`
+
+### rr-b10
+bad (throws: Repository not found):
+```
+throw 'Error processing question: Repository not found. Visit https://deepwiki.com to index it. Requested repos: owner/third (repos record never called)'
+```
+good:
+```
+'repos call exists licensed MIT git-host evidence PASS'
+```
+prints: `repos call`
+
+### rr-b11
+bad (throws: 404):
+```
+throw 'GET https://raw.githubusercontent.com/owner/name/main/README.md: 404 Not Found (guessed raw URL without a contents call)'
+```
+good:
+```
+'contents call pinned ref file lines PASS no raw fetch'
+```
+prints: `contents call`
+
 ## Check-first reads
 
 ### rr-g01

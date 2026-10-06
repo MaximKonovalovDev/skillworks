@@ -1,7 +1,7 @@
 ---
 name: repo-read-first
 description: Use when reading a GitHub repo or asking a wiki service about one: check the repo record first, list before reading, and pin the ref instead of guessing the path, branch, or index state.
-version: 1.0.0
+version: 1.1.0
 author: skillworks
 tags: [researcher, github]
 license: MIT
@@ -28,3 +28,11 @@ Researchers lose reads to three guessed things: the repo path, the file path, an
 - Report the repos record result, the resolved ref, and the contents lines with `gh api` evidence in one closing block [src: references/pairs.md#rr-g06]
 - State what is still unverified with `unverified: <path or ref>` instead of filing a silent gap [src: references/pairs.md#rr-g06]
 - Run the pair check with `python skills/repo-read-first/scripts/run_pairs.py` before claiming the read is fixed [src: scripts/run_pairs.py#live-check]
+
+## Fresh shapes (v1.1.0)
+
+- Retry a timed-out contents call from the repos record with `gh api repos/OWNER/REPO/contents/FILE?ref=REF` instead of guessing again [src: references/pairs.md#rr-b07]
+- Resolve the default branch from the repos record with `gh api repos/OWNER/REPO --jq .default_branch` before reading any named branch [src: references/pairs.md#rr-b08]
+- List the parent directory with `gh api repos/OWNER/REPO/contents/DIR` before reading a nested path you never listed [src: references/pairs.md#rr-b09]
+- Prove a third repo exists with `gh api repos/OWNER/REPO` and note its licence before any wiki question about it [src: references/pairs.md#rr-b10]
+- Never fetch a guessed raw URL on the main branch; read with `gh api repos/OWNER/REPO/contents/FILE?ref=REF` instead [src: references/pairs.md#rr-b11]
