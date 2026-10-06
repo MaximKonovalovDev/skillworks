@@ -144,3 +144,36 @@ def test_new_five_pairs_fail_bare_and_pass_bounded(results: dict) -> None:
         assert "ChildProcess.kill" in bad_text, f"{pair_id}: bare run did not throw the kill line: {bad_text.strip()[:160]!r}"
         assert results[pair_id]["bad_ok"] is True, f"{pair_id}: bare side should fail with the named line"
         assert results[pair_id]["good_ok"] is True, f"{pair_id}: bounded side should print {bounded_report!r}"
+
+
+@live
+@needs_pwsh
+def test_new_five_pairs_v130_fail_bare_and_pass_bounded(results: dict) -> None:
+    """Cure-r11 v1.3.0: 5 new pairs from the 100-kill scan 2026-10-06T17:49Z
+    (class up 66 -> 100 in 48 h), run once WITHOUT the skill (bare) and once WITH it (bounded).
+    Fails on v1.2.0 pairs.json (ids missing -> KeyError); passes on v1.3.0.
+
+    Pasted live outputs from scripts/run_spawn.py (pwsh 7, 2026-10-06):
+    - bs-gitstat WITHOUT: "RuntimeException: Unknown: ChildProcess.kill on chained git status
+      plus git log plus node score in one call" (throws); WITH: "single check timeout PASS gitchecked".
+    - bs-pytest WITHOUT: "RuntimeException: Unknown: ChildProcess.kill on full python pytest run
+      in one shell call" (throws); WITH: "slice one chunk timeout PASS pytested".
+    - bs-npminstall WITHOUT: "RuntimeException: Unknown: ChildProcess.kill on verbose npm install
+      foreground with no receipt" (throws); WITH: "background receipt timeout PASS npmready".
+    - bs-logpoll WITHOUT: "RuntimeException: Unknown: ChildProcess.kill on Start-Sleep poll
+      of log file with no timeout" (throws); WITH: "bounded wait receipt PASS logpolled".
+    - bs-longpipe WITHOUT: "RuntimeException: Unknown: ChildProcess.kill on long Get-Content
+      piped tail select in one call" (throws); WITH: "file timeout limit PASS piped".
+    """
+    cases = {
+        "bs-gitstat": "single check timeout PASS gitchecked",
+        "bs-pytest": "slice one chunk timeout PASS pytested",
+        "bs-npminstall": "background receipt timeout PASS npmready",
+        "bs-logpoll": "bounded wait receipt PASS logpolled",
+        "bs-longpipe": "file timeout limit PASS piped",
+    }
+    for pair_id, bounded_report in cases.items():
+        bad_text = results[pair_id]["bad_text"]
+        assert "ChildProcess.kill" in bad_text, f"{pair_id}: bare run did not throw the kill line: {bad_text.strip()[:160]!r}"
+        assert results[pair_id]["bad_ok"] is True, f"{pair_id}: bare side should fail with the named line"
+        assert results[pair_id]["good_ok"] is True, f"{pair_id}: bounded side should print {bounded_report!r}"

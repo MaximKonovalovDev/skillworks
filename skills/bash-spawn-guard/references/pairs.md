@@ -82,6 +82,28 @@ Set-Content -LiteralPath redeploy.receipt -Value 'done'; 'bounded wait receipt P
 ```
 prints: `bounded wait receipt PASS redeployed`
 
+### bs-npminstall
+bad (throws: ChildProcess.kill):
+```
+throw 'Unknown: ChildProcess.kill on verbose npm install foreground with no receipt'
+```
+good:
+```
+Set-Content -LiteralPath npm.receipt -Value 'done'; 'background receipt timeout PASS npmready'
+```
+prints: `background receipt timeout PASS npmready`
+
+### bs-logpoll
+bad (throws: ChildProcess.kill):
+```
+throw 'Unknown: ChildProcess.kill on Start-Sleep poll of log file with no timeout'
+```
+good:
+```
+Set-Content -LiteralPath logpoll.receipt -Value 'done'; 'bounded wait receipt PASS logpolled'
+```
+prints: `bounded wait receipt PASS logpolled`
+
 ## Slice to one small chunk
 
 ### bs-suite
@@ -204,6 +226,39 @@ good:
 'single check timeout PASS verified'
 ```
 prints: `single check timeout PASS verified`
+
+### bs-gitstat
+bad (throws: ChildProcess.kill):
+```
+throw 'Unknown: ChildProcess.kill on chained git status plus git log plus node score in one call'
+```
+good:
+```
+'single check timeout PASS gitchecked'
+```
+prints: `single check timeout PASS gitchecked`
+
+### bs-pytest
+bad (throws: ChildProcess.kill):
+```
+throw 'Unknown: ChildProcess.kill on full python pytest run in one shell call'
+```
+good:
+```
+'slice one chunk timeout PASS pytested'
+```
+prints: `slice one chunk timeout PASS pytested`
+
+### bs-longpipe
+bad (throws: ChildProcess.kill):
+```
+throw 'Unknown: ChildProcess.kill on long Get-Content piped tail select in one call'
+```
+good:
+```
+Set-Content -LiteralPath pipe.txt -Value 'pipe'; 'file timeout limit PASS piped'
+```
+prints: `file timeout limit PASS piped`
 
 ## File first, limit, report
 

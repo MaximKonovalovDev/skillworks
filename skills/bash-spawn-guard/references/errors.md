@@ -24,3 +24,8 @@ Each fragment below is a substring of the real `bad_text` of the named pair. The
 - `ChildProcess.kill`: double node test full run piped with no slice. Pair `bs-nodetest`
 - `ChildProcess.kill`: triple detect checks plus board grep chained in one call. Pair `bs-detect3`
 - `ChildProcess.kill`: chained proof plus check scans in one call. Pair `bs-proofchain`
+- `ChildProcess.kill`: chained git status plus git log plus node score in one call. Pair `bs-gitstat`
+- `ChildProcess.kill`: full python pytest run in one shell call. Pair `bs-pytest`
+- `ChildProcess.kill`: verbose npm install foreground with no receipt. Pair `bs-npminstall`
+- `ChildProcess.kill`: Start-Sleep poll of log file with no timeout. Pair `bs-logpoll`
+- `ChildProcess.kill`: long Get-Content piped tail select in one call. Pair `bs-longpipe`
