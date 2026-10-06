@@ -1,9 +1,9 @@
 {
   "skill": "book-to-skill",
   "fingerprint": "9732afbed6005b228a8af6e4b88cb44d49bc29fdb48b6f0dcde3377fcefcad71",
-  "date": "2026-10-05T23:03Z",
+  "date": "2026-10-06T01:33Z",
   "command": "SKILL_LIVE=1 python -m pytest tests/test_book_to_skill.py -q",
-  "result": "20 passed in 21.38s",
+  "result": "20 passed in 41.42s",
   "versions": {
     "python": "3.13.14",
     "os": "Windows-10-10.0.19045-SP0",

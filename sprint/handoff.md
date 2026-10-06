@@ -1,28 +1,17 @@
-# skillworks handoff - round 193 (token 75b4)
+# skillworks handoff - round 194 (token 75b4)
 
-Round: 193 (doctor NOOP fresh scan; stale book resend refused)
-Written: 2026-10-05T23:35Z
-Token: 75b4 (taken 21:23Z free lock, refreshed 23:35Z)
-Knobs: width 2, foreground, heavy_max 3.
+Round: 194 (owner removed halt; Maxim waves A/B on S3; batch triaged)
+Written: 2026-10-06T01:25Z
+Token: 75b4 (held since 2026-10-05T23:35Z, refreshed 01:25Z)
+Knobs: width 5, foreground, heavy_max 3.
 
 ## Heading
-- Nothing moved (doctor NOOP). No Scorecard change.
+- Resume: halt file gone (owner removed, 21:22Z pause lifted). No Scorecard move this round yet.
 
-## Rows done
-- None. Doctor re-scan fresh: edit-stale 163 top (DR-1004-2 open), loads 55 (pwsh41 bevy6 rba4 git3), all-UP compares all covered, round-line proven20/loads30/class169. No take, tree untouched.
-- builder-book-r1-repair resend refused: already landed ec9466e (judge PASS). Resending a landed packet is the round-181 fingerprint; not repeated.
-
-## Held, not committed
-- Keeper/batch/claims/loop-keeper/knobs/orders churn, ready deletions/additions, halt file (untouched), pilot-112 note. Untouched.
-
-## Checks
-- node sprint/check.mjs RESULT PASS 20/0/0 (round 192; doctor ran read-only, tree unchanged).
-
-## S5
-- Still no after number. Installer adoption + 48 h window pending.
-
-## Blockers
-- BK-1004-1 BLOCKED source_only lift 0.25; K-54 OWNER; K-03 K-06 PARKED.
+## State
+- Maxim's own waves on top of round 193: bc6da5f Wave A (free Vol 0 publish gates checklist, S3 path), be5f4ea Wave B (Vol0 stale-zip triage + adopted 9-rows-open note, S3 still FAIL).
+- My 3 repairs all still landed ancestors: book ec9466e, cure 2f0f6e6, pack 2dc1549. Re-queued repairs refused again (resend fingerprint).
+- S3 (lowest open bar, 5 of 6): waits on factory lister/store + Maxim's waves, not on this loop. Pack gate 13/0/0 PASS from here (2dc1549). That is why this batch does not move S3.
 
 ## Next
-- Keeper batch: installer stranger run, cure DR-1005-9 bevy version bump.
+- Dispatch now: researcher-doctor (fresh lanes after waves A/B — new scan, not a resend) + builder-cure (fresh red DR-1005-9). Collect, judge, land.

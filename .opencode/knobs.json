@@ -1,12 +1,12 @@
 {
-  "updated": "2026-10-05T18:57:04Z",
+  "updated": "2026-10-06T00:14:22Z",
   "knobs": {
-    "width": {"value":2,"min":1,"max":30,"step":1,"why":"helpers in one batch"},
+    "width": {"value":5,"min":1,"max":30,"step":1,"why":"helpers in one batch"},
     "dispatch": {"value":"foreground","why":"owner 2026-09-28: every helper seen live"},
     "heavy_max": {"value":3,"min":1,"max":10,"step":1,"why":"CPU-heavy packets in one batch"},
     "helper_max_min": {"value":90,"min":20,"max":240,"step":10,"why":"a helper past this is stopped so its batch ends"},
     "bg_width": {"value":0,"min":0,"max":8,"step":1,"why":"research helpers run in the background, N at once (0 = off)"},
-    "paid_mode": {"label":"Model mode (0 free only, 1 hybrid: paid Go twins)","value":1,"min":0,"max":1,"step":1,"rule":"0 = every helper on the free Muse. 1 = hybrid: roles with a -paid twin (writers, judges, planners, plus researchers in engine/forge/factory) run on the Go subscription for speed. Width follows the mode (free runs lean). Flip it from the Loop Boss or `node empire.mjs mode free|hybrid`; it applies from the next Task."}
+    "paid_mode": {"label":"Model mode (0 free only, 1 hybrid: paid Go twins)","value":0,"min":0,"max":1,"step":1,"rule":"0 = every helper on the free Muse. 1 = hybrid: roles with a -paid twin (writers, judges, planners, plus researchers in engine/forge/factory) run on the Go subscription for speed. Width follows the mode (free runs lean). Flip it from the Loop Boss or `node empire.mjs mode free|hybrid`; it applies from the next Task."}
   },
   "history": [
     {"at":"2026-10-03T13:25:07Z","knob":"paid_mode","from":null,"to":0,"by":"center (mode knob added)"},
@@ -30,6 +30,11 @@
     {"at":"2026-10-05T11:55:25Z","knob":"paid_mode","from":0,"to":1,"by":"Maxim"},
     {"at":"2026-10-05T12:16Z","knob":"cards_per_reader","from":5,"to":null,"by":"center fixer (S72: 0 readers, dead knob removed)"},
     {"at":"2026-10-05T14:44:29Z","knob":"paid_mode","from":1,"to":0,"by":"Maxim"},
-    {"at":"2026-10-05T18:57:04Z","knob":"paid_mode","from":0,"to":1,"by":"Maxim"}
+    {"at":"2026-10-05T18:57:04Z","knob":"paid_mode","from":0,"to":1,"by":"Maxim"},
+    {"at":"2026-10-05T21:13:16Z","knob":"width","from":2,"to":4,"by":"Maxim (Loop Boss)"},
+    {"at":"2026-10-05T22:38:29Z","knob":"paid_mode","from":1,"to":0,"by":"Loop Boss"},
+    {"at":"2026-10-05T22:54:43Z","knob":"width","from":4,"to":2,"by":"Maxim (Loop Boss)"},
+    {"at":"2026-10-05T23:43:12Z","knob":"width","from":2,"to":4,"by":"Maxim (Loop Boss)"},
+    {"at":"2026-10-06T00:14:22Z","knob":"width","from":4,"to":5,"by":"Maxim (Loop Boss)"}
   ]
 }
