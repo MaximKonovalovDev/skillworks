@@ -1,9 +1,9 @@
 {
   "skill": "cargo-book",
-  "fingerprint": "1dd3ffc95ada133813dc06f9a9e7b1a93a144c686e90859ed6ab1a658da10932",
-  "date": "2026-10-06T03:29Z",
+  "fingerprint": "0cb9b7fc09bb420b5dc9b8fa29bd442d20011d9d71f2b5afa1aa52e71115b228",
+  "date": "2026-10-06T11:10Z",
   "command": "SKILL_LIVE=1 python -m pytest tests/test_cargo_book.py -q",
-  "result": "12 passed in 24.56s",
+  "result": "12 passed in 30.96s",
   "versions": {
     "python": "3.13.14",
     "os": "Windows-10-10.0.19045-SP0",

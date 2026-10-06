@@ -198,7 +198,7 @@ def fingerprint(name: str) -> str:
     """sha256 over the skill folder (except the proofs themselves), its QA file and its test file."""
     d = SKILLS / name
     h = hashlib.sha256()
-    files = [p for p in sorted(d.rglob("*")) if p.is_file() and p.name not in (PROOF_NAME, "trial-proof.json")
+    files = [p for p in sorted(d.rglob("*")) if p.is_file() and p.name not in (PROOF_NAME, "trial-proof.json", "eval_report.json")
              and "export" not in p.relative_to(d).parts and "__pycache__" not in p.parts]
     files += [ROOT / "evals" / f"{name}_qa.jsonl", test_file_for(name)]
     for p in files:
