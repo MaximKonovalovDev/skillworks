@@ -1,33 +1,32 @@
-# skillworks handoff - round 208 (token 4ed1)
+# skillworks handoff - round 209 (token 4ed1)
 
-Round: 208 (resume after halt, 1 batch of 5)
-Written: 2026-10-06T09:30Z
-Token: 4ed1 (held since 2026-10-06T09:15Z, lock was free, halt removed by resume)
+Round: 209 (2 batches collected)
+Written: 2026-10-06T09:50Z
+Token: 4ed1 (held since 2026-10-06T09:15Z)
 Knobs: width 5, foreground, heavy_max 3.
 
 ## Heading
-- No Scorecard percent moved. Pack gate holds PASS, suite green, one new READY row.
+- No Scorecard percent moved. New READY book row plus red test landed.
 
 ## Rows done
-- Book repair judge PASS: sheet mix fixed run 3 answer 9, suite 579 passed 140 skipped. Content in backup ef8334e, noted on BK-1005-2 DONE.
-- Pack repair judge PASS: gate FAIL 3 findings to PASS 13/0/0, content in ef8334e.
-- Cure repair judge FAIL second time: paperwork relabel only, moved no number. Chain closed, no further repair. DR-1005-7 DONE 2f0f6e6 stands.
-- Doctor DONE DR-1006-1: webfetch github 403 plus 404s, 75 a day in 5 repos, 12-task red test sheet PASS. Committed 5bfefa7.
-- Pack maker DONE: Fleet Vol 1 gate PASS 13/0/0, licence re-read. Awaits judge review next batch, files untouched.
+- Pack run judge FAIL first time: date-only relabel, moved no number. Reverted per verdict, one repair queued.
+- Books DONE BK-1006-1: pwsh-docs at a3de8f22, CC-BY-4.0 plus MIT read live, 11 files in ignored work, 12 trials sheet PASS. Committed 29886c5.
+- Planner DONE: 0 rows, coach plus compact lines kept. Pilot DONE no defects pilot-113. Runner DONE 0 FAIL PAPERWORK.
+- Committed 5bfefa7 round 208 plus 29886c5 now.
 
 ## Held, not committed
-- Pack licence re-read lines plus keeper queue churn plus ready deletions. No secret, no export dirs.
+- Pack repair files await builder repair run. Keeper queue churn untouched.
 
 ## Checks
 - node sprint/check.mjs RESULT PASS 20/0/0.
-- python tools/skill_trial.py sheet --skill fetch-github-first: 12 tasks RESULT PASS.
+- skill_trial sheet pwsh-docs 12 tasks RESULT PASS, fetch-github-first 12 PASS.
 
 ## S3/S5
-- S3: pack gate PASS stands.
-- S5: query met pipe-run 10->0 stands per 2f0f6e6.
+- S3: pack gate PASS stands at HEAD.
+- S5: query met pipe-run 10->0 stands.
 
 ## Blockers
 - K-54 OWNER verdict pending. BK-1004-1 BLOCKED source_only lift 0.25. K-03 K-06 PARKED.
 
 ## Next
-- Next batch sent same turn: pack review, books scout, planner, pilot view, runner round.
+- Next batch: pack repair, book smith BK-1006-1, cure smith DR-1006-1, installer, proceedings per keeper.
