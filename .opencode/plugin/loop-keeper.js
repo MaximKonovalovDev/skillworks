@@ -1632,6 +1632,17 @@ Ready work: ${readyItem.id}. Claim only this item; selectors do not authorize sw
       return p && !isBg(p) && RESEARCH_ROLE.test(p.role) && roles.has(p.role.replace(/-paid$/, "")) && !((standingRest.get(f) ?? 0) > now()) && seatReadiness.evaluate(p, readyUsed).ok;
     }).length;
     const reserve = Math.min(researchSeatsReady, Math.max(1, Math.ceil(width / 5)));
+    const copies = new Map();
+    // Lead 2, the User (Maxim 2026-10-06): a seat with `reserve: 1` takes its place before the one-offs,
+    // so a full ready/ never starves it (jobhunt 2026-10-06: width 2, 14 one-offs waiting, it never ran).
+    for (const f of names("standing")) {
+      if (list.length >= width) break;
+      const p = parsePacket(read(join(qsub("standing"), f)));
+      if (!p || isBg(p) || String(p.fm?.reserve ?? "") !== "1") continue;
+      const hold = seatHold(f, p, readyUsed);
+      if (!hold.ok) { if (hold.kind === "resting") held.resting.add(f.slice(0, -3)); else if (hold.kind === "readiness") held.readiness.add(f.slice(0, -3)); continue; }
+      if (take(f.slice(0, -3), p, "seat")) copies.set(f, (copies.get(f) ?? 0) + 1);
+    }
     for (const f of names("ready")) {
       if (list.length >= width - reserve) break;
       const p = parsePacket(read(join(qsub("ready"), f)));
@@ -1651,7 +1662,6 @@ Ready work: ${readyItem.id}. Claim only this item; selectors do not authorize sw
       }
       seats.push({ f, p });
     }
-    const copies = new Map();
     if (reserve) {
       let got = 0;
       for (const { f, p } of seats) {

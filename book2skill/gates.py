@@ -61,6 +61,9 @@ FLEET_SKILLS = {
     "fetch-github-first": ["cli/cli (MIT)"],
     "playwright-docs": ["microsoft/playwright"],
     "edit-verify": ["cline/cline", "aider-ai/aider", "sst/opencode"],
+    "websearch-retry": [],
+    "repomap-guard": [],
+    "edit-identical": [],
 }
 # Installed in forge, whose `node scripts/check.mjs` bans some English words.
 FORGE_SAFE = {"pwsh-for-bash-writers", "git-one-branch", "cron-skip-clean", "pipe-run", "inbox-file-reader"}

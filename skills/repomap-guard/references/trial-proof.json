@@ -1,0 +1,12 @@
+{
+  "skill": "repomap-guard",
+  "runs": 12,
+  "with_rate": 1.0,
+  "without_rate": 0.0,
+  "lift": 1.0,
+  "spread": 1.0,
+  "fingerprint": "2ee6b0781acde65bded67a4ab3b1eccd91c39547eecc173b40e70bd6d3be7122",
+  "sheet": "evals/repomap-guard_trials.jsonl",
+  "at": "2026-10-06T20:23Z",
+  "ok": true
+}

@@ -1,0 +1,10 @@
+{"must": ["list", "folder", "first"], "q": "what comes first before any map read?"}
+{"must": ["glob", "check", "hit"], "q": "how is the map file located before reading?"}
+{"must": ["once", "stop", "miss"], "q": "how many times is a missing map read?"}
+{"must": ["fallback", "existing", "report"], "q": "what follows a map miss?"}
+{"must": ["RESULT", "report", "listing"], "q": "how does a finished map run close?"}
+{"must": ["File not found", "repomap.md"], "q": "what error names a guessed map path?"}
+{"must": ["pairs.md", "pairs.json", "run_map.py"], "q": "where are the tested map runs?"}
+{"must": ["target-class.json"], "q": "where is the map failure class recorded?"}
+{"must": ["errors.md"], "q": "what names the cause of a map miss?"}
+{"must": ["PASS", "listing", "check"], "q": "what does a good map read print?"}

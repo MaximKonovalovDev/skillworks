@@ -1,0 +1,12 @@
+{
+  "skill": "edit-identical",
+  "runs": 12,
+  "with_rate": 1.0,
+  "without_rate": 0.0,
+  "lift": 1.0,
+  "spread": 1.0,
+  "fingerprint": "92f154d924722051b9d2348cf0f012e98d50ab0c3f922151b92c87e7f7bfa19f",
+  "sheet": "evals/edit-identical_trials.jsonl",
+  "at": "2026-10-06T20:24Z",
+  "ok": true
+}

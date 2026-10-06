@@ -1,0 +1,10 @@
+{"must": ["refuse", "verify", "PASS"], "q": "what replaces a no-op edit when old and new text are identical?"}
+{"must": ["diff", "read", "PASS"], "q": "what is compared against the fresh file before sending an edit?"}
+{"must": ["quote", "fresh", "PASS"], "q": "how many fresh lines are quoted before a follow-up edit?"}
+{"must": ["single", "check", "PASS"], "q": "how many hunks land after one identical miss?"}
+{"must": ["narrow", "unique", "PASS"], "q": "what shape does the old text take instead of a whole block?"}
+{"must": ["RESULT", "report", "PASS"], "q": "what closes an edit run with paths and checks?"}
+{"must": ["verify", "read", "holds"], "q": "what is verified before landing a real change?"}
+{"must": ["diff", "check", "hunks"], "q": "what is read before closing to confirm one change?"}
+{"must": ["no-op", "refuse", "PASS"], "q": "what happens to an already-satisfied request?"}
+{"must": ["small", "hunk", "PASS"], "q": "what size hunk is kept for the landed change?"}

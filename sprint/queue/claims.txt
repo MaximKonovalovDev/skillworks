@@ -1,12 +1,15 @@
-task-scope | pilot-installer | 2026-10-06T02:11Z | skills/task-scope (global install + check)
-bash-abort-guard | pilot-installer | 2026-10-06T02:13Z | skills/bash-abort-guard (global install + check)
-ready-file-check | pilot-installer | 2026-10-06T02:15Z | skills/ready-file-check (global install + check)
-bash-allowlist | pilot-installer | 2026-10-06T02:18Z | skills/bash-allowlist (global install + check)
-task-abort-guard | pilot-installer | 2026-10-06T02:21Z | skills/task-abort-guard (global install + check)
-bash-spawn-guard | pilot-installer | 2026-10-06T02:28Z | skills/bash-spawn-guard (global install + check)
-read-offset-guard | pilot-installer | 2026-10-06T02:30Z | skills/read-offset-guard (global install + check)
-bevy-rust-ecs | pilot-installer | 2026-10-06T02:39Z | skills/bevy-rust-ecs (global install + check)
-BK-1005-1 | builder-book | 2026-10-06T06:00Z | book2skill/split_chapters.py, tests/test_split_chapters.py (chapter-aware split + docs)
-BK-1004-3 | builder-book | 2026-10-06T02:55Z | skills/cargo-book, tests/test_cargo_book.py, evals/cargo-book_qa.jsonl, tools/install_fleet_skills.py, book2skill/gates.py, THIRD_PARTY_NOTICES.md, team/p3.md
-cargo-book | pilot-installer | 2026-10-06T03:36Z | skills/cargo-book (global install + check)
-bash-abort-guard-reinstall | pilot-installer | 2026-10-06T03:36Z | skills/bash-abort-guard (global reinstall + check)
+
+pack.token | builder-pack-r5 | 2026-10-06T16:54Z | packs/fleet-vol-1
+DR-1006-6 | builder-cure-r8 | 2026-10-06T16:56Z | skills/bash-allowlist/, evals/bash-allowlist_trials.jsonl, tests/test_bash_allowlist.py
+DR-1006-7 | researcher-doctor-r9 | 2026-10-06T17:31Z | evals/websearch-retry_trials.jsonl, skills/websearch-retry/references/target-class.json
+DR-1006-5 | builder-cure-r9 | 2026-10-06T17:25Z | skills/read-offset-guard/, evals/read-offset-guard_trials.jsonl, tests/test_read_offset_guard.py
+DR-1006-4 | builder-cure-r10 | 2026-10-06T17:48Z | skills/edit-verify/, evals/edit-verify_trials.jsonl, tests/test_edit_verify.py
+DR-1006-3 | builder-cure-r11 | 2026-10-06T18:26Z | skills/bash-spawn-guard/, evals/bash-spawn-guard_trials.jsonl, tests/test_bash_spawn_guard.py
+DR-1006-8 | researcher-doctor-r10 | 2026-10-06T18:47Z | evals/repomap-guard_trials.jsonl, skills/repomap-guard/references/target-class.json
+DR-1006-9 | researcher-doctor-r11 | 2026-10-06T19:31Z | evals/bash-abort-guard_trials.jsonl, skills/bash-abort-guard/references/target-class.json
+planner.token | planner-rows-r8 | 2026-10-06T19:39Z | sprint/board.md sprint/queue/claims.txt
+DR-1006-7 | builder-cure-websearch | 2026-10-06T19:05Z | skills/websearch-retry/, evals/websearch-retry_trials.jsonl, tests/test_websearch_retry.py
+DR-1006-10 | researcher-doctor-r12 | 2026-10-06T20:11Z | evals/edit-identical_trials.jsonl, skills/edit-identical/references/target-class.json
+DR-1006-11 | researcher-doctor-r13 | 2026-10-06T20:26Z | evals/keeper-ready_trials.jsonl, skills/keeper-ready/references/target-class.json
+DR-1006-10 | builder-cure-identical | 2026-10-06T20:32Z | skills/edit-identical/, evals/edit-identical_qa.jsonl, tests/test_edit_identical.py
+AD-1006-1 | pilot-install-AD-1 | 2026-10-06T20:50Z | skills/bash-spawn-guard/, evals/bash-spawn-guard_trials.jsonl
