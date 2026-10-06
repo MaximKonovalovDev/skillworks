@@ -1,32 +1,33 @@
-# skillworks handoff - round 207 (token e7a4)
+# skillworks handoff - round 208 (token 4ed1)
 
-Round: 207 (takeover + 1 batch, halt stop)
-Written: 2026-10-06T03:50Z
-Token: e7a4 (held since 2026-10-06T03:39Z, takeover from 75b4 left by closed app)
+Round: 208 (resume after halt, 1 batch of 5)
+Written: 2026-10-06T09:30Z
+Token: 4ed1 (held since 2026-10-06T09:15Z, lock was free, halt removed by resume)
 Knobs: width 5, foreground, heavy_max 3.
 
 ## Heading
-- Takeover done (75b4 -> e7a4). No Scorecard percent moved yet. Repairs await judge.
+- No Scorecard percent moved. Pack gate holds PASS, suite green, one new READY row.
 
 ## Rows done
-- Repairs DONE unjudged, no commit: book bv-b03 run 3 answer 9, pytest 579 passed 140 skipped. cure steals landed 2f0f6e6, query met pipe-run 10->0. pack listing dates 2026-10-06, pack_check PASS 13/0/0.
-- Installer DONE: engine-builder global reinstall, copy matches, trial 1.0/0.4167 lift 0.5833. No repo commit.
-- Doctor BLOCKED working: scan 107 edit-stale top, loads 37 in 48h, only pwsh 3+ loads UP with DR-1005-1 open. No new row.
-- Inbox -> board: S84 -> O-003 READY R2, S85 -> O-004 READY R1.
+- Book repair judge PASS: sheet mix fixed run 3 answer 9, suite 579 passed 140 skipped. Content in backup ef8334e, noted on BK-1005-2 DONE.
+- Pack repair judge PASS: gate FAIL 3 findings to PASS 13/0/0, content in ef8334e.
+- Cure repair judge FAIL second time: paperwork relabel only, moved no number. Chain closed, no further repair. DR-1005-7 DONE 2f0f6e6 stands.
+- Doctor DONE DR-1006-1: webfetch github 403 plus 404s, 75 a day in 5 repos, 12-task red test sheet PASS. Committed 5bfefa7.
+- Pack maker DONE: Fleet Vol 1 gate PASS 13/0/0, licence re-read. Awaits judge review next batch, files untouched.
 
 ## Held, not committed
-- All repair diffs plus live-proof churn plus keeper queue churn. Judge reviews ready: review-2 x3 top next batch.
+- Pack licence re-read lines plus keeper queue churn plus ready deletions. No secret, no export dirs.
 
 ## Checks
 - node sprint/check.mjs RESULT PASS 20/0/0.
+- python tools/skill_trial.py sheet --skill fetch-github-first: 12 tasks RESULT PASS.
 
 ## S3/S5
-- S3: pack gate PASS stands per repair proof.
-- S5: 8 adopted rows wait, age-gated.
+- S3: pack gate PASS stands.
+- S5: query met pipe-run 10->0 stands per 2f0f6e6.
 
 ## Blockers
-- sprint/halt restored from HEAD: paused by Maxim 2026-10-05T17:14Z, finish round, write handoff, stop.
-- BK-1004-1 BLOCKED source_only lift 0.25; K-54 OWNER; K-03 K-06 PARKED.
+- K-54 OWNER verdict pending. BK-1004-1 BLOCKED source_only lift 0.25. K-03 K-06 PARKED.
 
 ## Next
-- Resume removes halt. Next batch: 3 judge reviews (book/cure/pack review-2) then installer lanes.
+- Next batch sent same turn: pack review, books scout, planner, pilot view, runner round.
