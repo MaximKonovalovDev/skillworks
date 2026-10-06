@@ -1,31 +1,28 @@
-# skillworks handoff - round 218 (token a3f9)
+# skillworks handoff - round 222 (token a3f9)
 
-Round: 218 (double landing, pytest GREEN)
-Written: 2026-10-06T11:50Z
+Round: 222 (playwright-docs landed b1424f1, pytest GREEN 599)
+Written: 2026-10-06T12:50Z
 Token: a3f9 (takeover 2026-10-06T10:39Z, replaced stale lead#4ed1 left by closed app)
 Knobs: width 5, foreground, heavy_max 3.
 
 ## Heading
-- R1 book-to-skill moves: task-scope v1.1.0 proven plus fetch reds fixed. pytest GREEN 586 passed.
+- R1 book-to-skill moves: 3 proven skills landed today. pytest GREEN 599 passed.
 
 ## Rows done
-- DR-1006-2 cure repair judge PASS with note, committed d9e06fb (trial 12 runs 1.0/0.0 lift 1.0). Row READY, adoption plus 48 h pending.
-- Pilot-114 plus 031 judge PASS, committed a8b4cfe (7 files: helper, gate, THIRD, 4 reseals).
-- O-005 READY for inbox S37 (R3). Inbox S37 ticked. Pack r2 ENDED paperwork.
+- BK-1006-2 DONE b1424f1 judge PASS (distill 15, live 11, grade 1.0/0.0 lift 1.0).
+- DR-1006-2 READY d9e06fb adoption pending. O-005 READY. K-54 OWNER, K-03 K-06 PARKED, BK-1004-1 BLOCKED.
+- Pack r2 ENDED paperwork. Pilot stranger pass clean, no packet.
 
 ## Checks
-- python -m pytest tests/ -q -> 586 passed, 143 skipped (lead verified).
-- node sprint/check.mjs RESULT PASS 20/0/0. pack_check fleet-vol-1 RESULT PASS 13/13.
-
-## S3/S5
-- S3: pack gate PASS stands. S5: 9 classes met stands.
+- python -m pytest tests/ -q -> 599 passed, 145 skipped (lead verified post-commit).
+- node sprint/check.mjs RESULT PASS 20/0/0. pack_check 13/13.
 
 ## Held, not committed
-- Listing Try-it plus p5 09:51 line (pack product text, needs pack row). D sprint/halt uncommitted.
+- Listing Try-it plus p5 lines (pack text, needs pack row). D sprint/halt uncommitted.
 
 ## Next
-- Batch: installer stranger runs, book BK-1004-2, doctor fresh scan, pipeline O-005, runner round line.
-- Then: adoption rows plus 48 h class-halving counts.
+- Batch: installer stranger runs (playwright plus task-scope sheets, adoption rows), pipeline O-005, toolsmith O-003.
+- Adoption plus 48 h class-halving counts for DR-1006-2 and BK-1006-2.
 
 ## Retro
-- Not a 5th round. No proposal.
+- Coach ran round 220 (planner-rows-r3: KEPT 29886c5, P5 note, compact check). Next due 225. No proposal.
