@@ -1,0 +1,289 @@
+{
+  "about": "Every pair runs live: gh api against the public microsoft/playwright repo at the pinned ref d0fd0f22, plus one python sha256 over the pinned local download (see scripts/playwright_docs.py). bad refutes the mistake (or replays the real miss); good asserts the rule. Scratch dirs live under $TEMP/opencode; the hash step reads the repo it runs from.",
+  "pin": "d0fd0f22ffad53804c0a326a692ee6b8e70ada3d",
+  "pairs": [
+    {
+      "bad": {
+        "steps": [
+          {
+            "absent": ["MIT"],
+            "argv": ["gh", "api", "repos/microsoft/playwright", "--jq", "{license:.license.spdx_id, branch:.default_branch}"],
+            "expect_exit": 0
+          }
+        ]
+      },
+      "good": {
+        "steps": [
+          {
+            "argv": ["gh", "api", "repos/microsoft/playwright", "--jq", "{license:.license.spdx_id, branch:.default_branch}"],
+            "expect": ["Apache-2.0", "main"],
+            "expect_exit": 0
+          }
+        ]
+      },
+      "group": "licence",
+      "id": "pw-p01",
+      "title": "licence spdx and default branch of the pinned repo"
+    },
+    {
+      "bad": {
+        "steps": [
+          {
+            "absent": ["00000000"],
+            "argv": ["gh", "api", "repos/microsoft/playwright/contents/LICENSE?ref=d0fd0f22ffad53804c0a326a692ee6b8e70ada3d", "--jq", ".sha"],
+            "expect_exit": 0
+          }
+        ]
+      },
+      "good": {
+        "steps": [
+          {
+            "argv": ["gh", "api", "repos/microsoft/playwright/contents/LICENSE?ref=d0fd0f22ffad53804c0a326a692ee6b8e70ada3d", "--jq", ".sha"],
+            "expect": ["df112373"],
+            "expect_exit": 0
+          }
+        ]
+      },
+      "group": "licence",
+      "id": "pw-p02",
+      "title": "LICENSE blob sha at the pinned ref"
+    },
+    {
+      "bad": {
+        "steps": [
+          {
+            "argv": ["gh", "api", "repos/microsoft/playwright/contents/docs/src/no-such-page.md?ref=d0fd0f22ffad53804c0a326a692ee6b8e70ada3d", "--jq", "{message:.message}"],
+            "expect": ["Not Found", "get-repository-content"],
+            "expect_exit": 1
+          }
+        ]
+      },
+      "good": {
+        "steps": [
+          {
+            "argv": ["gh", "api", "repos/microsoft/playwright/contents/docs/src/locators.md?ref=d0fd0f22ffad53804c0a326a692ee6b8e70ada3d", "--jq", "{name:.name, size:.size}"],
+            "expect": ["locators.md", "47224"],
+            "expect_exit": 0
+          }
+        ]
+      },
+      "group": "miss",
+      "id": "pw-p03",
+      "title": "guessed path misses, pinned path hits"
+    },
+    {
+      "bad": {
+        "steps": [
+          {
+            "absent": ["00000"],
+            "argv": ["gh", "api", "repos/microsoft/playwright/contents/docs/src/locators.md?ref=d0fd0f22ffad53804c0a326a692ee6b8e70ada3d", "--jq", "{name:.name, size:.size}"],
+            "expect_exit": 0
+          }
+        ]
+      },
+      "good": {
+        "steps": [
+          {
+            "argv": ["gh", "api", "repos/microsoft/playwright/contents/docs/src/locators.md?ref=d0fd0f22ffad53804c0a326a692ee6b8e70ada3d", "--jq", "{name:.name, size:.size}"],
+            "expect": ["locators.md", "47224"],
+            "expect_exit": 0
+          }
+        ]
+      },
+      "group": "docs",
+      "id": "pw-p04",
+      "title": "strictness doc: locators.md name and size at the pin"
+    },
+    {
+      "bad": {
+        "steps": [
+          {
+            "absent": ["00000"],
+            "argv": ["gh", "api", "repos/microsoft/playwright/contents/docs/src/actionability.md?ref=d0fd0f22ffad53804c0a326a692ee6b8e70ada3d", "--jq", "{name:.name, size:.size}"],
+            "expect_exit": 0
+          }
+        ]
+      },
+      "good": {
+        "steps": [
+          {
+            "argv": ["gh", "api", "repos/microsoft/playwright/contents/docs/src/actionability.md?ref=d0fd0f22ffad53804c0a326a692ee6b8e70ada3d", "--jq", "{name:.name, size:.size}"],
+            "expect": ["actionability.md", "6270"],
+            "expect_exit": 0
+          }
+        ]
+      },
+      "group": "docs",
+      "id": "pw-p05",
+      "title": "actionability doc: name and size at the pin"
+    },
+    {
+      "bad": {
+        "steps": [
+          {
+            "absent": ["00000"],
+            "argv": ["gh", "api", "repos/microsoft/playwright/contents/docs/src/navigations.md?ref=d0fd0f22ffad53804c0a326a692ee6b8e70ada3d", "--jq", "{name:.name, size:.size}"],
+            "expect_exit": 0
+          }
+        ]
+      },
+      "good": {
+        "steps": [
+          {
+            "argv": ["gh", "api", "repos/microsoft/playwright/contents/docs/src/navigations.md?ref=d0fd0f22ffad53804c0a326a692ee6b8e70ada3d", "--jq", "{name:.name, size:.size}"],
+            "expect": ["navigations.md", "6562"],
+            "expect_exit": 0
+          }
+        ]
+      },
+      "group": "docs",
+      "id": "pw-p06",
+      "title": "navigations doc: name and size at the pin"
+    },
+    {
+      "bad": {
+        "steps": [
+          {
+            "absent": ["00000"],
+            "argv": ["gh", "api", "repos/microsoft/playwright/contents/docs/src/best-practices-js.md?ref=d0fd0f22ffad53804c0a326a692ee6b8e70ada3d", "--jq", "{name:.name, size:.size}"],
+            "expect_exit": 0
+          }
+        ]
+      },
+      "good": {
+        "steps": [
+          {
+            "argv": ["gh", "api", "repos/microsoft/playwright/contents/docs/src/best-practices-js.md?ref=d0fd0f22ffad53804c0a326a692ee6b8e70ada3d", "--jq", "{name:.name, size:.size}"],
+            "expect": ["best-practices-js.md", "19880"],
+            "expect_exit": 0
+          }
+        ]
+      },
+      "group": "docs",
+      "id": "pw-p07",
+      "title": "philosophy doc: best-practices-js.md name and size at the pin"
+    },
+    {
+      "bad": {
+        "steps": [
+          {
+            "absent": ["00000"],
+            "argv": ["gh", "api", "repos/microsoft/playwright/contents/docs/src/debug.md?ref=d0fd0f22ffad53804c0a326a692ee6b8e70ada3d", "--jq", "{name:.name, size:.size}"],
+            "expect_exit": 0
+          }
+        ]
+      },
+      "good": {
+        "steps": [
+          {
+            "argv": ["gh", "api", "repos/microsoft/playwright/contents/docs/src/debug.md?ref=d0fd0f22ffad53804c0a326a692ee6b8e70ada3d", "--jq", "{name:.name, size:.size}"],
+            "expect": ["debug.md", "18019"],
+            "expect_exit": 0
+          }
+        ]
+      },
+      "group": "docs",
+      "id": "pw-p08",
+      "title": "debug doc: name and size at the pin"
+    },
+    {
+      "bad": {
+        "steps": [
+          {
+            "absent": ["00000"],
+            "argv": ["gh", "api", "repos/microsoft/playwright/contents/docs/src/auth.md?ref=d0fd0f22ffad53804c0a326a692ee6b8e70ada3d", "--jq", "{name:.name, size:.size}"],
+            "expect_exit": 0
+          }
+        ]
+      },
+      "good": {
+        "steps": [
+          {
+            "argv": ["gh", "api", "repos/microsoft/playwright/contents/docs/src/auth.md?ref=d0fd0f22ffad53804c0a326a692ee6b8e70ada3d", "--jq", "{name:.name, size:.size}"],
+            "expect": ["auth.md", "26389"],
+            "expect_exit": 0
+          }
+        ]
+      },
+      "group": "docs",
+      "id": "pw-p09",
+      "title": "auth doc: name and size at the pin"
+    },
+    {
+      "bad": {
+        "steps": [
+          {
+            "absent": ["00000"],
+            "argv": ["gh", "api", "repos/microsoft/playwright/contents/docs/src/network.md?ref=d0fd0f22ffad53804c0a326a692ee6b8e70ada3d", "--jq", "{name:.name, size:.size}"],
+            "expect_exit": 0
+          }
+        ]
+      },
+      "good": {
+        "steps": [
+          {
+            "argv": ["gh", "api", "repos/microsoft/playwright/contents/docs/src/network.md?ref=d0fd0f22ffad53804c0a326a692ee6b8e70ada3d", "--jq", "{name:.name, size:.size}"],
+            "expect": ["network.md", "25671"],
+            "expect_exit": 0
+          }
+        ]
+      },
+      "group": "docs",
+      "id": "pw-p10",
+      "title": "network doc: name and size at the pin"
+    },
+    {
+      "bad": {
+        "steps": [
+          {
+            "absent": ["00000"],
+            "argv": ["gh", "api", "repos/microsoft/playwright/contents/docs/src/frames.md?ref=d0fd0f22ffad53804c0a326a692ee6b8e70ada3d", "--jq", "{name:.name, size:.size}"],
+            "expect_exit": 0
+          }
+        ]
+      },
+      "good": {
+        "steps": [
+          {
+            "argv": ["gh", "api", "repos/microsoft/playwright/contents/docs/src/frames.md?ref=d0fd0f22ffad53804c0a326a692ee6b8e70ada3d", "--jq", "{name:.name, size:.size}"],
+            "expect": ["frames.md", "2710"],
+            "expect_exit": 0
+          },
+          {
+            "argv": ["gh", "api", "repos/microsoft/playwright/contents/docs/src/pages.md?ref=d0fd0f22ffad53804c0a326a692ee6b8e70ada3d", "--jq", "{name:.name, size:.size}"],
+            "expect": ["pages.md", "8678"],
+            "expect_exit": 0
+          }
+        ]
+      },
+      "group": "docs",
+      "id": "pw-p11",
+      "title": "frames and pages docs: names and sizes at the pin"
+    },
+    {
+      "bad": {
+        "steps": [
+          {
+            "absent": ["deadbeef"],
+            "argv": ["python", "-c", "import hashlib; print(hashlib.sha256(open('work/playwright-docs/src/locators.md','rb').read()).hexdigest()[:16])"],
+            "expect_exit": 0,
+            "repo": true
+          }
+        ]
+      },
+      "good": {
+        "steps": [
+          {
+            "argv": ["python", "-c", "import hashlib; print(hashlib.sha256(open('work/playwright-docs/src/locators.md','rb').read()).hexdigest()[:16])"],
+            "expect": ["ca8a0035dc87cf97"],
+            "expect_exit": 0,
+            "repo": true
+          }
+        ]
+      },
+      "group": "hash",
+      "id": "pw-p12",
+      "title": "local download hash matches the board pin"
+    }
+  ]
+}

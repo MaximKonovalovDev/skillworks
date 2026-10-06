@@ -1,0 +1,10 @@
+{"must": ["strict", "throws", "one element"], "q": "Your Playwright test clicks a button but two buttons match. What does strict mode do and what does a locator guarantee?"}
+{"must": ["Visible", "Stable", "actionability"], "q": "Before Playwright clicks, which actionability checks gate the click and what does force skip?"}
+{"must": ["Hydration", "BFCache", "waitForURL"], "q": "Your suite flakes around navigations. Which two concepts explain it and which waiting call fixes it?"}
+{"must": ["codegen", "isolated", "web first"], "q": "How do you generate locators, isolate tests, and assert without flakes?"}
+{"must": ["Trace Viewer", "Inspector", "trace.zip"], "q": "A test fails only in CI. Which debugger opens first and what does its bundle carry?"}
+{"must": ["storageState", "signed in state"], "q": "Logins slow your suite. What file do you save once and share across every test?"}
+{"must": ["route", "fulfill", "frameLocator"], "q": "Your test must run offline and reach inside an iframe. Which calls fake the backend and frame the page?"}
+{"must": ["Apache-2.0", "d0fd0f22"], "q": "Under which licence were the playwright docs read and at which pinned commit?"}
+{"must": ["df112373", "Not Found"], "q": "How do you prove the LICENSE blob is the pinned one, and what does a guessed docs path answer?"}
+{"must": ["ca8a0035dc87cf97", "47224"], "q": "How do you prove the local locators.md download matches the board pin?"}
