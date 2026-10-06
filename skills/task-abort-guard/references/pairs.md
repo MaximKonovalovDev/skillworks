@@ -49,6 +49,17 @@ Set-Content -LiteralPath receipt.txt -Value 'done'; 'receipt poll bounded timeou
 ```
 prints: `receipt poll bounded timeout PASS`
 
+### ta-task-timeout
+bad (throws: Tool execution aborted):
+```
+throw 'Tool execution aborted on task parallel build with no timeout'
+```
+good:
+```
+'single task timeout deliverable PASS tasked'
+```
+prints: `single task timeout deliverable PASS`
+
 ## Slice into one small chunk
 
 ### ta-write
@@ -95,6 +106,39 @@ good:
 ```
 prints: `narrow folder pattern timeout PASS`
 
+### ta-write-receipt
+bad (throws: Tool execution aborted):
+```
+throw 'Tool execution aborted on write unbounded chunk with no receipt'
+```
+good:
+```
+Set-Content -LiteralPath receipt.txt -Value 'ok'; 'write chunk receipt timeout PASS written'
+```
+prints: `write chunk receipt timeout PASS`
+
+### ta-read-window
+bad (throws: Tool execution aborted):
+```
+throw 'Tool execution aborted on read unbounded offset with no window'
+```
+good:
+```
+$c = Get-Content -LiteralPath target.txt | Select-Object -First 1; 'read window offset timeout PASS windowed'
+```
+prints: `read window offset timeout PASS`
+
+### ta-edit-reread
+bad (throws: Tool execution aborted):
+```
+throw 'Tool execution aborted on edit stale text with no reread'
+```
+good:
+```
+Set-Content -LiteralPath edit.txt -Value 'ok'; 'edit reread hunk timeout PASS reread'
+```
+prints: `edit reread hunk timeout PASS`
+
 ## Limit plus report
 
 ### ta-slice
@@ -140,3 +184,14 @@ good:
 Set-Content -LiteralPath report.txt -Value 'done'; 'report diff checks PASS reported'
 ```
 prints: `report diff checks PASS`
+
+### ta-grep-scope
+bad (throws: Tool execution aborted):
+```
+throw 'Tool execution aborted on grep unbounded repo search with no folder'
+```
+good:
+```
+'grep folder scope timeout PASS scoped'
+```
+prints: `grep folder scope timeout PASS`

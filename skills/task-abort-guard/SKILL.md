@@ -1,7 +1,7 @@
 ---
 name: task-abort-guard
 description: Use when a task write read edit or grep call comes back Tool execution aborted after a long run
-version: 1.0.0
+version: 1.1.0
 author: skillworks
 tags: [queue]
 license: MIT (skill text and scripts, original work)
@@ -33,6 +33,14 @@ The full bad and good runs are `references/pairs.md`, the machine list is `refer
 - Limit the output with `limit read timeout` keeping every call to a few lines [src: references/pairs.md#ta-limit]
 - Run one chunk with `small chunk edit timeout` and report the diff plus check results [src: references/pairs.md#ta-chunk]
 - Report the run with `Set-Content report.txt` listing timeout, slice, receipt, and PASS [src: references/pairs.md#ta-report]
+
+## New shapes from 48 h scan
+
+- Dispatch a parallel build with `task timeout single` running one task alone with a timeout [src: references/pairs.md#ta-task-timeout]
+- Write with `Set-Content receipt.txt` one chunk plus receipt on a short timeout [src: references/pairs.md#ta-write-receipt]
+- Read with `Get-Content target.txt` a one-line window plus offset timeout [src: references/pairs.md#ta-read-window]
+- Edit stale text after `Read section exact` reread with a timeout [src: references/pairs.md#ta-edit-reread]
+- Search with `Grep folder pattern` scoped to one folder with a timeout [src: references/pairs.md#ta-grep-scope]
 
 ## When a call aborts
 

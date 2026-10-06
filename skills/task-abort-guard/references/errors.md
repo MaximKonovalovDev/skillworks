@@ -14,3 +14,8 @@ Each fragment below is a substring of the real `bad_text` of the named pair. The
 - `Tool execution aborted`: full read with no limit. Pair `ta-limit`
 - `Tool execution aborted`: whole-file edit with no chunk. Pair `ta-chunk`
 - `Tool execution aborted`: long run with no result reported. Pair `ta-report`
+- `Tool execution aborted`: task parallel build with no timeout. Pair `ta-task-timeout`
+- `Tool execution aborted`: write unbounded chunk with no receipt. Pair `ta-write-receipt`
+- `Tool execution aborted`: read unbounded offset with no window. Pair `ta-read-window`
+- `Tool execution aborted`: edit stale text with no reread. Pair `ta-edit-reread`
+- `Tool execution aborted`: grep unbounded repo search with no folder. Pair `ta-grep-scope`
