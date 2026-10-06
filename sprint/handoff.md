@@ -1,34 +1,35 @@
-# skillworks handoff - round 238 (token 1803)
+# skillworks handoff - round 239 (token 1803)
 
-Round: 238 (websearch + abort skills built, identical row + adoption rows added, S74 ticked)
-Written: 2026-10-06T20:20Z
+Round: 239 (websearch + abort landed, repomap + identical built, keeper row added)
+Written: 2026-10-06T20:45Z
 Token: 1803 (takeover 2026-10-06T15:24Z, replaced stale lead#a7e2 left by closed app)
 Knobs: width 5, foreground, heavy_max 3, paid_mode 0 (file of 2026-10-06T00:14Z, unchanged).
 
 ## Heading
-- No Scorecard row moved. Two new skills built and proven (websearch-retry 12/12 lift 1.0, abort-guard 18/18 lift 1.0); both await review.
+- R1 book-to-skill: websearch-retry new skill + abort-guard v1.1.0 landed (both grade 1.0/0.0). Two more skills built and proven (repomap, identical).
 
 ## Results collected
-- builder-cure-websearch (builder): DONE websearch-retry new skill (12 rules 640 tok, grade 1.0/0.0, live 6, QA 10/10). Review queued (fresh one-off).
-- builder-cure-abort (builder): DONE abort-guard v1.1.0 (18/18 pairs, grade 18-run 1.0/0.0, live 6). Review queued (fresh one-off).
-- researcher-doctor-r12 (researcher): DONE DR-1006-10 edit-identical (20/48 h) + red test + row.
-- planner-rows-r8 (planner): DONE AD-1006-1 + AD-1006-2 adoption rows. Inbox now 2 open (S50 + S74); finish 6/6.
+- websearch-review (judge): VERDICT PASS (lift 1.0, live 6, proven 26->27). Committed 079fe2e (13 files).
+- abort-review (judge): VERDICT PASS (pairs 12->18 ADD-only, 18-run grade 1.0/0.0). Committed e6579ba (7 files).
+- cure-repomap (builder): DONE repomap-guard new skill (12/12, live 6, 626 green). Review queued (fresh one-off).
+- cure-identical (builder): DONE edit-identical new skill (12/12, live 6, grade 1.0/0.0). Review queued (fresh one-off).
+- doctor-r13 (researcher): DONE DR-1006-11 keeper-ready (21/48 h) + red test + row.
 
 ## Rows
-- DR-1006-10 READY added (edit-identical new). AD-1006-1/2 READY added (S5 adoption path for spawn + allowlist).
-- DR-1006-7/9 READY (built, reviews queued). DR-1006-8 READY (red test ready, cure next). DR-1006-3/4/5/6 READY (landed).
-- K-54 OWNER, K-03 K-06 PARKED, BK-1004-1 BLOCKED. S50 open 1 of 5, S74 ticked to AD rows (open).
+- DR-1006-7 DONE 079fe2e. DR-1006-9 READY v1.1.0 in e6579ba (halving pending). DR-1006-11 READY added.
+- DR-1006-8/10 READY (built, reviews queued). DR-1006-3/4/5/6 READY (landed). AD-1/2 READY. BK-1006-3 DONE.
+- K-54 OWNER, K-03 K-06 PARKED, BK-1004-1 BLOCKED. S50 open 1 of 5, S74 ticked open.
 
 ## Checks
 - node sprint/check.mjs RESULT PASS 20 pass 0 warn 0 fail (lead reran).
-- Full pytest not rerun by lead; helpers report 612 green + seat-guard concurrent untracked out-of-scope.
+- Lead reran: live_proof websearch 6 passed, abort 6 passed. FLEET wiring + credits + p3 held for batch land.
 
 ## Held, not committed
-- Websearch + abort skill files + trials + lists + credits, identical + repomap red tests, team/p3.md lines, timestamp noise (land after reviews).
+- FLEET lists + credits + p3 (mixed reviewed + unreviewed), repomap + identical + keeper skills + tests, timestamp noise (land after reviews).
 
 ## Next
-- Fresh titles only: websearch review, abort review, cure DR-1006-8 repomap, cure DR-1006-10 identical, doctor next class.
-- Then: land on PASS, installer stranger runs on AD rows, 48 h counts.
+- Fresh titles: repomap review, identical review, cure next open row, doctor next class, installer stranger run on AD-1.
+- Then: land on PASS, batch-wire FLEET lists, adoption counts.
 
 ## Retro
 - Done 235. Next due 240.
