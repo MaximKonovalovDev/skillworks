@@ -1,9 +1,9 @@
 {
   "skill": "bash-abort-guard",
-  "fingerprint": "77509bad42aeb2875eae33957626356237212d72259327c508b7392a941b88ac",
-  "date": "2026-10-06T12:52Z",
+  "fingerprint": "23100787ba40e8dd505da46d694f2fcd6ece86f37584ac10c8fca7ce753e926b",
+  "date": "2026-10-06T20:40Z",
   "command": "SKILL_LIVE=1 python -m pytest tests/test_bash_abort_guard.py -q",
-  "result": "6 passed in 5.50s",
+  "result": "6 passed in 5.45s",
   "versions": {
     "python": "3.13.14",
     "os": "Windows-10-10.0.19045-SP0",

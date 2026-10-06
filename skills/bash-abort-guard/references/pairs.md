@@ -49,6 +49,28 @@ good:
 ```
 prints: `moved to background receipt timeout PASS`
 
+### bb-wrapper
+bad (throws: Tool execution aborted):
+```
+throw 'Tool execution aborted on bash heavy test runner through wrapper in one foreground call'
+```
+good:
+```
+'background timeout receipt PASS wrapped'
+```
+prints: `background timeout receipt PASS wrapped`
+
+### bb-shortloop
+bad (throws: Tool execution aborted):
+```
+throw 'Tool execution aborted on bash foreground wait for heavy job with no bound'
+```
+good:
+```
+Set-Content -LiteralPath job.receipt -Value 'done'; 'background receipt timeout PASS looped'
+```
+prints: `background receipt timeout PASS looped`
+
 ## Slice into one chunk
 
 ### bb-slice
@@ -95,6 +117,39 @@ $c = Get-Content -LiteralPath target.txt | Select-Object -First 1; 'single call 
 ```
 prints: `single call sequence timeout PASS`
 
+### bb-halve
+bad (throws: Tool execution aborted):
+```
+throw 'Tool execution aborted on bash rerun same heavy test command after abort'
+```
+good:
+```
+'single slice timeout PASS halved'
+```
+prints: `single slice timeout PASS halved`
+
+### bb-unhook
+bad (throws: Tool execution aborted):
+```
+throw 'Tool execution aborted on bash chained heavy build plus verify in one call'
+```
+good:
+```
+'single timeout receipt PASS unhooked'
+```
+prints: `single timeout receipt PASS unhooked`
+
+### bb-bounded
+bad (throws: Tool execution aborted):
+```
+throw 'Tool execution aborted on bash long suite unbounded output in one call'
+```
+good:
+```
+'slice limit timeout PASS bounded'
+```
+prints: `slice limit timeout PASS bounded`
+
 ## File plus limit plus report
 
 ### bb-file
@@ -140,3 +195,14 @@ good:
 Set-Content -LiteralPath report.txt -Value 'RESULT: DONE - one chunk'; 'RESULT receipt timeout slice PASS reported'
 ```
 prints: `RESULT receipt timeout slice PASS`
+
+### bb-scope
+bad (throws: Tool execution aborted):
+```
+throw 'Tool execution aborted on bash chained checks across scopes in one call'
+```
+good:
+```
+'single limit timeout PASS scoped'
+```
+prints: `single limit timeout PASS scoped`

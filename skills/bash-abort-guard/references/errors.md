@@ -14,3 +14,9 @@ Each fragment below is a substring of the real `bad_text` of the named pair. The
 - `Tool execution aborted`: unbounded listing scan with no limit. Pair `bb-limit`
 - `Tool execution aborted`: unbounded output flood with no cap. Pair `bb-output`
 - `Tool execution aborted`: long run with no result reported. Pair `bb-report`
+- `Tool execution aborted`: heavy test runner through wrapper in one foreground call. Pair `bb-wrapper`
+- `Tool execution aborted`: rerun same heavy test command after abort. Pair `bb-halve`
+- `Tool execution aborted`: chained heavy build plus verify in one call. Pair `bb-unhook`
+- `Tool execution aborted`: long suite unbounded output in one call. Pair `bb-bounded`
+- `Tool execution aborted`: foreground wait for heavy job with no bound. Pair `bb-shortloop`
+- `Tool execution aborted`: chained checks across scopes in one call. Pair `bb-scope`

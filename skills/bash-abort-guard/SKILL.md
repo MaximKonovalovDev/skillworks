@@ -1,7 +1,7 @@
 ---
 name: bash-abort-guard
 description: Use when a bash shell call comes back Tool execution aborted after a long run
-version: 1.0.0
+version: 1.1.0
 author: skillworks
 tags: [shell]
 license: MIT (skill text and scripts, original work)
@@ -33,6 +33,15 @@ The full bad and good runs are `references/pairs.md`, the machine list is `refer
 - Limit output with `Select-Object -First 5` so a scan never floods the call [src: references/pairs.md#bb-limit]
 - Cap tool output with `Out-String` piped to a small slice before quoting it [src: references/pairs.md#bb-output]
 - Report the run with `Set-Content report.txt` listing timeout, slice, file, limit, and RESULT [src: references/pairs.md#bb-report]
+
+## Heavy runners plus reruns
+
+- Move a heavy test runner through a `wrapper background timeout receipt` to background and poll its receipt [src: references/pairs.md#bb-wrapper]
+- After an abort never `rerun heavy command` halve to one `single slice timeout` filter alone [src: references/pairs.md#bb-halve]
+- Never chain a heavy build plus verify run one `single timeout receipt` check alone [src: references/pairs.md#bb-unhook]
+- Bound a long suite with `slice limit timeout` on one small chunk with a small limit [src: references/pairs.md#bb-bounded]
+- Start a heavy job in `background receipt timeout` and poll its receipt on a short loop [src: references/pairs.md#bb-shortloop]
+- Run checks across scopes as one `single limit timeout` call alone never chained [src: references/pairs.md#bb-scope]
 
 ## When a call aborts
 

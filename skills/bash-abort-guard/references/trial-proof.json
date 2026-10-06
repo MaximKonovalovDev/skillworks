@@ -1,12 +1,12 @@
 {
   "skill": "bash-abort-guard",
-  "runs": 12,
+  "runs": 18,
   "with_rate": 1.0,
   "without_rate": 0.0,
   "lift": 1.0,
   "spread": 1.0,
-  "fingerprint": "42d72ea6ef55a36ee68310e0737b053abf86988931c375909048e23db1ce7394",
+  "fingerprint": "c00c53bf7ab6e942c38c71a95ea6ee843bc48d0e14853ab74b52c7b4a4c02e57",
   "sheet": "evals/bash-abort-guard_trials.jsonl",
-  "at": "2026-10-06T02:13Z",
+  "at": "2026-10-06T20:18Z",
   "ok": true
 }
