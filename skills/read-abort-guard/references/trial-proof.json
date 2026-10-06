@@ -1,0 +1,12 @@
+{
+  "skill": "read-abort-guard",
+  "runs": 12,
+  "with_rate": 1.0,
+  "without_rate": 0.0,
+  "lift": 1.0,
+  "spread": 1.0,
+  "fingerprint": "5cecf90767e2c6e7b76ce11abd91ef06e27e97e69eefcae64e89f549ca735f0d",
+  "sheet": "evals/read-abort-guard_trials.jsonl",
+  "at": "2026-10-06T23:09Z",
+  "ok": true
+}

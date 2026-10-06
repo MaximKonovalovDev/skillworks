@@ -1,0 +1,10 @@
+{"must": ["slice", "offset", "limit"], "q": "how is a large file read without aborting?"}
+{"must": ["halve", "slice", "alone"], "q": "what follows a read abort?"}
+{"must": ["single", "stop", "abort"], "q": "how many sliced reads run after an abort?"}
+{"must": ["size", "check", "slice"], "q": "what comes first when no offset or limit is set?"}
+{"must": ["background", "receipt", "poll"], "q": "where does a long read run?"}
+{"must": ["RESULT", "report", "slice"], "q": "how does a finished read run close?"}
+{"must": ["Tool execution aborted", "read"], "q": "what error names a failed long read?"}
+{"must": ["pairs.md", "pairs.json", "run_read.py"], "q": "where are the tested read runs?"}
+{"must": ["target-class.json"], "q": "where is the read failure class recorded?"}
+{"must": ["errors.md"], "q": "what names the cause of a read abort?"}
