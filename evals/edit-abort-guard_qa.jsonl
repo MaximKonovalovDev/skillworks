@@ -1,0 +1,10 @@
+{"must": ["slice", "hunk", "timeout"], "q": "how is a large file edited without aborting?"}
+{"must": ["halve", "hunk", "alone"], "q": "what follows an edit abort?"}
+{"must": ["single", "stop", "abort"], "q": "how many hunk edits run after an abort?"}
+{"must": ["size", "check", "slice"], "q": "what comes first when no scope or limit is set?"}
+{"must": ["background", "receipt", "poll"], "q": "where does a long edit run?"}
+{"must": ["RESULT", "report", "hunk"], "q": "how does a finished edit run close?"}
+{"must": ["Tool execution aborted", "edit"], "q": "what error names a failed long edit?"}
+{"must": ["pairs.md", "pairs.json", "run_edit.py"], "q": "where are the tested edit runs?"}
+{"must": ["target-class.json"], "q": "where is the edit failure class recorded?"}
+{"must": ["errors.md"], "q": "what names the cause of an edit abort?"}

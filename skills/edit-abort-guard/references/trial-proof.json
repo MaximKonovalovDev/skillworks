@@ -1,0 +1,12 @@
+{
+  "skill": "edit-abort-guard",
+  "runs": 12,
+  "with_rate": 1.0,
+  "without_rate": 0.0,
+  "lift": 1.0,
+  "spread": 1.0,
+  "fingerprint": "341a6c79adb9fcb00bd804ea88e7b36ede0a05fb78d79927048c49139fefe00c",
+  "sheet": "evals/edit-abort-guard_trials.jsonl",
+  "at": "2026-10-06T23:37Z",
+  "ok": true
+}
