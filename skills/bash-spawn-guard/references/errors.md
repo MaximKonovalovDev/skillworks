@@ -14,3 +14,8 @@ Each fragment below is a substring of the real `bad_text` of the named pair. The
 - `ChildProcess.kill`: inline probe with no file. Pair `bs-file`
 - `ChildProcess.kill`: unbounded status check. Pair `bs-short`
 - `ChildProcess.kill`: long run with no result reported. Pair `bs-report`
+- `ChildProcess.kill`: chained 4 listings plus git plus node in one call. Pair `bs-chain4`
+- `ChildProcess.kill`: Start-Process clone plus Start-Sleep 20 with no receipt. Pair `bs-clone`
+- `ChildProcess.kill`: Start-Process shim plus Start-Sleep 3 plus double poll. Pair `bs-shim`
+- `ChildProcess.kill`: chained detect checks with redirects piped tail. Pair `bs-detect`
+- `ChildProcess.kill`: npm run suites bare with no slice. Pair `bs-suites`

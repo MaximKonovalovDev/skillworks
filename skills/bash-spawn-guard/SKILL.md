@@ -1,7 +1,7 @@
 ---
 name: bash-spawn-guard
-description: Use when a bash shell call comes back Unknown ChildProcess.kill after a long run
-version: 1.0.0
+description: Use when a long shell call, suites run, detached launch, or chained checks might hit Unknown ChildProcess.kill
+version: 1.1.0
 author: skillworks
 tags: [shell]
 license: MIT (skill text and scripts, original work)
@@ -33,6 +33,14 @@ The full bad and good runs are `references/pairs.md`, the machine list is `refer
 - Run the file with a `run file timeout` and read its output with a small limit [src: references/pairs.md#bs-file]
 - Bound a status check with a `short status timeout limit` of a few lines only [src: references/pairs.md#bs-short]
 - Report the run with `Set-Content report.txt` listing command, receipt, RESULT, and PASS [src: references/pairs.md#bs-report]
+
+## Dispatch before the kill
+
+- Never chain with `;` run `one command timeout limit` only [src: references/pairs.md#bs-chain4]
+- Never poll `Start-Process -PassThru` with `Start-Sleep` use `Wait-Process timeout receipt` plus poll [src: references/pairs.md#bs-clone]
+- Never double-poll a `Start-Process shim` with `Start-Sleep 3` use `bounded wait receipt` plus poll [src: references/pairs.md#bs-shim]
+- Never chain `detect checks redirects` piped to tail run `single check file timeout` alone [src: references/pairs.md#bs-detect]
+- Never run `npm run suites` bare run `one file timeout limit` from a file [src: references/pairs.md#bs-suites]
 
 ## When a call is killed
 

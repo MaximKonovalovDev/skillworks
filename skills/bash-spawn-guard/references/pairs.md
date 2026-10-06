@@ -49,6 +49,28 @@ Set-Content -LiteralPath bg.receipt -Value 'done'; 'background receipt timeout P
 ```
 prints: `background receipt timeout PASS started`
 
+### bs-clone
+bad (throws: ChildProcess.kill):
+```
+throw 'Unknown: ChildProcess.kill on Start-Process clone plus Start-Sleep 20 with no receipt'
+```
+good:
+```
+Set-Content -LiteralPath clone.receipt -Value 'done'; 'Wait-Process timeout receipt PASS cloned'
+```
+prints: `Wait-Process timeout receipt PASS cloned`
+
+### bs-shim
+bad (throws: ChildProcess.kill):
+```
+throw 'Unknown: ChildProcess.kill on Start-Process shim plus Start-Sleep 3 plus double poll'
+```
+good:
+```
+Set-Content -LiteralPath shim.receipt -Value 'done'; 'bounded wait receipt PASS polled'
+```
+prints: `bounded wait receipt PASS polled`
+
 ## Slice to one small chunk
 
 ### bs-suite
@@ -94,6 +116,39 @@ good:
 'single listing limit timeout PASS listed'
 ```
 prints: `single listing limit timeout PASS listed`
+
+### bs-chain4
+bad (throws: ChildProcess.kill):
+```
+throw 'Unknown: ChildProcess.kill on chained 4 listings plus git plus node in one call'
+```
+good:
+```
+'single command timeout limit PASS listed'
+```
+prints: `single command timeout limit PASS listed`
+
+### bs-detect
+bad (throws: ChildProcess.kill):
+```
+throw 'Unknown: ChildProcess.kill on chained detect checks with redirects piped tail'
+```
+good:
+```
+'single check file timeout PASS checked'
+```
+prints: `single check file timeout PASS checked`
+
+### bs-suites
+bad (throws: ChildProcess.kill):
+```
+throw 'Unknown: ChildProcess.kill on npm run suites bare with no slice'
+```
+good:
+```
+'one file timeout limit PASS ran'
+```
+prints: `one file timeout limit PASS ran`
 
 ## File first, limit, report
 
