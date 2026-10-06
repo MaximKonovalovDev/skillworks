@@ -1,9 +1,9 @@
 {
   "skill": "task-abort-guard",
   "fingerprint": "b66dd2cf8975ca592af8e97eb67fe8a3c63160f12ef3de646c280a813f7522a1",
-  "date": "2026-10-06T01:45Z",
+  "date": "2026-10-06T13:02Z",
   "command": "SKILL_LIVE=1 python -m pytest tests/test_task_abort_guard.py -q",
-  "result": "6 passed in 12.49s",
+  "result": "6 passed in 2.42s",
   "versions": {
     "python": "3.13.14",
     "os": "Windows-10-10.0.19045-SP0",

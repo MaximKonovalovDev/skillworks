@@ -1,9 +1,9 @@
 {
   "skill": "pipe-run",
   "fingerprint": "cbacb76de313dde8f53909afaac2e3d89738305d8fa001a691ecc7c86ae819c4",
-  "date": "2026-10-06T01:39Z",
+  "date": "2026-10-06T12:59Z",
   "command": "SKILL_LIVE=1 python -m pytest tests/test_pipe_run.py -q",
-  "result": "19 passed in 18.46s",
+  "result": "19 passed in 4.13s",
   "versions": {
     "python": "3.13.14",
     "os": "Windows-10-10.0.19045-SP0",

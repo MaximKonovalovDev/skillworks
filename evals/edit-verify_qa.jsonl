@@ -1,0 +1,10 @@
+{"must": ["re-read", "Read"], "q": "what is re-read right after every edit to confirm the new text is on disk?"}
+{"must": ["six lines", "quote"], "q": "how many lines are quoted from the fresh read before a follow-up edit?"}
+{"must": ["line endings", "CRLF"], "q": "what must the line endings match after the edit, CRLF or LF?"}
+{"must": ["git diff", "hunks"], "q": "what is read before closing to confirm the single intended change?"}
+{"must": ["no-op", "verify"], "q": "what replaces a re-edit when oldString and newString are identical?"}
+{"must": ["single", "Count"], "q": "what count check keeps a short match to one intended place?"}
+{"must": ["lint", "pytest"], "q": "what runs after every code edit before the close?"}
+{"must": ["re-run", "green"], "q": "what happens after each fix until the check passes?"}
+{"must": ["error line", "paraphrase"], "q": "what is pasted from a failed check instead of a paraphrase?"}
+{"must": ["unverified", "report"], "q": "what does the closing report name about the remaining gaps?"}

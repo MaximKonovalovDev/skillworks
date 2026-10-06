@@ -1,4 +1,4 @@
-"""bash-spawn-guard: the bounded-call pairs really behave as written, in pwsh 7 in scratch dirs."""
+"""edit-verify: the verify-then-lint pairs really behave as written, in pwsh 7 in scratch dirs."""
 import importlib.util
 import json
 import re
@@ -11,7 +11,7 @@ import pytest
 import skill_gates as g
 from skill_gates import live
 
-NAME = "bash-spawn-guard"
+NAME = "edit-verify"
 SKILL = g.SKILLS / NAME
 SCRIPTS = SKILL / "scripts"
 
@@ -36,7 +36,7 @@ def doc() -> dict:
 def results(doc: dict) -> dict:
     if shutil.which("pwsh") is None:
         pytest.skip("pwsh 7 is not installed")
-    return {r["id"]: r for r in _load("run_spawn").run_pairs(doc)}
+    return {r["id"]: r for r in _load("run_verify").run_pairs(doc)}
 
 
 def test_pair_file_is_well_formed(doc: dict) -> None:
@@ -76,10 +76,10 @@ def test_the_harness_can_fail() -> None:
     """A pair whose bad command works, and whose good command prints the wrong thing, must be reported."""
     doc = {
         "fixture": {"target.txt": "line one\n"},
-        "pairs": [{"id": "liar", "group": "x", "bad": "'all done'", "bad_error": "ChildProcess.kill",
+        "pairs": [{"id": "liar", "group": "x", "bad": "'all done'", "bad_error": "Could not find oldString",
                    "good": "'all done'", "expect": "NOT THERE"}],
     }
-    res = _load("run_spawn").run_pairs(doc)[0]
+    res = _load("run_verify").run_pairs(doc)[0]
     assert res["bad_ok"] is False and res["good_ok"] is False
 
 
@@ -92,28 +92,3 @@ def test_error_fragments_come_from_real_failures(results: dict) -> None:
     for fragment, pair_id in rows:
         got = results[pair_id]["bad_text"]
         assert fragment.lower() in got.lower(), f"errors.md says {fragment!r} for {pair_id}, the real error was {got.strip()[:200]!r}"
-
-
-@live
-@needs_pwsh
-def test_three_dispatch_bad_cases_fail_bare_and_pass_bounded(results: dict) -> None:
-    """Judge repair cure-r4: 3 bad cases run once WITHOUT the skill (bare) and once WITH it (bounded).
-
-    Pasted live outputs from scripts/run_spawn.py (pwsh 7, 2026-10-06):
-    - bs-chain4 WITHOUT: "RuntimeException: Unknown: ChildProcess.kill on chained 4 listings
-      plus git plus node in one call" (throws); WITH: "single command timeout limit PASS listed".
-    - bs-clone WITHOUT: "RuntimeException: Unknown: ChildProcess.kill on Start-Process clone
-      plus Start-Sleep 20 with no receipt" (throws); WITH: "Wait-Process timeout receipt PASS cloned".
-    - bs-suites WITHOUT: "RuntimeException: Unknown: ChildProcess.kill on npm run suites bare
-      with no slice" (throws); WITH: "one file timeout limit PASS ran".
-    """
-    cases = {
-        "bs-chain4": "single command timeout limit PASS listed",
-        "bs-clone": "Wait-Process timeout receipt PASS cloned",
-        "bs-suites": "one file timeout limit PASS ran",
-    }
-    for pair_id, bounded_report in cases.items():
-        bad_text = results[pair_id]["bad_text"]
-        assert "ChildProcess.kill" in bad_text, f"{pair_id}: bare run did not throw the kill line: {bad_text.strip()[:160]!r}"
-        assert results[pair_id]["bad_ok"] is True, f"{pair_id}: bare side should fail with the named line"
-        assert results[pair_id]["good_ok"] is True, f"{pair_id}: bounded side should print {bounded_report!r}"
