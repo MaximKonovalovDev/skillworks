@@ -1,0 +1,14 @@
+{
+  "skill": "fetch-github-first",
+  "fingerprint": "498493b1c8b19f52d88e22fd1af535499af200dedefc18b6b3180265283c9e19",
+  "date": "2026-10-06T10:37Z",
+  "command": "SKILL_LIVE=1 python -m pytest tests/test_fetch_github_first.py -q",
+  "result": "6 passed in 2.26s",
+  "versions": {
+    "python": "3.13.14",
+    "os": "Windows-10-10.0.19045-SP0",
+    "git": "git version 2.53.0.windows.1",
+    "node": "v24.14.0",
+    "pwsh": "7.6.3"
+  }
+}

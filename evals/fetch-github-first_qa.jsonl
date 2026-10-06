@@ -1,0 +1,10 @@
+{"must": ["repos call", "exists"], "q": "what proves the repo exists before any file read?"}
+{"must": ["contents", "exact path"], "q": "which call reads the exact path after the listing?"}
+{"must": ["pinned ref", "contents"], "q": "how is the file read pinned instead of guessing raw?"}
+{"must": ["default branch", "ref"], "q": "where does the ref come from before reading?"}
+{"must": ["backoff", "repos call"], "q": "what happens on a 403 rate limit?"}
+{"must": ["directory listing"], "q": "what comes before reading a path you did not list?"}
+{"must": ["search", "exact path"], "q": "how is the helper location confirmed before quoting?"}
+{"must": ["licence", "repos call"], "q": "what is noted from the record before reusing lines?"}
+{"must": ["fallback", "exists"], "q": "what happens when the web fetch misses?"}
+{"must": ["unverified", "record"], "q": "what does the closing report state about gaps?"}
