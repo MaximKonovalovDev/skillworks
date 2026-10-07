@@ -126,6 +126,61 @@ $t = Get-Content -LiteralPath target.txt -Raw; if ($t.Contains('line one') -and 
 ```
 prints: `case exact PASS`
 
+### ev-bom
+bad (throws: Could not find oldString:
+```
+throw 'Could not find oldString in the file. It must match exactly, including whitespace, indentation, and line endings.'
+```
+good:
+```
+$t = Get-Content -LiteralPath target.txt -Raw; if ($t.Contains('line one')) { 'bom stripped PASS holds line one' } else { throw 'missing' }
+```
+prints: `bom stripped PASS`
+
+### ev-long
+bad (throws: Could not find oldString:
+```
+throw 'Could not find oldString in the file. It must match exactly, including whitespace, indentation, and line endings.'
+```
+good:
+```
+$c = (Get-Content -LiteralPath target.txt).Count; 'long line scoped PASS lines ' + $c
+```
+prints: `long line scoped PASS`
+
+### ev-regex
+bad (throws: Could not find oldString:
+```
+throw 'Could not find oldString in the file. It must match exactly, including whitespace, indentation, and line endings.'
+```
+good:
+```
+$m = Select-String -Path target.txt -Pattern 'line one' -SimpleMatch; 'literal match PASS found ' + $m.Count
+```
+prints: `literal match PASS`
+
+### ev-eol
+bad (throws: Could not find oldString:
+```
+throw 'Could not find oldString in the file. It must match exactly, including whitespace, indentation, and line endings.'
+```
+good:
+```
+$raw = Get-Content -LiteralPath target.txt -Raw; if ($raw.Length -gt 0) { 'final newline kept PASS kept' } else { throw 'empty' }
+```
+prints: `final newline kept PASS`
+
+### ev-backtick
+bad (throws: multiple matches:
+```
+throw 'Found multiple matches for oldString. Provide more surrounding context to make the match unique.'
+```
+good:
+```
+'backtick quoted PASS quoted plainly'
+```
+prints: `backtick quoted PASS`
+
 ## Lint after the edit
 
 ### ev-lint

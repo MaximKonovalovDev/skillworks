@@ -19,3 +19,8 @@ Each fragment below is a substring of the real `bad_text` of the named pair. The
 - `Could not find oldString`: file changed after the read, stale oldString retried. Pair `ev-stale`
 - `multiple matches`: short line in two places, widened with six surrounding lines. Pair `ev-widen`
 - `Could not find oldString`: wrong-case oldString typed from memory. Pair `ev-case`
+- `Could not find oldString`: BOM-prefixed file matched without stripping. Pair `ev-bom`
+- `Could not find oldString`: long line outside the read window. Pair `ev-long`
+- `Could not find oldString`: regex chars read as a pattern. Pair `ev-regex`
+- `Could not find oldString`: closing newline dropped from oldString. Pair `ev-eol`
+- `multiple matches`: backtick span in two places, quoted until one. Pair `ev-backtick`

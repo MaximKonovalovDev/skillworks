@@ -1,7 +1,7 @@
 ---
 name: edit-verify
 description: Use when an edit lands but nothing proves it: re-read the edited lines, run the lint check, and report the diff plus checks before closing.
-version: 0.2.0
+version: 0.3.0
 author: skillworks
 tags: [editor, verify]
 license: MIT
@@ -30,6 +30,11 @@ failure class is `references/target-class.json`.
 - Re-read after any outside write with `Get-Content -LiteralPath <file>` when the file may have changed since the last read [src: references/pairs.md#ev-stale]
 - Widen a short hit with six surrounding lines from `Get-Content <file>` until the match is one place [src: references/pairs.md#ev-widen]
 - Match case exactly with `Select-String -Pattern <old> <file>` and never change the case of oldString [src: references/pairs.md#ev-case]
+- Strip the BOM with `Get-Content -Raw <file>` and match `line one` before landing the oldString [src: references/pairs.md#ev-bom]
+- Scope long lines with `(Get-Content <file>).Count` and keep the oldString inside the read window [src: references/pairs.md#ev-long]
+- Match literally with `Select-String -SimpleMatch <file>` and never read regex chars as patterns [src: references/pairs.md#ev-regex]
+- Keep the final newline with `Get-Content -Raw <file>` and never drop the closing line ending [src: references/pairs.md#ev-eol]
+- Quote backtick spans with `'quoted'` in `target.txt` and widen until the match is one place [src: references/pairs.md#ev-backtick]
 
 ## Lint after the edit (close green, never red)
 
