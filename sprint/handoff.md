@@ -1,37 +1,41 @@
-# skillworks handoff - round 279 (token 1ddc)
+# skillworks handoff - round 281 (token a4f2)
 
-Round: 279 (2 cure repairs landed)
-Written: 2026-10-07T10:13Z
-Token: 1ddc (takeover 2026-10-07T08:44Z, replaced stale lead#45a3 left by closed app)
+Round: 281 (takeover round, one landing)
+Written: 2026-10-07T16:45Z
+Token: a4f2 (takeover 2026-10-07T16:27Z, replaced stale lead#1ddc left by closed app)
 Knobs: width 10, foreground, heavy_max 3, paid_mode 0 (unchanged).
 
 ## Heading
-- R1 failure-to-skill repairs landed: edit-verify regression test plus allowlist ADD-only trials 22. No percent moved, class halving needs adoption plus 48 h.
+- R1 moves: read-offset-guard v1.3.1 re-lands lost v1.3.0 coverage (SKILL 20 rules, 28 pairs). DR-1006-5 stays READY, halving pending adoption.
 
 ## Results collected
-- builder-cure-r6-review-2 (judge): VERDICT PASS (new red-replay test, proxy lift 1.0, plus 1 test nothing worse).
-- builder-cure-r8-review-2 (judge): VERDICT PASS (trials 17 to 22 ADD-only, grade lift 1.0, auditable).
-- builder-cure-r7-repair (builder): DONE ro-index547 covers Offset 620/547, 27 to 28 pairs, needs review.
-- builder-cure-r8-repair-repair (builder): DONE red-green.md filed plus eval_report refreshed, needs review.
-- builder-cure-reprofirst-review (judge): VERDICT PASS (landed 44d72b4, lift 1.0).
-- builder-cure-scorerisk-finish-review plus scorerisk-review (judge): VERDICT PASS twice (landed 0d9975f plus 44d72b4, lift 1.0).
-- builder-cure-reprofirst-finish plus scorerisk-finish (builder): DONE wire verified, proofs only.
-- builder-cure-reprofirst (builder): NOOP already DONE 44d72b4.
+- builder-cure-r7-review-2 (judge): VERDICT PASS. Landed ddb4c9e.
+- builder-cure-reprofirst-finish-review (judge): VERDICT FAIL paperwork (2 date bumps, same fingerprints). Reverted tree, no repair.
+- builder-cure-reprofirst-review (judge): VERDICT PASS (confirms landed 0d9975f/44d72b4, lift 1.0).
+- builder-cure-scorerisk-review (judge): VERDICT PASS (confirms 0d9975f, lift 1.0).
+- builder-cure-scorerisk (builder): NOOP already landed, re-verified lift 1.0.
+- builder-cure-taskabort-review (judge): VERDICT PASS on landed 91fe680 (12->17, 17/17 run).
+- builder-cure-webfetch-review (judge): VERDICT PASS on landed e423356 (lift 1.0).
+- builder-cure-webfetch (builder): NOOP already DONE e423356.
+- builder-cure-websearch-review (judge): VERDICT PASS on landed 079fe2e (lift 1.0).
+- builder-fix-agentlint-finish-review (judge): VERDICT FAIL (agentlint WARN 0 fail 4 warn, O-007 still red). Repair queued next.
 
 ## Rows
-- DR-1006-4 READY stands (regression test landed db552c1, halving needs adoption).
-- DR-1006-6 READY stands (ADD-only 22 landed 4c8b6bb, halving needs adoption).
-- S133 scoreproof still open, no row (planner rests this batch).
-- Open: DR-1007-8 READY, O-009 O-010 O-011 READY, DR-1007-9 READY, AD cures, K-54 OWNER, K-03 K-06 PARKED, BK-1004-1 BLOCKED.
+- DR-1006-5 READY updated with ddb4c9e (lint 885 tok, live 6 proven, grade 1.0/0.0, check 20/0/0).
+- Open: DR-1007-8 READY, O-009 O-010 O-011 O-012 O-013 READY, DR-1007-9 READY, AD cures, K-54 OWNER, K-03 K-06 PARKED, BK-1004-1 BLOCKED.
+- Inbox still needs rows: S133 scoreproof, S41 mcp-register, S12 U1 bar, S146 S180 S196 S215 S216 (planner next).
 
 ## Checks
-- node sprint/check.mjs RESULT PASS 20 pass 0 warn 0 fail (lead, 10:13Z round).
-- python -m pytest tests/ -q 721 passed 2 failed pre-existing out-of-scope (c02 golden gate plus seat-guard fetch-status-retry untracked, judges 10:00Z reruns).
+- node sprint/check.mjs RESULT PASS 20 pass 0 warn 0 fail (lead, 16:45Z round).
+- SKILL_LIVE=1 pytest tests/test_read_offset_guard.py 6 passed in 3.90s.
+- Full pytest still 6 failed 725 passed pre-existing out-of-scope drift (helpers 16:45Z).
 
 ## Held, not committed
-- r7-repair (28 pairs) plus r8 red-green.md plus eval_report refresh awaiting review, proof-date reseals, keeper files, claims.txt, lead2 files, loop-keeper, batch, repomap, team notes, ready-file deletions.
+- bash-allowlist r8 fix-forward (+55 pairs.md) plus reseals, keeper files, claims.txt, lead2 files, batch, ready deletions.
 - sprint/halt deleted in working tree, HEAD still carries Maxim 2026-10-05 pause; deletion stays uncommitted.
 
 ## Next
-- Keeper names next batch (r7 review, r8 red-green review, DR-1007-8 cure, S133 row).
-- Planner rows S133 scoreproof when woken; cure builds DR-1007-8; O-009 O-010 O-011 repairs queued.
+- Keeper names next batch: r8 fix-forward review, O-011 pack builder, O-009 O-010 builders, agentlint repair, planner S133/S41 rows.
+- O-011 pack-gate repair first builder; S3 (lowest open bar) still waits on pack packet.
+
+RESULT: DONE - read-offset-guard v1.3.1 ddb4c9e | proof: ddb4c9e and check RESULT PASS 20/0/0
