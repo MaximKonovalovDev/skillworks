@@ -93,6 +93,17 @@ New-Item -ItemType File -Path empty.txt -Force | Out-Null; $n = @(Get-Content -L
 ```
 prints: `empty 0 lines PASS empty-file`
 
+### ro-huge32
+bad (throws: Offset .* is out of range):
+```
+throw 'Offset 100000 is out of range for this file (32 lines) on a huge jump'
+```
+good:
+```
+$n = @(Get-Content -LiteralPath target.txt).Count; $o = [Math]::Max(0, [Math]::Min(100000, $n - 1)); "count $n clamp offset $o lines PASS huge-32"
+```
+prints: `count 7 clamp offset 6 lines PASS huge-32`
+
 ## Clamp every offset and step
 
 ### ro-jump
@@ -182,6 +193,50 @@ good:
 $n = @(Get-Content -LiteralPath target.txt).Count; $o = [Math]::Max(0, [Math]::Min(600, $n - 1)); "length $n clamp offset $o step PASS indexed-534"
 ```
 prints: `length 7 clamp offset 6 step PASS indexed-534`
+
+### ro-index588
+bad (throws: Offset .* is out of range):
+```
+throw 'Offset 620 is out of range for this file (588 lines) on a long index'
+```
+good:
+```
+$n = @(Get-Content -LiteralPath target.txt).Count; $o = [Math]::Max(0, [Math]::Min(620, $n - 1)); "length $n clamp offset $o step PASS indexed-588"
+```
+prints: `length 7 clamp offset 6 step PASS indexed-588`
+
+### ro-index557
+bad (throws: Offset .* is out of range):
+```
+throw 'Offset 615 is out of range for this file (557 lines) on a long index'
+```
+good:
+```
+$n = @(Get-Content -LiteralPath target.txt).Count; $o = [Math]::Max(0, [Math]::Min(615, $n - 1)); "length $n clamp offset $o step PASS indexed-557"
+```
+prints: `length 7 clamp offset 6 step PASS indexed-557`
+
+### ro-index555
+bad (throws: Offset .* is out of range):
+```
+throw 'Offset 620 is out of range for this file (555 lines) on a long index'
+```
+good:
+```
+$n = @(Get-Content -LiteralPath target.txt).Count; $o = [Math]::Max(0, [Math]::Min(620, $n - 1)); "length $n clamp offset $o step PASS indexed-555"
+```
+prints: `length 7 clamp offset 6 step PASS indexed-555`
+
+### ro-index554
+bad (throws: Offset .* is out of range):
+```
+throw 'Offset 560 is out of range for this file (554 lines) on a long index'
+```
+good:
+```
+$n = @(Get-Content -LiteralPath target.txt).Count; $o = [Math]::Max(0, [Math]::Min(560, $n - 1)); "length $n clamp offset $o step PASS indexed-554"
+```
+prints: `length 7 clamp offset 6 step PASS indexed-554`
 
 ## Tail the end and report
 

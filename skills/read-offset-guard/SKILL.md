@@ -1,7 +1,7 @@
 ---
 name: read-offset-guard
 description: Use when reading a file with offset and limit, and when a read call comes back Offset N is out of range for this file
-version: 1.2.0
+version: 1.3.0
 author: skillworks
 tags: [read]
 license: MIT (skill text and scripts, original work)
@@ -34,6 +34,7 @@ The full bad and good runs are `references/pairs.md`, the machine list is `refer
 - Start at the first line with `Select-Object -Skip 0 -First 3` for the head [src: references/pairs.md#ro-first]
 - Step forward by the limit with `$o += $l` and stop at the last line [src: references/pairs.md#ro-walk]
 - Re-check a long index near 544 lines with `(Get-Content target.txt).Count` before jumping to 600 [src: references/pairs.md#ro-index544]
+- Re-check a long index near 560 lines with `(Get-Content target.txt).Count` before jumping to 620 [src: references/pairs.md#ro-index588]
 - Re-check a long index near 534 lines with `(Get-Content target.txt).Count` before jumping to 600 [src: references/pairs.md#ro-index534]
 
 ## Tail the end and report
