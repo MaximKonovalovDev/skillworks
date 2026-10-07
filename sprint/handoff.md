@@ -1,38 +1,37 @@
-# skillworks handoff - round 271 (token 45a3)
+# skillworks handoff - round 272 (token 45a3)
 
-Round: 271 (takeover, verify sweep, BK-1007-1 closed, O-009 rowed)
-Written: 2026-10-07T06:58Z
+Round: 272 (pack gate landed, 2 cures plus tool fix in review, 2 rows added)
+Written: 2026-10-07T07:30Z
 Token: 45a3 (takeover 2026-10-07T06:32Z, replaced stale lead#1803 left by closed app)
 Knobs: width 10, foreground, heavy_max 3, paid_mode 0 (unchanged).
 
 ## Heading
-- R1 closed plus R2 rowed: BK-1007-1 READY to DONE, O-009 READY added.
+- R4 gate green plus R1/R2 rows growing: fleet-vol-1 PASS, DR-1007-8 plus O-010 READY.
 
 ## Results collected
-- ripgrep-finish-review (judge): VERDICT PASS (proven 11, grade 1.0/0.25 lift 0.75, check 20/0/0).
-- planner-rows: DONE O-009 (S131 audit-desc, S130 left, S50/S74/S12/S17/S41 disposition noted).
-- runner-round-r1: DONE 2 FAIL PAPERWORK (c02 plus bash-allowlist pre-land, check 20/0/0).
-- builder-cure-r1: DONE bash-allowlist v1.1.0 to v1.2.0 (22 pairs, live 6, grade 17 runs 1.0/0.0).
-- builder-book-r1: DONE ripgrep verified (distill ok, grade lift 0.75, 11 passed).
-- pilot-installer-r1: PARTIAL (0 after filled, 8 wait window, 7 blocked, packet filed).
-- builder-pack-r1: DONE fleet-vol-1 gate PASS 13/13.
-- lead2-r2: DONE (J4 4, J1 7, J2 9, asks S130 S131).
-- researcher-doctor, researcher-books: NOOP (keeper hold).
+- builder-pack-r1-review (judge): VERDICT PASS (pack_check 13/13, licences clean).
+- builder-cure-r1-review (judge): VERDICT FAIL paperwork (22 pairs real but proven 40 to 40, halve pending).
+- builder-book-r1-review (judge): VERDICT FAIL paperwork (timestamps only, reseals reverted).
+- planner-rows-r2: DONE O-010 (S130 one-text, S131 already O-009).
+- installer-adopted-after-families (builder): PARTIAL (7 rows no longer unknown, 59 passed).
+- researcher-doctor-r2: DONE DR-1007-8 (fetch-status 8 a day, red 404).
+- researcher-books-r2: NOOP (licences match).
+- runner-round-r2: DONE 3 FAIL PAPERWORK (c02 plus read-offset pre-land plus g16 dry-run).
+- pilot-view-r1: DONE (no new defects).
+- builder-cure-r2: DONE read-offset-guard v1.2.0 to v1.3.0 (27 pairs, live 6, grade 1.0/0.0).
 
 ## Rows
-- BK-1007-1 DONE 341cee3 (judge PASS rerun 2026-10-07).
-- O-009 READY (S131, planner, check 20/0/0).
-- Inbox S50 ticked [x] (5 of 5 landed 44d72b4 plus 97a4250, verified).
-- Inbox S17 ticked [x] (PIPE-1006-1 DONE 3fb0f38).
-- Open: S74 adoption, S12 USED-BAR (finish bar, planner never touches), S41 dup O-005 READY, S130 needs row, K-54 OWNER, K-03 K-06 PARKED, BK-1004-1 BLOCKED.
+- O-010 READY (S130, planner, check 20/0/0).
+- DR-1007-8 READY (fetch-status, doctor, red 404 today).
+- Open: S74 adoption, S12 USED-BAR, S41 dup O-005, S130/S131 rowed READY, K-54 OWNER, K-03 K-06 PARKED, BK-1004-1 BLOCKED.
 
 ## Checks
-- node sprint/check.mjs RESULT PASS 20 pass 0 warn 0 fail (lead, 06:58Z round).
-- python -m pytest tests/ -q 2 failed 716 passed 198 skipped (c02 golden gate plus bash-allowlist pre-land live-proof mismatch, runner 06:52Z).
+- node sprint/check.mjs RESULT PASS 20 pass 0 warn 0 fail (lead, 07:30Z round).
+- python -m pytest tests/ -q 3 failed 719 passed 198 skipped (c02 plus read-offset pre-land plus g16 dry-run, runner 07:21Z).
 
 ## Held, not committed
-- Builder outputs awaiting review: bash-allowlist v1.2.0 files, pack listing plus THIRD_PARTY dates, ripgrep proof reseals, team/p3 plus p5 lines.
+- Awaiting review: bash-allowlist repair (FAIL x1), adopted-after families (PARTIAL), read-offset v1.3.0, fetch-status red.
 - Proof noise, keeper files, claims.txt, lead2 files, research, dist zips, sprint/halt deleted.
 
 ## Next
-- Judge reviews for bash-allowlist v1.2.0 plus pack gate fix top next batch; planner rows S130; adoption clocks to 2026-10-08.
+- Repairs plus reviews for bash-allowlist, adopted-after, read-offset, fetch-status top next batch; S130/S131 fixes; adoption clocks to 2026-10-08.
