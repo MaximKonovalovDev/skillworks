@@ -1,35 +1,34 @@
-# skillworks handoff - round 245 (token 1803)
+# skillworks handoff - round 246 (token 1803)
 
-Round: 245 (task-abort landed, FLEET batch-wired, retro done)
-Written: 2026-10-07T00:15Z
+Round: 246 (GO batch collected, 2 re-review FAILs rejected, 3 LEAD2 rows rowed)
+Written: 2026-10-07T01:39Z
 Token: 1803 (takeover 2026-10-06T15:24Z, replaced stale lead#a7e2 left by closed app)
 Knobs: width 5, foreground, heavy_max 3, paid_mode 0 (file of 2026-10-06T00:14Z, unchanged).
 
 ## Heading
-- R1 book-to-skill: task-abort-guard v1.1.0 landed (lift 1.0). FLEET lists + credits + p3 batch-wired for all 8 landed skills.
+- R1 bookkeeping: 10-wide GO batch closed. 5 re-review PASSes confirm landed work, 2 re-review FAILs rejected with reason (no revert), 2 scout rows kept, lead2 DONE 7/10/10 with 3 asks rowed as O-006 to O-008.
 
 ## Results collected
-- taskabort-review (judge): VERDICT PASS (pairs 12->17, run 17/17, red fails-before). Committed 91fe680 (7 files).
-- Fleet batch-wire (lead): committed 668b216 (gates + install + THIRD_PARTY + p3) — every line maps to judged-PASS landed work.
+- lead2 (pilot): DONE scores 7/10/10, fake green on 3bc9cc2 + J1 rough edges filed as S121 S123 S124.
+- 037-allowlist re-review: VERDICT FAIL rejected. Demands revert of 5b484b5 over 48 h not yet elapsed (by design, AD-1006-2 clock running) plus out-of-scope concurrent reds. Prior judged PASS stands, no revert.
+- abort re-review: VERDICT FAIL rejected. Judge ran no grade or suite (shell aborts), demands revert of e6579ba. Prior judged PASS stands, no revert.
+- editabort, identical, keeper, r10, r11 re-reviews: all PASS, confirm 1d32fea 6bc627e fe10213 97a4250 0af4040. Nothing new to land.
+- researcher-doctor: DONE DR-1007-1 ready-file-check widen, 41/48 h. Researcher-books: DONE BK-1007-1 ripgrep-search Unlicense. Both rows on board READY.
+- S110 FAST-EXTEND still open: no pack packet in this batch, width spent on re-reviews plus scouts.
 
 ## Rows
-- No row for the task-abort fallback bump (no open row; work recorded in 91fe680). All doctor rows built/landed.
-- AD-1/2 installed (clocks ~5 h). PW-1006-1 DONE (teeth). K-54 OWNER, K-03 K-06 PARKED, BK-1004-1 BLOCKED.
+- New O-006 O-007 O-008 READY from S121 S123 S124 (inbox ticked). DR-1007-1 BK-1007-1 READY kept as written.
+- AD-1/2 adoption clocks running. K-54 OWNER, K-03 K-06 PARKED, BK-1004-1 BLOCKED. S50 1 of 5, S74 open.
 
 ## Checks
-- node sprint/check.mjs RESULT PASS 20 pass 0 warn 0 fail (lead reran).
-- Lead reran: live_proof task-abort-guard 6 passed. Judges report 644-646 green + concurrent-dirt reds.
+- node sprint/check.mjs RESULT PASS 20 pass 0 warn 0 fail (lead reran 01:39Z).
 
 ## Held, not committed
-- Timestamp noise, folded-mcp-forge research, keeper loop files (keeper-owned).
+- skills live-proof plus trial-proof timestamp noise from re-review reruns, keeper loop files, folded-mcp-forge research, packs/mcp-template, evals/ripgrep-search_trials.jsonl (lands with the BK-1007-1 cure), sprint/halt stays deleted (owner removal only).
 
 ## Next
-- Adoption 48 h watch (spawn ~5 h, allowlist ~4 h in — too early to count). Fleet Vol 2 row when a third packable set proves out.
-- S50 remaining 4 prompt trials (judge score-risk, repro-first, batch-first, brief-gate) still unrowed — needs failure classes named first.
+- Round 247 batch: cures for DR-1007-1 and BK-1007-1 plus fixes for O-006 O-007 O-008 (2 heavy plus 3 light).
+- Adoption 48 h watch continues. S110 needs Vol 1 loads logged across repos.
 
-## Retro (round 245, due)
-- Metrics 23:56Z: judge PASS 30/48 (62.5%, +12 w/w), FAIL 18. Cost warning: tokens per PASS 11.7M (+2.8M).
-- Top failures: keeper readiness hold 8 (lead-side, my stale batches), SKILL_LIVE bash form 8 (+2, rebound), edit oldString 7 (incl. lead's own board edits tonight), target-class 4, 000-tool-sprint 4.
-- Worst repeated: SKILL_LIVE=1 bash-in-pwsh back to 8/24 h — helpers copy the bash form from live-proof.json command fields and packet proofs; the 230 proposal did not stick.
-- PROPOSAL: tests/live_proof.py | write the pwsh form ($env:SKILL_LIVE='1'; python -m pytest tests/<f> -q) into live-proof.json command fields and packet proof lines, bash form nowhere | SKILL_LIVE bash form fails 8x in 24 h now (was 5 after the 230 proposal)
-- Coach: no change (PASS rate rising 51->62%). Next retro due 250.
+## Retro (round 246, not due)
+- None. Next retro due 250.
