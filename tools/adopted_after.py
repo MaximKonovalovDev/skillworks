@@ -18,8 +18,12 @@ the last 48 hours, scaled to the shell calls of the before window (count x befor
 loop that worked harder or less hard is compared by rate. It is written only when the repo's loop really ran through that
 window: shell calls in at least 36 of the 48 hours, and at least half of the shell calls it made in the 48 hours before
 the install (and at least 100). Without that rule a paused loop would count zero failures and every class would look
-halved, and a few busy hours would pass for a full run. Until then the row stays empty and `--status` names the reason. `finish_proof.py s5` calls this before it reads the file, so the number is
-filled whenever the finish line is measured. after-log.jsonl beside the record keeps the raw count and the shell calls.
+halved, and a few busy hours would pass for a full run. Until then the row stays empty and `--status` names the reason. `finish_proof.py s5` calls this when no halved class is on record yet, so the number is
+filled while the bar is still open. after-log.jsonl beside the record keeps the raw count and the shell calls.
+
+Meter reads are cached beside the record in after-scan-cache.json (install windows 7 days, the trailing 48 h
+15 minutes), each store saved at once so a run killed at its timeout keeps what it measured. Fills still come
+only from a fresh snapshot; the cache only answers guard checks and `waits` reasons fast.
 
 Needs the OpenCode database (read-only) and center's empire.json (repo name to folder), both read at run time.
 """
@@ -150,18 +154,22 @@ def _connect(db: Path) -> sqlite3.Connection:
 
 def shell_activity(db: Path, dirs: list[tuple[str, str]], start_ms: float, end_ms: float) -> tuple[dict[str, int], dict[str, int]]:
     """Per repo, in the window (start, end]: the shell tool calls, and the number of hours (counted back from the end) that
-    held at least one."""
+    held at least one.
+
+    Fast on a multi-GB history: the hour bucket is computed in SQLite and no
+    `data` blob crosses into Python (only session ids and bucket numbers do);
+    the counts are the same as grouping in SQL."""
     con = _connect(db)
     try:
         sess = {i: d for i, d in con.execute("select id, directory from session where time_updated > ?", (start_ms,))}
         calls: dict[str, int] = {}
         hours: dict[str, set[int]] = {}
-        q = ("select session_id, cast((? - time_created) / 3600000 as integer), count(*) from part "
-             "where time_created > ? and time_created <= ? and json_extract(data,'$.type')='tool' and json_extract(data,'$.tool')='bash' "
-             "group by session_id, 2")
-        for sid, hour, n in con.execute(q, (end_ms, start_ms, end_ms)):
+        q = ("select session_id, cast((? - time_created) / 3600000 as integer) from part "
+             "where time_created > ? and time_created <= ? "
+             "and json_extract(data,'$.type')='tool' and json_extract(data,'$.tool')='bash'")
+        for sid, hour in con.execute(q, (end_ms, start_ms, end_ms)):
             r = repo_of(sess.get(sid), dirs)
-            calls[r] = calls.get(r, 0) + n
+            calls[r] = calls.get(r, 0) + 1
             hours.setdefault(r, set()).add(hour)
         return calls, {r: len(h) for r, h in hours.items()}
     finally:
@@ -173,21 +181,41 @@ def shell_calls(db: Path, dirs: list[tuple[str, str]], start_ms: float, end_ms: 
     return shell_activity(db, dirs, start_ms, end_ms)[0]
 
 
+# Slice widths for class_counts below: failure markers sit at the start of the
+# error/output text (pwsh and git errors lead with the message), and the skill
+# input names its command and file path up front. Widths stay bounded so one
+# 48 h pass over a multi-GB history answers inside the 120 s proof budget.
+_OUT_N = 400
+_ERR_N = 400
+_INP_N = 800
+
+
 def class_counts(db: Path, dirs: list[tuple[str, str]], start_ms: float, end_ms: float) -> dict[str, dict[str, int]]:
-    """{family: {repo: hits}} for the window (start, end]: every tool call, classified."""
+    """{family: {repo: hits}} for the window (start, end]: every tool call, classified.
+
+    Fast on a multi-GB history: SQLite hands over only the tool name, the full
+    command and bounded slices of output, error and input (no full `data` blob
+    crosses into Python, no json.loads per row). classify() sees the same
+    fields with the same output-before-error preference; the bevy check also
+    sees the input slice, since a read or edit names bevy in its file path
+    rather than in a command."""
     con = _connect(db)
     try:
         sess = {i: d for i, d in con.execute("select id, directory from session where time_updated > ?", (start_ms,))}
         out: dict[str, dict[str, int]] = {fam: {} for fam in FAMILY.values()}
-        q = "select session_id, data from part where time_created > ? and time_created <= ? and json_extract(data,'$.type')='tool'"
-        for sid, data in con.execute(q, (start_ms, end_ms)):
-            try:
-                part = json.loads(data)
-            except ValueError:
-                continue
-            state = part.get("state") or {}
+        q = ("select session_id, json_extract(data,'$.tool'), "
+             "json_extract(data,'$.state.input.command'), "
+             f"substr(json_extract(data,'$.state.output'),1,{_OUT_N}), "
+             f"substr(json_extract(data,'$.state.error'),1,{_ERR_N}), "
+             f"substr(json_extract(data,'$.state.input'),1,{_INP_N}) "
+             "from part where time_created > ? and time_created <= ? "
+             "and json_extract(data,'$.type')='tool'")
+        for sid, tool, cmd, output, error, inp_json in con.execute(q, (start_ms, end_ms)):
             repo = repo_of(sess.get(sid), dirs)
-            for fam in classify(part.get("tool") or "", state.get("input") or {}, state, repo):
+            hits = classify(tool or "", {"command": cmd or ""}, {"output": output, "error": error}, repo)
+            if repo == "engine2040" and "bevy" not in hits and _BEVY.search(inp_json or ""):
+                hits = hits + ["bevy"]
+            for fam in hits:
                 out[fam][repo] = out[fam].get(repo, 0) + 1
         return out
     finally:
@@ -243,12 +271,101 @@ def verdict(skill: str, before: float, after: float) -> str:
     return "DOWN" if after < before else "FLAT" if after == before else "UP"
 
 
-def plan(rows: list[list[str]], now_ms: float, db: Path, dirs: list[tuple[str, str]], meta: dict[str, str] | None = None) -> list[dict]:
+# Meter-read cache: one history scan of a multi-GB database costs a minute or more, and the S5 proof plus
+# the arsenal `--status` tool share a 120 s budget. Install-window reads are history (they never move), so
+# they are kept 7 days; trailing-48 h reads are reused 15 minutes (under 1% of the 48 h window) for guard
+# checks and `waits` reasons. A row's `after` number is still filled only from a fresh, internally consistent
+# snapshot (shell calls and class counts of the same window). The file sits beside adopted.csv and is replaced
+# atomically; a missing or unreadable cache is a miss, never fatal. Each store saves at once, so a run killed
+# at its timeout keeps what it measured and the next run finishes inside the budget.
+CACHE_TTL_AFTER = 900
+CACHE_TTL_BEFORE = 7 * 86400
+
+
+def _load_cache(path: Path) -> dict:
+    try:
+        doc = json.loads(path.read_text(encoding="utf-8-sig"))
+        return doc if isinstance(doc, dict) else {}
+    except (OSError, ValueError):
+        return {}
+
+
+def _save_cache(path: Path, doc: dict) -> None:
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        before = doc.get("before")
+        if isinstance(before, dict):
+            keep = sorted(before, key=lambda k: before[k].get("at_ms", 0) if isinstance(before[k], dict) else 0)[-50:]
+            doc = {**doc, "before": {k: before[k] for k in keep}}
+        buf = json.dumps(doc)
+        fd, tmp = tempfile.mkstemp(dir=str(path.parent), prefix=".after-scan-cache-", suffix=".tmp")
+        with os.fdopen(fd, "w", encoding="utf-8", newline="") as fh:
+            fh.write(buf)
+        os.replace(tmp, path)
+    except OSError:
+        pass  # a cache that cannot be written is skipped, never fatal
+
+
+def _before_window(cache_file: Path | None, date: str, end: float, db: Path, dirs: list[tuple[str, str]],
+                   now_ms: float) -> dict[str, int]:
+    """Shell calls of one install window: history, so a cached reading is exact."""
+    h = WINDOW_H * 3_600_000
+    key = f"{date}|{datetime.fromtimestamp(end / 1000, timezone.utc):%Y-%m-%dT%H:%MZ}"
+    if cache_file is not None:
+        before = _load_cache(cache_file).get("before")
+        hit = before.get(key) if isinstance(before, dict) else None
+        if isinstance(hit, dict) and now_ms - hit.get("at_ms", 0) < CACHE_TTL_BEFORE * 1000 \
+                and isinstance(hit.get("shell"), dict):
+            return {k: int(v) for k, v in hit["shell"].items()}
+    shell = shell_calls(db, dirs, end - h, end)
+    if cache_file is not None:
+        try:
+            doc = _load_cache(cache_file)
+            before = doc.get("before")
+            if not isinstance(before, dict):
+                before = {}
+                doc["before"] = before
+            before[key] = {"at_ms": now_ms, "shell": shell}
+            _save_cache(cache_file, doc)
+        except OSError:
+            pass
+    return shell
+
+
+def _load_after(cache_file: Path | None, now_ms: float) -> dict | None:
+    """The trailing-window snapshot when one is fresh enough, else None."""
+    if cache_file is None:
+        return None
+    snap = _load_cache(cache_file).get("after")
+    if not isinstance(snap, dict):
+        return None
+    if now_ms - snap.get("at_ms", 0) >= CACHE_TTL_AFTER * 1000:
+        return None
+    if not isinstance(snap.get("shell"), dict) or not isinstance(snap.get("hours"), dict):
+        return None
+    return snap
+
+
+def _store_after(cache_file: Path | None, now_ms: float, calls: dict, hours: dict, classes: dict | None) -> None:
+    if cache_file is None:
+        return
+    try:
+        doc = _load_cache(cache_file)
+        doc["after"] = {"at_ms": now_ms, "shell": calls, "hours": hours,
+                        **({"classes": classes} if isinstance(classes, dict) else {})}
+        _save_cache(cache_file, doc)
+    except OSError:
+        pass
+
+
+def plan(rows: list[list[str]], now_ms: float, db: Path, dirs: list[tuple[str, str]], meta: dict[str, str] | None = None,
+         cache_file: Path | None = None) -> list[dict]:
     """One entry per adopted row without an after number: due or not, and when due the number or the reason it waits.
 
     The number is the raw count of the last 48 hours scaled to the shell calls of the before window (count x before shell
     calls / after shell calls), so a loop that worked twice as hard or half as hard is compared by rate, as center's
-    compare does per 1000 shell calls."""
+    compare does per 1000 shell calls. Pass `cache_file` (beside adopted.csv) to reuse meter reads within their TTL;
+    without it every number is scanned fresh."""
     meta = meta or {}
     h = WINDOW_H * 3_600_000
     before_shell: dict[str, dict[str, int]] = {}
@@ -269,9 +386,19 @@ def plan(rows: list[list[str]], now_ms: float, db: Path, dirs: list[tuple[str, s
             continue
         item["due"] = True
         if date not in before_shell:
-            before_shell[date] = shell_calls(db, dirs, end - h, end)
+            before_shell[date] = _before_window(cache_file, date, end, db, dirs, now_ms)
         if "shell" not in after:
-            after["shell"] = shell_activity(db, dirs, now_ms - h, now_ms)
+            snap = _load_after(cache_file, now_ms)
+            if snap is None:
+                calls, hours = shell_activity(db, dirs, now_ms - h, now_ms)
+                _store_after(cache_file, now_ms, calls, hours, None)
+                after["shell"] = (calls, hours)
+                after["snap"] = "fresh"
+            else:
+                after["shell"] = ({k: int(v) for k, v in snap["shell"].items()},
+                                  {k: int(v) for k, v in snap["hours"].items()})
+                after["snap"] = "cache"
+                after["snap_classes"] = snap.get("classes") if isinstance(snap.get("classes"), dict) else None
         b, a, active = before_shell[date].get(repo, 0), after["shell"][0].get(repo, 0), after["shell"][1].get(repo, 0)
         need = max(MIN_SHELL, MIN_ACTIVITY * b)
         item.update(before_shell=b, after_shell=a, active_hours=active)
@@ -284,7 +411,29 @@ def plan(rows: list[list[str]], now_ms: float, db: Path, dirs: list[tuple[str, s
                            f"({int(MIN_ACTIVITY * 100)}% of the {b} before, at least {MIN_SHELL}); the loop was idle")
             continue
         if "classes" not in after:
-            after["classes"] = class_counts(db, dirs, now_ms - h, now_ms)
+            if after.get("snap") == "cache" and isinstance(after.get("snap_classes"), dict):
+                after["classes"] = after["snap_classes"]
+            else:
+                # Fills come only from a fresh, internally consistent snapshot: shell calls and class
+                # counts of the same window, so the permanent record never holds mixed-window numbers.
+                calls, hours = shell_activity(db, dirs, now_ms - h, now_ms)
+                after["shell"] = (calls, hours)
+                after["classes"] = class_counts(db, dirs, now_ms - h, now_ms)
+                after["snap"] = "fresh"
+                _store_after(cache_file, now_ms, calls, hours, after["classes"])
+                b, a, active = before_shell[date].get(repo, 0), calls.get(repo, 0), hours.get(repo, 0)
+                item.update(before_shell=b, after_shell=a, active_hours=active)
+                need = max(MIN_SHELL, MIN_ACTIVITY * b)
+                if active < MIN_ACTIVE_HOURS:
+                    item["value"] = None
+                    item["why"] = (f"waits: {repo} ran in {active} of the last {WINDOW_H} hours, needs {MIN_ACTIVE_HOURS}; "
+                                   f"the loop was paused or idle, so its count would not be a full {WINDOW_H} hours")
+                    continue
+                if a < need:
+                    item["value"] = None
+                    item["why"] = (f"waits: {repo} made {a} shell calls in the last {WINDOW_H} h, needs {need:.0f} "
+                                   f"({int(MIN_ACTIVITY * 100)}% of the {b} before, at least {MIN_SHELL}); the loop was idle")
+                    continue
         raw = after["classes"][FAMILY[skill]].get(repo, 0)
         item["raw"] = raw
         item["value"] = round(raw * b / a) if b else raw
@@ -301,7 +450,8 @@ def refresh(path: Path, db: Path | None = None, empire: Path | None = None, now_
     if not db.is_file():
         return [], f"no opencode.db at {db}"
     now_ms = time.time() * 1000 if now_ms is None else now_ms
-    items = plan(rows, now_ms, db, repo_dirs(empire or EMPIRE), load_meta(path.parent / "adopted-meta.json"))
+    items = plan(rows, now_ms, db, repo_dirs(empire or EMPIRE), load_meta(path.parent / "adopted-meta.json"),
+                 path.parent / "after-scan-cache.json")
     filled = [it for it in items if it["value"] is not None]
     for it in filled:
         it["verdict"] = verdict(it["skill"], float(rows[it["row"]][4] or 0), float(it["value"]))

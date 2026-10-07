@@ -322,6 +322,37 @@ def test_s5_prints_a_measuring_fault_instead_of_raising(world: World, monkeypatc
     assert not ok and "after-number measuring failed: RuntimeError: database is locked" in msg
 
 
+def test_s5_already_met_returns_without_any_database_scan(world: World, monkeypatch) -> None:
+    """The fast path: a record that already names a halved class is met with no measuring."""
+    world.write_csv(["2026-10-03,forge,pwsh-for-bash-writers,adopted,9,4"])
+
+    def broken(*a, **k):
+        raise AssertionError("no database scan when the bar is already met")
+
+    monkeypatch.setattr(aa, "refresh", broken)
+    ok, msg = fp.s5(world.csv, refresh=True)
+    assert ok and "forge/pwsh-for-bash-writers 9 -> 4" in msg and "no re-scan" in msg
+    assert world.cells()[0][5] == "4"
+
+
+def test_second_refresh_reuses_the_meter_cache(world: World, monkeypatch) -> None:
+    """One full scan warms after-scan-cache.json; the next refresh answers from it."""
+    end = datetime(2026, 10, 2, 0, 0, tzinfo=timezone.utc).timestamp() * 1000
+    world.busy("alpha", end, hours=48, per_hour=20)
+    world.write_csv(["2026-10-01,alpha,pwsh-for-bash-writers,adopted,10,"])
+    first, _ = world.refresh()
+    assert (world.tmp / "state" / "after-scan-cache.json").is_file()
+
+    def broken(*a, **k):
+        raise AssertionError("the second refresh must reuse the meter cache, not rescan")
+
+    monkeypatch.setattr(aa, "shell_calls", broken)
+    monkeypatch.setattr(aa, "shell_activity", broken)
+    monkeypatch.setattr(aa, "class_counts", broken)
+    second, _ = world.refresh()
+    assert second == first and second[0]["value"] is None and "needs 36" in second[0]["why"]
+
+
 def test_a_fall_in_use_rows_is_not_a_cured_class(tmp_path: Path) -> None:
     """real-browser-automation and bevy-rust-ecs rows count use, where up is good: 7 -> 3 must not meet S5."""
     p = tmp_path / "adopted.csv"
