@@ -1,28 +1,28 @@
-# skillworks handoff - round 263 (token 1803)
+# skillworks handoff - round 264 (token 1803)
 
-Round: 263 (mcp pack landed, bevy reseal in review)
-Written: 2026-10-07T05:06Z
+Round: 264 (bevy landed, git-one-branch upkeep plus S50 hunt queued)
+Written: 2026-10-07T05:10Z
 Token: 1803 (takeover 2026-10-06T15:24Z, replaced stale lead#a7e2 left by closed app)
 Knobs: width 5, foreground, heavy_max 3, paid_mode 0 (file of 2026-10-06T00:14Z, unchanged).
 
 ## Heading
-- R4 pack lane: mcp-template tested and catalog-listed. Vol1 bevy proof resealed, review queued.
+- Vol1 bevy green again (eval 1.0). Same treatment queued for git-one-branch stale proof; S50 hunt resumes with a fresh angle (cards to classes, not a repeat scout).
 
 ## Results collected
-- mcp-pack-review (judge): VERDICT PASS (selftests x2 plus pack test 5 green on rerun, MIT credited, suite better 3/687). Committed 3fb0f38 (pack files plus catalog row plus test).
-- bevy reseal (builder): DONE, bevy -k 50 passed 3 skipped. Review queued (QA-edit vs skill-fix in scope).
+- bevy-review (judge): VERDICT PASS (3 FAILs flip on diff, musts by skill fix, live 42 passed, suite 688/2). Committed a3b9832 (3 files).
+- Suite note: only c02 golden plus git-one-branch proof red now; git-one-branch upkeep queued.
 
 ## Rows
-- PIPE-1006-1 DONE 3fb0f38. No open row for bevy upkeep; landing records under Vol1 upkeep here.
+- No board change (Vol1 upkeep needs no row). S50 hunter ticks inbox per row added.
 
 ## Checks
-- node sprint/check.mjs RESULT PASS 20 pass 0 warn 0 fail (lead, 05:06Z round).
+- node sprint/check.mjs RESULT PASS 20 pass 0 warn 0 fail (judge reran; lead reruns on land).
 
 ## Held, not committed
-- bevy subject uncommitted (verdict pending). Proof noise, keeper files, claims.txt, research, packs/mcp-template balance, sprint/halt deleted.
+- Proof noise, keeper files, claims.txt, research, packs/mcp-template balance, sprint/halt deleted.
 
 ## Next
-- Collect bevy review; land PASS by path. Scouts resume with fresh angles after the hold.
+- Collect upkeep plus S50 hunt; land and row accordingly. Retro due 265.
 
-## Retro (round 263, not due)
+## Retro (round 264, not due)
 - None. Next retro due 265.
