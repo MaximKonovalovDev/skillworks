@@ -158,6 +158,12 @@ const REPOS = {
     state: "C:/Users/me/Desktop/video-studio/sprint/loop-keeper.json", cmd: "C:/Users/me/Desktop/video-studio/sprint/loop-keeper.cmd.json",
     knobs: "C:/Users/me/Desktop/video-studio/.opencode/knobs.json", command: "C:/Users/me/Desktop/video-studio/.opencode/commands/sprint.md",
   },
+  soulworks: {
+    lock: "C:/Users/me/Desktop/soulworks/sprint/lock.txt", halt: "C:/Users/me/Desktop/soulworks/sprint/halt",
+    handoff: "C:/Users/me/Desktop/soulworks/sprint/handoff.md", inbox: "C:/Users/me/Desktop/soulworks/sprint/inbox.md",
+    state: "C:/Users/me/Desktop/soulworks/sprint/loop-keeper.json", cmd: "C:/Users/me/Desktop/soulworks/sprint/loop-keeper.cmd.json",
+    knobs: "C:/Users/me/Desktop/soulworks/.opencode/knobs.json", command: "C:/Users/me/Desktop/soulworks/.opencode/commands/sprint.md",
+  },
 };
 const CFG = {
   repo: "skillworks",
@@ -371,16 +377,8 @@ const PROOF_MIN = 90;
 const GATE = /^(?:judge|checker|overseer|api-reviewer)(?:-paid)?$/;
 const NOT_ROLES = new Set(["orchestrator", "lead", "overseer", "general", "build", "plan"]);
 const RESULT_ASK = "\n\nEnd your reply with one line: `RESULT: DONE|PARTIAL|BLOCKED|NOOP - <what changed, or the blocker> | proof: <command result, file or URL>`.";
-// Roles that have a `<role>-paid.md` twin (the Go lane): hybrid mode (knob paid_mode = 1) sends those roles to the twin.
-const paidIn = (dir) => {
-  const out = new Map(); // role -> twin file
-  for (const f of ["agents", "agent"]) {
-    try {
-      for (const n of readdirSync(join(dir, ".opencode", f))) if (n.endsWith("-paid.md")) out.set(n.slice(0, -"-paid.md".length).toLowerCase(), join(dir, ".opencode", f, n));
-    } catch { /* no such folder */ }
-  }
-  return out;
-};
+// Roles that have a `<role>-paid.md` twin (free only since 2026-10-07: the
+// twins stay on disk, nothing routes to them).
 const rolesIn = (dir) => {
   const out = new Set();
   for (const f of ["agents", "agent"]) {
@@ -586,7 +584,6 @@ const makeKeeper = async ({ client, worktree, directory }, options) => {
   const background = opt.background ?? backgroundOn();
   const calls = ho.calls ?? { since: iso(), backgrounded: 0, todoFilled: 0, routed: 0, resultAsked: 0 };
   const roles = opt.roles ?? (root ? rolesIn(root) : new Set());
-  const paidRoles = opt.paidRoles ?? (root ? paidIn(root) : new Set());
   // The claims file lives in the queue folder (qsub), never at the repo root. A read of the root guess goes to the real file.
   const claimsPath = () => qsub("claims.txt").replace(/\\/g, "/");
   const isRootClaims = (p) => {
@@ -828,8 +825,9 @@ const makeKeeper = async ({ client, worktree, directory }, options) => {
     log(`${id} fresh context: session context ${input} > ${threshold} (fresh_ctx_k=${k}); ${answer}`);
     return answer;
   };
-  // Two modes (owner 2026-09-29): free only, or hybrid: with the knob paid_mode at 1 a role that has a -paid twin runs on the Go subscription.
-  const paidOf = (role) => (!role || /-paid$/.test(role) || Number(knobValue("paid_mode")) !== 1 || !paidRoles.has(String(role).toLowerCase()) || (paidRoles.get?.(String(role).toLowerCase()) && (mtime(paidRoles.get(String(role).toLowerCase())) ?? 0) > loadedAt) ? role : `${role}-paid`);
+  // Free only (owner 2026-10-07: "delete hybrid we do free only"): every role
+  // runs on the free Muse, paid_mode 1 is refused by the knobs, nothing
+  // routes to a -paid twin (an explicit `-paid` name still passes through).
   // Knob `dispatch`: "foreground" (the default, owner 2026-09-28) or "queue" (see the queue section).
   const foreground = () => String(knobValue("dispatch") ?? "foreground").trim().toLowerCase() !== "queue";
   // The /sprint command changed since the loop was last told. A running session got the command
@@ -2071,7 +2069,7 @@ Ready work: ${readyItem.id}. Claim only this item; selectors do not authorize sw
     }
     const snap = { alive: iso(), busy: status.session ? busy.has(status.session) : false };
     if (fixes.total) snap.shellFixes = { ...fixes, last: fixLast };
-    if (calls.backgrounded || calls.todoFilled || calls.routed || calls.resultAsked || calls.delegated || calls.queued || calls.packets || calls.foregrounded || calls.timeoutRaised || calls.repeatHeld || calls.paidRouted || calls.heavyQueued || calls.adhocStopped || calls.claimsRouted || calls.navHinted || calls.subHelpers || calls.subCapHeld) snap.callFixes = { ...calls };
+    if (calls.backgrounded || calls.todoFilled || calls.routed || calls.resultAsked || calls.delegated || calls.queued || calls.packets || calls.foregrounded || calls.timeoutRaised || calls.repeatHeld || calls.heavyQueued || calls.adhocStopped || calls.claimsRouted || calls.navHinted || calls.subHelpers || calls.subCapHeld) snap.callFixes = { ...calls };
     // The queue acts every beat (a stuck helper aborts, free width fills,
     // finished results go out); the census below only runs when a decision
     // dirtied it, so an idle beat costs no session API call and no queue scan.
@@ -2484,9 +2482,8 @@ Ready work: ${readyItem.id}. Claim only this item; selectors do not authorize sw
                 args.prompt = `The loop sent \`packet: ${ref[1]}\`, but ${job.why}. Do nothing else; reply with one line: RESULT: BLOCKED - ${job.why} | proof: the keeper`;
                 return log(`${input.sessionID} batch: packet ${ref[1]} not started (${job.why})`);
               }
-              const sub = paidOf(job.role);
+              const sub = job.role;
               args.subagent_type = sub;
-              if (sub !== job.role) calls.paidRouted = (calls.paidRouted ?? 0) + 1;
               args.description = String(args.description ?? "").trim() || job.title;
               args.prompt = job.text;
               if (input.callID) fgJobs.set(input.callID, { ...job, sub, ref: ref[1], copies: job.standing ? Math.max(1, Number(job.fm?.copies) || 1) : 1, desc: args.description, group: job.group?.map((j) => ({ ...j, text: undefined })) });
@@ -2524,8 +2521,6 @@ Ready work: ${readyItem.id}. Claim only this item; selectors do not authorize sw
             if (adhocCalls.size > 200) adhocCalls.delete(adhocCalls.keys().next().value);
             adhocCalls.set(input.callID, repeatKey(args));
           }
-          const paid = paidOf(args.subagent_type);
-          if (paid !== args.subagent_type) { args.subagent_type = paid; calls.paidRouted = (calls.paidRouted ?? 0) + 1; }
           if (input.callID) {
             if (adhocRun.size > 200) adhocRun.delete(adhocRun.keys().next().value);
             adhocRun.set(input.callID, { sid: input.sessionID, desc: String(args.description ?? ""), sub: String(args.subagent_type ?? ""), proof: PROOF_TEXT.test(String(args.prompt ?? "")), started: now() });
