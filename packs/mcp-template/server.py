@@ -34,3 +34,16 @@ def echo(text: str):
 
 def list_tools():
     return list(_TOOLS.values())
+
+def selftest():
+    """In-process check: 3 tools, verbs work, registry intact."""
+    names = [t.name for t in list_tools()]
+    assert names == ["ping", "add", "echo"], f"want 3 tools, got {names}"
+    assert _TOOLS["ping"].fn() == "pong"
+    assert _TOOLS["add"].fn(2, 3) == 5
+    assert _TOOLS["echo"].fn("hi") == "hi"
+    print("SELFTEST PASS")
+
+if __name__ == "__main__":
+    if "--selftest" in sys.argv:
+        selftest()
