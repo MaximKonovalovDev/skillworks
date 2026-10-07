@@ -81,6 +81,7 @@ The glTF loader puts the `AnimationPlayer` on a descendant of the scene root, so
 ## Dev setup
 - Fast dev builds: feature `dynamic_linking`. In the viewer: `[features] dev = ["bevy/dynamic_linking"]`, run `cargo run --features dev`. Dev only. On Windows also set `[profile.dev] opt-level = 1` and `[profile.dev.package."*"] opt-level = 3`, else the link fails with "too many exported symbols".
 - The first Bevy build is heavy (many minutes, several GB). Do not build it on a small PC: use the project's heavy-build queue if it has one.
+- Heavy viewer builds run in the queue: queue every viewer build there; see `references/viewer-recipe.md` Run section for the queued-wait rules.
 - Smaller build: `bevy = { version = "0.19.1", default-features = false, features = ["3d"] }`.
 - Assets live in `assets/` next to Cargo.toml (`cargo run` reads there).
 - A glb faces +Z, Bevy forward is -Z: if the fighter shows its back, turn it by PI about Y.

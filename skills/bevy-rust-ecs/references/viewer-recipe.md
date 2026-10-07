@@ -356,6 +356,8 @@ fn save_shot_and_exit(captured: On<ScreenshotCaptured>, mut exit: MessageWriter<
 cargo run --manifest-path viewer/Cargo.toml --features dev
 ```
 
+Heavy viewer builds run in the project's heavy-build queue. Never abort the queued wait for a viewer crate build: the first build takes 30 to 60 minutes, so queue every viewer build through the queue and do other tasks meanwhile (an aborted wait still counts as a run: re-queue it instead of starting a bare run). Never run a bare cargo command for the viewer crate: every viewer build uses --locked with a pooled shared cache and --target-dir, plus the queue's sccache and incremental settings. When the queue instructions say to check first with a short command and then the long test, follow that order: then the long test decides; re-queue a run that ends with empty output instead of retrying it by hand on a small PC.
+
 The process exits by itself: code 0 after the picture is saved to `viewer-shot.png` in the current directory, code 1 if the time limit hit first. `fn main() -> AppExit` is what carries the code out.
 
 ## Checks before you call it done
