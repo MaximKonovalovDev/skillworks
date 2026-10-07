@@ -1921,10 +1921,110 @@ Ready work: ${readyItem.id}. Claim only this item; selectors do not authorize sw
     snapDirty = true; // results went back to the loop: the next beat censuses
     return true;
   };
+  // WIRE-REPLAN-01 (staged 2026-10-08): each round runs the replan-escalate
+  // verdicts (mirrors of center/replan-escalate.mjs verdictFor/throttleOk/
+  // orderLine; vendored so this file loads with no new dependency and skips
+  // cleanly when there is nothing to do). PARKED + READY<10 unparks in
+  // order; OWNER_GATE/BAD-DONE stuck over 24h orders works solvers at most
+  // once per row per 7 days; OWNER rows never order. Best effort only: the
+  // tick never throws into the queue path. Board scan is not wired yet; the
+  // tick plans in-memory intents (ho.replanQueue) each round.
+  const REPLAN_ESCALATE_WINDOW_MS = 7 * 24 * 60 * 60 * 1000;
+  const REPLAN_STUCK_MS = 24 * 60 * 60 * 1000;
+  const replanSent = ho.replanSent ?? new Map(); // row id -> ms of last solvers order
+  const replanVerdictFor = (row) => {
+    const obj = row != null && typeof row === "object" ? row : null;
+    if (obj && (obj.owner === true || obj.ownerGate === true)) return "skip-owner";
+    const raw = obj ? (obj.kind ?? obj.status ?? obj.state ?? obj.flag ?? obj.reason ?? obj.type ?? "") : row;
+    const kind = String(raw ?? "").toUpperCase().replace(/[-_\s]+/g, "");
+    if (kind.includes("OWNER") || kind === "GATE") return "skip-owner";
+    if (kind === "PARKED") return "unpark";
+    if (kind === "BADDONE" || kind.startsWith("BLOCKED")) return "order-solvers";
+    return "skip-owner";
+  };
+  const replanToMs = (v) => {
+    if (v == null || v === "") return null;
+    if (typeof v === "number") return Number.isFinite(v) ? v : null;
+    if (v instanceof Date) { const t = v.getTime(); return Number.isNaN(t) ? null : t; }
+    if (typeof v === "string") {
+      if (/^-?\d+(\.\d+)?$/.test(v.trim())) { const n = Number(v.trim()); return Number.isFinite(n) ? n : null; }
+      const t = Date.parse(v);
+      return Number.isNaN(t) ? null : t;
+    }
+    return null;
+  };
+  const replanThrottleOk = (sentAt, nowMs = now()) => {
+    const sent = replanToMs(sentAt);
+    if (sent == null) return true;
+    const t = replanToMs(nowMs);
+    if (t == null) return false;
+    return t - sent >= REPLAN_ESCALATE_WINDOW_MS;
+  };
+  const replanCleanId = (rowId) => {
+    const obj = rowId != null && typeof rowId === "object" ? rowId : null;
+    const raw = obj ? (obj.id ?? obj.rowId ?? obj.row ?? "") : rowId;
+    return String(raw ?? "").replace(/[\r\n]+/g, " ").replace(/["`$]/g, "").replace(/\s+/g, " ").trim().slice(0, 120);
+  };
+  const replanOrderLine = (rowId, verdict) => {
+    const v = String(verdict ?? "").trim().toLowerCase().replace(/[_\s]+/g, "-");
+    if (v !== "order-solvers") return "";
+    const id = replanCleanId(rowId);
+    if (!id) return "";
+    return 'node empire.mjs order works "solvers: take stuck row ' + id + ' (blocked 24h or bad done)"';
+  };
+  const replanStuckMs = (row, nowMs = now()) => {
+    const obj = row != null && typeof row === "object" ? row : null;
+    if (obj && obj.stuckMs != null && obj.stuckMs !== "") {
+      const n = Number(obj.stuckMs);
+      if (Number.isFinite(n) && n >= 0) return n;
+    }
+    const at = obj ? (obj.blockedAt ?? obj.badAt ?? obj.since ?? obj.stuckSince ?? null) : null;
+    if (at == null || at === "") return null;
+    const t = replanToMs(at);
+    const cur = replanToMs(nowMs);
+    if (t == null || cur == null || cur < t) return null;
+    return cur - t;
+  };
+  const replanPlan = (rows, readyCount, nowMs = now()) => {
+    const out = { unpark: [], order: [], skip: [] };
+    const list = Array.isArray(rows) ? rows : [];
+    const canUnpark = Number(readyCount) < 10;
+    const at = replanToMs(nowMs) ?? now();
+    for (const row of list) {
+      const obj = row != null && typeof row === "object" ? row : null;
+      const id = replanCleanId(obj ? (obj.id ?? obj.rowId ?? obj.row ?? "") : row);
+      const v = replanVerdictFor(row);
+      if (v === "unpark") { if (id && canUnpark) out.unpark.push(id); else if (id) out.skip.push(id); continue; }
+      if (v === "order-solvers") {
+        const stuck = replanStuckMs(row, at);
+        if (stuck == null || stuck <= REPLAN_STUCK_MS) { if (id) out.skip.push(id); continue; }
+        if (!id || !replanThrottleOk(replanSent.get(id), at)) { if (id) out.skip.push(id); continue; }
+        const line = replanOrderLine(id, v);
+        if (!line) { if (id) out.skip.push(id); continue; }
+        out.order.push({ id, line });
+        replanSent.set(id, at);
+        continue;
+      }
+      if (id) out.skip.push(id);
+    }
+    return out;
+  };
+  const replanTick = (rows, readyCount) => {
+    try {
+      if (replanSent.size > 500) {
+        const t = now();
+        for (const [k, v] of replanSent) if (t - v > REPLAN_ESCALATE_WINDOW_MS + 24 * 3_600_000) replanSent.delete(k);
+      }
+      const pending = Array.isArray(rows) ? rows : (Array.isArray(ho.replanQueue) ? ho.replanQueue.splice(0) : []);
+      if (!pending.length) return { unpark: [], order: [], skip: [] };
+      return replanPlan(pending, readyCount ?? 10, now());
+    } catch { return { unpark: [], order: [], skip: [] }; }
+  };
   // Every beat: helpers that ended without an idle event (a restart, a lost event) are collected,
   // one past the limit is stopped; then free width is filled and finished results go out.
   const tendQueue = async () => {
     if (!qdir) return;
+    try { replanTick(); } catch { /* replan is best effort */ }
     await tendForeground();
     for (const [child, job] of queueRunning) {
       if (now() - job.started > QUEUE_STUCK_MS) {
@@ -2413,7 +2513,7 @@ Ready work: ${readyItem.id}. Claim only this item; selectors do not authorize sw
       st.timer = null;
       st.rearm = st.pending ? st.dueAt ?? now() : null;
     }
-    return { state, busy, sprint, live, queueRunning, queueDone, standingRest, standingNoops, adhocRest, adhocSeen, standingRuns, standingLast, capStops, fgJobs, adhocRun, batchMeter, readySeen, readyPending, fixes, calls, fixLast, cmdSeen, loadedAt, freshCtxAt };
+    return { state, busy, sprint, live, queueRunning, queueDone, standingRest, standingNoops, adhocRest, adhocSeen, standingRuns, standingLast, capStops, replanSent, fgJobs, adhocRun, batchMeter, readySeen, readyPending, fixes, calls, fixLast, cmdSeen, loadedAt, freshCtxAt };
   };
   const quiet = () => inflight === 0 && ![...state.values()].some((st) => st.busy || st.sending);
 
