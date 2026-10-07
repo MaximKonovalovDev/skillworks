@@ -1,0 +1,12 @@
+{
+  "skill": "bat-cat",
+  "runs": 12,
+  "with_rate": 1.0,
+  "without_rate": 0.0,
+  "lift": 1.0,
+  "spread": 1.0,
+  "fingerprint": "70d2562e388b047a38bbb969d26e74e7eaca1b7327120e9a2cfcb113ae83bb25",
+  "sheet": "evals/bat-cat_trials.jsonl",
+  "at": "2026-10-07T21:40Z",
+  "ok": true
+}

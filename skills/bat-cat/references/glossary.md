@@ -1,0 +1,37 @@
+# Glossary
+
+- cat(1) clone: what bat is on `README.md` line `6`: a cat clone with `syntax highlighting` and `Git integration`.
+- syntax highlighting: the bat capability named on line `6`; 9 hits from line `6`.
+- Git integration: the second capability named on line `6`.
+- pipes its own output to a pager: the default paging behaviour on lines `45-47`; example pager `less`.
+- less: the default pager example; `from_bin` maps it to `Less`.
+- --paging=never: the flag value disabling paging everywhere including config.
+- non-interactive terminal: the condition on line `52` triggering the cat fallback.
+- drop-in replacement for cat: what bat acts as in a pipe.
+- plain file contents: what bat prints in a pipe instead of styled output.
+- bat -n: the invocation on line `94` showing `line numbers` only.
+- line numbers: shown by `-n`; 7 hits from line `94`.
+- -n: the flag controlling numbers-only output.
+- BAT_PAGER: the variable that will `override` `PAGER`; `builtin` selects the builtin pager; 7 hits from line `647`.
+- override: what `BAT_PAGER` does to `PAGER` per line `650`.
+- PAGER: the generic pager variable; loses to `BAT_PAGER`.
+- builtin: the value selecting the builtin pager on line `647`.
+- PagerSource: the enum on `pager.rs` line `6` tracking the pager origin.
+- EnvVarBatPager: the variant for the `BAT_PAGER` env var.
+- EnvVarPager: the variant for the `PAGER` env var.
+- Config: the variant for a `--config` pager.
+- Default: the variant when no pager was specified.
+- PagerKind: the enum on line `22` listing known pagers.
+- Bat: the variant for the current bat binary itself.
+- Less: the variant `from_bin` returns for `less`.
+- More: the variant `from_bin` returns for `more`.
+- Most: the variant `from_bin` returns for `most`.
+- Builtin: the variant `from_bin` returns for `builtin`.
+- Unknown: the fallback variant for anything unrecognised.
+- from_bin: the function on lines `42-68` mapping a binary name to a `PagerKind`.
+- 6: the first `syntax highlighting` line in `README.md` and the `PagerSource` line in `pager.rs`.
+- 94: the `bat -n` line showing `line numbers` only.
+- 647: the first `BAT_PAGER` line selecting the `builtin` pager.
+- Pager: the word appearing 28 times in `pager.rs` from line `6`.
+- README.md: the docs file carrying `syntax highlighting` (9 lines) and `BAT_PAGER` (7 lines).
+- pager.rs: the source file carrying `PagerSource` (line `6`) and `PagerKind` (line `22`).

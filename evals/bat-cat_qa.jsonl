@@ -1,0 +1,10 @@
+{"must": ["cat(1) clone", "syntax highlighting"], "q": "What does the README call bat on line 6 and which two capabilities does it name?"}
+{"must": ["pipes its own output to a pager", "--paging=never"], "q": "When does bat page and which flag value disables paging everywhere?"}
+{"must": ["non-interactive terminal", "plain file contents"], "q": "What does bat print when its output is piped to another process?"}
+{"must": ["bat -n", "line numbers"], "q": "Which bat invocation shows line numbers only?"}
+{"must": ["BAT_PAGER", "override"], "q": "Which pager variable overrides the other per the README?"}
+{"must": ["PagerSource", "EnvVarBatPager"], "q": "Which enum tracks where the pager choice came from?"}
+{"must": ["PagerKind", "Unknown"], "q": "Which enum lists the pagers bat recognises plus a fallback?"}
+{"must": ["from_bin", "Builtin"], "q": "Which function maps a pager binary name to its kind?"}
+{"must": ["6", "syntax highlighting"], "q": "Which README line names bat a cat clone with highlighting?"}
+{"must": ["647", "builtin"], "q": "Which README line selects the builtin pager via BAT_PAGER?"}
