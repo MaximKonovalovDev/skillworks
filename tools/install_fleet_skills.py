@@ -80,7 +80,10 @@ def main(argv: list[str]) -> int:
     if unknown:
         print(f"not built here: {unknown}")
         return 2
-    dest_root = Path(args.to)
+    if args.to == "global":
+        dest_root = Path.home() / ".config" / "opencode" / "skills"
+    else:
+        dest_root = Path(args.to)
     worst = 0
     for name in names:
         if args.check:
