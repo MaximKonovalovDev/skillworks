@@ -1,0 +1,12 @@
+{
+  "skill": "ripgrep-search",
+  "runs": 12,
+  "with_rate": 1.0,
+  "without_rate": 0.25,
+  "lift": 0.75,
+  "spread": 0.75,
+  "fingerprint": "8c6cb33421cb2f4a1e99982b11adfbc276c827edea12405f3f9be1c2430918df",
+  "sheet": "evals/ripgrep-search_trials.jsonl",
+  "at": "2026-10-07T02:37Z",
+  "ok": true
+}

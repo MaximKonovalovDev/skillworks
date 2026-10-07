@@ -1,0 +1,10 @@
+{"must": ["fixed-strings", "escape", "same lines"], "q": "Your pattern has a literal open parenthesis and matches the wrong lines. What two fixes does the skill sanction and do they print the same lines?"}
+{"must": ["current directory", "rg foo ./", "pass the directory"], "q": "You run rg foo with no path and get hits across the whole tree. What is the default root, what is it equivalent to, and how do you narrow to one folder?"}
+{"must": ["NUL", "--no-ignore", "--hidden", "--text", "--debug"], "q": "A string you know is on disk returns nothing. What four things does ripgrep skip, which flag reverses each, and what do you run while still perplexed?"}
+{"must": ["single quotes", "-g '*.toml'", "blacklists"], "q": "You want dependency hits only in TOML files. Give the -g command, say why the glob is quoted, and what leading ! does on the command line."}
+{"must": ["later", "override", "reversed"], "q": "You stack two -g globs and the match set surprises you. Which glob wins and what can the reversed order do?"}
+{"must": ["--type-add", "--type-list", "that command only"], "q": "You need a web type for html plus css plus js. Which commands list types and add it, and how long does the added type live?"}
+{"must": ["--type all", "--type-not all", "extensionless"], "q": "You want a search over every known file type at once, then its inverse. Which flags run each, and why is an extensionless script skipped?"}
+{"must": ["RIPGREP_CONFIG_PATH", "verbatim", "--max-columns=150"], "q": "You want flags on every run without aliases. How is the config file found, what is one line in it, and how are valued flags written?"}
+{"must": ["--encoding", "--search-zip", "--multiline", "--pcre2"], "q": "Four searches: a Latin-1 log, a gzipped file, a cross-line pattern, lookaround. Which flag answers each?"}
+{"must": ["--replace", "matched text", "files stay untouched"], "q": "You want to preview matched text swapped in the results. Which flag does it, what exactly changes, and do the files change?"}
