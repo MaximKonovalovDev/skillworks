@@ -1,13 +1,16 @@
 ---
 name: bevy-rust-ecs
-description: Bevy 0.19.1 for a coding agent that builds a viewer crate drawing a deterministic sim - ECS app basics, loading a glTF or glb fighter, skeletal animation with AnimationPlayer and AnimationGraph, snapshot resources, dynamic linking, screenshots, plugin version pins. Use when writing or fixing Bevy code, editing a Cargo.toml bevy dependency, or when a Bevy tutorial from 0.12 to 0.16 does not compile on bevy 0.19.
-version: 0.2.0
+description: Bevy VIEWER dropped 2026-10-07 (owner "i dont want bevy shit i want my own renderer"): do not build or extend a Bevy viewer. Stealing Bevy code and methods into our own renderer (crates/render) stays fine. Old text - Bevy 0.19.1 for a coding agent that builds a viewer crate drawing a deterministic sim - ECS app basics, loading a glTF or glb fighter, skeletal animation with AnimationPlayer and AnimationGraph, snapshot resources, dynamic linking, screenshots, plugin version pins. Use when writing or fixing Bevy code, editing a Cargo.toml bevy dependency, or when a Bevy tutorial from 0.12 to 0.16 does not compile on bevy 0.19.
 license: MIT OR Apache-2.0 (Bevy source), MIT (scaffold)
 ---
 
 # bevy-rust-ecs
 
-Target: Bevy 0.19.1 (stable; 0.20 is only a release candidate, do not use it). Old tutorials are wrong in many names: check every unsure name in `references/verified-api.md`. Nothing here was compiled.
+> Bevy VIEWER dropped 2026-10-07 (owner: "i dont want bevy shit i want my own renderer"; later the same day:
+> "we steal from bevy just stuff"). The viewer is frozen and the picture is our own renderer in `crates/render`.
+> Do not build or extend a viewer. Reading Bevy source and stealing its methods into `crates/render` stays fine.
+
+Target: Bevy 0.19.1 (stable; 0.20 is only a release candidate, do not use it). Old tutorials are wrong in many names. Before you write a Bevy name you are unsure of, find it in `references/verified-api.md`. Everything here was read from the v0.19.1 source, none of it compiled.
 
 ## Old names that no longer exist
 - `SceneRoot` is now `WorldAssetRoot`; `SceneInstanceReady` is `WorldInstanceReady` (import it from `bevy::world_serialization`). `bevy::scene` is the new BSN system and cannot spawn glTF yet.
@@ -75,20 +78,13 @@ The glTF loader puts the `AnimationPlayer` on a descendant of the scene root, so
 5. rapier3d stays inside the sim: no `bevy_rapier`.
 6. Done means: golden hash check unchanged, only `viewer/` is new in git, checker exit 0, a screenshot you looked at.
 
-## Heavy builds: queue only
-- Never run a bare cargo command on the viewer crate: queue every viewer build through the heavy-build queue [src: references/viewer-recipe.md#run]
-- Never abort the queued wait: the first build takes 30 to 60 minutes; do other tasks meanwhile [src: references/viewer-recipe.md#run]
-- Every viewer build carries `--locked`, a pooled `--target-dir` and lane job flags (`-j 4`, `RUSTC_WRAPPER=sccache`, `CARGO_INCREMENTAL=0`) [src: references/viewer-recipe.md#run]
-- Seed `viewer/Cargo.lock` once from the pinned engine lock; the viewer keeps its own workspace and the engine lock stays untouched [src: references/viewer-recipe.md#layout]
-- `cargo check` through the queue first, then the long test; re-queue a run that ends with empty output [src: references/viewer-recipe.md]
-
 ## Dev setup
 - Fast dev builds: feature `dynamic_linking`. In the viewer: `[features] dev = ["bevy/dynamic_linking"]`, run `cargo run --features dev`. Dev only. On Windows also set `[profile.dev] opt-level = 1` and `[profile.dev.package."*"] opt-level = 3`, else the link fails with "too many exported symbols".
-- The first Bevy build is heavy (many minutes, several GB): Heavy builds above is the rule.
+- The first Bevy build is heavy (many minutes, several GB). Do not build it on a small PC: use the project's heavy-build queue if it has one.
 - Smaller build: `bevy = { version = "0.19.1", default-features = false, features = ["3d"] }`.
 - Assets live in `assets/` next to Cargo.toml (`cargo run` reads there).
 - A glb faces +Z, Bevy forward is -Z: if the fighter shows its back, turn it by PI about Y.
-- Screenshot then exit:
+- Screenshot then exit (`use bevy::render::view::screenshot::{save_to_disk, Screenshot, ScreenshotCaptured};`):
 ```rust
 commands.spawn(Screenshot::primary_window()).observe(save_and_exit);
 
@@ -100,10 +96,10 @@ fn save_and_exit(shot: On<ScreenshotCaptured>, mut exit: MessageWriter<AppExit>)
 - Time limit: in a system, `if time.elapsed_secs() > 90.0 { exit.write(AppExit::error()); }`. `fn main() -> AppExit` returns the exit code. Take the shot at a sim tick, not a frame number.
 
 ## Plugin version pin
-A plugin crate (bevy_hanabi, bevy-inspector-egui, bevy_brp_mcp, bevy_ggrs, bevy_mod_inverse_kinematics ...) works with one Bevy minor. Before `cargo add`: `node scripts/plugin-bevy-version.mjs owner/repo` (for a workspace repo `owner/repo:crate/dir`). It reads `bevy = ".."` on the default branch and at the latest release tag, plus the README table, and prints OK, NO or UNKNOWN against 0.19.1. The default branch often targets 0.20; the release tag decides. Never add a plugin on NO.
+A plugin crate (bevy_hanabi, bevy-inspector-egui, bevy_brp_mcp, bevy_ggrs, bevy_mod_inverse_kinematics ...) works with one Bevy minor. Before `cargo add`: `node scripts/plugin-bevy-version.mjs owner/repo` (for a workspace repo `owner/repo:crate/dir`). It reads `bevy = ".."` in Cargo.toml on the default branch and at the latest release tag, plus the README compatibility table, and prints OK, NO or UNKNOWN against 0.19.1. The default branch often targets 0.20; the release tag decides. Never add a plugin on NO.
 
 ## Files
-- `references/viewer-recipe.md`: complete viewer crate plus checks and gotchas.
+- `references/viewer-recipe.md`: complete viewer crate (Cargo.toml, sim_port.rs, main.rs, checks, gotchas).
 - `references/verified-api.md`: every Bevy name with file and line at v0.19.1, and the names that do not exist.
 - `references/sources.md`: sources, licences, pinned tag and commit.
 - `scripts/check-sim-outside-bevy.mjs`, `scripts/plugin-bevy-version.mjs`: Node 24, no install.
