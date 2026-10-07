@@ -1,41 +1,45 @@
-# skillworks handoff - round 284 (token a4f2)
+# skillworks handoff - round 286 (token d5a1)
 
-Round: 284 (pack PASS reviewed, bevy landed, 6 scout rows landed)
-Written: 2026-10-07T17:12Z
-Token: a4f2 (takeover 2026-10-07T16:27Z, same session as 281-283)
+Round: 286 (takeover of stale lock a4f2 from closed app, new token d5a1 since 2026-10-07T17:58Z)
+Written: 2026-10-07T19:05Z
+Token: d5a1 (takeover 2026-10-07T17:58Z; prior a4f2 rounds 281-285 closed)
 Knobs: width 10, foreground, heavy_max 3, paid_mode 0 (unchanged).
 
 ## Heading
-- R2 plus R6 move: bevy Vol1 member green again (50 passed), pack gate PASS 13/0/0 reviewed then re-staled by the bevy reseal. O-011 stays READY.
+- No Scorecard % moved (R1 50%, R4 25% unchanged pending O-014 re-proof): landed yq-jq skill + read-abort bump, both R1 with R4 for yq-jq.
 
 ## Results collected
-- builder-pack-r5-review-2 (judge): VERDICT PASS gate PASS 13/0/0. Landed p5 log in 0b29999.
-- pilot-bevy-stale-proof-review (judge): VERDICT PASS 3 FAILs flip, reseal only. Landed in 0b29999.
-- researcher-books-scout-review (judge): VERDICT PASS BK-1007-5 yq-jq lift 1.0. Landed in 80806f1.
-- researcher-doctor-scout-2-review (judge): VERDICT PASS DR-1007-11. Landed in 80806f1.
-- builder-fix-auditfold-repair-review-2 (judge): VERDICT PASS second identical on 8df8360.
-- pilot-install-vol1-review (judge): VERDICT PASS measurement pwsh 23 loads 8 repos.
-- researcher-doctor-scout-repair (builder): DONE 12 rp7 trials run, grade 1.0/0.0 lift 1.0. DR-1007-10 stands.
-- researcher-doctor-scout-3: DONE DR-1007-12 write-abort plus sheet. Landed, review queued.
-- researcher-books-scout-2/3: DONE BK-1007-6 fzf plus BK-1007-7 xsv, graded sheets. Landed, reviews queued.
-- Push: remote 500 x2 16:57Z cleared, 5acc7fa..80806f1 pushed 17:12Z.
+- lead2 (pilot): DONE J4 9, J1 7, J3 10; 3 scores, 0 asks (4 open held).
+- 301-pack-rebuild (builder): DONE pack_check PASS 13/0 (listing 2026-10-07, p5:32, dist 135639 B). Held for fresh review (prior 306 PASS predates this tree).
+- 302-book-yqjq (builder): DONE verified complete. Judge 307 PASS. LANDED 39999f4.
+- 303-cure-writeabort (builder): DONE 12 pairs grade 1.0/0.0. Judge 308 FAIL (live_proof unknown skill, no FLEET wire). One repair queued.
+- 304-cure-readabort (builder): DONE v0.2.0 re-proven. Judge 309 PASS. LANDED f4906a1.
+- 305-inbox-rows (planner): NOOP 79 rows before/after, O-014..O-021 already in tree.
+- 308-review-writeabort (judge): FAIL as above.
+- builder-cure-reprofirst-review (judge): PASS reseal-only (lift 1.0). Uncommitted, needs land decision.
+- builder-fix-agentlint-finish (builder): PARTIAL ready-file-check resealed 1.0/0.0 adopted, agentlint 0 fail 4 warn (out-of-scope). O-007 stays READY.
+- builder-gitonebranch-reseal (builder): DONE 18 passed, check 20/0/0. Held for review.
+- Prior round judges: 306 PASS, 307 PASS, 309 PASS landed/collected; reprofirst/taskabort/webfetch PASS; auditfold/pack-r5/vol1 FAIL (see blockers).
 
 ## Rows
-- O-011 READY (evidence updated: PASS then re-stale, rebuild queued after tree settles).
-- DR-1007-10/11/12 plus BK-1007-5/6/7 READY landed 80806f1 (2 reviewed PASS, 1 repair-proved, 3 fresh DONE).
-- Open: O-009 O-010 O-012 O-013 READY, DR-1007-8 DR-1007-9 READY, K-54 OWNER, K-03 K-06 PARKED, BK-1004-1 BLOCKED.
+- BK-1007-5 DONE 39999f4 judge PASS 307 (grade 1.0/0.0 lift 1.0, lint 18/1211, live 19).
+- DR-1007-11 DONE f4906a1 judge PASS 309 (grade 1.0/0.0 lift 1.0, lint 12/759, live 6).
+- O-014..O-021 READY (planner 305, uncommitted tree); S1 lowest bar 4/6: not moved (new skills 0 loads; loads need adoption + 48 h).
+- Retro: due round 290; worst repeat per 285 is pwsh env-prefix (20/24 h) with PROPOSAL standing.
+
+## Blockers
+- DR-1007-12 FAIL: write-abort-guard missing FLEET wire (gates.py + installer + live_proof unknown). Repair: one builder adds wire, no new pairs.
+- O-007 PARTIAL: agentlint 0 fail 4 warn (fetch-status-retry, bash-allowlist, bevy, read-offset-guard out of scope). Replan: narrow row to named skill or queue 4 reseals.
+- O-011 gate re-stales under concurrent bevy proof touches; rebuild+review must serialize after tree settles.
+- auditfold-review-2 FAIL, pack-r5-review-2 FAIL, vol1-review FAIL: second FAILs for lead replan (no auto re-send).
 
 ## Checks
-- node sprint/check.mjs RESULT PASS 20 pass 0 warn 0 fail (lead, 17:12Z round).
-- python tools/pack_check.py packs/fleet-vol-1: FAIL 2 again after bevy reseal (lead 17:10Z).
-- Full pytest 6 failed 726 passed pre-existing out-of-scope drift.
-
-## Held, not committed
-- proof timestamp dirt (same fps, policy denies checkout), keeper files, claims, batch, ready deletions.
-- sprint/halt deleted in working tree, HEAD still carries Maxim 2026-10-05 pause; deletion stays uncommitted.
+- node sprint/check.mjs RESULT PASS 20 pass 0 warn 0 fail (lead, 19:05Z round).
+- grade yq-jq 12 runs 1.0/0.0 lift 1.0 PASS; lint 18/1211 PASS (lead rerun).
+- grade read-abort-guard 12 runs 1.0/0.0 lift 1.0 PASS; lint 12/759 PASS (lead rerun).
 
 ## Next
-- Batch: reviews for scout-repair plus DR-1007-12 plus BK-1007-6/7, cures for DR-1007-10/11/12, pack rebuild after tree settles.
-- S3 still waits on a settled-tree pack PASS.
+- Keeper queues: repair 303 FLEET wire; fresh reviews for new 301 DONE + gitonebranch DONE; land reprofirst reseal on read; builders for O-009 O-010 BK-1007-6/7 after reviews clear.
+- sprint/halt absent in tree (HEAD carries Maxim 2026-10-05 pause; deletion uncommitted, loop continues).
 
-RESULT: DONE - bevy plus p5 log 0b29999, board rows 80806f1 | proof: 80806f1 and check RESULT PASS 20/0/0
+RESULT: PARTIAL - 2 landed (39999f4, f4906a1), 5 DONEs held for review, 1 NOOP, 1 PARTIAL, 3 FAILs replanned | proof: check RESULT PASS 20/0/0; commits 39999f4 + f4906a1
