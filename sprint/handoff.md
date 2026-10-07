@@ -1,32 +1,35 @@
-# skillworks handoff - round 274 (token 45a3)
+# skillworks handoff - round 275 (token 45a3)
 
-Round: 274 (edit-verify landed, DR-1007-9 rowed, fd-find plus spawn-guard in review)
-Written: 2026-10-07T08:10Z
+Round: 275 (fd-find plus spawn-guard landed, retro due)
+Written: 2026-10-07T08:20Z
 Token: 45a3 (takeover 2026-10-07T06:32Z, replaced stale lead#1803 left by closed app)
 Knobs: width 10, foreground, heavy_max 3, paid_mode 0 (unchanged).
 
 ## Heading
-- R1 proven plus rowed: edit-verify v0.3.0 PASS landed, DR-1007-9 READY added.
+- R1 new plus bumped: fd-find proven 12 of 12, spawn-guard v1.4.0 live 10.
 
 ## Results collected
-- builder-cure-r3-review (judge): VERDICT PASS (22 pairs, grade 1.0/0.0, check 20/0/0).
-- builder-cure-r4: DONE bash-spawn-guard v1.3.0 to v1.4.0 (32 pairs, live 10, grade 1.0/0.0).
-- builder-book-r2: DONE fd-find distilled (distill ok, grade 1.0/0.0 lift 1.0, 97 focused).
-- researcher-doctor-scout-3: DONE DR-1007-9 (keeper holds 15 a day, version bump).
-- pilot-installer-r3: DONE (5 stale converged, 8/8 check, afters 0 fillable).
-- planner: BLOCKED rest until 08:18Z (keeper). runner, toolsmith, view, books: NOOP holds.
+- builder-book-r2-review (judge): VERDICT PASS (grade 1.0/0.0 lift 1.0, distill ok).
+- builder-cure-r4-review (judge): VERDICT PASS (live 10, lint 32 rules, grade 1.0/0.0).
+- Others: holds, planner rest, runner 2 FAIL PAPERWORK, pilot-view DONE no defects.
 
 ## Rows
-- DR-1007-9 READY (keeper holds, doctor, red 30 today).
-- Open: DR-1007-8 READY (cure next), BK-1007-4 READY (review next), O-009 O-010 READY, S74 S12 S41 S130 S131, K-54 OWNER, K-03 K-06 PARKED, BK-1004-1 BLOCKED.
+- BK-1007-4 DONE fd-find plus spawn v1.4.0 (both PASS, landing this round).
+- Open: DR-1007-8 READY, O-009 O-010 READY, DR-1007-9 READY, S74 S12 S41 S130 S131, K-54 OWNER, K-03 K-06 PARKED, BK-1004-1 BLOCKED.
 
 ## Checks
-- node sprint/check.mjs RESULT PASS 20 pass 0 warn 0 fail (lead, 08:10Z round).
-- python -m pytest tests/ -q still 3 failed pre-land (c02 plus read-offset landed plus g16, runner 07:21Z).
+- node sprint/check.mjs RESULT PASS 20 pass 0 warn 0 fail (lead, 08:20Z round).
+- python -m pytest tests/ -q 2 failed 720 passed (c02 plus seat-guard pre-land, runner 08:25Z).
 
 ## Held, not committed
-- Awaiting review: fd-find build, bash-spawn-guard v1.4.0, adopted-after families, bash-allowlist repair.
+- Awaiting review: adopted-after families, bash-allowlist repair.
 - Proof noise, keeper files, claims.txt, lead2 files, research, dist zips, sprint/halt deleted.
 
 ## Next
-- Reviews for fd-find plus spawn-guard top next batch (275, retro due); cure builds DR-1007-8; planner triages after rest.
+- Cure builds DR-1007-8; planner triages S130/S131 after rest; adoption clocks to 2026-10-09.
+
+## Retro (round 275, due)
+- Rounds 271-274: 6 judge PASS, 2 FAIL paperwork, 0 BLOCKED. Landings 53a3b47 a91bdcd c381979 plus 2 this round.
+- Worst repeated: 2 paperwork FAILs on version bumps with proven 40 to 40 and no class-halve number, plus metrics wire FAILs (repro-first plus octokit unknown skill).
+- PROPOSAL: sprint/queue/standing/builder-cure.md | version-bump packet must name a count bump or new-class coverage before building, else NOOP | 2 paperwork FAILs rounds 271-275
+- Coach: no change (judges 6/8, builders ship wired). Next retro due 280.
