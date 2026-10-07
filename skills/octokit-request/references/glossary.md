@@ -1,0 +1,35 @@
+# Glossary
+
+- AbortError: the name the wrapper checks at line 58; an abort keeps its object and gains `status` 500 instead of a fresh wrap.
+- status: stamped 500 on the rethrown abort and on wrapped network faults; under 400 a HEAD returns, at 400 or more it throws.
+- RequestError: the wrapper class thrown for network faults, failed HEAD, 304, and status 400 or more; never for an abort.
+- TypeError: the undici shape for network errors; the real message hides in `cause`.
+- cause: read off a `TypeError` - an `Error` cause gives `cause.message`, a string `cause` passes through, otherwise the outer message stands.
+- 204: empty-success status returned at once with no parse.
+- 205: empty-success status returned at once with no parse.
+- HEAD: the probe method; under 400 it returns the empty response, at 400 or more it throws with `statusText`.
+- 304: the conditional status; the body is read first, then the `Not modified` error throws.
+- Not modified: the message carried by the 304 `RequestError`.
+- getResponseData: the body reader used before every error throw (304, 400-plus) and for success bodies.
+- status >= 400: the branch at line 140 that throws `RequestError` with the built message.
+- 140: the line number of the `status >= 400` branch.
+- toErrorMessage: the helper defined at line 197 and called at line 143 that builds failure text.
+- 197: the line number defining `toErrorMessage`.
+- documentation_url: the object field appended as a suffix to the built message.
+- Unknown error: the fallback for an `arrayBuffer` body and for unshaped data.
+- errors: the array joined into the message when the object body carries one.
+- content-type: the header `getResponseData` branches on.
+- application/json: the JSON mimetype (plus scim+json) that is text-read then parsed.
+- arrayBuffer: what non-text, non-JSON bodies return.
+- endpoint.parse: turns merged options into the request `fetchWrapper` runs.
+- fetchWrapper: the direct runner when no `hook` is set; the file pair with `with-defaults.ts` makes 2 files.
+- 2 files: the count `rg -l "fetchWrapper"` lists over the source folder.
+- with-defaults: the module that builds the request function from endpoint defaults.
+- hook: when set on `endpointOptions.request`, the inner closure routes through it instead of calling `fetchWrapper` directly.
+- endpoint: carried on the inner request closure via Object.assign.
+- defaults: carried beside `endpoint` on the inner closure for chained defaulting.
+- signal: the option carrying the abort signal into fetch.
+- duplex: set to half only when a request body is present, for streamed uploads.
+- deprecation: the response header that triggers the removal warning.
+- sunset: the response header naming the removal date in that warning.
+- 58: the line number checking `error.name` for the abort.

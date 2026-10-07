@@ -70,6 +70,7 @@ FLEET_SKILLS = {
     "edit-abort-guard": [],
     "ripgrep-search": ["BurntSushi/ripgrep"],
     "axios-get": ["axios/axios"],
+    "octokit-request": ["octokit/request"],
 }
 # Installed in forge, whose `node scripts/check.mjs` bans some English words.
 FORGE_SAFE = {"pwsh-for-bash-writers", "git-one-branch", "cron-skip-clean", "pipe-run", "inbox-file-reader"}

@@ -1,0 +1,10 @@
+{"must": ["AbortError", "500", "rethrow"], "q": "A fetch is aborted and an AbortError surfaces inside the wrapper. What name does the skill check first, what status is stamped on the error, and is the abort wrapped in a new RequestError or rethrown as-is?"}
+{"must": ["TypeError", "cause", "RequestError"], "q": "Undici raises TypeError with the network reason hidden in cause. How does the skill unwrap cause when it is an Error versus a string, and what error class carries status 500?"}
+{"must": ["204", "205", "HEAD"], "q": "A 204 or 205 arrives and a HEAD request succeeds. What does the wrapper return at once for 204 or 205, and what does it return for a HEAD under 400?"}
+{"must": ["304", "Not modified", "getResponseData"], "q": "A conditional request comes back 304. What does the wrapper read first, what message does the thrown error carry, and which helper read the body?"}
+{"must": ["toErrorMessage", "documentation_url", "Unknown error"], "q": "A failed response needs a message built. Which helper builds it, what suffix does an object message gain, and what yields Unknown error?"}
+{"must": ["content-type", "application/json", "arrayBuffer"], "q": "The wrapper must pick a body reader. What does it do for application/json, and what does it return for a type that is neither text nor JSON?"}
+{"must": ["hook", "fetchWrapper", "endpoint.parse"], "q": "A request goes out through endpoint defaults. When does the skill call fetchWrapper directly on endpoint.parse output, and when does it hand the closure to hook instead?"}
+{"must": ["signal", "duplex", "deprecation"], "q": "An upload needs its stream option and the server flags a sunset. Which option carries the abort signal, when is duplex half set, and which header drives the deprecation warning?"}
+{"must": ["58", "AbortError", "52"], "q": "You replay the abort check with rg over fetch-wrapper.ts. Which two numbered lines match AbortError, and what comparison sits on line 58?"}
+{"must": ["fetch-wrapper.ts", "with-defaults.ts", "fetchWrapper"], "q": "You list every file that mentions fetchWrapper. Which two source files come back, and which wrapper name did you search?"}
