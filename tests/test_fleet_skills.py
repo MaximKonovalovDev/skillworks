@@ -31,6 +31,15 @@ def test_frontmatter_folds_folded_description_scalar() -> None:
     g.check_format("git-one-branch")
 
 
+def test_gates_frontmatter_reads_git_one_branch_folded_description() -> None:
+    """Repair: gates.frontmatter must fold the shipped git-one-branch `>-` scalar (477 chars, not 2)."""
+    text = (g.SKILLS / "git-one-branch" / "SKILL.md").read_text(encoding="utf-8")
+    desc = g.frontmatter(text).get("description", "")
+    assert len(desc) > 40, f"git-one-branch description is {len(desc)} chars, want 40-1024"
+    assert desc.startswith("Use before")
+    assert ">-" not in desc
+
+
 @pytest.mark.parametrize("name", sorted(g.FLEET_SKILLS))
 def test_fleet_skill_sources_and_notices(name: str) -> None:
     if not _built(name):

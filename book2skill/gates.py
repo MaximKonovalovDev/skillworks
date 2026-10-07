@@ -155,7 +155,9 @@ def frontmatter(text: str) -> dict[str, str]:
                 literal = indicator.startswith("|")
                 out[key] = ""
             else:
-                out[key] = val.strip().strip('"')
+                if len(val) >= 2 and val[0] == val[-1] and val[0] in ("'", '"'):
+                    val = val[1:-1]
+                out[key] = val.strip()
                 current_key = key
     _flush()
     return out
