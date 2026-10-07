@@ -82,6 +82,39 @@ $t = Get-Content -LiteralPath target.txt -Raw; 'single call no pipe lanes PASS l
 ```
 prints: `single call no pipe lanes PASS listed`
 
+### ba-stash
+bad (throws: prevents you from using this specific tool call):
+```
+throw 'prevents you from using this specific tool call on bash git stash piped to Select-Object'
+```
+good:
+```
+'never stash single status no pipe PASS stashed'
+```
+prints: `never stash single status no pipe PASS stashed`
+
+### ba-diffpipe
+bad (throws: prevents you from using this specific tool call):
+```
+throw 'prevents you from using this specific tool call on bash git diff piped to Select-Object echo'
+```
+good:
+```
+'single diff stat no pipe PASS diffpiped'
+```
+prints: `single diff stat no pipe PASS diffpiped`
+
+### ba-lanes-echo
+bad (throws: prevents you from using this specific tool call):
+```
+throw 'prevents you from using this specific tool call on bash node tools/lanes.mjs piped to Select-Object echo'
+```
+good:
+```
+$t = Get-Content -LiteralPath target.txt -Raw; 'single call no pipe echo-free PASS lanes-echoed'
+```
+prints: `single call no pipe echo-free PASS lanes-echoed`
+
 ## Dedicated tools for text
 
 ### ba-read
@@ -139,6 +172,17 @@ good:
 ```
 prints: `blocked path exact patch text no further call PASS denied-edit`
 
+### ba-checkout
+bad (throws: prevents you from using this specific tool call):
+```
+throw 'prevents you from using this specific tool call on bash git checkout chained to echo'
+```
+good:
+```
+'Edit tool leave tree alone PASS checkedout'
+```
+prints: `Edit tool leave tree alone PASS checkedout`
+
 ## Sequence single calls and report
 
 ### ba-seq
@@ -195,3 +239,14 @@ good:
 Set-Content -LiteralPath prog.txt -Value 'x'; 'single call no chain temp file PASS inlined'
 ```
 prints: `single call no chain temp file PASS inlined`
+
+### ba-getdate
+bad (throws: prevents you from using this specific tool call):
+```
+throw 'prevents you from using this specific tool call on bash Get-Date chained to node piped to Select-Object'
+```
+good:
+```
+'one single call no chain PASS dated'
+```
+prints: `one single call no chain PASS dated`

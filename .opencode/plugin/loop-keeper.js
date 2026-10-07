@@ -347,7 +347,7 @@ const heavyOn = () => {
   if (!js || !existsSync(js)) return false;
   return !existsSync(join(process.env.EMPIRE_STATE || join(homedir(), ".empire", "state"), "heavy", "off"));
 };
-const SUPPORTED_COMMANDS = ["go", "sprint", "stop", "new", "say", "archive", "chat"];
+const SUPPORTED_COMMANDS = ["go", "sprint", "stop", "new", "say", "archive", "chat", "open"];
 const centerDir = () => {
   const c = REPOS.center?.command;
   return c ? String(c).replace(/\\/g, "/").replace(/\/\.opencode\/commands\/sprint\.md$/, "") : null;
@@ -2249,6 +2249,61 @@ Ready work: ${readyItem.id}. Claim only this item; selectors do not authorize sw
       return `CHAT ${created.id}`;
     } catch (e) { return `NOT SENT: ${e?.message ?? e}`; }
   };
+  // Open: one NEW parallel session in THIS repo with a first prompt (Maxim 2026-10-07:
+  // card buttons open a 2nd session in parallel, never more work in the loop's own
+  // session). {cmd:"open", id, title, agent, files?, prompt}. Never a sprint: a plain
+  // working session; it never commits (the loop's lead lands its files after it files
+  // one inbox item). At most 3 running at once; the rest is refused with its reason.
+  const PARALLEL_MAX_RUNNING = 3;
+  const parallelRules = (files) => {
+    const rules = [
+      { permission: "question", pattern: "*", action: "deny" },
+      { permission: "edit", pattern: "*", action: "deny" },
+    ];
+    for (const f of files) {
+      const rel = String(f).replace(/\\/g, "/").replace(/^\.\//, "");
+      if (!rel || rel.includes("..")) continue;
+      rules.push({ permission: "edit", pattern: rel, action: "allow" });
+      rules.push({ permission: "edit", pattern: `**/${rel}`, action: "allow" });
+    }
+    for (const p of ["**/queue/**", "**/sprint/board.md", "**/sprint/inbox.md", "**/EMPIRE-INBOX.md", "**/.opencode/**", "**/*halt*", "**/STOP", "**/*.cmd.json", "**/loop-keeper.json"])
+      rules.push({ permission: "edit", pattern: p, action: "deny" });
+    return rules;
+  };
+  const handleOpen = async (cmd) => {
+    const title = clip(String(cmd.title ?? ""), 120).trim();
+    const prompt = String(cmd.prompt ?? "");
+    const agent = String(cmd.agent ?? "");
+    const files = Array.isArray(cmd.files) ? cmd.files.map(String).filter((f) => f && !f.includes("..")).slice(0, 40) : [];
+    if (!title) return "refused: open needs a title";
+    if (!prompt || prompt.length > 20000) return "refused: open needs a prompt (at most 20000 chars)";
+    if (!/^[a-z][a-z0-9-]{1,23}$/.test(agent)) return `refused: no agent "${agent}"`;
+    const tracked = ho.parallelOpen ?? new Map();
+    ho.parallelOpen = tracked;
+    let running = 0;
+    try {
+      const st = (await client.session.status())?.data ?? {};
+      for (const [sid, rec] of [...tracked]) {
+        const type = st[sid]?.type;
+        if (!type || (type === "idle" && now() - rec.at > 30 * 60_000)) tracked.delete(sid);
+        else if (type !== "idle") running++;
+      }
+    } catch { running = tracked.size; }
+    if (running >= PARALLEL_MAX_RUNNING) return `refused: ${running} parallel sessions already running (at most ${PARALLEL_MAX_RUNNING}; close one first)`;
+    try {
+      const created = (await client.session.create({ body: { title, permission: parallelRules(files) } }))?.data;
+      if (!created?.id) return "refused: the session was not created";
+      await client.session.promptAsync({ path: { id: created.id }, body: { agent, parts: [{ type: "text", text: prompt }] } });
+      tracked.set(created.id, { at: now(), title });
+      if (qdir) {
+        try {
+          mkdirSync(qsub("parallel"), { recursive: true });
+          writeFileSync(join(qsub("parallel"), `${String(cmd.id ?? created.id).replace(/[^a-zA-Z0-9_-]/g, "_")}.md`), `session: ${created.id}\ntitle: ${title}\nagent: ${agent}\nby: ${cmd.from ?? "popper"}\nat: ${iso()}\n`);
+        } catch { /* the answer below still carries the id */ }
+      }
+      return `OPENED ${created.id}: ${title}`;
+    } catch (e) { return `refused: open failed: ${e?.message ?? e}`; }
+  };
   const handleArchive = async (cmd, target) => {
     if (!isCenterKeeper()) return "only center";
     if (!opt.archiveChat) {
@@ -2296,6 +2351,7 @@ Ready work: ${readyItem.id}. Claim only this item; selectors do not authorize sw
     if (action === "say") return answer(await handleSay(cmd, target));
     if (action === "archive") return answer(await handleArchive(cmd, target));
     if (action === "chat") return answer(await handleChat(cmd));
+    if (action === "open") return answer(await handleOpen(cmd));
     try {
       const info = id ? (await client.session.get({ path: { id } }))?.data : null;
       if (action === "new") return answer(await renew(info ? id : null));
