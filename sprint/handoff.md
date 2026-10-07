@@ -1,27 +1,29 @@
-# skillworks handoff - round 261 (token 1803)
+# skillworks handoff - round 262 (token 1803)
 
-Round: 261 (octokit landed, lanes clear)
-Written: 2026-10-07T04:53Z
+Round: 262 (scout repeats held, mcp pack review plus bevy reseal queued)
+Written: 2026-10-07T05:01Z
 Token: 1803 (takeover 2026-10-06T15:24Z, replaced stale lead#a7e2 left by closed app)
 Knobs: width 5, foreground, heavy_max 3, paid_mode 0 (file of 2026-10-06T00:14Z, unchanged).
 
 ## Heading
-- Book octokit landed (lift 1.0, eval 1.0, MIT clean). All scout rows from this week are DONE; lanes clear for fresh scouts.
+- Keeper held both scout dispatches (same title 3x in 3 h cap). Accepted, not re-sent: scouts pause until the hold clears. mcp-template pack DONE with review queued; pilot's bevy stale-proof packet goes out.
 
 ## Results collected
-- octokit-finish-review (judge): VERDICT PASS (proven 11 rerun, grade 1.0/0.0 lift 1.0, eval 1.0, check 20/0/0). Committed 2a39744 (4 new paths plus 4 wire lines).
+- scout repeats x2 (keeper): BLOCKED repeat dispatch 3x in 3 h. Lesson: scout packets must vary title plus angle each round, or wait out the 3 h hold.
+- builder-pack-mcp: DONE, selftest plus selftest.py SELFTEST PASS, catalog row added, pack test 5 passed, check 20/0/0. Review queued against PIPE-1006-1.
+- pilot Vol1 run filed pilot-bevy-stale-proof.md: bevy-rust-ecs fails 3 gates on stale proof (fingerprint 2026-10-06T18:01Z), distinct from DR-1005-9 DONE. Dispatched with claim plus record lines added.
 
 ## Rows
-- BK-1007-3 DONE 2a39744. Open: S50 4 trials, S74 adoption, K-54 OWNER, K-03 K-06 PARKED, BK-1004-1 BLOCKED, PIPE-1006-1 mcp-template.
+- No board change (scout rows on hold, verdicts pending). PIPE-1006-1 READY awaiting review.
 
 ## Checks
-- node sprint/check.mjs RESULT PASS 20 pass 0 warn 0 fail (builder reports; lead reruns next round).
+- node sprint/check.mjs RESULT PASS 20 pass 0 warn 0 fail (lead, 05:01Z round).
 
 ## Held, not committed
-- Proof noise, keeper files, claims.txt, research, packs/mcp-template, sprint/halt deleted.
+- mcp pack plus bevy subjects uncommitted. Proof noise, keeper files, claims.txt, research, packs/mcp-template claimed by builder, sprint/halt deleted.
 
 ## Next
-- Fresh doctor plus book scouts; PIPE-1006-1 mcp-template pack needs a builder when width allows.
+- Collect mcp review plus bevy reseal; land PASSes by path. Scouts resume with fresh angles after the hold.
 
-## Retro (round 261, not due)
+## Retro (round 262, not due)
 - None. Next retro due 265.
