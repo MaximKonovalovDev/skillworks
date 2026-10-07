@@ -1,0 +1,12 @@
+{
+  "skill": "judge-score-risk",
+  "runs": 12,
+  "with_rate": 1.0,
+  "without_rate": 0.0,
+  "lift": 1.0,
+  "spread": 1.0,
+  "fingerprint": "f9126781cd16dc79be6883ef65372042fa3cbbff866082691be29074c01b465f",
+  "sheet": "evals/judge-score-risk_trials.jsonl",
+  "at": "2026-10-07T06:08Z",
+  "ok": true
+}

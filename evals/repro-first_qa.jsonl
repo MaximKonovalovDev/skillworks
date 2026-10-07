@@ -1,0 +1,10 @@
+{"must": ["repro", "timeout", "PASS"], "q": "A task dispatch aborts with no repro. What do you run first, under what bound, and what report closes it?"}
+{"must": ["slice", "single", "step"], "q": "A whole-task dispatch aborts with nothing learned. How do you cut it down and what do you run alone?"}
+{"must": ["before", "quoted", "fix"], "q": "You assumed the cause and the fix aborted. What do you quote first and when do you fix?"}
+{"must": ["verify", "before", "after"], "q": "A fix claims done with no proof. What two outputs prove it and what do they show?"}
+{"must": ["redispatch", "timeout", "stop"], "q": "The same step aborted twice on redispatch. What do you stop and what do you run instead?"}
+{"must": ["minimal", "failure", "single"], "q": "A kitchen-sink dispatch with five goals aborts. What do you shrink it to?"}
+{"must": ["riskiest", "first", "alone"], "q": "A long task is needed. Which step do you repro first and how?"}
+{"must": ["symptom", "isolated", "first"], "q": "A multi-symptom report arrives. Which symptom do you isolate and what do you report?"}
+{"must": ["RESULT", "outcomes", "gaps"], "q": "A flaky step needs a close-out. What line closes the repro report and what does it list?"}
+{"must": ["aborted", "dispatch", "repro"], "q": "A task call comes back aborted. What gate runs before the next dispatch?"}

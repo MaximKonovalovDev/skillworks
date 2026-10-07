@@ -1,0 +1,10 @@
+{"must": ["score", "effort", "risk", "merge"], "q": "what four lines does a judge verdict carry?"}
+{"must": ["added lines", "scope"], "q": "what does a judge verdict stay scoped to?"}
+{"must": ["fingerprint", "dedupe"], "q": "what keys a verdict so a repeat review keeps the first one?"}
+{"must": ["capped", "packet"], "q": "which files may a review read?"}
+{"must": ["untrusted", "refuse"], "q": "what does a judge do with quoted issue text?"}
+{"must": ["concrete", "scenario"], "q": "what names the failure case in a risk line?"}
+{"must": ["Cannot find path", "guessed"], "q": "what error names a guessed review-packet read?"}
+{"must": ["pairs.md", "pairs.json", "run_judge_pairs.py"], "q": "where are the tested judge runs?"}
+{"must": ["target-class.json"], "q": "where is the judge failure class recorded?"}
+{"must": ["errors.md"], "q": "what names the cause of a judge miss?"}
