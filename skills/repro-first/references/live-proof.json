@@ -1,9 +1,9 @@
 {
   "skill": "repro-first",
   "fingerprint": "ab4b71c84bce35fbd49b3b97ebbea7dacb0bfb2831998ec66b4dcdc0d762f926",
-  "date": "2026-10-07T06:08Z",
+  "date": "2026-10-07T09:14Z",
   "command": "SKILL_LIVE=1 python -m pytest tests/test_repro_first.py -q",
-  "result": "6 passed in 7.29s",
+  "result": "6 passed in 5.44s",
   "versions": {
     "python": "3.13.14",
     "os": "Windows-10-10.0.19045-SP0",

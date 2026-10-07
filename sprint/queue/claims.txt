@@ -1,6 +1,2 @@
-O-007 | builder-fix-agentlint-finish | 2026-10-07T02:37Z | skills/ready-file-check/
-SCOUT | researcher-books-scout | 2026-10-07T03:07Z | board row
-SCOUT | researcher-doctor-scout | 2026-10-07T03:07Z | DR-1007-2 edit-multimatch
-DR-1007-2 | builder-cure-multimatch | 2026-10-07T03:14Z | skills/
-BK-1007-2 | builder-book-axiosget | 2026-10-07T03:15Z | skills/axios-get/
-BK-1007-2 | builder-book-axiosget-finish | 2026-10-07T03:40Z | FLEET wiring
+DR-1007-4 | builder-cure-scorerisk-finish | 2026-10-07T09:14Z | FLEET wiring
+DR-1007-5 | builder-cure-reprofirst | 2026-10-07T09:13Z | skills/

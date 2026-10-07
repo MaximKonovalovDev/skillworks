@@ -62,6 +62,8 @@ NOT_RECOGNIZED = "The term 'grep' is not recognized as a name of a cmdlet, funct
     ("git branch -D old", "", "git", 1),
     ("node run.mjs --headless", "", "browser", 1),
     ("npx playwright test", "", "browser", 1),
+    ("npm run suites", "RuntimeException: Unknown: ChildProcess.kill on detached check with no receipt to poll", "spawn", 1),
+    ("node tools/lanes.mjs | Select-Object Name", "RuntimeException: prevents you from using this specific tool call: pipe through formatting", "denied", 1),
 ])
 def test_each_target_class_is_counted(cmd: str, out: str, family: str, hits: int) -> None:
     assert call(cmd, out) == [family] * hits
@@ -93,6 +95,34 @@ def test_a_call_that_hits_two_classes_counts_twice_and_the_error_text_may_carry_
     both = "\x1b[31m" + NOT_RECOGNIZED + "\x1b[0m\nParserError: x"
     assert call("grep x", both) == ["pwsh", "pwsh"]
     assert aa.classify("bash", {"command": "grep x"}, {"error": NOT_RECOGNIZED}, "alpha") == ["pwsh"], "the error field is read when there is no output"
+
+
+KILL = "RuntimeException: Unknown: ChildProcess.kill on detached check with no receipt to poll"
+DENIED = "RuntimeException: prevents you from using this specific tool call: pipe through formatting"
+
+
+def test_spawn_kills_and_policy_denials_count_per_repo() -> None:
+    """The two 2026-10-06 classes: spawn kills after long foreground calls, denials after a pipe or shell git reach."""
+    assert aa.FAMILY["bash-spawn-guard"] == "spawn" and aa.FAMILY["bash-allowlist"] == "denied"
+    assert call("npm run suites", KILL) == ["spawn"]
+    assert call("node tools/lanes.mjs | Select-Object Name", DENIED) == ["denied"]
+    assert aa.classify("read", {"filePath": "notes.txt"}, {"output": KILL}, "alpha") == []
+    assert aa.classify("read", {"filePath": "notes.txt"}, {"output": DENIED}, "alpha") == []
+    assert aa.classify("bash", {"command": "x"}, {"error": KILL}, "alpha") == ["spawn"], "the error field is read when there is no output"
+    assert aa.verdict("bash-spawn-guard", 66, 30) == "HALVED" and aa.verdict("bash-allowlist", 260, 130) == "HALVED"
+
+
+def test_spawn_kills_and_policy_denials_count_per_repo_in_history(world: "World") -> None:
+    end = datetime(2026, 10, 2, 0, 0, tzinfo=timezone.utc).timestamp() * 1000
+    world.busy("alpha", end, hours=48, per_hour=20)
+    world.busy("beta", end, hours=48, per_hour=20)
+    world.busy("alpha", NOW, hours=40, per_hour=20)
+    world.busy("beta", NOW, hours=40, per_hour=20)
+    world.shell("alpha", NOW - HOUR, cmd="npm run suites", out=KILL, count=3)
+    world.shell("beta", NOW - HOUR, cmd="node tools/lanes.mjs | Select-Object Name", out=DENIED, count=5)
+    counts = aa.class_counts(world.db, aa.repo_dirs(world.empire), NOW - 48 * HOUR, NOW)
+    assert counts["spawn"] == {"alpha": 3}
+    assert counts["denied"] == {"beta": 5}
 
 
 # ------------------------------------------------------------------ the record, the windows and the guard

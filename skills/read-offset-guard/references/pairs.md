@@ -238,6 +238,17 @@ $n = @(Get-Content -LiteralPath target.txt).Count; $o = [Math]::Max(0, [Math]::M
 ```
 prints: `length 7 clamp offset 6 step PASS indexed-554`
 
+### ro-index547
+bad (throws: Offset .* is out of range):
+```
+throw 'Offset 620 is out of range for this file (547 lines) on a long index'
+```
+good:
+```
+$n = @(Get-Content -LiteralPath target.txt).Count; $o = [Math]::Max(0, [Math]::Min(620, $n - 1)); "length $n clamp offset $o step PASS indexed-547"
+```
+prints: `length 7 clamp offset 6 step PASS indexed-547`
+
 ## Tail the end and report
 
 ### ro-walk

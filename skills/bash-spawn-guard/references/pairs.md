@@ -260,61 +260,6 @@ Set-Content -LiteralPath pipe.txt -Value 'pipe'; 'file timeout limit PASS piped'
 ```
 prints: `file timeout limit PASS piped`
 
-### bs-cargopipe
-bad (throws: ChildProcess.kill):
-```
-throw 'Unknown: ChildProcess.kill on piped cargo single test with Select-String tail in one call'
-```
-good:
-```
-'slice one chunk file timeout PASS cargopiped'
-```
-prints: `slice one chunk file timeout PASS cargopiped`
-
-### bs-batchchain
-bad (throws: ChildProcess.kill):
-```
-throw 'Unknown: ChildProcess.kill on chained git status plus batch read plus board grep in one call'
-```
-good:
-```
-'single check timeout PASS batchchecked'
-```
-prints: `single check timeout PASS batchchecked`
-
-### bs-lockchain
-bad (throws: ChildProcess.kill):
-```
-throw 'Unknown: ChildProcess.kill on chained lock show plus diff plus listing plus trials read in one call'
-```
-good:
-```
-'single check file timeout PASS lockchecked'
-```
-prints: `single check file timeout PASS lockchecked`
-
-### bs-romescore
-bad (throws: ChildProcess.kill):
-```
-throw 'Unknown: ChildProcess.kill on bare node rome-score with exit check in one call'
-```
-good:
-```
-'single file timeout PASS romescored'
-```
-prints: `single file timeout PASS romescored`
-
-### bs-scanchain
-bad (throws: ChildProcess.kill):
-```
-throw 'Unknown: ChildProcess.kill on chained fleet scan plus loads in one call'
-```
-good:
-```
-'single check timeout PASS scanchecked'
-```
-prints: `single check timeout PASS scanchecked`
-
 ## File first, limit, report
 
 ### bs-inline

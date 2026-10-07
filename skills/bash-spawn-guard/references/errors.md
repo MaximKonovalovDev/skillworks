@@ -29,8 +29,3 @@ Each fragment below is a substring of the real `bad_text` of the named pair. The
 - `ChildProcess.kill`: verbose npm install foreground with no receipt. Pair `bs-npminstall`
 - `ChildProcess.kill`: Start-Sleep poll of log file with no timeout. Pair `bs-logpoll`
 - `ChildProcess.kill`: long Get-Content piped tail select in one call. Pair `bs-longpipe`
-- `ChildProcess.kill`: piped cargo single test with Select-String tail in one call. Pair `bs-cargopipe`
-- `ChildProcess.kill`: chained git status plus batch read plus board grep in one call. Pair `bs-batchchain`
-- `ChildProcess.kill`: chained lock show plus diff plus listing plus trials read in one call. Pair `bs-lockchain`
-- `ChildProcess.kill`: bare node rome-score with exit check in one call. Pair `bs-romescore`
-- `ChildProcess.kill`: chained fleet scan plus loads in one call. Pair `bs-scanchain`

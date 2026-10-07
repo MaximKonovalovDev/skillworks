@@ -6,8 +6,10 @@
 
 adopted.csv (outside this public repo): `date,repo,skill,status,no_edit_before,no_edit_after`. The two numbers are the
 repo's count, in 48 hours of the OpenCode history, of the failure class the skill targets (pwsh-for-bash-writers: pwsh
-errors, git-one-branch: git errors and risky git commands; real-browser-automation and bevy-rust-ecs count USE and up is
-good). The classes are the ones center's skill-feed scan counted for the `before` column; the same definitions are
+errors, git-one-branch: git errors and risky git commands, bash-spawn-guard: spawn kills (`ChildProcess.kill`) after
+long foreground calls, bash-allowlist: policy denials (`prevents you from using this specific tool call`) after a pipe
+or shell git reach; real-browser-automation and bevy-rust-ecs count USE and up is good, the other four count DOWN).
+The classes are the ones center's skill-feed scan counted for the `before` column; the same definitions are
 ported here so before and after compare.
 
 A row is DUE 48 hours after its install. The install moment is the entry for the row's date in adopted-meta.json beside
@@ -83,8 +85,11 @@ _STASH_CLASS = 6
 _GIT_STASH_READ = re.compile(r"\bgit\s+stash\s+(list|show)\b")
 _BROWSER = re.compile(r"playwright|puppeteer|chromedriver|selenium|--remote-debugging|--headless|msedge|chrome\.exe|DevToolsActivePort", re.I)
 _BEVY = re.compile(r"bevy", re.I)
+_SPAWN_KILL = re.compile(r"ChildProcess\.kill")
+_DENIED = re.compile(r"prevents you from using this specific tool call")
 
-FAMILY = {"pwsh-for-bash-writers": "pwsh", "git-one-branch": "git", "real-browser-automation": "browser", "bevy-rust-ecs": "bevy"}
+FAMILY = {"pwsh-for-bash-writers": "pwsh", "git-one-branch": "git", "real-browser-automation": "browser", "bevy-rust-ecs": "bevy",
+          "bash-spawn-guard": "spawn", "bash-allowlist": "denied"}
 
 
 def classify(tool: str, inp: dict, state: dict, repo: str) -> list[str]:
@@ -118,6 +123,10 @@ def classify(tool: str, inp: dict, state: dict, repo: str) -> list[str]:
                 hit.append("git")
     if _BROWSER.search(cmd):
         hit.append("browser")
+    if _SPAWN_KILL.search(out):
+        hit.append("spawn")
+    if _DENIED.search(out):
+        hit.append("denied")
     return hit
 
 
@@ -169,7 +178,7 @@ def class_counts(db: Path, dirs: list[tuple[str, str]], start_ms: float, end_ms:
     con = _connect(db)
     try:
         sess = {i: d for i, d in con.execute("select id, directory from session where time_updated > ?", (start_ms,))}
-        out: dict[str, dict[str, int]] = {"pwsh": {}, "git": {}, "browser": {}, "bevy": {}}
+        out: dict[str, dict[str, int]] = {fam: {} for fam in FAMILY.values()}
         q = "select session_id, data from part where time_created > ? and time_created <= ? and json_extract(data,'$.type')='tool'"
         for sid, data in con.execute(q, (start_ms, end_ms)):
             try:

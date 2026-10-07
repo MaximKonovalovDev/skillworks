@@ -1,9 +1,9 @@
 {
   "skill": "judge-score-risk",
   "fingerprint": "63e6ad012f731af3c6a1ac6272a80b673e308539c96dc6490d8289da4128f8fd",
-  "date": "2026-10-07T06:07Z",
+  "date": "2026-10-07T09:14Z",
   "command": "SKILL_LIVE=1 python -m pytest tests/test_judge_score_risk.py -q",
-  "result": "6 passed in 6.47s",
+  "result": "6 passed in 5.70s",
   "versions": {
     "python": "3.13.14",
     "os": "Windows-10-10.0.19045-SP0",

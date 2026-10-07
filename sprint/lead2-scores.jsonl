@@ -1,3 +1,9 @@
 {"at":"2026-10-07T01:06:52.384Z","journey":"J1","score":7,"note":"install fast eval perfect; live tests skip silently","evidence":"eval 14/14 rate 1.0, pytest 18 passed (SKILL_LIVE=1)"}
 {"at":"2026-10-07T01:06:58.366Z","journey":"J2","score":10,"note":"Three rows verified halved in minutes","evidence":"adopted.csv lines 2-4, 88.9%/83.3%/71.4%"}
 {"at":"2026-10-07T01:07:06.640Z","journey":"J3","score":10,"note":"Ran first try, all green, no setup","evidence":"test_mcp_schema + test_mcp_skills_dir 6 passed in 6.75s"}
+{"at":"2026-10-07T06:35:58.894Z","journey":"J4","score":4,"note":"Identical everywhere but needs insider paths","evidence":"AEB9598B 57 lines x5 C:/Users/me/Desktop/center/skills-shared"}
+{"at":"2026-10-07T06:36:02.220Z","journey":"J1","score":7,"note":"Installs clearly, check stale one rough edge","evidence":"skills/git-one-branch/eval_report.json 14/14, 18 tests collected"}
+{"at":"2026-10-07T06:36:06.392Z","journey":"J2","score":9,"note":"drops 88.9% 100% 83.3% obvious would return","evidence":"C:/Users/me/.empire/state/skilldoctor/adopted.csv 9-1, 6-0, 60-10"}
+{"at":"2026-10-07T08:33:33.302Z","journey":"J4","score":4,"note":"drift persists; one text everywhere not met","evidence":"skills/bash-spawn-guard/SKILL.md v1.4.0 5222B vs global v1.3.0 4590B +5 lines, loops still 1.3.0"}
+{"at":"2026-10-07T08:33:33.498Z","journey":"J1","score":7,"note":"live tests need hidden SKILL_LIVE flag","evidence":"skills/git-one-branch/SKILL.md, 18 passed, 14/14 eval 1.0"}
+{"at":"2026-10-07T08:33:33.598Z","journey":"J2","score":9,"note":"instant clear drops, header wording only nit","evidence":"adopted.csv rows 2-4 (88.9%, 83.3%, 71.4%)"}
