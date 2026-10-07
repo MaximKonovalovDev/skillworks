@@ -177,3 +177,41 @@ def test_new_five_pairs_v130_fail_bare_and_pass_bounded(results: dict) -> None:
         assert "ChildProcess.kill" in bad_text, f"{pair_id}: bare run did not throw the kill line: {bad_text.strip()[:160]!r}"
         assert results[pair_id]["bad_ok"] is True, f"{pair_id}: bare side should fail with the named line"
         assert results[pair_id]["good_ok"] is True, f"{pair_id}: bounded side should print {bounded_report!r}"
+
+
+@live
+@needs_pwsh
+def test_new_five_pairs_v140_fail_bare_and_pass_bounded(results: dict) -> None:
+    """Cure-r4 v1.4.0: 5 new pairs from the 80-kill scan 2026-10-07T07:56Z
+    (class still over bar despite v1.3.0 loads), run once WITHOUT the skill (bare)
+    and once WITH it (bounded). Fails on v1.3.0 pairs.json (ids missing -> KeyError);
+    passes on v1.4.0.
+
+    Pasted live outputs from scripts/run_spawn.py (pwsh 7, 2026-10-07):
+    - bs-cargopipe WITHOUT: "RuntimeException: Unknown: ChildProcess.kill on piped cargo
+      single test with Select-String tail in one call" (throws); WITH: "slice one chunk
+      file timeout PASS cargopiped".
+    - bs-batchchain WITHOUT: "RuntimeException: Unknown: ChildProcess.kill on chained git
+      status plus batch read plus board grep in one call" (throws); WITH: "single check
+      timeout PASS batchchecked".
+    - bs-lockchain WITHOUT: "RuntimeException: Unknown: ChildProcess.kill on chained lock
+      show plus diff plus listing plus trials read in one call" (throws); WITH: "single
+      check file timeout PASS lockchecked".
+    - bs-romescore WITHOUT: "RuntimeException: Unknown: ChildProcess.kill on bare node
+      rome-score with exit check in one call" (throws); WITH: "single file timeout
+      PASS romescored".
+    - bs-scanchain WITHOUT: "RuntimeException: Unknown: ChildProcess.kill on chained fleet
+      scan plus loads in one call" (throws); WITH: "single check timeout PASS scanchecked".
+    """
+    cases = {
+        "bs-cargopipe": "slice one chunk file timeout PASS cargopiped",
+        "bs-batchchain": "single check timeout PASS batchchecked",
+        "bs-lockchain": "single check file timeout PASS lockchecked",
+        "bs-romescore": "single file timeout PASS romescored",
+        "bs-scanchain": "single check timeout PASS scanchecked",
+    }
+    for pair_id, bounded_report in cases.items():
+        bad_text = results[pair_id]["bad_text"]
+        assert "ChildProcess.kill" in bad_text, f"{pair_id}: bare run did not throw the kill line: {bad_text.strip()[:160]!r}"
+        assert results[pair_id]["bad_ok"] is True, f"{pair_id}: bare side should fail with the named line"
+        assert results[pair_id]["good_ok"] is True, f"{pair_id}: bounded side should print {bounded_report!r}"
