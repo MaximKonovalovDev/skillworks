@@ -1,0 +1,12 @@
+{
+  "skill": "github-file-guard",
+  "runs": 12,
+  "with_rate": 1.0,
+  "without_rate": 0.0,
+  "lift": 1.0,
+  "spread": 1.0,
+  "fingerprint": "ca66e08efe1856a73c30238be1dc885e4dc664e1af348ca32f9b7542549bc61c",
+  "sheet": "evals/github-file-guard_trials.jsonl",
+  "at": "2026-10-07T23:32Z",
+  "ok": true
+}

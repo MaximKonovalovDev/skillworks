@@ -1,0 +1,14 @@
+{
+  "skill": "github-file-guard",
+  "fingerprint": "e918b5f282f8a968e2f8bd38bf4e222bcf2ac970fa35e6deccbe2be58b30f389",
+  "date": "2026-10-07T23:32Z",
+  "command": "SKILL_LIVE=1 python -m pytest tests/test_github_file_guard.py -q",
+  "result": "6 passed in 13.67s",
+  "versions": {
+    "python": "3.13.14",
+    "os": "Windows-10-10.0.19045-SP0",
+    "git": "git version 2.53.0.windows.1",
+    "node": "v24.14.0",
+    "pwsh": "7.6.3"
+  }
+}
