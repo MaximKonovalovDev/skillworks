@@ -1,0 +1,14 @@
+{
+  "skill": "write-abort-guard",
+  "fingerprint": "075c3b0152db94867ac7a8954efab78c9a6a8e2a75b739e3bad4dc673a96431b",
+  "date": "2026-10-07T20:48Z",
+  "command": "SKILL_LIVE=1 python -m pytest tests/test_write_abort_guard.py -q",
+  "result": "6 passed in 32.99s",
+  "versions": {
+    "python": "3.13.14",
+    "os": "Windows-10-10.0.19045-SP0",
+    "git": "git version 2.53.0.windows.1",
+    "node": "v24.14.0",
+    "pwsh": "7.6.3"
+  }
+}

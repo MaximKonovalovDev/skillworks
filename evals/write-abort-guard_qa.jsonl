@@ -1,0 +1,10 @@
+{"must": ["slice", "chunk", "timeout"], "q": "how is a large file written without aborting?"}
+{"must": ["halve", "chunk", "alone"], "q": "what follows a write abort?"}
+{"must": ["single", "stop", "abort"], "q": "how many chunk writes run after an abort?"}
+{"must": ["stage", "append", "chunk"], "q": "what comes first when no staging exists?"}
+{"must": ["background", "receipt", "poll"], "q": "where does a long write run?"}
+{"must": ["RESULT", "report", "chunk"], "q": "how does a finished write run close?"}
+{"must": ["Tool execution aborted", "write"], "q": "what error names a failed long write?"}
+{"must": ["pairs.md", "pairs.json", "run_write.py"], "q": "where are the tested write runs?"}
+{"must": ["target-class.json"], "q": "where is the write failure class recorded?"}
+{"must": ["errors.md"], "q": "what names the cause of a write abort?"}

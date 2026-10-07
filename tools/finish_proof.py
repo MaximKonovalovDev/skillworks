@@ -66,20 +66,54 @@ def _repo_of(directory: str, own: Path) -> str | None:
 
 
 def skill_loads(db: Path, hours: float = HOURS, now_ms: float | None = None, skills: Path | None = None, own: Path | None = None) -> dict[str, int]:
-    """Loads of this repo's skills per other repo in the last `hours` (the database is read-only)."""
+    """Loads of this repo's skills per other repo in the last `hours` (the database is read-only).
+
+    Fast on a multi-GB history: SQLite extracts only the skill name per skill
+    part (no full `data` blob crosses into Python, no json.loads per row), the
+    same filters as before (a `skill` tool call naming a skill of this repo,
+    in a session that ran in another repo)."""
+    detail = skill_loads_detail(db, hours=hours, now_ms=now_ms, skills=skills, own=own)
+    out: dict[str, int] = {}
+    for (_name, repo), n in detail.items():
+        out[repo] = out.get(repo, 0) + n
+    return out
+
+
+def skill_loads_detail(db: Path, hours: float = HOURS, now_ms: float | None = None,
+                       from_ms: float | None = None, to_ms: float | None = None,
+                       skills: Path | None = None, own: Path | None = None) -> dict[tuple[str, str], int]:
+    """Skill loads by (skill, repo): the one counter S1/S2 and `fleet_failures loads` share.
+
+    Default is the trailing `hours`. Pass `from_ms`/`to_ms` to count an exact
+    window (e.g. one day). See skill_loads for the filters and the speed note."""
     skills, own = skills or SKILLS, own or ROOT
     names = _skill_names(skills)
-    cutoff = (time.time() * 1000 if now_ms is None else now_ms) - hours * 3_600_000
+    if from_ms is not None:
+        lo, hi = from_ms, to_ms
+    else:
+        lo = (time.time() * 1000 if now_ms is None else now_ms) - hours * 3_600_000
+        hi = None
     con = sqlite3.connect(f"{db.resolve().as_uri()}?mode=ro", uri=True, timeout=30)
     try:
-        sessions = dict(con.execute("select id, directory from session where time_updated > ?", (cutoff,)))
-        out: dict[str, int] = {}
-        for sid, data in con.execute("select session_id, data from part where time_created > ? and data like ?", (cutoff, '%"tool":"skill"%')):
-            part = json.loads(data)
-            name = ((part.get("state") or {}).get("input") or {}).get("name")
-            repo = _repo_of(sessions.get(sid) or "", own) if part.get("tool") == "skill" and name in names else None
-            if repo:
-                out[repo] = out.get(repo, 0) + 1
+        if hi is None:
+            sessions = dict(con.execute("select id, directory from session where time_updated > ?", (lo,)))
+            q = ("select session_id, json_extract(data,'$.state.input.name') from part "
+                 "where time_created > ? and json_extract(data,'$.type')='tool' "
+                 "and json_extract(data,'$.tool')='skill'")
+            args = (lo,)
+        else:
+            sessions = dict(con.execute(
+                "select id, directory from session where time_updated > ? and time_updated <= ?", (lo, hi)))
+            q = ("select session_id, json_extract(data,'$.state.input.name') from part "
+                 "where time_created > ? and time_created <= ? and json_extract(data,'$.type')='tool' "
+                 "and json_extract(data,'$.tool')='skill'")
+            args = (lo, hi)
+        out: dict[tuple[str, str], int] = {}
+        for sid, name in con.execute(q, args):
+            if name in names:
+                repo = _repo_of(sessions.get(sid) or "", own)
+                if repo and name:
+                    out[(name, repo)] = out.get((name, repo), 0) + 1
         return out
     finally:
         con.close()
@@ -140,23 +174,8 @@ def s3(skills: Path = SKILLS, packs: Path | None = None) -> tuple[bool, str]:
     return False, problem
 
 
-def s5(path: Path = ADOPTED, refresh: bool | None = None) -> tuple[bool, str]:
-    """A failure class fell by half. The `after` numbers are measured here when due (tools/adopted_after.py), for the real
-    record only; a file given on the command line or by a test is read as it is."""
-    note = ""
-    if refresh is None:
-        refresh = path == ADOPTED
-    if refresh:
-        try:
-            import adopted_after
-            _, said = adopted_after.refresh(path, log=path.parent / "after-log.jsonl")
-            note = f"; {said}"
-        except Exception as err:  # the bar must still print: a measuring fault is shown, never hidden
-            note = f"; after-number measuring failed: {type(err).__name__}: {err}"
-    try:
-        rows = list(csv.reader(path.read_text(encoding="utf-8-sig").splitlines()))
-    except OSError:
-        return False, f"no adopted.csv at {path}"
+def _halved(rows: list[list[str]]) -> tuple[list[list[str]], int, list[str]]:
+    """The adopted rows (outside this repo), how many have an after number, and the halved classes."""
     adopted = [r for r in rows if len(r) >= 6 and r[3].strip().lower() == "adopted" and r[1].strip() != "skillworks"]
     measured, halved = 0, []
     for r in adopted:
@@ -169,7 +188,39 @@ def s5(path: Path = ADOPTED, refresh: bool | None = None) -> tuple[bool, str]:
             continue  # these rows count use, where more is good: a fall is no cured failure
         if before > 0 and after * 2 <= before:
             halved.append(f"{r[1].strip()}/{r[2].strip()} {r[4].strip()} -> {r[5].strip()}")
-    return bool(halved), f"{len(halved)} class(es) fell by half (want 1): {', '.join(halved) or 'none'}; {measured} of {len(adopted)} adopted rows have an after number{note}"
+    return adopted, measured, halved
+
+
+def s5(path: Path = ADOPTED, refresh: bool | None = None) -> tuple[bool, str]:
+    """A failure class fell by half. The `after` numbers are measured here when due (tools/adopted_after.py),
+    for the real record only, and only when the record does not already name a halved class: a record that
+    already proves the bar is returned met with no database scan, so the proof answers in under a second
+    on a multi-GB history instead of timing out. A file given on the command line or by a test is read as it is."""
+    note = ""
+    if refresh is None:
+        refresh = path == ADOPTED
+    try:
+        rows = list(csv.reader(path.read_text(encoding="utf-8-sig").splitlines()))
+    except OSError:
+        return False, f"no adopted.csv at {path}"
+    adopted, measured, halved = _halved(rows)
+    if halved:
+        return True, (f"{len(halved)} class(es) fell by half (want 1): {', '.join(halved)}; "
+                      f"{measured} of {len(adopted)} adopted rows have an after number (already met, no re-scan)")
+    if refresh:
+        try:
+            import adopted_after
+            _, said = adopted_after.refresh(path, log=path.parent / "after-log.jsonl")
+            note = f"; {said}"
+        except Exception as err:  # the bar must still print: a measuring fault is shown, never hidden
+            note = f"; after-number measuring failed: {type(err).__name__}: {err}"
+        try:
+            rows = list(csv.reader(path.read_text(encoding="utf-8-sig").splitlines()))
+        except OSError:
+            return False, f"no adopted.csv at {path}{note}"
+        adopted, measured, halved = _halved(rows)
+    return bool(halved), (f"{len(halved)} class(es) fell by half (want 1): {', '.join(halved) or 'none'}; "
+                          f"{measured} of {len(adopted)} adopted rows have an after number{note}")
 
 
 def _live_current(name: str) -> bool:

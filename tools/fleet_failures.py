@@ -296,39 +296,10 @@ def loads_detail(db: Path, hours: float = 24, now_ms: float | None = None,
     Default is the trailing `hours`. Pass `from_ms`/`to_ms` to count the exact
     window a sanity date covers (e.g. 2026-10-03), so the 7-or-more pwsh-loads
     check reads one day instead of a drifting trailing window.
-    """
-    skills = fp._skill_names(fp.SKILLS)
-    own = fp.ROOT
-    if from_ms is not None:
-        lo, hi = from_ms, to_ms
-    else:
-        lo = (time.time() * 1000 if now_ms is None else now_ms) - hours * 3_600_000
-        hi = None
-    con = connect_ro(db)
-    try:
-        if hi is None:
-            sessions = dict(con.execute("select id, directory from session where time_updated > ?", (lo,)))
-            rows = con.execute(
-                "select session_id, data from part where time_created > ? and data like ?", (lo, '%"tool":"skill"%'))
-        else:
-            sessions = dict(con.execute(
-                "select id, directory from session where time_updated > ? and time_updated <= ?", (lo, hi)))
-            rows = con.execute(
-                "select session_id, data from part where time_created > ? and time_created <= ? and data like ?",
-                (lo, hi, '%"tool":"skill"%'))
-        out: dict[tuple[str, str], int] = {}
-        for sid, data in rows:
-            try:
-                part = json.loads(data)
-            except ValueError:
-                continue
-            name = ((part.get("state") or {}).get("input") or {}).get("name")
-            repo = fp._repo_of(sessions.get(sid) or "", own) if part.get("tool") == "skill" and name in skills else None
-            if repo and name:
-                out[(name, repo)] = out.get((name, repo), 0) + 1
-        return out
-    finally:
-        con.close()
+
+    One counter: this delegates to finish_proof.skill_loads_detail, the same
+    function S1/S2 aggregate, so the three never disagree."""
+    return fp.skill_loads_detail(db, hours=hours, now_ms=now_ms, from_ms=from_ms, to_ms=to_ms)
 
 
 def read_rows(path: Path) -> list[list[str]]:
@@ -413,7 +384,9 @@ def cmd_loads(a: argparse.Namespace) -> int:
         hi_s = datetime.fromtimestamp(to_ms / 1000, timezone.utc).strftime("%Y-%m-%dT%H:%MZ") if to_ms else "now"
         print(f"{sum(totals.values())} loads {lo_s} to {hi_s} across {len(totals)} repos: {seen}")
         return 0
-    totals = fp.skill_loads(db, hours=a.hours)
+    totals: dict[str, int] = {}
+    for (_skill, repo), n in detail.items():
+        totals[repo] = totals.get(repo, 0) + n
     seen = ", ".join(f"{r} {n}" for r, n in sorted(totals.items())) or "none"
     print(f"{sum(totals.values())} loads in {a.hours:g} h across {len(totals)} repos: {seen}")
     return 0

@@ -1,9 +1,9 @@
 {
   "skill": "ripgrep-search",
   "fingerprint": "6e209954c99a1c8f63c0ab5bdb707203ae36d32697f1a93d46732694c5b4d417",
-  "date": "2026-10-07T02:37Z",
+  "date": "2026-10-07T19:27Z",
   "command": "SKILL_LIVE=1 python -m pytest tests/test_ripgrep_search.py -q",
-  "result": "11 passed in 6.07s",
+  "result": "11 passed in 0.31s",
   "versions": {
     "python": "3.13.14",
     "os": "Windows-10-10.0.19045-SP0",

@@ -1,7 +1,7 @@
-Lead 2 16:19: one text holds, drops real, pack PASS went stale again
-Journeys: J4 7 (5 copies one hash AEB9598B, 0 diff), J1 7 (eval 14/14 rate 1.0, install --check STALE exit 1), J2 10 (drops 88.9%, 83.3%, 71.4%)
-Usage: orders open 7 delivered 3 used 3 (skillworks-to-product 0 used); 100 done last 24h, 8 NOOP (builder x4 + 4 singles)
-Diagnose: sprint/check.mjs PASS 20/0/0; worst is empire checks 40.3h old (node empire.mjs check skillworks not run)
-Compare: R1 oldest evidence 2026-10-03; ours 12/12=1.0 on disk 2026-10-07, theirs ClawHub registry page live 2026-10-07 still 0/6 pipe (no book pipeline)
-Recheck: 53a3b47 pack PASS now FAIL 2 findings (already O-011); fd-find PASS 12 runs, bash-allowlist PASS 22 runs hold
-Asks: asks held: 4 open (S130 onetext, S131 audit-desc, S132 packgate, S133 scoreproof)
+Lead 2 18:53: stranger journeys green except hidden live tests; one new fake green held
+Journeys: J4 9 (one text everywhere, copy list unstated), J1 7 (live tests hide behind SKILL_LIVE=1), J3 10 (6 passed in 5.10s, zero friction).
+Usage: orders open 7, delivered 3, used 3 (design-studio art into skillworks); last 24h done files 137 with 12 NOOP (builder 7, researcher 3).
+Diagnose: loop check PASS 20/0/0 but empire checks 42.9h old; worst item is the stale empire check, not a failing one.
+Compare: scorecard R3 (MCP, evidence 2026-10-03): ours today lists every skill (J3 6 passed); ClawHub page today still registry+bundles with scans, no stdio serve, their 0/3 stands.
+Recheck: fd-find grade PASS 12 runs 1.0/0.0 lift 1.0 still green; fleet-vol-1 pack_check PASS 13 checks now green (S132 closable); bash-spawn-guard live_proof NOT proven, pairs.md stale (eb14259 claimed 10 passed) = fake green, held for inbox.
+Asks: asks held: 4 open (S130 onetext, S131 audit-desc, S132 packgate, S133 scoreproof); new fake green (spawn-guard pairs.md stale) queued behind them.

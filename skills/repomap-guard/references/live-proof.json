@@ -1,9 +1,9 @@
 {
   "skill": "repomap-guard",
   "fingerprint": "1b63e6a345027ea21be1f6f004dac675bd040388d2f4d35dfb709735b186cbee",
-  "date": "2026-10-07T09:06Z",
+  "date": "2026-10-07T19:26Z",
   "command": "SKILL_LIVE=1 python -m pytest tests/test_repomap_guard.py -q",
-  "result": "6 passed in 4.70s",
+  "result": "6 passed in 1.28s",
   "versions": {
     "python": "3.13.14",
     "os": "Windows-10-10.0.19045-SP0",

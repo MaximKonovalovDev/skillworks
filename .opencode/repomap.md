@@ -1,5 +1,5 @@
 # repomap: skillworks
-_generated 2026-10-07T07:21:24.222Z | 8946 files mapped | 207 hot (commits, last 14d) | cap 25KB_
+_generated 2026-10-07T19:51:09.131Z | 9043 files mapped | 213 hot (commits, last 14d) | cap 25KB_
 
 ## tree
 - `.claude-plugin/` - 1 file
@@ -20,7 +20,7 @@ _generated 2026-10-07T07:21:24.222Z | 8946 files mapped | 207 hot (commits, last
 - `book2skill/` - 30 files
 - `dist/` - 9 files
 - `docs/` - 1 file
-- `evals/` - 89 files
+- `evals/` - 101 files
 - `findings/` - 1 file
 - `from-design-studio/` - 12 files
 - `mcp_server/` - 5 files
@@ -29,17 +29,17 @@ _generated 2026-10-07T07:21:24.222Z | 8946 files mapped | 207 hot (commits, last
 - `packs/` - 54 files
 - `prompts/` - 2 files
 - `requirements.txt` - 1 file
-- `research/` - 29 files
-- `skills/` - 471 files
-- `sprint/` - 28 files
+- `research/` - 31 files
+- `skills/` - 509 files
+- `sprint/` - 30 files
 - `steal-spec-mcp.md` - 1 file
 - `team/` - 8 files
-- `tests/` - 190 files
-- `tools/` - 54 files
-- `work/` - 907 files
+- `tests/` - 198 files
+- `tools/` - 56 files
+- `work/` - 940 files
 
 ## symbols (hot first, xN = commits last 14d)
-### `book2skill/gates.py` x23 (12KB)
+### `book2skill/gates.py` x25 (12KB)
 - `def frontmatter`
 - `def body_of`
 - `def body_tokens`
@@ -53,12 +53,12 @@ _generated 2026-10-07T07:21:24.222Z | 8946 files mapped | 207 hot (commits, last
 - `def test_file_for`
 - `def fingerprint`
 - `def check_proof`
-### `tools/install_fleet_skills.py` x21 (4.4KB)
+### `tools/install_fleet_skills.py` x23 (4.6KB)
 - `def payload`
 - `def stale`
 - `def install`
 - `def main`
-### `.opencode/plugin/loop-keeper.js` x20 (177KB) - loop-keeper: continues THIS repo's /sprint when its session goes idle, and
+### `.opencode/plugin/loop-keeper.js` x22 (180KB) - loop-keeper: continues THIS repo's /sprint when its session goes idle, and
 ### `book2skill/export.py` x9 (8.5KB)
 - `def layout_for`
 - `def load_eval_report`
@@ -141,6 +141,20 @@ _generated 2026-10-07T07:21:24.222Z | 8946 files mapped | 207 hot (commits, last
 - `def skill_answer_texts`
 - `def _rank`
 - `def run_eval`
+### `tests/test_bash_spawn_guard.py` x5 (11KB)
+- `def _load`
+- `def doc`
+- `def results`
+- `def test_pair_file_is_well_formed`
+- `def test_pairs_md_is_current`
+- `def test_every_rule_line_carries_a_source`
+- `def test_every_pair_behaves_as_written`
+- `def test_the_harness_can_fail`
+- `def test_error_fragments_come_from_real_failures`
+- `def test_three_dispatch_bad_cases_fail_bare_and_pass_bounded`
+- `def test_new_five_pairs_fail_bare_and_pass_bounded`
+- `def test_new_five_pairs_v130_fail_bare_and_pass_bounded`
+- `def test_new_five_pairs_v140_fail_bare_and_pass_bounded`
 ### `book2skill/make.py` x4 (5.3KB)
 - `def _inside`
 - `def _check_places`
@@ -164,19 +178,6 @@ _generated 2026-10-07T07:21:24.222Z | 8946 files mapped | 207 hot (commits, last
 - `def _reply`
 - `def _unknown_skill_message`
 - `def main`
-### `tests/test_bash_spawn_guard.py` x4 (8.5KB)
-- `def _load`
-- `def doc`
-- `def results`
-- `def test_pair_file_is_well_formed`
-- `def test_pairs_md_is_current`
-- `def test_every_rule_line_carries_a_source`
-- `def test_every_pair_behaves_as_written`
-- `def test_the_harness_can_fail`
-- `def test_error_fragments_come_from_real_failures`
-- `def test_three_dispatch_bad_cases_fail_bare_and_pass_bounded`
-- `def test_new_five_pairs_fail_bare_and_pass_bounded`
-- `def test_new_five_pairs_v130_fail_bare_and_pass_bounded`
 ### `.opencode/agents/planner.md` x3 (1.7KB)
 - # Planner
 - ## Dispatch discipline
@@ -204,6 +205,14 @@ _generated 2026-10-07T07:21:24.222Z | 8946 files mapped | 207 hot (commits, last
 - `def test_help_runs_without_a_prompt`
 - `def test_skill_md_documents_what_the_script_prints`
 - `def test_an_installed_copy_runs_from_another_folder_through_pwsh`
+### `tests/test_fleet_skills.py` x3 (2.3KB)
+- `def _built`
+- `def test_fleet_skill_format`
+- `def test_frontmatter_folds_folded_description_scalar`
+- `def test_gates_frontmatter_reads_git_one_branch_folded_description`
+- `def test_fleet_skill_sources_and_notices`
+- `def test_fleet_skill_eval_gate`
+- `def test_fleet_skill_matches_its_last_live_proof`
 ### `tests/test_inbox_file_reader.py` x3 (11KB)
 - `def run_reader`
 - `def tree`
@@ -349,6 +358,33 @@ _generated 2026-10-07T07:21:24.222Z | 8946 files mapped | 207 hot (commits, last
 - `def estimate`
 - `def read_item`
 - `def main`
+### `tests/test_adopted_after.py` x2 (21KB)
+- `def call`
+- `def test_each_target_class_is_counted`
+- `def test_ordinary_calls_are_not_counted`
+- `def test_only_shell_calls_count_for_pwsh_git_and_browser_and_bevy_counts_in_engine2040_only`
+- `def test_a_call_that_hits_two_classes_counts_twice_and_the_error_text_may_carry_colour`
+- `def test_spawn_kills_and_policy_denials_count_per_repo`
+- `def test_spawn_kills_and_policy_denials_count_per_repo_in_history`
+- `class World`
+- `def world`
+- `def test_a_row_is_not_due_before_48_hours_after_the_install`
+- `def test_a_paused_loop_never_gets_its_row_filled_it_would_look_halved`
+- `def test_a_few_busy_hours_do_not_pass_for_a_full_run`
+- `def test_an_idle_loop_with_every_hour_covered_but_few_calls_waits`
+- `def test_a_full_run_fills_the_number_scaled_to_the_before_workload`
+- `def test_the_install_moment_in_adopted_meta_json_replaces_the_end_of_the_day`
+- `def test_only_adopted_rows_without_an_after_number_are_touched_and_the_rest_stays_as_it_was`
+- `def test_a_dry_run_measures_and_prints_but_writes_nothing`
+- `def test_use_rows_say_up_is_good`
+- `def test_a_missing_database_or_record_says_so_and_does_not_raise`
+- `def _full_run`
+- `def test_s5_measures_the_due_rows_of_the_real_record_before_it_reads_it`
+- `def test_s5_reads_a_file_given_to_it_as_it_is_and_never_measures_for_it`
+- `def test_s5_prints_a_measuring_fault_instead_of_raising`
+- `def test_a_fall_in_use_rows_is_not_a_cured_class`
+- `def test_the_command_line_status_prints_one_line_per_row_and_a_summary`
+- `def test_the_port_reproduces_the_before_numbers_center_counted_in_the_same_window`
 ### `tests/test_audit_grades.py` x2 (5.2KB)
 - `def _skill`
 - `def test_audit_reports_three_cost_numbers_on_progit`
@@ -375,6 +411,17 @@ _generated 2026-10-07T07:21:24.222Z | 8946 files mapped | 207 hot (commits, last
 - `def test_help_lists_every_stage`
 - `def test_the_budget_numbers_in_the_skill_match_the_gates`
 - `def test_it_runs_through_pwsh_from_a_folder_with_spaces_and_writes_there`
+### `tests/test_edit_verify.py` x2 (4.9KB)
+- `def _load`
+- `def doc`
+- `def results`
+- `def test_pair_file_is_well_formed`
+- `def test_pairs_md_is_current`
+- `def test_every_rule_line_carries_a_source`
+- `def test_every_pair_behaves_as_written`
+- `def test_the_harness_can_fail`
+- `def test_error_fragments_come_from_real_failures`
+- `def test_stale_oldstring_replays_red_then_reread_fixes_it`
 ### `tests/test_eval_persist.py` x2 (1.8KB)
 - `def test_eval_persists_report_beside_skill`
 - `def test_readme_order_eval_then_export`
@@ -413,13 +460,6 @@ _generated 2026-10-07T07:21:24.222Z | 8946 files mapped | 207 hot (commits, last
 - `def test_scan_exact_window_matches_metrics_entry`
 - `def test_loads_exact_window_pins_single_day`
 - `def test_command_line_help_exits_zero`
-### `tests/test_fleet_skills.py` x2 (1.8KB)
-- `def _built`
-- `def test_fleet_skill_format`
-- `def test_frontmatter_folds_folded_description_scalar`
-- `def test_fleet_skill_sources_and_notices`
-- `def test_fleet_skill_eval_gate`
-- `def test_fleet_skill_matches_its_last_live_proof`
 ### `tests/test_make.py` x2 (9.2KB)
 - `def _manual`
 - `def _run`
@@ -441,6 +481,23 @@ _generated 2026-10-07T07:21:24.222Z | 8946 files mapped | 207 hot (commits, last
 - `def _stdio_session`
 - `def test_stdio_handshake_list_call_and_bad_call`
 - `def test_skill_preview_returns_head_and_unknown_skill_errors`
+### `tools/adopted_after.py` x2 (18KB)
+- `def classify`
+- `def repo_dirs`
+- `def repo_of`
+- `def _connect`
+- `def shell_activity`
+- `def shell_calls`
+- `def class_counts`
+- `def read_rows`
+- `def write_rows`
+- `def install_day_end`
+- `def load_meta`
+- `def install_end`
+- `def verdict`
+- `def plan`
+- `def refresh`
+- `def main`
 ### `tools/fleet_failures.py` x2 (27KB)
 - `def norm`
 - `def head_of`
@@ -710,60 +767,5 @@ _generated 2026-10-07T07:21:24.222Z | 8946 files mapped | 207 hot (commits, last
 ### `skills/repomap-guard/scripts/pairs_to_md.py` x1 (2.4KB)
 - `def render`
 - `def main`
-### `skills/repomap-guard/scripts/run_map.py` x1 (5.5KB)
-- `def scratch_root`
-- `def run_pairs`
-- `def main`
-### `skills/repro-first/scripts/pairs_to_md.py` x1 (2.3KB)
-- `def render`
-- `def main`
-### `skills/repro-first/scripts/run_repro.py` x1 (5.5KB)
-- `def scratch_root`
-- `def run_pairs`
-- `def main`
-### `skills/task-abort-guard/scripts/pairs_to_md.py` x1 (2.4KB)
-- `def render`
-- `def main`
-### `skills/task-abort-guard/scripts/run_task.py` x1 (5.5KB)
-- `def scratch_root`
-- `def run_pairs`
-- `def main`
-### `skills/task-scope/scripts/pairs_to_md.py` x1 (2.3KB)
-- `def render`
-- `def main`
-### `skills/task-scope/scripts/run_scope.py` x1 (5.5KB)
-- `def scratch_root`
-- `def run_pairs`
-- `def main`
-### `skills/webfetch-retry/scripts/pairs_to_md.py` x1 (2.4KB)
-- `def render`
-- `def main`
-### `skills/webfetch-retry/scripts/run_fetch_retry.py` x1 (5.5KB)
-- `def scratch_root`
-- `def run_pairs`
-- `def main`
-### `skills/websearch-retry/scripts/pairs_to_md.py` x1 (2.4KB)
-- `def render`
-- `def main`
-### `skills/websearch-retry/scripts/run_search.py` x1 (5.5KB)
-- `def scratch_root`
-- `def run_pairs`
-- `def main`
-### `tests/live_proof.py` x1 (3.0KB)
-- `def versions`
-- `def prove`
-- `def main`
-### `tests/skill_stock.py` x1 (4.1KB)
-- `def run_script`
-- `def help_runs`
-- `def skill_md_documents`
-- `class Installed`
-- `def installed_copy`
-### `tests/test_a10_findvol1.py` x1 (7.4KB)
-- `def test_sheet_valid_12_tasks`
-- `def test_skill_md_format`
-- `def test_skill_covers_all_sheet_routes`
-- `def test_discovery_wins_lift`
-- `def test_no_vendor_hermetic`
 
-_3120 cold files dropped to fit cap_
+_3143 cold files dropped to fit cap_

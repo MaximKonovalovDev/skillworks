@@ -1,9 +1,9 @@
 {
   "skill": "bevy-rust-ecs",
   "fingerprint": "1dd7390aaed7b1465f05e6f2b6945f8f186d75183b600c4c4f34fb330a34cd3d",
-  "date": "2026-10-07T17:08Z",
+  "date": "2026-10-07T19:18Z",
   "command": "SKILL_LIVE=1 python -m pytest tests/test_bevy_rust_ecs.py -q",
-  "result": "42 passed in 102.12s (0:01:42)",
+  "result": "42 passed in 141.60s (0:02:21)",
   "versions": {
     "python": "3.13.14",
     "os": "Windows-10-10.0.19045-SP0",

@@ -1,9 +1,9 @@
 {
   "skill": "batch-first",
   "fingerprint": "6f743319b7fbf4bf6ff58a76928ae000e3f975019197ec0c4be864ef1789cc09",
-  "date": "2026-10-07T08:48Z",
+  "date": "2026-10-07T19:16Z",
   "command": "SKILL_LIVE=1 python -m pytest tests/test_batch_first.py -q",
-  "result": "6 passed in 3.90s",
+  "result": "6 passed in 5.65s",
   "versions": {
     "python": "3.13.14",
     "os": "Windows-10-10.0.19045-SP0",

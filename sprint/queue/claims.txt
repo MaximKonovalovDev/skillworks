@@ -1,2 +1,11 @@
-DR-1007-4 | builder-cure-scorerisk-finish | 2026-10-07T09:14Z | FLEET wiring
-DR-1007-5 | builder-cure-reprofirst | 2026-10-07T09:13Z | skills/
+O-011 | 312-pack-rebuild2 | 2026-10-07T19:33Z | packs/fleet-vol-1/
+SCOUT | researcher-doctor-scout-3 | 2026-10-07T19:45Z | board row DR-1007-13
+DR-1007-13 | 318-cure-100713 | 2026-10-07T19:48Z | skills/read-abort-guard/
+DR-1007-12 | 317-writeabort-fix | 2026-10-07T19:46Z | tools/install_fleet_skills.py
+SCOUT | researcher-books-scout-2 | 2026-10-07T20:04Z | board row
+BK-1007-8 | 322-book-gronjson | 2026-10-07T20:15Z | skills/gron-json/
+
+SCOUT | researcher-books-scout-3 | 2026-10-07T20:45Z | board row
+BK-1007-9 | 325-book-batcat | 2026-10-07T21:13Z | skills/bat-cat/
+SCOUT | researcher-doctor-scout-4 | 2026-10-07T21:55Z | board row
+DR-1007-14 | 328-cure-100714 | 2026-10-07T22:47Z | skills/github-file-guard/

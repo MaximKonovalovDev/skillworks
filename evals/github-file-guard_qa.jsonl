@@ -1,0 +1,10 @@
+{"must": ["list", "directory", "verified"], "q": "A get_file_contents call missed on a nested path. What is listed first and what is fetched?"}
+{"must": ["record", "verified", "fetch"], "q": "A repo file was fetched by guess after a miss. What record is read and which path is fetched?"}
+{"must": ["directory", "listing", "fallback"], "q": "A directory path was passed where a file belongs. What fallback covers the miss?"}
+{"must": ["single", "stop", "verify"], "q": "The same guessed path failed twice. How many lists run and when does it stop?"}
+{"must": ["branch", "verify", "fetch"], "q": "A branch-qualified path missed. What is verified before the fetch?"}
+{"must": ["RESULT", "verified", "report"], "q": "A file-contents miss filed no report. What RESULT line closes the run?"}
+{"must": ["list", "verify", "PASS"], "q": "How is one file fetched so the run ends with PASS?"}
+{"must": ["record", "single", "path"], "q": "How is one repo file read from a single verified path?"}
+{"must": ["target-class.json"], "q": "where is the github file failure class recorded?"}
+{"must": ["errors.md"], "q": "what names the cause of a file-contents miss?"}
