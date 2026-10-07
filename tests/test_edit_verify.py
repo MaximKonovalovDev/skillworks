@@ -92,3 +92,37 @@ def test_error_fragments_come_from_real_failures(results: dict) -> None:
     for fragment, pair_id in rows:
         got = results[pair_id]["bad_text"]
         assert fragment.lower() in got.lower(), f"errors.md says {fragment!r} for {pair_id}, the real error was {got.strip()[:200]!r}"
+
+
+def test_stale_oldstring_replays_red_then_reread_fixes_it(tmp_path) -> None:
+    """r6 red replay as a test: a stale oldString throws the target-class
+    error (red); the skill's re-read rule (ev-reread/ev-stale) lands it (green)."""
+    import re as _re
+
+    target = tmp_path / "target.txt"
+    target.write_text("line one\nline two\n", encoding="utf-8")
+
+    def exact_edit(path, old: str, new: str) -> None:
+        text = Path(path).read_text(encoding="utf-8")
+        if old not in text:
+            raise RuntimeError(
+                "Could not find oldString in the file. It must match exactly, "
+                "including whitespace, indentation, and line endings."
+            )
+        assert text.count(old) == 1, "oldString must match exactly one place"
+        Path(path).write_text(text.replace(old, new, 1), encoding="utf-8")
+
+    stale_old = "line one\n"  # read before the outside write
+    target.write_text("line ONE changed outside\nline two\n", encoding="utf-8")
+
+    with pytest.raises(RuntimeError, match="Could not find oldString"):
+        exact_edit(target, stale_old, "line one\nline TWO\n")
+    assert _re.search(
+        json.loads((SKILL / "references" / "target-class.json").read_text(encoding="utf-8"))["error_regex"],
+        "Could not find oldString in the file.",
+    )
+
+    fresh = target.read_text(encoding="utf-8")  # ev-reread/ev-stale: re-read after outside write
+    assert "changed outside" in fresh
+    exact_edit(target, "line ONE changed outside\n", "line one\n")
+    assert target.read_text(encoding="utf-8") == "line one\nline two\n"
