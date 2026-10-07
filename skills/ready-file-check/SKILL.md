@@ -1,7 +1,7 @@
 ---
 name: ready-file-check
-description: Use when a read call comes back File not found on a missing ready file
-version: 1.0.0
+description: Use when a read call comes back File not found on a missing queue path (ready, claims, lead-lock, review, inbox, or packet path)
+version: 1.1.0
 author: skillworks
 tags: [queue]
 license: MIT (skill text and scripts, original work)
@@ -9,11 +9,12 @@ license: MIT (skill text and scripts, original work)
 
 # List first, never guess a ready path
 
-A standing seat reads a hardcoded ready-file path after the keeper moved or
-consumed it, and the read comes back `File not found`. List the ready folder
-first, read only files that exist, follow the batch doc for the live packets,
-take only named items, skip misses gracefully, and report the diff plus check
-results.
+A pilot, lead, judge, planner, or builder seat reads a hardcoded queue path - a
+ready file, claims file, lead-lock file, review file, inbox file, or packet
+path - after the keeper moved or consumed it, and the read comes back
+`File not found`. List the ready folder first, read only files that exist,
+follow the batch doc for the live packets, take only named items, skip misses
+gracefully, and report the diff plus check results.
 
 The full bad and good runs are `references/pairs.md`, the machine list is `references/pairs.json`, the runner is `scripts/run_ready.py`, and the failure class is `references/target-class.json`.
 
