@@ -1,0 +1,10 @@
+{"must": ["ECONNABORTED", "ETIMEDOUT", "isAxiosError"], "q": "A request fails on timeout versus abort. Which two codes name those cases, what flag proves the error came from axios, and what do you branch on?"}
+{"must": ["ERR_CANCELED", "canceled", "__CANCEL__"], "q": "An operation is canceled. What code does the CanceledError constructor pass, what default message appears, and what marker identifies a cancellation?"}
+{"must": ["ERR_BAD_RESPONSE", "ERR_BAD_REQUEST", "response"], "q": "A bad status versus a bad request shape. Which two codes distinguish them and what object carries the server reply?"}
+{"must": ["AggregateError", "errors", "message"], "q": "A dual-stack failure arrives as an AggregateError with an empty message. How does AxiosError.from build a usable message and what array does it read?"}
+{"must": ["redact", "REDACTED", "toJSON"], "q": "You must hide secrets when logging an AxiosError as JSON. What config array enables redaction, what placeholder replaces matching keys, and which method serializes?"}
+{"must": ["cause", "enumerable", "circular"], "q": "AxiosError.from wraps the original error as cause. Why is cause non-enumerable and what payload on the wrapped error motivates that?"}
+{"must": ["status", "response", "from"], "q": "Where does the AxiosError constructor read status from, and when does from copy status from the wrapped error?"}
+{"must": ["AxiosError", "CanceledError", "name"], "q": "Tell an AxiosError from a CanceledError without instanceof. What name string does each constructor set?"}
+{"must": ["ERR_INVALID_URL", "AxiosError", "CanceledError"], "q": "A fetch fails before any request is sent. Which code names the invalid URL, and which two name strings does the skill use to tell the error classes apart?"}
+{"must": ["ECONNABORTED", "ERR_BAD_RESPONSE", "isAxiosError"], "q": "Two failures: an aborted connection and a bad server reply. Which code names each, and what flag confirms both came from axios?"}

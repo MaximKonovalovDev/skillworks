@@ -1,0 +1,27 @@
+# Glossary
+
+- ECONNABORTED: the static code for the aborted connection; branch on `err.code`, never on the message text.
+- ETIMEDOUT: the static code for the exceeded deadline; the pair of `ECONNABORTED` plus `ETIMEDOUT` covers the timeout shape.
+- isAxiosError: the flag the `AxiosError` constructor sets to true; it proves the error came from axios.
+- code: the token naming the failure (`ERR_CANCELED`, `ERR_BAD_RESPONSE`, and kin); the constructor stores it when given.
+- CanceledError: the subclass thrown when an operation is canceled; the constructor passes `ERR_CANCELED` as the code argument at line 16.
+- canceled: the default message when none is given to the `CanceledError` constructor.
+- __CANCEL__: the marker property set to true on a `CanceledError`; it identifies a cancellation.
+- ERR_BAD_RESPONSE: the code for a bad status; the server reply rides on `response` and `status` travels on the error too.
+- ERR_BAD_REQUEST: the code for a malformed request shape.
+- response: the object carrying the server reply in the bad-response case.
+- status: taken from `response.status` by the constructor; `from` copies `error.status` when the new error has none, which keeps a fetch 404 readable.
+- AggregateError: the Node error thrown on dual-stack connection failure with an empty message; its detail lives in the `errors` array.
+- errors: the array `AxiosError.from` reads and joins into one message line.
+- message: the joined entry texts, or `error.name` when the array gives nothing.
+- from: the `AxiosError.from` wrapper that builds a usable error from a raw one.
+- redact: the opt-in config array listing sensitive keys.
+- REDACTED: the placeholder replacing each matching key in `toJSON` output at any depth.
+- toJSON: the method performing the redacted serialization.
+- cause: the wrapped original error, defined non-enumerable so `circular` internals never enter an own-property walk.
+- enumerable: property visibility; `cause` stays out of it while `message` stays in it for backward compatibility.
+- circular: self-referencing internals (sockets, requests, agents) that make structured loggers throw.
+- name: `AxiosError` on the base, `CanceledError` on the subclass; read it instead of reaching for instanceof.
+- ERR_INVALID_URL: the code signaling an invalid URL.
+- config: the request config carried on the error; the `redact` array lives on it.
+- request: the request object carried on the error when given.

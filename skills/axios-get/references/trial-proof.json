@@ -1,0 +1,12 @@
+{
+  "skill": "axios-get",
+  "runs": 12,
+  "with_rate": 1.0,
+  "without_rate": 0.0,
+  "lift": 1.0,
+  "spread": 1.0,
+  "fingerprint": "a889a5e08168da6e0e00a36e4979c53365c2dcfb1b8f708ba09bc429511543e5",
+  "sheet": "evals/axios-get_trials.jsonl",
+  "at": "2026-10-07T03:42Z",
+  "ok": true
+}
