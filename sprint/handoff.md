@@ -1,29 +1,28 @@
-# skillworks handoff - round 258 (token 1803)
+# skillworks handoff - round 259 (token 1803)
 
-Round: 258 (self-caught gate break fixed, 2 reviews queued)
-Written: 2026-10-07T04:23Z
+Round: 259 (webfetch landed, octokit wire finish queued)
+Written: 2026-10-07T04:34Z
 Token: 1803 (takeover 2026-10-06T15:24Z, replaced stale lead#a7e2 left by closed app)
 Knobs: width 5, foreground, heavy_max 3, paid_mode 0 (file of 2026-10-06T00:14Z, unchanged).
 
 ## Heading
-- Two cures DONE with records on file. My S110 close tripped the DONE-needs-SHA gate; fixed by naming the recording commit.
+- Doctor webfetch-retry landed (lift 1.0, distinct from websearch-retry). Book octokit needs only its wire; finish queued with the record rule.
 
 ## Results collected
-- webfetch cure (builder): DONE new webfetch-retry, 12 pairs, live 6/6, grade lift 1.0. Review queued (distinctness from websearch-retry in scope).
-- octokit build (builder): DONE, distill 777 tok, grade 1.0 lift 1.0, live 11, suite 675. Review queued (wire gap fails by name if present).
-- Lead fix: PIPE-1007-1 DONE named record 0635f21 after check FAIL `DONE without a commit SHA`. Check back to 20/0/0. Lesson: installer-proven rows name the recording commit, never bare proof.
+- webfetch-review (judge): VERDICT PASS (red 12/12 rerun, grade lift 1.0, live 6, audit clean, check 20/0/0). Committed e423356 (skill plus test plus scout sheet).
+- octokit-review (judge): VERDICT FAIL wire-only, nothing else (distill ok, grade 1.0/0.0 lift 1.0, 11 green, check 20/0/0, MIT clean). Finish queued mirroring the ripgrep wire.
 
 ## Rows
-- PIPE-1007-1 DONE (record 0635f21). DR-1007-3 plus BK-1007-3 READY awaiting verdicts.
+- DR-1007-3 DONE e423356. BK-1007-3 READY awaiting wire finish. Retro due next round.
 
 ## Checks
-- node sprint/check.mjs RESULT PASS 20 pass 0 warn 0 fail (lead reran after fix, 04:23Z).
+- node sprint/check.mjs RESULT PASS 20 pass 0 warn 0 fail (builder reports; lead reruns on land).
 
 ## Held, not committed
-- Both cure subjects uncommitted (verdicts pending). Proof noise, keeper files, claims.txt, research, packs/mcp-template, sprint/halt deleted.
+- octokit skill plus wire uncommitted (finish pending). Proof noise, keeper files, claims.txt, research, packs/mcp-template, sprint/halt deleted.
 
 ## Next
-- Collect 2 reviews; land PASSes by path; finishes for wire gaps if named.
+- Collect octokit finish, review, land by path. Retro due 260.
 
-## Retro (round 258, not due)
+## Retro (round 259, not due)
 - None. Next retro due 260.
