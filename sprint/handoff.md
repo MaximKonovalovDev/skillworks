@@ -1,35 +1,37 @@
-# skillworks handoff - round 289 (token d5a1)
+# skillworks handoff - round 290 (token d5a1) RETRO
 
-Round: 289 (lock d5a1 held since 19:04Z, refreshed 19:55Z)
-Written: 2026-10-07T19:55Z
+Round: 290 (lock d5a1 held since 19:04Z, refreshed 20:00Z; takeover of a4f2 in 286)
+Written: 2026-10-07T20:00Z
 Token: d5a1
 Knobs: width 10, foreground, heavy_max 3, paid_mode 0 (unchanged).
 
 ## Heading
-- R6 pack gate green and LANDED 6848c04 (13/0 twice). Write-abort fix DONE awaiting review; read-abort v0.3.0 DONE awaiting review. No Scorecard % moved yet (loads plus halving need adoption plus 48 h).
+- R1 read-abort cure v0.3.0 LANDED d08e35d (grade 1.0/0.0 lift 1.0). R6 pack green 6848c04. No Scorecard % moved (halving needs adoption plus 48 h).
 
-## Results collected (batch of 4)
-- 315-pack-rebuild2-review (judge): PASS (zip rebuilt LAST 19:34Z, proofs older, gate FAIL-3 flips to PASS). LANDED 6848c04.
-- 316-scout-review (judge): PASS (DR-1007-13 well-formed, class real 30 in 48 h, sheet 12 ids, no repeat).
-- 317-writeabort-fix (builder): DONE (installer FLEET wire plus chunk plus pycache plus claim). Needs review (319).
-- 318-cure-100713 (builder): DONE (read-abort v0.2.0 to v0.3.0 additive, grade 1.0/0.0 lift 1.0, live 6, lint 12/759). Needs review (320).
+## Results collected (batch of 2)
+- 319-writeabort-fix-review (judge): FAIL (third FAIL on the line: pycache remains plus wire-flips-nothing dispute). STOP: fingerprint pycache-plus-wire-dispute ends the step; row stays archived, content stands proven, hygiene parked with TRIM.
+- 320-cure-100713-review (judge): PASS. LANDED d08e35d (SKILL plus 2 proof reseals plus 12-task sheet).
 
 ## Rows
-- O-011 DONE 6848c04 judge PASS 315 (pack_check 13/0 twice, check 20/0/0).
-- DR-1007-13 READY (cure DONE, review 320 next).
-- DR-1007-12 archived by trim; fix DONE (317), review 319 next; moves back up on PASS.
-- Installer upkeep landed 48214e7 (round 288).
+- DR-1007-13 DONE d08e35d judge PASS 320.
+- DR-1007-12 parked (archived): 3 FAILs, skill content proven (grade/lint/live PASS x3), remaining gaps are gitignored pyc plus a disputed installer wire. No fourth repair.
+- O-011 DONE 6848c04 (pack_check 13/0). Installer upkeep DONE 48214e7.
 
 ## Blockers
-- Concurrent trim churn continues (proof timestamps, ready queue). Commits stay by-path, judged PASS only. O-011 zip verified PASS after the 318 touch (read-abort-guard is not a pack member).
-- Retro due round 290.
+- Concurrent trim churn (uncommitted board, ready, proof timestamps). Commits stay by-path, judged PASS only.
+- Seat-guard untracked test still lists write-abort-guard (needs a row or removal; parked with the row).
 
 ## Checks
-- pack_check RESULT PASS 13 checks 0 warnings (lead, 19:55Z, on-tree after the batch).
 - check.mjs PASS 20/0/0 (judge reruns). Full pytest 6 failed/747 passed, same 6 pre-existing.
+- pack_check PASS 13/0 on-tree 19:55Z (lead).
+
+## Retro (round 290)
+- Worst repeated failure: edit oldString misses 10 (+8 rising, across planner lead researcher builder per center metrics 19:45Z). Prior worst pwsh env-prefix stands addressed; the edit class is rising despite edit-verify v0.2.0 landed 97a4250.
+- PROPOSAL: skills/edit-verify/SKILL.md | add planner-plus-lead trigger shapes for oldString misses | edit-oldString 10 (+8) in 48h
+- Cost: builders 86 runs 160M tok, judges 115 runs 38.9M (all no-edit, as designed); fail rates under 3.4%.
 
 ## Next
-- Batch of 2: judge 319-writeabort-fix-review, judge 320-cure-100713-review. Land both on PASS, then serialize the next pack rebuild only if proofs moved.
-- git pull done 19:55Z (up to date); push this handoff with the round.
+- Batch of 1: researcher researcher-books-scout-2 (only eligible writer work; cures wait on adoption clocks, pack green, write-abort parked).
+- git pull 19:55Z up to date; push this handoff with the round.
 
-RESULT: PARTIAL - 1 landed (6848c04), 2 DONEs awaiting review | proof: commit 6848c04; pack_check PASS 13/0
+RESULT: PARTIAL - 1 landed (d08e35d), write-abort line stopped after third FAIL | proof: commit d08e35d; grade 1.0/0.0 lift 1.0
