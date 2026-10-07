@@ -1,33 +1,38 @@
-# skillworks handoff - round 270 (token 1803)
+# skillworks handoff - round 271 (token 45a3)
 
-Round: 270 (4-skill convergence landed, S50 closed, retro due)
-Written: 2026-10-07T06:29Z
-Token: 1803 (takeover 2026-10-06T15:24Z, replaced stale lead#a7e2 left by closed app)
-Knobs: width 5, foreground, heavy_max 3, paid_mode 0 (file of 2026-10-06T00:14Z, unchanged).
+Round: 271 (takeover, verify sweep, BK-1007-1 closed, O-009 rowed)
+Written: 2026-10-07T06:58Z
+Token: 45a3 (takeover 2026-10-07T06:32Z, replaced stale lead#1803 left by closed app)
+Knobs: width 10, foreground, heavy_max 3, paid_mode 0 (unchanged).
 
 ## Heading
-- S50 closed: all 5 trials rowed, cured, landed. Four skills plus one wire set in a single convergence commit.
+- R1 closed plus R2 rowed: BK-1007-1 READY to DONE, O-009 READY added.
 
 ## Results collected
-- batchfirst-review (judge): VERDICT PASS (red documented, proven 6, distill 614 tok, grade lift 1.0, wired same build).
-- briefgate-review (judge): VERDICT PASS (red documented, proven 6, lint 671 tok, grade lift 1.0, wired same build).
-- Convergence committed 44d72b4 (8 new paths plus 4 wire files, all four proofs in body).
+- ripgrep-finish-review (judge): VERDICT PASS (proven 11, grade 1.0/0.25 lift 0.75, check 20/0/0).
+- planner-rows: DONE O-009 (S131 audit-desc, S130 left, S50/S74/S12/S17/S41 disposition noted).
+- runner-round-r1: DONE 2 FAIL PAPERWORK (c02 plus bash-allowlist pre-land, check 20/0/0).
+- builder-cure-r1: DONE bash-allowlist v1.1.0 to v1.2.0 (22 pairs, live 6, grade 17 runs 1.0/0.0).
+- builder-book-r1: DONE ripgrep verified (distill ok, grade lift 0.75, 11 passed).
+- pilot-installer-r1: PARTIAL (0 after filled, 8 wait window, 7 blocked, packet filed).
+- builder-pack-r1: DONE fleet-vol-1 gate PASS 13/13.
+- lead2-r2: DONE (J4 4, J1 7, J2 9, asks S130 S131).
+- researcher-doctor, researcher-books: NOOP (keeper hold).
 
 ## Rows
-- DR-1007-4/5/6/7 DONE 44d72b4 (files 0d9975f plus 44d72b4). Inbox S50 5 of 5 rowed plus landed: tick to [x] next round after verify sweep.
-- Open: S74 adoption, K-54 OWNER, K-03 K-06 PARKED, BK-1004-1 BLOCKED.
+- BK-1007-1 DONE 341cee3 (judge PASS rerun 2026-10-07).
+- O-009 READY (S131, planner, check 20/0/0).
+- Inbox S50 ticked [x] (5 of 5 landed 44d72b4 plus 97a4250, verified).
+- Inbox S17 ticked [x] (PIPE-1006-1 DONE 3fb0f38).
+- Open: S74 adoption, S12 USED-BAR (finish bar, planner never touches), S41 dup O-005 READY, S130 needs row, K-54 OWNER, K-03 K-06 PARKED, BK-1004-1 BLOCKED.
 
 ## Checks
-- node sprint/check.mjs RESULT PASS 20 pass 0 warn 0 fail (lead, 06:29Z round).
+- node sprint/check.mjs RESULT PASS 20 pass 0 warn 0 fail (lead, 06:58Z round).
+- python -m pytest tests/ -q 2 failed 716 passed 198 skipped (c02 golden gate plus bash-allowlist pre-land live-proof mismatch, runner 06:52Z).
 
 ## Held, not committed
-- Proof noise, keeper files, claims.txt, research, packs/mcp-template balance, sprint/halt deleted.
+- Builder outputs awaiting review: bash-allowlist v1.2.0 files, pack listing plus THIRD_PARTY dates, ripgrep proof reseals, team/p3 plus p5 lines.
+- Proof noise, keeper files, claims.txt, lead2 files, research, dist zips, sprint/halt deleted.
 
 ## Next
-- Verify sweep (S50 tick, adoption clocks ~24 h), fresh lanes after.
-
-## Retro (round 270, due)
-- Rounds 265-269: 5 judge PASS, 2 FAIL wire-only answered by finishes, 0 BLOCKED. Landings ffc44ff 0d9975f 44d72b4. Wire-in-scope template validated: batch-first plus brief-gate needed no finish round.
-- Worst repeated: 4 packets sharing gates.py force convergence landings the lead must hand-map. Reviews pass in isolation while the commit waits on all residents.
-- PROPOSAL: sprint/queue/claims.txt | claim lines on shared files carry wire line numbers (gates.py:NN) per packet so convergence commits assemble without re-reading diffs | 4-packet convergence 44d72b4 needed manual mapping
-- Coach: no change (judges 5/5, builders ship wired). Next retro due 275.
+- Judge reviews for bash-allowlist v1.2.0 plus pack gate fix top next batch; planner rows S130; adoption clocks to 2026-10-08.
