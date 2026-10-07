@@ -1,0 +1,12 @@
+{
+  "skill": "brief-gate",
+  "runs": 12,
+  "with_rate": 1.0,
+  "without_rate": 0.0,
+  "lift": 1.0,
+  "spread": 1.0,
+  "fingerprint": "fada1fd2a133a1d70e514b0b665b715cbe54ad8f04ed933c2317aa19fc779068",
+  "sheet": "evals/brief-gate_trials.jsonl",
+  "at": "2026-10-07T06:23Z",
+  "ok": true
+}

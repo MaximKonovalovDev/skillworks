@@ -1,0 +1,10 @@
+{"must": ["brief", "plan", "PASS"], "q": "A pilot dispatch needs a written plan. What do you write first and what line opens the run?"}
+{"must": ["brief", "gate", "released"], "q": "A dispatch must wait for the brief. What gate holds it and when is it released?"}
+{"must": ["brief", "sections", "goal"], "q": "A one-line brief sent the pilot at the wrong file. What sections does the rewrite carry?"}
+{"must": ["brief", "verify", "exists"], "q": "You assumed the brief existed. What check runs before dispatch and what must exist?"}
+{"must": ["brief", "handoff", "filed"], "q": "An oral handoff left the pilot reading missing files. What written file replaces it?"}
+{"must": ["brief", "approval", "wave"], "q": "A dispatch skipped approval on stale paths. What is approved before the wave releases?"}
+{"must": ["brief", "plan", "dispatched"], "q": "A pilot run opens with no plan. What written plan opens it and how is it dispatched?"}
+{"must": ["brief", "gate", "build"], "q": "A build is requested with no brief file. What gate holds the build?"}
+{"must": ["shaped", "scope", "stop"], "q": "A handoff arrives with no sections. How is it shaped and where does it stop?"}
+{"must": ["RESULT", "approval", "recorded"], "q": "A second wave needs a close-out. What RESULT line closes the brief and what does it list?"}

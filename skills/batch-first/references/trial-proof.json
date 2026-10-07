@@ -1,0 +1,12 @@
+{
+  "skill": "batch-first",
+  "runs": 12,
+  "with_rate": 1.0,
+  "without_rate": 0.0,
+  "lift": 1.0,
+  "spread": 1.0,
+  "fingerprint": "bb8bc1453d162860c71ca1f177bb399ea028b859fc26496c1c61cf08247e4f83",
+  "sheet": "evals/batch-first_trials.jsonl",
+  "at": "2026-10-07T06:22Z",
+  "ok": true
+}

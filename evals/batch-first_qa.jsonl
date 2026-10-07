@@ -1,0 +1,10 @@
+{"must": ["batch", "timeout", "PASS"], "q": "Scattered GitHub calls each time out alone. What do you batch them into, under what bound, and what report closes it?"}
+{"must": ["batch", "cap", "PASS"], "q": "Repo records fetched one by one keep timing out. How do you bound the fan-out and what does the dispatch print?"}
+{"must": ["batch", "read-only", "PASS"], "q": "A mixed read-write dispatch times out on the reads. What order do you run and what proves the split?"}
+{"must": ["batch", "pool", "PASS"], "q": "Sequential file-content fetches time out one after another. What pool do you dispatch and what is collected?"}
+{"must": ["batch", "fallback", "PASS"], "q": "A single-path content fetch times out with no fallback. What do you batch together and which wins?"}
+{"must": ["batch", "timeout", "PASS"], "q": "A slow endpoint keeps timing out scattered calls. What single call do you make and under what wait?"}
+{"must": ["collect", "batch", "PASS"], "q": "Several repo records are needed at once. What do you collect them with?"}
+{"must": ["RESULT", "outcomes", "batch"], "q": "A flaky batched call needs a close-out. What line closes the batch report and what does it list?"}
+{"must": ["timeout", "batch", "PASS"], "q": "Repo-record batches need a bound. What dispatch runs them and under what limit?"}
+{"must": ["queries", "cap", "batch"], "q": "A multi-repo search needs many queries. How do you cap them in one dispatch?"}

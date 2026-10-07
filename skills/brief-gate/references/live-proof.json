@@ -1,0 +1,14 @@
+{
+  "skill": "brief-gate",
+  "fingerprint": "dc6aff19618d28576533072594c3fe61d14b7023ad7deb75adf8d0697a9e5211",
+  "date": "2026-10-07T06:22Z",
+  "command": "SKILL_LIVE=1 python -m pytest tests/test_brief_gate.py -q",
+  "result": "6 passed in 12.59s",
+  "versions": {
+    "python": "3.13.14",
+    "os": "Windows-10-10.0.19045-SP0",
+    "git": "git version 2.53.0.windows.1",
+    "node": "v24.14.0",
+    "pwsh": "7.6.3"
+  }
+}

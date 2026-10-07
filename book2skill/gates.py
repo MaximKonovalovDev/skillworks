@@ -71,6 +71,10 @@ FLEET_SKILLS = {
     "ripgrep-search": ["BurntSushi/ripgrep"],
     "axios-get": ["axios/axios"],
     "octokit-request": ["octokit/request"],
+    "repro-first": [],
+    "judge-score-risk": [],
+    "batch-first": [],
+    "brief-gate": [],
 }
 # Installed in forge, whose `node scripts/check.mjs` bans some English words.
 FORGE_SAFE = {"pwsh-for-bash-writers", "git-one-branch", "cron-skip-clean", "pipe-run", "inbox-file-reader"}
