@@ -75,6 +75,7 @@ FLEET_SKILLS = {
     "judge-score-risk": [],
     "batch-first": [],
     "brief-gate": [],
+    "yq-jq": ["kislyuk/yq"],
 }
 # Installed in forge, whose `node scripts/check.mjs` bans some English words.
 FORGE_SAFE = {"pwsh-for-bash-writers", "git-one-branch", "cron-skip-clean", "pipe-run", "inbox-file-reader"}

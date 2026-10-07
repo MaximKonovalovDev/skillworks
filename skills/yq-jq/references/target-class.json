@@ -1,0 +1,1 @@
+{"direction": "down", "error_regex": "-i/--in-place can only be used with", "id": "yq-jq-miss", "tool": "yq"}

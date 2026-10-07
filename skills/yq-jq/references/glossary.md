@@ -1,0 +1,30 @@
+# Glossary
+
+- transcodes: what yq does to each `YAML` document before `jq` sees it: load as YAML, encode as `JSON`.
+- jq: the command-line JSON processor yq pipes transcoded input to; yq forwards its exit code.
+- jq wrapper: the phrase naming yq on `README.rst` line 1 and `__init__.py` line 2.
+- YAML: the default input format (`input_format` `yaml` on `cli` line `102`).
+- JSON: the interchange encoding between the loader and `jq`, and the default `output_format`.
+- --yaml-output: the flag converting jq output `back into YAML`; short spelling `-y`; documented on line `26`.
+- -y: short flag for `--yaml-output`.
+- back into YAML: what `-y` does to jq output; without it the output stays JSON.
+- -Y: short flag for `--yaml-roundtrip` (`annotated_yaml`); keeps tags, styles, and comments.
+- annotated_yaml: the `output_format` value that preserves annotations; plain `yaml` drops them.
+- output_format: the setting choosing `json`, `yaml`, `annotated_yaml`, `toml`, `annotated_toml`, or `xml` out.
+- xq: the entry point for XML; sets `input_format` to `xml`.
+- input_format: the setting naming the input kind: `yaml`, `xml`, or `toml`.
+- xml: the input kind `xq` reads.
+- tomlq: the entry point for TOML; sets `input_format` to `toml`.
+- toml: the input kind `tomlq` reads.
+- cli: the function whose line `102` defaults carry `input_format` `yaml` and `program_name` `yq`.
+- 102: the line number of the `cli` defaults.
+- program_name: the setting naming the running tool: `yq`, `xq`, or `tomlq`.
+- 26: the line number documenting `--yaml-output`/`-y` in `README.rst`.
+- yaml-frontmatter: the `--yaml-frontmatter`/`-F` mode: one header document to jq, body passes through.
+- YAML input: the only input kind `--yaml-frontmatter` accepts.
+- JSON or YAML output: the only output kinds `--yaml-frontmatter` accepts.
+- in-place: the `-i`/`--in-place` mode: edits files, needs an output flag plus filename arguments.
+- reading: the error stage naming input failures with the input file name.
+- Error: the word starting both staged error shapes.
+- jq produced invalid JSON: the error naming filter-output failures with the output format.
+- README.rst: the docs file carrying the `jq wrapper` phrase (line 1) and the `-y` flag (line 26).

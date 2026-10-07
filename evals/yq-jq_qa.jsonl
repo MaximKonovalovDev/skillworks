@@ -1,0 +1,10 @@
+{"must": ["transcodes", "jq"], "q": "When does an agent need the yq-jq skill for structured data?"}
+{"must": ["--yaml-output", "-y"], "q": "Which yq flag converts jq output back into YAML?"}
+{"must": ["xq", "input_format", "xml"], "q": "Which entry point queries XML, and what input format does it set?"}
+{"must": ["tomlq", "toml"], "q": "Which entry point queries TOML input?"}
+{"must": ["yaml-frontmatter", "-F"], "q": "Which flag processes a Markdown header document?"}
+{"must": ["in-place", "-y/-Y/-t/-T/-x"], "q": "What must accompany -i/--in-place for the gate to pass?"}
+{"must": ["annotated_yaml", "tags"], "q": "Which output format keeps YAML tags and styles?"}
+{"must": ["reading", "stage"], "q": "How does yq report a broken input document versus a bad filter?"}
+{"must": ["program_name", "yq"], "q": "What is the default program name on cli line 102?"}
+{"must": ["102", "yaml"], "q": "What input format default lives on cli line 102?"}
