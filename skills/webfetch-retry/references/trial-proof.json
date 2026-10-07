@@ -1,0 +1,12 @@
+{
+  "skill": "webfetch-retry",
+  "runs": 12,
+  "with_rate": 1.0,
+  "without_rate": 0.0,
+  "lift": 1.0,
+  "spread": 1.0,
+  "fingerprint": "37aa8e025c5525212cd18822fb4b9f3d629272fe1001dfa5a7292fec9746317f",
+  "sheet": "evals/webfetch-retry_trials.jsonl",
+  "at": "2026-10-07T04:24Z",
+  "ok": true
+}
