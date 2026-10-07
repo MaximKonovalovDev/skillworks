@@ -1,0 +1,12 @@
+{
+  "skill": "gron-json",
+  "runs": 12,
+  "with_rate": 1.0,
+  "without_rate": 0.0,
+  "lift": 1.0,
+  "spread": 1.0,
+  "fingerprint": "18a93294c979a1ddf07203bd05ab9cec0e15f5495d873a860458ba4cbb3d14c5",
+  "sheet": "evals/gron-json_trials.jsonl",
+  "at": "2026-10-07T20:24Z",
+  "ok": true
+}

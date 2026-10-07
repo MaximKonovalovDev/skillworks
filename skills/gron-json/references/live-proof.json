@@ -1,0 +1,14 @@
+{
+  "skill": "gron-json",
+  "fingerprint": "803839ce51febc2f19ff18085a035a271df2a26db0d43add33b10a222f044a49",
+  "date": "2026-10-07T20:25Z",
+  "command": "SKILL_LIVE=1 python -m pytest tests/test_gron_json.py -q",
+  "result": "19 passed in 81.99s (0:01:21)",
+  "versions": {
+    "python": "3.13.14",
+    "os": "Windows-10-10.0.19045-SP0",
+    "git": "git version 2.53.0.windows.1",
+    "node": "v24.14.0",
+    "pwsh": "7.6.3"
+  }
+}

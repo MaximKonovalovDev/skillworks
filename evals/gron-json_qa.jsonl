@@ -1,0 +1,10 @@
+{"must": ["discrete assignments", "grep"], "q": "What does gron transform JSON into and which tool searches the assignments?"}
+{"must": ["--ungron", "back into JSON"], "q": "Which gron flag turns filtered assignments back into JSON?"}
+{"must": ["norg", "alias"], "q": "Which alias shortens the gron reverse operation?"}
+{"must": ["--values", "-v"], "q": "Which gron flag prints just the values of assignments?"}
+{"must": ["--stream", "-s"], "q": "Which gron flag treats each input line as a separate JSON object?"}
+{"must": ["--json", "-j"], "q": "Which gron flag represents gron data as a JSON stream?"}
+{"must": ["withBare", "withNumericKey"], "q": "Which statement helpers append a bare word versus a numeric index?"}
+{"must": ["Exit Codes", "Failed to encode"], "q": "Which README section lists numeric stages for parse versus encode failures?"}
+{"must": ["19", "--ungron"], "q": "Which README line pipes fgrep into the gron reverse flag?"}
+{"must": ["68", "jsonify"], "q": "Which statements.go line documents the jsonify receiver method?"}

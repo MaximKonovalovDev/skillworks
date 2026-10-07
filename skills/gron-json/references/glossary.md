@@ -1,0 +1,40 @@
+# Glossary
+
+- transforms: what gron does to each `JSON` document before `grep` sees it: flatten into `discrete assignments`.
+- discrete assignments: the gron output lines; the phrase lives on `README.mkd` lines `6` and `213`.
+- grep: the tool that searches gron assignment lines; line `6` says gron makes blobs easier to grep.
+- path: the absolute path each assignment line shows to its value.
+- JSON: the input document kind gron flattens, and the output kind `--ungron` rebuilds.
+- filtered: the grepped subset of assignments piped into the reverse step.
+- --ungron: the flag turning `filtered` assignments `back into JSON`; short spelling `-u`; 13 hits starting at line `19`.
+- back into JSON: what `--ungron` does to `filtered` assignments; without it the pipeline stays assignment text.
+- -u: short flag for `--ungron`.
+- ungron: the reverse operation word; also the twin alias spelling for `gron --ungron`.
+- norg: the short `alias` for `gron --ungron`, kept in `~/.bashrc`.
+- alias: the shell line wrapping `gron --ungron` under the `norg` or `ungron` name.
+- --values: the flag printing `just the values` of assignments; short spelling `-v`.
+- just the values: what `--values` prints; the `path` sides are dropped.
+- -v: short flag for `--values`.
+- --stream: the flag treating each input line as a `separate JSON` object; short spelling `-s`.
+- separate JSON: what each `--stream` input line parses as; one-document parsing breaks without it.
+- -s: short flag for `--stream`.
+- --json: the flag emitting a `JSON stream` of path plus value pairs; short spelling `-j`.
+- JSON stream: the `--json` output shape; each emitted pair carries the path array plus the value.
+- -j: short flag for `--json`.
+- statement: the token-slice assignment type; `type statement []token` on line `22` of `statements.go`; 70 hits from line `14`.
+- withBare: the builder appending a bare word key; takes a string.
+- withQuotedKey: the builder appending a bracket quoted key; takes a quoted key string.
+- withNumericKey: the builder appending a bracket numeric index; takes an `int`.
+- jsonify: the receiver on line `69` converting an assignment `statement` to its JSON form; documented on line `68`.
+- 68: the line number documenting `jsonify` in `statements.go`.
+- 69: the line number defining the `jsonify` receiver.
+- 14: the first `statement` line number in `statements.go`.
+- 22: the line number defining `type statement []token`.
+- 19: the first `ungron` line number in `README.mkd`, piping `fgrep` into `gron --ungron`.
+- 6: the first `discrete assignments` line number in `README.mkd`.
+- Exit Codes: the README section listing numeric stages for parse versus encode failures.
+- Failed to parse: the statements failure; code `5`.
+- Failed to encode: the JSON failure; code `6`.
+- fgrep: the line-`19` filter selecting `commit.author` lines before the reverse step.
+- README.mkd: the docs file carrying `discrete assignments` (lines `6`, `213`) and `ungron` (13 lines from `19`).
+- statements.go: the source file carrying `statement` (70 lines from `14`) and `jsonify` (lines `68`, `69`).
