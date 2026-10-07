@@ -1,31 +1,33 @@
-# skillworks handoff - round 249 (token 1803)
+# skillworks handoff - round 250 (token 1803)
 
-Round: 249 (ripgrep files banked, 3 fast reviews queued, gates.py convergence planned)
-Written: 2026-10-07T03:00Z
+Round: 250 (O-007 landed, auditfold record re-requested, scouts out, retro due)
+Written: 2026-10-07T03:05Z
 Token: 1803 (takeover 2026-10-06T15:24Z, replaced stale lead#a7e2 left by closed app)
 Knobs: width 5, foreground, heavy_max 3, paid_mode 0 (file of 2026-10-06T00:14Z, unchanged).
 
 ## Heading
-- R1 book: ripgrep-search files banked (judged PASS), wire held. R2 tool: both repairs DONE with proof, agentlint 0/0 clean, all three go to fast review.
+- R2 honest gate: agentlint 0/0 landed. O-006 PASS banked, O-008 repair needs its record file, two lane scouts dispatched.
 
 ## Results collected
-- skiphint-repair (builder): DONE proof-only, F2P met plus 6-item independence list (stash denied by policy, used allowed alternative). Repair-review queued (fast: no full rerun).
-- auditfold-repair (builder): DONE, gates.py folds, format test green, audit 0, 656/6 pre-existing. Repair-review queued.
-- ripgrep-finish-review (judge): VERDICT PASS (proven 11, grade 1.0/0.25 lift 0.75, check 20/0/0). Skill files committed 32247f3 (4 paths).
-- agentlint-finish (builder): DONE, ready-file-check resealed plus adopted, agentlint 0 fail 0 warn. Review queued.
+- skiphint-repair-review (judge): VERDICT PASS (F2P reran green, 6 fails proven independent, scope is hint lines only). Landing held for gates.py convergence.
+- auditfold-repair-review (judge): VERDICT BLOCKED, record missing (done/ has 172 entries, no repair record). Work is in the tree; record-only packet queued.
+- agentlint-finish-review (judge): VERDICT PASS (agentlint 0/0 rerun, grade 1.0/0.0 fingerprint matches landed). Committed 15012ae (3 trial-proof reseals).
+- Round-line: proven 32, trials 28, installed 27, loads 76 in 9 repos, top class edit oldString 106, tools landed 13.
 
 ## Rows
-- BK-1007-1 READY: files landed 32247f3, wire lines held for gates.py convergence with O-006 plus O-008 (one shared file, three packets: land together after reviews).
-- DR-1007-1 DONE. O-007 meets F2P (agentlint 0/0), closes on review PASS.
+- O-007 DONE 15012ae. O-006 READY (PASS banked, held). O-008 READY (record re-requested). BK-1007-1 READY (files landed 32247f3, wire held). DR-1007-1 DONE.
 
 ## Checks
-- node sprint/check.mjs RESULT PASS 20 pass 0 warn 0 fail (lead, 03:00Z round).
+- node sprint/check.mjs RESULT PASS 20 pass 0 warn 0 fail (lead, 03:05Z round).
 
 ## Held, not committed
-- gates.py (3 packets), install script plus notices plus p3 wire lines, audit.py, test files, proof noise, keeper files, research, packs/mcp-template, sprint/halt deleted.
+- gates.py (3 packets converging), audit.py, test files, ripgrep wire lines, proof noise, keeper files, research, packs/mcp-template, sprint/halt deleted.
 
 ## Next
-- Collect 3 reviews; land O-006 plus O-008 plus O-007 by path, then ripgrep wire lines last in the same commit set.
+- Collect record packet plus 2 scouts; re-review auditfold repair; land O-006 plus O-008 plus ripgrep wire together.
 
-## Retro (round 249, not due)
-- None. Next retro due 250.
+## Retro (round 250, due)
+- Rounds 246-249: 4 judge PASS, 2 FAIL both answered by repair (skiphint P2P-unproven, auditfold second reader), 1 BLOCKED record-missing. Cost note: full-suite reruns time out at 300 s, repairs now prove by fast commands plus stash reasoning.
+- Worst repeated: one shared file stalls many landings. gates.py held 3 packets across 2 rounds (hint plus fold plus wire); each review passed in isolation while the commit waited on all three.
+- PROPOSAL: sprint/queue/claims.txt | claim lines on shared files name the exact line ranges owned (gates.py:18 plus 80-86 hint, 158-166 fold, :71 wire) so the lead lands converged lines without waiting a full round | gates.py held 3 packets 2 rounds tonight
+- Coach: no change (judges strict and fast, PASS rate 4/4 on answered work). Next retro due 255.
