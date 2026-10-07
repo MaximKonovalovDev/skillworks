@@ -63,6 +63,39 @@ def test_audit_grades_description_name_and_links(tmp_path: Path) -> None:
     assert ok["broken_links"] == []
 
 
+def test_audit_reads_folded_yaml_description(tmp_path: Path) -> None:
+    """O-008: a `description: >-` folded scalar must not read as 2 chars."""
+    skill = tmp_path / "folded-skill"
+    (skill / "references").mkdir(parents=True)
+    folded = ("Use when chaining commands in PowerShell for testing folded audits "
+              "with enough characters to clear the length gate.")
+    assert len(folded) >= audit_mod.DESC_MIN
+    (skill / "SKILL.md").write_text(
+        f"---\nname: folded-skill\ndescription: >-\n  {folded}\n---\nbody text here\n",
+        encoding="utf-8")
+    report = audit_mod.audit(skill)
+    assert report["description"]["chars"] == len(folded)
+    assert report["description"]["ok"] is True
+    assert not any("2 chars" in f for f in report["flags"])
+    # Literal block style reads in full too.
+    literal = tmp_path / "literal-skill"
+    (literal / "references").mkdir(parents=True)
+    (literal / "SKILL.md").write_text(
+        "---\nname: literal-skill\ndescription: |\n  Use when testing literal blocks with enough chars here.\n---\nbody\n",
+        encoding="utf-8")
+    lit_report = audit_mod.audit(literal)
+    assert lit_report["description"]["chars"] > 40
+    assert lit_report["description"]["ok"] is True
+
+
+def test_audit_git_one_branch_has_no_folded_length_flag() -> None:
+    """O-008 regression on the shipped skill: no `2 chars` length misread."""
+    report = audit_mod.audit(ROOT / "skills" / "git-one-branch")
+    assert report["description"]["chars"] > 40
+    assert not any("2 chars" in f for f in report["flags"])
+    assert not any("chars, want" in r for r in report["description"]["reasons"])
+
+
 def test_make_prints_over_budget_on_a_big_fixture(tmp_path: Path) -> None:
     docs = tmp_path / "manual"
     docs.mkdir()

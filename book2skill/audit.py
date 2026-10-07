@@ -27,16 +27,68 @@ def _tokens(chars: int) -> int:
 
 
 def _frontmatter(text: str) -> dict:
+    """Minimal frontmatter reader with YAML block-scalar support.
+
+    Handles folded (``>``, ``>-``) and literal (``|``, ``|-``) values such as::
+
+        description: >-
+          Use when ...
+
+    Continuation lines are the indented lines that follow the indicator;
+    folded lines join with a space, literal lines join with a newline.
+    Plain single-line ``key: value`` pairs keep the old behaviour.
+    """
     if not text.startswith("---"):
         return {}
     parts = text.split("---", 2)
     if len(parts) < 3:
         return {}
     out: dict = {}
-    for line in parts[1].splitlines():
-        m = re.match(r"^([\w-]+):\s*(.*)$", line.strip())
+    current_key: str | None = None
+    folded = False
+    literal = False
+    buf: list[str] = []
+
+    def _flush() -> None:
+        if current_key is not None and (folded or literal):
+            if folded:
+                out[current_key] = " ".join(s.strip() for s in buf if s.strip())
+                # Drop blank folding lines, collapse to single spaces.
+                out[current_key] = re.sub(r"\s+", " ", out[current_key]).strip()
+            else:
+                out[current_key] = "\n".join(s.strip() for s in buf).strip()
+
+    for raw in parts[1].splitlines():
+        if raw.strip() == "" or raw.strip().startswith("#"):
+            continue
+        indented = raw[:1] in (" ", "\t")
+        if indented and current_key is not None:
+            if not (folded or literal):
+                # Plain indented continuation without an indicator: fold with a space.
+                out[current_key] = re.sub(r"\s+", " ", (out[current_key] + " " + raw.strip())).strip()
+            else:
+                buf.append(raw.strip())
+            continue
+        _flush()
+        current_key = None
+        folded = False
+        literal = False
+        buf = []
+        m = re.match(r"^([\w-]+):\s*(.*)$", raw.strip())
         if m:
-            out[m.group(1)] = m.group(2).strip()
+            key, val = m.group(1), m.group(2).strip()
+            indicator = val.split()[0] if val.split() else ""
+            if indicator in (">", ">-", ">+", "|", "|-", "|+"):
+                current_key = key
+                folded = indicator.startswith(">")
+                literal = indicator.startswith("|")
+                out[key] = ""
+            else:
+                if len(val) >= 2 and val[0] == val[-1] and val[0] in ("'", '"'):
+                    val = val[1:-1]
+                out[key] = val.strip()
+                current_key = key
+    _flush()
     return out
 
 

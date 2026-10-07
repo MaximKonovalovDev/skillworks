@@ -19,6 +19,18 @@ def test_fleet_skill_format(name: str) -> None:
     g.check_format(name)
 
 
+def test_frontmatter_folds_folded_description_scalar() -> None:
+    """O-008: gates.frontmatter must fold `description: >-` like audit does."""
+    text = ("---\nname: demo-skill\nlicense: MIT\ndescription: >-\n"
+            "  Use when chaining commands in PowerShell for testing folded gates "
+            "with enough characters to clear the length gate.\n---\nbody\n")
+    desc = g.frontmatter(text).get("description", "")
+    assert len(desc) > 40
+    assert desc.startswith("Use when")
+    assert ">-" not in desc
+    g.check_format("git-one-branch")
+
+
 @pytest.mark.parametrize("name", sorted(g.FLEET_SKILLS))
 def test_fleet_skill_sources_and_notices(name: str) -> None:
     if not _built(name):

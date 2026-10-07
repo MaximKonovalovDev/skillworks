@@ -15,6 +15,7 @@ import json
 import os
 import re
 import tempfile
+import warnings
 from pathlib import Path
 
 import pytest
@@ -67,6 +68,7 @@ FLEET_SKILLS = {
     "keeper-ready": [],
     "read-abort-guard": [],
     "edit-abort-guard": [],
+    "ripgrep-search": ["BurntSushi/ripgrep"],
 }
 # Installed in forge, whose `node scripts/check.mjs` bans some English words.
 FORGE_SAFE = {"pwsh-for-bash-writers", "git-one-branch", "cron-skip-clean", "pipe-run", "inbox-file-reader"}
@@ -76,6 +78,12 @@ FORGE_SAFE = {"pwsh-for-bash-writers", "git-one-branch", "cron-skip-clean", "pip
 # the default run only checks that the skill still matches its last live proof.
 LIVE = os.environ.get("SKILL_LIVE") == "1"
 live = pytest.mark.skipif(not LIVE, reason="live test: set SKILL_LIVE=1 (python tests/live_proof.py runs them all)")
+if not LIVE:
+    warnings.warn(
+        "live tests skipped: set SKILL_LIVE=1 to run them (python tests/live_proof.py runs them all)",
+        UserWarning,
+        stacklevel=2,
+    )
 PROOF_NAME = "live-proof.json"
 NUL, CRLF, LF = bytes([0]), bytes([13, 10]), bytes([10])
 
@@ -93,14 +101,57 @@ WAVE_RE = re.compile(r"\b(?:[WF]\d{1,2}|[Ww]ave\s*-?\s*\d+|w-[a-z0-9]+(?:-[a-z0-
 
 
 def frontmatter(text: str) -> dict[str, str]:
+    """Frontmatter reader with YAML block-scalar folding (same as audit._frontmatter).
+
+    Folded (``>``, ``>-``) continuations join with a space, literal
+    (``|``, ``|-``) continuations join with a newline; plain
+    ``key: value`` pairs keep the old behaviour.
+    """
     m = re.match(r"^---\r?\n(.*?)\r?\n---\r?\n", text, re.S)
     if not m:
         return {}
     out: dict[str, str] = {}
+    current_key: str | None = None
+    folded = False
+    literal = False
+    buf: list[str] = []
+
+    def _flush() -> None:
+        if current_key is not None and (folded or literal):
+            if folded:
+                joined = " ".join(s.strip() for s in buf if s.strip())
+                out[current_key] = re.sub(r"\s+", " ", joined).strip()
+            else:
+                out[current_key] = "\n".join(s.strip() for s in buf).strip()
+
     for line in m.group(1).splitlines():
-        kv = re.match(r"^([\w-]+):\s*(.*)$", line)
+        if line.strip() == "" or line.strip().startswith("#"):
+            continue
+        indented = line[:1] in (" ", "\t")
+        if indented and current_key is not None:
+            if not (folded or literal):
+                out[current_key] = re.sub(r"\s+", " ", (out[current_key] + " " + line.strip())).strip()
+            else:
+                buf.append(line.strip())
+            continue
+        _flush()
+        current_key = None
+        folded = False
+        literal = False
+        buf = []
+        kv = re.match(r"^([\w-]+):\s*(.*)$", line.strip())
         if kv:
-            out[kv.group(1)] = kv.group(2).strip().strip('"')
+            key, val = kv.group(1), kv.group(2).strip()
+            indicator = val.split()[0] if val.split() else ""
+            if indicator in (">", ">-", ">+", "|", "|-", "|+"):
+                current_key = key
+                folded = indicator.startswith(">")
+                literal = indicator.startswith("|")
+                out[key] = ""
+            else:
+                out[key] = val.strip().strip('"')
+                current_key = key
+    _flush()
     return out
 
 
