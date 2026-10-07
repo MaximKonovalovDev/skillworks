@@ -83,7 +83,7 @@ one tested, versioned download with its proof files, not for secrecy.
 - `real-browser-automation`: MIT, Apache-2.0 and BSD-3-Clause. The script and text are original (MIT); ideas from the Playwright docs (Apache-2.0); protocol names checked against the DevTools protocol files (BSD-3-Clause).
 - `bevy-rust-ecs`: MIT and Apache-2.0. The text and scripts are original (MIT); facts read from the Bevy source, tag v0.19.1 (MIT OR Apache-2.0).
 - No NonCommercial source is in the paid zip. `git-one-branch` (CC-BY-NC-SA-3.0) is the free Vol 0 only.
-   Source licences re-read live 2026-10-05 via gh api (PowerShell-Docs repo spdx
+   Source licences re-read live 2026-10-07 via gh api (PowerShell-Docs repo spdx
    NOASSERTION with CC-BY-4.0 text and MIT code license files, Playwright
    Apache-2.0, devtools-protocol BSD-3-Clause, Bevy Apache-2.0, Pro Git repo
    spdx NOASSERTION with CC BY-NC-SA 3.0 license file; Pro Git stays
@@ -97,7 +97,7 @@ Each skill has a live proof: its tests ran against real programs and the skill s
 
 - `pwsh-for-bash-writers`: 2026-10-06, 7 passed (one of them runs all 49 pairs in pwsh 7.6.3).
 - `real-browser-automation`: 2026-10-06, 11 passed (real Edge and Chrome against 127.0.0.1).
-- `bevy-rust-ecs`: 2026-10-06, 42 passed (names and file lines checked against the 0.19.1 source tree; nothing compiled).
+- `bevy-rust-ecs`: 2026-10-07, 42 passed (names and file lines checked against the 0.19.1 source tree; nothing compiled).
 
 The records are in `proof/` inside the zip.
 
