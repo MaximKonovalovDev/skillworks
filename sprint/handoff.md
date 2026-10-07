@@ -1,29 +1,28 @@
-# skillworks handoff - round 262 (token 1803)
+# skillworks handoff - round 263 (token 1803)
 
-Round: 262 (scout repeats held, mcp pack review plus bevy reseal queued)
-Written: 2026-10-07T05:01Z
+Round: 263 (mcp pack landed, bevy reseal in review)
+Written: 2026-10-07T05:06Z
 Token: 1803 (takeover 2026-10-06T15:24Z, replaced stale lead#a7e2 left by closed app)
 Knobs: width 5, foreground, heavy_max 3, paid_mode 0 (file of 2026-10-06T00:14Z, unchanged).
 
 ## Heading
-- Keeper held both scout dispatches (same title 3x in 3 h cap). Accepted, not re-sent: scouts pause until the hold clears. mcp-template pack DONE with review queued; pilot's bevy stale-proof packet goes out.
+- R4 pack lane: mcp-template tested and catalog-listed. Vol1 bevy proof resealed, review queued.
 
 ## Results collected
-- scout repeats x2 (keeper): BLOCKED repeat dispatch 3x in 3 h. Lesson: scout packets must vary title plus angle each round, or wait out the 3 h hold.
-- builder-pack-mcp: DONE, selftest plus selftest.py SELFTEST PASS, catalog row added, pack test 5 passed, check 20/0/0. Review queued against PIPE-1006-1.
-- pilot Vol1 run filed pilot-bevy-stale-proof.md: bevy-rust-ecs fails 3 gates on stale proof (fingerprint 2026-10-06T18:01Z), distinct from DR-1005-9 DONE. Dispatched with claim plus record lines added.
+- mcp-pack-review (judge): VERDICT PASS (selftests x2 plus pack test 5 green on rerun, MIT credited, suite better 3/687). Committed 3fb0f38 (pack files plus catalog row plus test).
+- bevy reseal (builder): DONE, bevy -k 50 passed 3 skipped. Review queued (QA-edit vs skill-fix in scope).
 
 ## Rows
-- No board change (scout rows on hold, verdicts pending). PIPE-1006-1 READY awaiting review.
+- PIPE-1006-1 DONE 3fb0f38. No open row for bevy upkeep; landing records under Vol1 upkeep here.
 
 ## Checks
-- node sprint/check.mjs RESULT PASS 20 pass 0 warn 0 fail (lead, 05:01Z round).
+- node sprint/check.mjs RESULT PASS 20 pass 0 warn 0 fail (lead, 05:06Z round).
 
 ## Held, not committed
-- mcp pack plus bevy subjects uncommitted. Proof noise, keeper files, claims.txt, research, packs/mcp-template claimed by builder, sprint/halt deleted.
+- bevy subject uncommitted (verdict pending). Proof noise, keeper files, claims.txt, research, packs/mcp-template balance, sprint/halt deleted.
 
 ## Next
-- Collect mcp review plus bevy reseal; land PASSes by path. Scouts resume with fresh angles after the hold.
+- Collect bevy review; land PASS by path. Scouts resume with fresh angles after the hold.
 
-## Retro (round 262, not due)
+## Retro (round 263, not due)
 - None. Next retro due 265.
