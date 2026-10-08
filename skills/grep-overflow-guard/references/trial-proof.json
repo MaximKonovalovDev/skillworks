@@ -1,0 +1,12 @@
+{
+  "skill": "grep-overflow-guard",
+  "runs": 12,
+  "with_rate": 1.0,
+  "without_rate": 0.0,
+  "lift": 1.0,
+  "spread": 1.0,
+  "fingerprint": "062979fa6ff4d80c24c74533a63e6c13478ecff867f5d59addaeb1bdb40a4451",
+  "sheet": "evals/grep-overflow-guard_trials.jsonl",
+  "at": "2026-10-08T07:53Z",
+  "ok": true
+}

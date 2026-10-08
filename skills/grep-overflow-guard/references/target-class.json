@@ -1,0 +1,1 @@
+{"direction": "down", "error_regex": "Ripgrep JSON record exceeded", "id": "grep-overflow-guard", "tool": "grep"}

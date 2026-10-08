@@ -1,0 +1,10 @@
+{"must": ["narrow", "folder", "chunked"], "q": "A whole-tree grep overflowed. What is searched first and how is the rerun staged?"}
+{"must": ["file-type filter", "rerun"], "q": "An unfiltered grep overflowed in center. What is added before the rerun?"}
+{"must": ["glob", "two chunks"], "q": "A whole-repo grep overflowed. What narrows it and in how many chunks is it rerun?"}
+{"must": ["split", "merge"], "q": "A single grep over many folders overflowed. How are the folders searched and joined?"}
+{"must": ["limit", "head"], "q": "An unbounded grep overflowed. What caps the hits before paging through chunks?"}
+{"must": ["exact literal"], "q": "A broad regex grep overflowed. What replaces the pattern before the rerun?"}
+{"must": ["scope", "filter", "chunked"], "q": "Docs are searched after an overflow in works. What three steps stage the search?"}
+{"must": ["unverified", "results"], "q": "A sweep over two repos is reported. What does the closing list state besides the hits?"}
+{"must": ["target-class.json"], "q": "where is the grep overflow failure class recorded?"}
+{"must": ["errors.md"], "q": "what names the cause of a grep overflow miss?"}
