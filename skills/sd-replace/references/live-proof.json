@@ -1,0 +1,14 @@
+{
+  "skill": "sd-replace",
+  "fingerprint": "afea7df7cb195ac45fb4ae7a682d81d2a7a80b91ea86251c50f27309e2f45719",
+  "date": "2026-10-08T04:06Z",
+  "command": "SKILL_LIVE=1 python -m pytest tests/test_sd_replace.py -q",
+  "result": "19 passed in 139.56s (0:02:19)",
+  "versions": {
+    "python": "3.13.14",
+    "os": "Windows-10-10.0.19045-SP0",
+    "git": "git version 2.53.0.windows.1",
+    "node": "v24.14.0",
+    "pwsh": "7.6.3"
+  }
+}

@@ -1,0 +1,37 @@
+# Glossary
+
+- String-literal mode: the no-regex mode on `README.md` line `114` with `-F`.
+- -F: the short flag enabling literal mode without regex.
+- fixed-strings: the long flag disabling regex; 1 hit from line `114`.
+- backslashes: the escaping pain literal mode removes.
+- sd before after: the sd spelling replacing all occurrences.
+- sed s/before/after/g: the sed spelling sd replaces.
+- -A: the short flag switching to cross-line matching.
+- across mode: the name of the -A cross-line mode.
+- lots of special chars: the output of the literal ((([]))) example.
+- capture groups: the numbered parts feature with $ refs.
+- $1: the indexed form referencing the first group.
+- named capture: the (?P<name>) form for dollars and cents.
+- dollars: the first named group yielding 123 dollars.
+- ambiguities: the $var touching text warning.
+- ${var}: the braced form fixing ambiguities.
+- dollars_dollars: the empty-print case fixed by braces.
+- in-place: what bare sd does to http.js without a flag.
+- -p: the single flag previewing instead of editing.
+- preview: the word on line `162` showing changes first.
+- http.js: the file the README example edits in place.
+- line by line: the default processing mode, one line at a time.
+- across: the cross-line mode; 8 hits from line `29`.
+- \n: the cross-line pattern needing -A to match.
+- --: the separator ending flag parsing.
+- end of flags: what -- signals with the -w example.
+- $$: the doubled escape printing a literal dollar.
+- $bar: the literal dollar output yielding $bar.
+- 114: the first `fixed-strings` line showing literal mode.
+- 162: the first `preview` line showing changes first.
+- 29: the first `across` line requiring -A for newline.
+- 41: the first `open_source` line defining the opener.
+- README.md: the docs file carrying literal plus preview plus across claims.
+- input.rs: the source file carrying the open_source opener.
+- open_source: the opener on line `41`; 2 hits from line `41`.
+- sd-replace-miss: the failure class id for find plus replace preview.

@@ -1,0 +1,10 @@
+{"must": ["String-literal mode", "-F"], "q": "Which String-literal mode flags with -F avoid regex escaping backslashes?"}
+{"must": ["sd before after", "sed s/before/after/g"], "q": "Why is sd before after simpler than sed s/before/after/g with across mode?"}
+{"must": ["fixed-strings", "lots of special chars"], "q": "What does the fixed-strings lots of special chars literal example prove?"}
+{"must": ["capture groups", "dollars"], "q": "How do capture groups with dollar refs yield dollars and cents?"}
+{"must": ["${var}", "dollars_dollars"], "q": "When does ${var} fix ambiguities with dollars_dollars empty prints?"}
+{"must": ["-p", "http.js"], "q": "How does -p preview the http.js in-place change first?"}
+{"must": ["line by line", "across"], "q": "When does line by line need across mode for newline matching?"}
+{"must": ["end of flags", "$bar"], "q": "How do end of flags with doubled dollars print $bar?"}
+{"must": ["114", "fixed-strings"], "q": "Which README line 114 shows fixed-strings literal mode?"}
+{"must": ["41", "open_source"], "q": "Which input.rs line 41 defines the open_source opener?"}

@@ -80,6 +80,7 @@ FLEET_SKILLS = {
     "gron-json": ["tomnomnom/gron"],
     "bat-cat": ["sharkdp/bat"],
     "delta-diff": ["dandavison/delta"],
+    "sd-replace": ["chmln/sd"],
     "github-file-guard": [],
 }
 # Installed in forge, whose `node scripts/check.mjs` bans some English words.

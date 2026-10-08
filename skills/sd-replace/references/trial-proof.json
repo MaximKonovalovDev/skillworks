@@ -1,0 +1,12 @@
+{
+  "skill": "sd-replace",
+  "runs": 12,
+  "with_rate": 1.0,
+  "without_rate": 0.0,
+  "lift": 1.0,
+  "spread": 1.0,
+  "fingerprint": "9b884e19270b7da9d57df84d74c93f7c0644551acb5fa7804900cbae46bf8b10",
+  "sheet": "evals/sd-replace_trials.jsonl",
+  "at": "2026-10-08T04:06Z",
+  "ok": true
+}
