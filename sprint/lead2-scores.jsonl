@@ -13,3 +13,6 @@
 {"at":"2026-10-07T18:46:45.470Z","journey":"J4","score":9,"note":"One text everywhere; copy list unstated","evidence":"SHA256 AEB9598B x4, 57 lines each"}
 {"at":"2026-10-07T18:46:47.789Z","journey":"J1","score":7,"note":"live tests hide behind SKILL_LIVE=1","evidence":"skills/git-one-branch/SKILL.md, 18 passed in 183s, eval 14/14 rate 1.0"}
 {"at":"2026-10-07T18:46:49.912Z","journey":"J3","score":10,"note":"Clean stranger run, zero friction observed","evidence":"6 passed in 5.10s via tests/test_mcp_schema.py + tests/test_mcp_skills_dir.py"}
+{"at":"2026-10-08T10:53:49.961Z","journey":"J1","score":9,"note":"install seconds, tests pass, eval PASS","evidence":"C:\\Users\\me\\AppData\\Local\\Temp\\opencode\\j1-stranger + RESULT PASS"}
+{"at":"2026-10-08T10:53:51.645Z","journey":"J4","score":8,"note":"Skill text identical single green full still red","evidence":"C:/Users/me/AppData/Local/Temp/opencode/j4tmp/bash-spawn-guard"}
+{"at":"2026-10-08T10:53:53.288Z","journey":"J2","score":9,"note":"Nine halved classes prove S5 met","evidence":"C:/Users/me/.empire/state/skilldoctor/adopted.csv"}
