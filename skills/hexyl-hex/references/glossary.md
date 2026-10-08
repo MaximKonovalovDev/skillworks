@@ -1,0 +1,42 @@
+# Glossary
+
+- hex viewer: the terminal tool on `README.md` line `7`.
+- NULL bytes: the null category the viewer colors.
+- printable ASCII: the non-whitespace printable category.
+- non-ASCII: any byte above 0x7F with its own color.
+- cargo install hexyl: the one-line source install.
+- Rust 1.56: the minimum Rust version for source install.
+- cargo install --path: the clone-then-install spelling.
+- apt install hexyl: the Ubuntu 19.10 plus spelling.
+- dpkg: the older-Ubuntu deb installer with an example deb name.
+- apt-get install hexyl: the Debian Buster plus spelling.
+- environment variables: how hexyl colors configure.
+- HEXYL_COLOR_ASCII_PRINTABLE: the printable ASCII variable on line `188`.
+- HEXYL_COLOR_NULL: the null byte variable on line `191`.
+- HEXYL_COLOR_: the prefix init_color builds the env name from.
+- bright blue: the example bright color name.
+- RGB hex: the custom color format name.
+- #abcdef: the example RGB hex value.
+- COLOR_NULL: the NULL static defaulting to BrightBlack on line `5`.
+- COLOR_NONASCII: the non-ASCII static defaulting to Yellow on line `15`.
+- BrightBlack: the default for NULL and OFFSET.
+- Yellow: the default for non-ASCII.
+- init_color: the function reading the env override on line `19`.
+- DynColors: the color type parsing the env value.
+- Apache-2.0: one of the two offer licences.
+- MIT: the other offer licence.
+- at your option: the choice phrase making the slice licit.
+- 7: the first `hex viewer` line naming colored categories.
+- 188: the first `HEXYL_COLOR` line opening the printable entry.
+- 193: a middle `HEXYL_COLOR` line in the config list.
+- 197: a later `HEXYL_COLOR` line showing the RGB example.
+- 5: the first `NULL` line defining COLOR_NULL.
+- 38: the `COLOR_NULL_RGB` line with the null gradient.
+- 9: the first `ASCII_PRINTABLE` line defining the printable static.
+- 48: the `COLOR_GRADIENT_ASCII_PRINTABLE` line with the printable gradient.
+- README.md: the docs file carrying viewer plus install plus color claims.
+- colors.rs: the source file carrying the COLOR statics.
+- ASCII_PRINTABLE: the printable static on line `9`; 3 hits from line `9`.
+- HEXYL_COLOR: the config token; 8 hits from line `188`.
+- NULL: the null token; 3 hits from line `5`.
+- hexyl-hex-miss: the failure class id for binary-read misses.

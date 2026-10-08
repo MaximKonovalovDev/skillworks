@@ -1,0 +1,10 @@
+{"must": ["hex viewer", "NULL bytes"], "q": "What does the hex viewer show for NULL bytes categories?"}
+{"must": ["cargo install hexyl", "Rust 1.56"], "q": "Which Rust 1.56 cargo install hexyl command installs from source?"}
+{"must": ["apt install hexyl", "dpkg"], "q": "When does apt install hexyl beat a dpkg deb install on Ubuntu?"}
+{"must": ["HEXYL_COLOR_ASCII_PRINTABLE", "environment variables"], "q": "Which environment variables hold HEXYL_COLOR_ASCII_PRINTABLE printable config?"}
+{"must": ["bright blue", "#abcdef"], "q": "Which bright blue name and #abcdef RGB hex spelling work?"}
+{"must": ["COLOR_NULL", "BrightBlack"], "q": "Which COLOR_NULL static defaults to BrightBlack?"}
+{"must": ["init_color", "DynColors"], "q": "How does init_color parse DynColors from HEXYL_COLOR_ names?"}
+{"must": ["Apache-2.0", "at your option"], "q": "Which Apache-2.0 plus MIT at your option licence covers the slice?"}
+{"must": ["188", "HEXYL_COLOR"], "q": "Which README line 188 shows HEXYL_COLOR config variables?"}
+{"must": ["5", "COLOR_NULL"], "q": "Which colors.rs line 5 defines the COLOR_NULL static?"}

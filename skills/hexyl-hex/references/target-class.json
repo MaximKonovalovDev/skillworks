@@ -1,0 +1,1 @@
+{"direction": "down", "error_regex": "hex viewer|HEXYL_COLOR|NULL|ASCII_PRINTABLE", "id": "hexyl-hex-miss", "tool": "hexyl"}

@@ -1,0 +1,113 @@
+{
+ "about": "Every pair runs in pwsh 7 in its own scratch copy of the fixture (see scripts/run_hexyl.py). bad replays the binary-read miss: it throws the real miss line, or silently queries the wrong file. good runs the fixed query and prints the report it promises.",
+ "fixture": {
+  "hex.txt": "hexyl is a hex viewer for the terminal with colored output distinguishing NULL bytes, printable ASCII, ASCII whitespace, other ASCII and non-ASCII.\nInstall from source with Rust 1.56 via cargo install hexyl, or git clone then cargo install --path ./hexyl.\nOn Ubuntu 19.10 plus run sudo apt install hexyl; older Ubuntu deb via sudo dpkg -i hexyl_0.15.0_amd64.deb; on Debian Buster plus run sudo apt-get install hexyl.\nColors come from environment variables; HEXYL_COLOR_ASCII_PRINTABLE covers printable ASCII and HEXYL_COLOR_NULL covers the null byte, plus WHITESPACE OTHER NONASCII OFFSET.\nUse the 8 standard colors plus bright blue, and RGB hex format like #abcdef, e.g. HEXYL_COLOR_ASCII_PRINTABLE=blue.\nStatics COLOR_NULL defaults BrightBlack and COLOR_NONASCII defaults Yellow, plus OFFSET BrightBlack, ASCII_PRINTABLE Cyan, WHITESPACE Green, OTHER Green.\ninit_color builds the env name with HEXYL_COLOR_ prefix, reads std env, parses DynColors via FromStr, falls back to default AnsiColors.\nLicensed under either Apache-2.0 or MIT at your option.\nhex viewer HEXYL_COLOR NULL ASCII_PRINTABLE hexyl-hex-miss\n",
+  "plain.txt": "hello world\n",
+  "view.py": "src = open('hex.txt', encoding='utf-8').read()\nassert 'hex viewer' in src and 'NULL bytes' in src and 'printable ASCII' in src and 'non-ASCII' in src\nprint('view PASS hex-categories')\n",
+  "inst.py": "src = open('hex.txt', encoding='utf-8').read()\nassert 'cargo install hexyl' in src and 'Rust 1.56' in src and 'cargo install --path' in src\nprint('inst PASS cargo-source')\n",
+  "apt.py": "src = open('hex.txt', encoding='utf-8').read()\nassert 'apt install hexyl' in src and 'dpkg' in src and 'apt-get install hexyl' in src\nprint('apt PASS debian-install')\n",
+  "col.py": "src = open('hex.txt', encoding='utf-8').read()\nassert 'HEXYL_COLOR_ASCII_PRINTABLE' in src and 'HEXYL_COLOR_NULL' in src and 'environment variables' in src\nprint('col PASS color-vars')\n",
+  "rgb.py": "src = open('hex.txt', encoding='utf-8').read()\nassert 'bright blue' in src and 'RGB hex' in src and '#abcdef' in src\nprint('rgb PASS color-spellings')\n",
+  "stat.py": "src = open('hex.txt', encoding='utf-8').read()\nassert 'COLOR_NULL' in src and 'COLOR_NONASCII' in src and 'BrightBlack' in src and 'Yellow' in src\nprint('stat PASS category-statics')\n",
+  "over.py": "src = open('hex.txt', encoding='utf-8').read()\nassert 'HEXYL_COLOR_' in src and 'init_color' in src and 'DynColors' in src\nprint('over PASS env-override')\n",
+  "lic.py": "src = open('hex.txt', encoding='utf-8').read()\nassert 'Apache-2.0' in src and 'MIT' in src and 'at your option' in src\nprint('lic PASS dual-licence')\n"
+ },
+ "pairs": [
+  {
+   "id": "hx-p01",
+   "group": "viewer",
+   "bad": "throw 'catted the binary, missed hex viewer with NULL bytes printable ASCII non-ASCII'",
+   "bad_error": "hex viewer",
+   "good": "python view.py",
+   "expect": "view PASS hex-categories"
+  },
+  {
+   "id": "hx-p02",
+   "group": "viewer",
+   "bad": "throw 'installed by guessing, missed cargo install hexyl with Rust 1.56 cargo install --path'",
+   "bad_error": "cargo install hexyl",
+   "good": "python inst.py",
+   "expect": "inst PASS cargo-source"
+  },
+  {
+   "id": "hx-p03",
+   "group": "viewer",
+   "bad": "throw 'used one package spelling, missed apt install hexyl with dpkg apt-get install hexyl'",
+   "bad_error": "apt install hexyl",
+   "good": "python apt.py",
+   "expect": "apt PASS debian-install"
+  },
+  {
+   "id": "hx-p04",
+   "group": "viewer",
+   "bad": "throw 'hardcoded colors, missed environment variables with HEXYL_COLOR_ASCII_PRINTABLE HEXYL_COLOR_NULL'",
+   "bad_error": "environment variables",
+   "good": "python col.py",
+   "expect": "col PASS color-vars"
+  },
+  {
+   "id": "hx-p05",
+   "group": "colors",
+   "bad": "throw 'used one color name, missed bright blue with RGB hex #abcdef'",
+   "bad_error": "bright blue",
+   "good": "python rgb.py",
+   "expect": "rgb PASS color-spellings"
+  },
+  {
+   "id": "hx-p06",
+   "group": "colors",
+   "bad": "throw 'guessed defaults, missed COLOR_NULL with COLOR_NONASCII BrightBlack Yellow'",
+   "bad_error": "COLOR_NULL",
+   "good": "python stat.py",
+   "expect": "stat PASS category-statics"
+  },
+  {
+   "id": "hx-p07",
+   "group": "colors",
+   "bad": "throw 'read colors by guessing, missed init_color with HEXYL_COLOR_ DynColors'",
+   "bad_error": "init_color",
+   "good": "python over.py",
+   "expect": "over PASS env-override"
+  },
+  {
+   "id": "hx-p08",
+   "group": "colors",
+   "bad": "throw 'shipped without clearing, missed Apache-2.0 with MIT at your option'",
+   "bad_error": "at your option",
+   "good": "python lic.py",
+   "expect": "lic PASS dual-licence"
+  },
+  {
+   "id": "hx-p09",
+   "group": "pin",
+   "bad": "rg -n \"hex viewer\" plain.txt; throw 'missed hex viewer: plain.txt carries no viewer phrase'",
+   "bad_error": "missed hex viewer",
+   "good": "rg -n \"hex viewer\" hex.txt",
+   "expect": "hex viewer"
+  },
+  {
+   "id": "hx-p10",
+   "group": "pin",
+   "bad": "rg -n \"HEXYL_COLOR\" plain.txt; throw 'missed HEXYL_COLOR: plain.txt carries no color phrase'",
+   "bad_error": "missed HEXYL_COLOR",
+   "good": "rg -n \"HEXYL_COLOR\" hex.txt",
+   "expect": "HEXYL_COLOR"
+  },
+  {
+   "id": "hx-p11",
+   "group": "pin",
+   "bad": "rg -n \"NULL\" plain.txt; throw 'missed NULL: plain.txt carries no null phrase'",
+   "bad_error": "missed NULL",
+   "good": "rg -n \"NULL\" hex.txt",
+   "expect": "NULL"
+  },
+  {
+   "id": "hx-p12",
+   "group": "pin",
+   "bad": "rg -n \"ASCII_PRINTABLE\" plain.txt; throw 'missed ASCII_PRINTABLE: plain.txt carries no printable phrase'",
+   "bad_error": "missed ASCII_PRINTABLE",
+   "good": "rg -n \"ASCII_PRINTABLE\" hex.txt",
+   "expect": "ASCII_PRINTABLE"
+  }
+ ]
+}

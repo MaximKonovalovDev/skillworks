@@ -1,0 +1,12 @@
+{
+  "skill": "hexyl-hex",
+  "runs": 12,
+  "with_rate": 1.0,
+  "without_rate": 0.0,
+  "lift": 1.0,
+  "spread": 1.0,
+  "fingerprint": "58dd082e56c9b60bae77d971ed773815f1287822f294e92352af1c53880d28ed",
+  "sheet": "evals/hexyl-hex_trials.jsonl",
+  "at": "2026-10-08T05:56Z",
+  "ok": true
+}
