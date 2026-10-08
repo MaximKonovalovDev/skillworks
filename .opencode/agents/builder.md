@@ -2,7 +2,7 @@
 description: skillworks builder. Builds one slice of board rows end to end in the files its packet owns, with the proof command's result, then stops.
 mode: subagent
 model: zen-proxy-muse/muse-spark-1.3-contributor-free
-variant: high
+variant: xhigh
 temperature: 0.2
 steps: 300
 options:

@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-08T16:43:43Z",
+  "updated": "2026-10-08T19:36:40Z",
   "knobs": {
     "width": {"value":10,"min":1,"max":30,"step":1,"why":"helpers in one batch"},
     "dispatch": {"value":"foreground","why":"owner 2026-09-28: every helper seen live"},
@@ -40,6 +40,7 @@
     {"at":"2026-10-06T22:47:14Z","knob":"width","from":6,"to":8,"by":"Maxim (Loop Boss)"},
     {"at":"2026-10-06T23:13:14Z","knob":"width","from":8,"to":10,"by":"Maxim (Loop Boss)"},
     {"at":"2026-10-08T06:18:16Z","knob":"mcp:arxiv.enabled","from":"on","to":"off","by":"Maxim"},
-    {"at":"2026-10-08T16:43:43Z","knob":"mcp:skill-search.added","from":"none","to":"python C:/empire/skillworks/mcp_server/server.py for researcher","by":"Maxim"}
+    {"at":"2026-10-08T16:43:43Z","knob":"mcp:skill-search.added","from":"none","to":"python C:/empire/skillworks/mcp_server/server.py for researcher","by":"Maxim"},
+    {"at":"2026-10-08T19:36:40Z","knob":"agent:builder.variant","from":"high","to":"xhigh","by":"Maxim"}
   ]
 }
