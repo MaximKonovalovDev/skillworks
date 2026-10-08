@@ -129,20 +129,45 @@ def _loads(db: Path | None) -> tuple[dict[str, int] | None, str]:
         return None, f"cannot read {path}: {err}"
 
 
-def s1(db: Path | None = None) -> tuple[bool, str]:
+def _breadth(db: Path | None) -> tuple[dict[str, int] | None, str, bool]:
+    """Per-repo loads for the S1/S2 path: cached meter reads when fresh, else one scan.
+
+    The default database reads through adopted_after.cached_skill_loads (the shared S1/S2
+    meter-read cache, the S5 record-first pattern: met with no scan when proven, refresh
+    only while open). A file given on the command line or by a test is scanned as it is,
+    never from the cache. Counting always stays in skill_loads, so the bar meaning
+    (10 loads in 24 h by loops outside this repo) cannot drift. Returns (loads, why, cached)."""
+    if db is None:
+        try:
+            import adopted_after
+            loads, cached = adopted_after.cached_skill_loads()
+            if loads is None:
+                return None, f"no opencode.db at {_db_path(None)}", False
+            return loads, "", cached
+        except Exception:
+            pass  # a cache fault never breaks the bar: fall through to a direct scan
     loads, why = _loads(db)
+    return loads, why, False
+
+
+def s1(db: Path | None = None) -> tuple[bool, str]:
+    loads, why, cached = _breadth(db)
     if loads is None:
         return False, why
     n = sum(loads.values())
-    return n >= LOADS_NEEDED, f"{n} loads of skillworks skills in {HOURS} h by loops outside it (want {LOADS_NEEDED})"
+    tail = " (already met, no re-scan)" if cached and n >= LOADS_NEEDED else \
+        " (cached meter reads)" if cached else ""
+    return n >= LOADS_NEEDED, f"{n} loads of skillworks skills in {HOURS} h by loops outside it (want {LOADS_NEEDED}){tail}"
 
 
 def s2(db: Path | None = None) -> tuple[bool, str]:
-    loads, why = _loads(db)
+    loads, why, cached = _breadth(db)
     if loads is None:
         return False, why
+    tail = " (already met, no re-scan)" if cached and len(loads) >= REPOS_NEEDED else \
+        " (cached meter reads)" if cached else ""
     seen = ", ".join(f"{r} {n}" for r, n in sorted(loads.items())) or "none"
-    return len(loads) >= REPOS_NEEDED, f"{len(loads)} other repos loaded one in {HOURS} h (want {REPOS_NEEDED}): {seen}"
+    return len(loads) >= REPOS_NEEDED, f"{len(loads)} other repos loaded one in {HOURS} h (want {REPOS_NEEDED}): {seen}{tail}"
 
 
 def _pack_tested(pack: Path) -> tuple[bool, str]:
