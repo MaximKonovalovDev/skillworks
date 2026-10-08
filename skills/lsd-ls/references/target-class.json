@@ -1,0 +1,1 @@
+{"direction": "down", "error_regex": "lt|filetype|--git|--long|--tree|timesort|sizesort|--config-file|--icon never|icon|sort|alias|XDG_CONFIG_HOME", "id": "lsd-ls-miss", "tool": "lsd"}

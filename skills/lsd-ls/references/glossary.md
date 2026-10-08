@@ -1,0 +1,63 @@
+# Glossary
+
+- lsd: the LSDeluxe ls rewrite on `README.md` line `33`.
+- ls: the stock command replaced by an alias on line `89`.
+- alias: the shell-config spelling on line `89`.
+- lt: the tree-view alias on line `100` spelling `lsd --tree`.
+- lsd --tree: the full flag behind the lt alias.
+- l: the long-listing alias on line `97` spelling `lsd -l`.
+- lsd -l: the alias body on line `97`.
+- la: the almost-all alias on line `98`.
+- lla: the long almost-all alias on line `99`.
+- name: the per-file icon override kind on line `142`.
+- filetype: the per-kind icon override kind on line `143`.
+- extension: the per-suffix icon override kind on line `144`.
+- icons.yaml: the icon override file in the config directory.
+- --git: the git-status flag on line `41` of lsd.md.
+- reduction: how a directory status folds file statuses on line `42`.
+- recursively: how the reduction walks included files on line `42`.
+- --long: the extended-metadata table flag on line `62`.
+- table: the --long output shape on line `63`.
+- blocks: the block list and order option on line `95`.
+- --blocks: the option naming blocks on line `95`.
+- --tree: the tree-view flag on line `86`.
+- --depth: the recursion bound flag on line `104`.
+- recurs: what --depth stops past the given depth.
+- --recursive: the plain recurse flag on line `71`.
+- timesort: the time sort on line `80` spelled `--timesort`.
+- --timesort: the flag sorting by time modified.
+- sizesort: the size sort on line `77` spelled `--sizesort`.
+- --sizesort: the flag sorting by size.
+- reverse: the order flip on line `75` spelled `--reverse`.
+- --reverse: the flag flipping any sort order.
+- --extensionsort: the extension sort on line `38`.
+- --sort: the WORD sort option on line `131`.
+- --no-sort: the unsorted directory-order flag on line `134`.
+- --config-file: the custom-config flag on line `53` plus README line `119`.
+- XDG_CONFIG_HOME: the config base on README line `125` and lsd.md line `173`.
+- .config/lsd: the default Unix config directory under XDG.
+- LS_COLORS: the custom color variable on README line `188` and lsd.md line `170`.
+- --icon never: the icon-isolating flag value on README line `224`.
+- --ignore-config: the config-isolating flag on line `50` plus README line `224`.
+- --icon: the icon mode flag on line `116` with default `auto`.
+- 116: the first `--icon` line setting the default.
+- auto: the --icon default value on line `117`.
+- 30: the first `icon` line on colours in classic mode.
+- 117: the default-value line for --icon.
+- 119: the `--icon-theme` line picking fancy or unicode.
+- 120: the icon-theme default line.
+- sort: the sort token; 9 hits from line `38`.
+- 38: the first `sort` line with --extensionsort.
+- 75: the reverse-order sort line.
+- 77: the first `--sizesort` line.
+- 80: the `--timesort` documenting line.
+- alias: the alias token; 8 hits from line `89`.
+- 89: the first `alias` line on shell configuration.
+- 91: the `alias ls` defining line.
+- 93: the alias-replaces-stock line.
+- 95: the useful-aliases example line.
+- 97: the `alias l` defining line as lsd -l.
+- 125: the first config-env line giving $XDG_CONFIG_HOME/lsd.
+- README.md: the docs file carrying aliases plus config plus icons claims.
+- lsd.md: the manual file carrying flags plus sorts plus environment.
+- lsd-ls-miss: the failure class id for directory-listing misses.

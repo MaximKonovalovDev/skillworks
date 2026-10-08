@@ -1,0 +1,12 @@
+{
+  "skill": "lsd-ls",
+  "runs": 12,
+  "with_rate": 1.0,
+  "without_rate": 0.0,
+  "lift": 1.0,
+  "spread": 1.0,
+  "fingerprint": "387593ea62680c1c18740537a840c142d4972e829f021bb2970f0dcd7013eff6",
+  "sheet": "evals/lsd-ls_trials.jsonl",
+  "at": "2026-10-08T08:18Z",
+  "ok": true
+}

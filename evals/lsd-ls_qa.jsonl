@@ -1,0 +1,10 @@
+{"must": ["lsd", "lt", "lsd --tree"], "q": "Which lt alias expands to lsd --tree for a tree view?"}
+{"must": ["filetype", "name", "extension"], "q": "Which filetype plus name plus extension kinds override icons?"}
+{"must": ["--git", "reduction", "recursively"], "q": "Which --git reduction over recursively included files gives a directory status?"}
+{"must": ["--long", "table", "blocks"], "q": "Which --long table does --blocks order?"}
+{"must": ["--tree", "--depth", "recurs"], "q": "Which --tree view does --depth stop from recursing?"}
+{"must": ["timesort", "sizesort", "reverse"], "q": "Which timesort plus sizesort orders does reverse flip?"}
+{"must": ["XDG_CONFIG_HOME", ".config/lsd", "--config-file"], "q": "Which --config-file overrides the XDG_CONFIG_HOME .config/lsd default?"}
+{"must": ["--icon never", "--ignore-config", "LS_COLORS"], "q": "Which --icon never plus --ignore-config pair isolates LS_COLORS trouble?"}
+{"must": ["116", "--icon", "auto"], "q": "Which lsd.md line 116 shows the --icon auto default?"}
+{"must": ["97", "alias", "lsd -l"], "q": "Which README line 97 defines alias l as lsd -l?"}
