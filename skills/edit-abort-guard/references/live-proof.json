@@ -1,9 +1,9 @@
 {
   "skill": "edit-abort-guard",
-  "fingerprint": "5964fa7a4da74216730a1d688f674739f727e5fd208cbf442ef876f6d3a1dab0",
-  "date": "2026-10-07T19:21Z",
+  "fingerprint": "68fb4e8eeac00c0271c48faaf869405a19e6ad782bb4b6cee46d663404b6f265",
+  "date": "2026-10-08T09:38Z",
   "command": "SKILL_LIVE=1 python -m pytest tests/test_edit_abort_guard.py -q",
-  "result": "6 passed in 2.21s",
+  "result": "6 passed in 23.90s",
   "versions": {
     "python": "3.13.14",
     "os": "Windows-10-10.0.19045-SP0",

@@ -1,7 +1,7 @@
 ---
 name: edit-abort-guard
-description: Use when a file edit comes back Tool execution aborted after a long call: slice to one small hunk with a timeout, run that hunk alone, then report with PASS.
-version: 0.1.0
+description: Use when a file edit comes back Tool execution aborted after a long call (unbounded whole-file edit, whole edit rerun after the abort, chained large edits, no scope and no limit, foreground wait with no receipt, silent close with no report): never rerun the whole edit, slice to one small hunk with a timeout, run that hunk alone, then report with PASS.
+version: 0.2.0
 author: skillworks
 tags: [edits]
 license: MIT
@@ -42,4 +42,4 @@ The full bad and good runs are `references/pairs.md`, the machine list is `refer
 
 ## When an edit aborts
 
-Fix the cause once. Do not send the same whole edit again. The error text names the cause: look it up in `references/errors.md`.
+Fix the cause once. Never rerun the same whole edit after an abort. The error text names the cause: look it up in `references/errors.md`.
