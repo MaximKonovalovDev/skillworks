@@ -145,7 +145,7 @@
         "--storage-path",
         "C:/Users/me/.config/opencode/mcp/arxiv-papers"
       ],
-      "enabled": true,
+      "enabled": false,
       "timeout": 30000
     }
   },
