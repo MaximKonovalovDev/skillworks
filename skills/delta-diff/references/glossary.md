@@ -1,0 +1,34 @@
+# Glossary
+
+- syntax-highlighting pager: what delta is on `README.md`: a pager for `git` plus `diff` plus `grep` output and blame.
+- git: the first output kind delta pages.
+- diff: the second output kind delta pages.
+- grep: the third output kind delta pages.
+- pager = delta: the value in core that pages every diff.
+- diffFilter: the interactive key set to `delta --color-only`.
+- delta --color-only: the exact diffFilter value the README prescribes.
+- Word-level: the granularity delta highlights at.
+- Levenshtein: the algorithm name the README cites.
+- edit inference: what the algorithm infers between minus and plus lines.
+- side-by-side = true: the single key enabling the two-panel view.
+- line-numbers: on by default inside the panel; 3 hits from line `26`.
+- wraps: what long lines do in the panel instead of truncating.
+- navigate: the key set to true for jumping; 3 hits from line `28`.
+- n and N: the two keystrokes jumping between files and diffs.
+- diff sections: what n and N move between, plus log -p views.
+- side-by-side: the two-panel view; 4 hits from line `86`.
+- left-format: the short name for the left number column key.
+- line-numbers-left-format: the full left number column key on line `27`.
+- bat: the sibling tool sharing its theme set with delta.
+- show-syntax-themes: the flag listing the themes.
+- dark: the value previewing the dark set.
+- zdiff3: the conflictStyle the README prescribes.
+- blame: the view gaining styling plus links.
+- hyperlinks: the flag formatting commits as terminal links.
+- syntax highlighting: the styling claim on line `49`; 3 hits from line `49`.
+- 86: the first `side-by-side` line showing the panel with line-numbers.
+- 28: the first `navigate` line using n and N.
+- 26: the first `line-numbers` line enabling the builtin feature.
+- 49: the first `syntax highlighting` line naming the bat themes.
+- README.md: the docs file carrying the pager, wiring, and styling claims.
+- side_by_side.rs: the source file carrying the line-numbers defaults.

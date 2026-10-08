@@ -1,0 +1,12 @@
+{
+  "skill": "delta-diff",
+  "runs": 12,
+  "with_rate": 1.0,
+  "without_rate": 0.0,
+  "lift": 1.0,
+  "spread": 1.0,
+  "fingerprint": "0574544bedeeadbda1a7978346e643fe10fece56c3e32a4e908d55f13ba0e96d",
+  "sheet": "evals/delta-diff_trials.jsonl",
+  "at": "2026-10-08T00:32Z",
+  "ok": true
+}

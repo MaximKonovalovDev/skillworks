@@ -1,0 +1,10 @@
+{"must": ["syntax-highlighting pager", "git"], "q": "What does the README call delta and which outputs does it page?"}
+{"must": ["pager = delta", "diffFilter"], "q": "Which two gitconfig values wire delta into git diffs?"}
+{"must": ["Word-level", "Levenshtein"], "q": "At which granularity does delta highlight and which algorithm does it cite?"}
+{"must": ["side-by-side = true", "wraps"], "q": "Which key enables the two-panel view and what happens to long lines?"}
+{"must": ["navigate", "n and N"], "q": "Which key plus keystrokes jump between diff sections?"}
+{"must": ["left-format", "line-numbers"], "q": "Which format keys own the side-by-side number columns?"}
+{"must": ["show-syntax-themes", "dark"], "q": "Which flag lists delta themes and which value previews dark?"}
+{"must": ["zdiff3", "hyperlinks"], "q": "Which conflict style plus blame flag improve merge and blame views?"}
+{"must": ["86", "side-by-side"], "q": "Which README line shows delta with the side-by-side panel?"}
+{"must": ["49", "syntax highlighting"], "q": "Which README line names syntax highlighting with bat themes?"}

@@ -1,0 +1,1 @@
+{"direction": "down", "error_regex": "diff|side-by-side|navigate", "id": "delta-diff-miss", "tool": "delta"}

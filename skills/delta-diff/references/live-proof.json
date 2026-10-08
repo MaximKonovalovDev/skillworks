@@ -1,0 +1,14 @@
+{
+  "skill": "delta-diff",
+  "fingerprint": "ae5fda8833a93ba58b12658b38a786aef84a1aba18b05ca5bfa3a4e5acec257f",
+  "date": "2026-10-08T00:35Z",
+  "command": "SKILL_LIVE=1 python -m pytest tests/test_delta_diff.py -q",
+  "result": "19 passed in 92.43s (0:01:32)",
+  "versions": {
+    "python": "3.13.14",
+    "os": "Windows-10-10.0.19045-SP0",
+    "git": "git version 2.53.0.windows.1",
+    "node": "v24.14.0",
+    "pwsh": "7.6.3"
+  }
+}

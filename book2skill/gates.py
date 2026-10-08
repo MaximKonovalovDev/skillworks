@@ -79,6 +79,7 @@ FLEET_SKILLS = {
     "yq-jq": ["kislyuk/yq"],
     "gron-json": ["tomnomnom/gron"],
     "bat-cat": ["sharkdp/bat"],
+    "delta-diff": ["dandavison/delta"],
     "github-file-guard": [],
 }
 # Installed in forge, whose `node scripts/check.mjs` bans some English words.
