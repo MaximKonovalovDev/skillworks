@@ -1,7 +1,7 @@
 ---
 name: edit-unique
-description: Use when an Edit reports multiple matches: widen context to a unique match or count and replaceAll with a verified count.
-version: 1.0.0
+description: Use when an Edit reports Found multiple matches for oldString: refuse the blind edit, re-read wider until the match is unique or count first and replaceAll with the verified count, retry once then stop (repeated import block in three places, one-line export in two modules).
+version: 1.2.0
 author: skillworks
 tags: [editor]
 license: MIT (skill text and scripts, original work)
@@ -9,7 +9,7 @@ license: MIT (skill text and scripts, original work)
 
 # Land a unique match
 
-A short oldString matches in several places. Never guess from memory: re-read, widen until unique, count first, then edit once. The full bad and good runs are `references/pairs.md`, the machine list is `references/pairs.json`, the runner is `scripts/run_unique.py`, and the failure class is `references/target-class.json`.
+A short oldString matches in several places and the tool reports Found multiple matches for oldString. Never guess from memory and never land the blind edit: refuse the ambiguous single edit, re-read with wider surrounding lines and retry once, and a second identical failure ends the step as partial. Count first and use replaceAll only with the verified count when every occurrence must change. The full bad and good runs are `references/pairs.md`, the machine list is `references/pairs.json`, the runner is `scripts/run_unique.py`, and the failure class is `references/target-class.json`.
 
 ## Widen until unique (no ambiguous edits)
 
