@@ -43,3 +43,7 @@ Rules:
 4. Every stage writes `work/<name>/receipt.json` with counts.
 5. Export guard (2026-10-03 a nested export crashed the OpenCode server 9 times): `--out` only `dist`, never inside `skills/` or the source folder; after any make or export `Get-ChildItem skills -Recurse -Directory -Filter export` prints nothing and no path passes 240 characters (`book2skill/export.py`, tests `test_export_guard.py` and `test_mcp_export_skip.py`).
 6. This repo is public: no secret, and no other repo's text or numbers, in a committed file; those go to the private state folder above.
+
+## Stage (Maxim 2026-10-08)
+
+The empire is at its START. Never cite sales, revenue or "0 sales" as a finding, verdict, score or reason (audits, Lead 2, steals, reviews, inbox plans). Judge work by what it builds and whether it works.

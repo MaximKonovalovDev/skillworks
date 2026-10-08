@@ -1,13 +1,13 @@
 ---
 role: judge
-title: review cure write-abort class (DR-1007-12)
+title: review lead2 (walk the journeys, rate them, find the dead)
 chain: review
-of: 303-cure-writeabort
-writer: builder
-attempt: 2
-origin_title: cure write-abort class (DR-1007-12)
+of: lead2
+writer: pilot
+attempt: 1
+origin_title: lead2 (walk the journeys, rate them, find the dead)
 ---
-Review 303-cure-writeabort, built by builder. Its record: C:\Users\me\Desktop\skillworks\sprint\queue\done\303-cure-writeabort-repair.md. Rerun its proof yourself, read its diff, check its rows' done-when as written (partly is FAIL). You never edit.
+Review lead2, built by pilot. Its record: C:\Users\me\Desktop\skillworks\sprint\queue\done\lead2.md. Rerun its proof yourself, read its diff, check its rows' done-when as written (partly is FAIL). You never edit.
 
 Run the check that fits what it made, and paste the result line of each:
 1. A skill (`skills/<name>/`): `python tests/live_proof.py <name>` ends `proven`; `python tools/skill_lint.py <name>` (or `python -m book2skill distill check --skill skills/<name>`) exit 0 (body at most 2000 tokens, every rule has a locator that exists, 10 or more pairs or trials, no scaffold text, ASCII); then 3 of its sample bad cases run once with and once without the skill, outputs pasted. The packet's red replay must have failed before and pass now.
@@ -20,7 +20,7 @@ Always, for every result: (a) `python -m pytest tests/ -q` and `node sprint/chec
 Your whole reply is at most 15 lines: `VERDICT: PASS|FAIL|BLOCKED`, what changed, the checks before and after (commands and numbers, the one real thing named), and how to revert it. A proof you cannot run is BLOCKED, never a guess.
 
 Its result, cut:
-<task id="ses_ee83daee0ffeQJec0q1FaRaHKO" state="completed"> <task_result> Repaired the verdict's failing check: `write-abort-guard` was built but never registered, so `live_proof.py` rejected it as unknown. - `book2skill/gates.py:71` added `"write-abort-guard": [],` (original work, no credit needle, matching read/edit-abort-guard). - `evals/write-abort-guard_qa.jsonl:1-10` new QA (10 rows mirroring read/edit-abort pattern, all must-words in skill text) so the new fleet registration passes the eval gate (rate 1.0). - `skills/write-abort-guard/references/live-proof.json` re-proven with the new fingerprint (was stale once QA joined the fingerprint). Red replay (rerunnable): `python skills/write-abort-guard/scripts/run_write.py` → 12 of 12 PASS; wa-slice bad fails with `Tool execution aborted: whole write in one call`, good passes printing `slice chunk timeout PASS 1-5`. Lint RESULT PASS (12 rules/24 pairs/763 tokens); grade 12 runs 1.0/0.0 lift 1.0; fleet `-k write-abort-guard` 4 passed; `node sprint/check.mjs` RESULT PASS 20/0/0; full pytest 6 failed/747 passed/211 skipped — same 6 pre-existing out-of-scope fails (bash-spawn pairs_md, c02 golden, engine-builder rule source, bash-spawn/engine-builder live-proofs, seat untracked), +4 passed vs verdict's 743. RESULT: DONE - registered write-abort-guard in FLEET_SKILLS with QA so live_proof ends proven | proof: `python tests/live_proof.py write-abort-guard` -> write-abort-guard: proven. 6 passed in 11.78s </task_result> </task>
+<task id="ses_ee3dd72b0ffeEaF31Rs5G2GlR5" state="completed"> <task_result> RESULT: DONE - all 10 operator journeys PASS, no dead ends, zero packets filed | proof: sprint/queue/done/lead2.md + J1 eval 3/3=1.000 + J8 export zip 7 files EXIT:0 + J10 MCP-HANDSHAKE-OK + node sprint/check.mjs RESULT PASS 20/0/0 </task_result> </task>
 
-Keeper facts: run 303-cure-writeabort-repair (@builder), repair cure write-abort class (DR-1007-12).
-RESULT: DONE - registered write-abort-guard in FLEET_SKILLS with QA so live_proof ends proven | proof: `python tests/live_proof.py write-abort-guard` -> write-abort-guard: proven. 6 passed in 11.78s
+Keeper facts: run lead2 (@pilot), lead2 (walk the journeys, rate them, find the dead).
+RESULT: DONE - all 10 operator journeys PASS, no dead ends, zero packets filed | proof: sprint/queue/done/lead2.md + J1 eval 3/3=1.000 + J8 export zip 7 files EXIT:0 + J10 MCP-HANDSHAKE-OK + node sprint/check.mjs RESULT PASS 20/0/0
