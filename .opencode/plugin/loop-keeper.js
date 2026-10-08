@@ -376,7 +376,7 @@ const PROOF_MIN = 90;
 //   (dispatch.mjs) reads what each helper delivered instead of guessing from its words.
 const GATE = /^(?:judge|checker|overseer|api-reviewer)(?:-paid)?$/;
 const NOT_ROLES = new Set(["orchestrator", "lead", "overseer", "general", "build", "plan"]);
-const RESULT_ASK = "\n\nEnd your reply with one line: `RESULT: DONE|PARTIAL|BLOCKED|NOOP - <what changed, or the blocker> | proof: <command result, file or URL>`.";
+const RESULT_ASK = "\n\nEnd your reply with one line: `RESULT: NOOP|PARTIAL|BLOCKED|DONE - <what changed, unchanged, or the blocker; unchanged work is NOOP, never DONE> | proof: <command result, file or URL>`.";
 // Roles that have a `<role>-paid.md` twin (free only since 2026-10-07: the
 // twins stay on disk, nothing routes to them).
 const rolesIn = (dir) => {
@@ -416,8 +416,8 @@ const shellOf = (dir) => {
   return "";
 };
 
-// A DONE that did nothing (sentinel "unchanged, no packet") holds the seat like NOOP.
-const UNCHANGED_RE = /\b(unchanged|no packet|nothing (new|to do)|no change)/i;
+// A DONE that did nothing (sentinel "unchanged, no packet"; forge "fresh, no row", "evidence green") holds the seat like NOOP.
+const UNCHANGED_RE = /\b(unchanged|no packet|nothing (new|to do)|no change|fresh, no row|no row|evidence green)/i;
 
 // The keeper itself. LoopKeeper (the shell at the end of this file) runs it and swaps in a fresh
 // copy when this file changes.
