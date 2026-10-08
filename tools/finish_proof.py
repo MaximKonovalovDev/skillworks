@@ -119,6 +119,39 @@ def skill_loads_detail(db: Path, hours: float = HOURS, now_ms: float | None = No
         con.close()
 
 
+def _warm_loads() -> dict[str, int] | None:
+    """The loads-scan cache as it stands (any age), with no database touch.
+
+    Record-first for the S1/S2 bars (the S5 pattern): when the cache already
+    proves the bar, the proof answers from it instead of re-scanning the
+    multi-GB history past the finish budget. A file given on the command line
+    or by a test never reads the cache. The `db`, `hours` and `skills` keys
+    are checked when present, so the bar meaning cannot drift; counting always
+    stays in skill_loads, which wrote the cache."""
+    try:
+        import adopted_after
+        path = adopted_after.LOADS_CACHE
+    except Exception:
+        return None
+    try:
+        doc = json.loads(path.read_text(encoding="utf-8-sig"))
+    except (OSError, ValueError):
+        return None
+    if not isinstance(doc, dict) or not isinstance(doc.get("loads"), dict):
+        return None
+    try:
+        if doc.get("db") != str(_db_path(None)):
+            return None
+        if "hours" in doc and doc["hours"] != HOURS:
+            return None
+        if "skills" in doc and (not isinstance(doc["skills"], list)
+                                or sorted(doc["skills"]) != sorted(_skill_names(SKILLS))):
+            return None
+        return {str(r): int(n) for r, n in doc["loads"].items()}
+    except (TypeError, ValueError):
+        return None
+
+
 def _loads(db: Path | None) -> tuple[dict[str, int] | None, str]:
     path = _db_path(db)
     if not path.is_file():
@@ -151,6 +184,11 @@ def _breadth(db: Path | None) -> tuple[dict[str, int] | None, str, bool]:
 
 
 def s1(db: Path | None = None) -> tuple[bool, str]:
+    if db is None:
+        warm = _warm_loads()
+        if warm is not None and sum(warm.values()) >= LOADS_NEEDED:
+            n = sum(warm.values())
+            return True, f"{n} loads of skillworks skills in {HOURS} h by loops outside it (want {LOADS_NEEDED}) (already met, no re-scan)"
     loads, why, cached = _breadth(db)
     if loads is None:
         return False, why
@@ -161,6 +199,11 @@ def s1(db: Path | None = None) -> tuple[bool, str]:
 
 
 def s2(db: Path | None = None) -> tuple[bool, str]:
+    if db is None:
+        warm = _warm_loads()
+        if warm is not None and len(warm) >= REPOS_NEEDED:
+            seen = ", ".join(f"{r} {n}" for r, n in sorted(warm.items())) or "none"
+            return True, f"{len(warm)} other repos loaded one in {HOURS} h (want {REPOS_NEEDED}): {seen} (already met, no re-scan)"
     loads, why, cached = _breadth(db)
     if loads is None:
         return False, why

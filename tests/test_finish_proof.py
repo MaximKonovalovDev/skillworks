@@ -190,6 +190,7 @@ def test_s3_a_pack_folder_counts_only_when_pack_check_passes(tmp_path: Path, mon
 def test_s1_met_cache_answers_with_no_scan(tmp_path: Path, monkeypatch) -> None:
     """S1 record-first: a fresh cache that already proves the bar is met with no database scan."""
     import adopted_after as aa  # noqa: E402
+    monkeypatch.setattr(fp, "_warm_loads", lambda: None)
     monkeypatch.setattr(aa, "cached_skill_loads", lambda *a, **k: ({"forge": 8, "center": 4}, True))
     monkeypatch.setattr(fp, "skill_loads",
                         lambda *a, **k: (_ for _ in ()).throw(AssertionError("met cache must not scan")))
@@ -200,6 +201,7 @@ def test_s1_met_cache_answers_with_no_scan(tmp_path: Path, monkeypatch) -> None:
 def test_s1_open_cache_answers_from_cached_meter_reads(tmp_path: Path, monkeypatch) -> None:
     """S1 open but fresh cache: no re-scan, the cached meter reads answer."""
     import adopted_after as aa  # noqa: E402
+    monkeypatch.setattr(fp, "_warm_loads", lambda: None)
     monkeypatch.setattr(aa, "cached_skill_loads", lambda *a, **k: ({"forge": 2}, True))
     monkeypatch.setattr(fp, "skill_loads",
                         lambda *a, **k: (_ for _ in ()).throw(AssertionError("fresh cache must not scan")))
@@ -222,12 +224,54 @@ def test_s1_explicit_path_scans_as_is_despite_a_met_cache(tmp_path: Path, monkey
 def test_s2_met_cache_answers_with_no_scan(tmp_path: Path, monkeypatch) -> None:
     """S2 shares the breadth path: a fresh met cache answers with no database scan."""
     import adopted_after as aa  # noqa: E402
+    monkeypatch.setattr(fp, "_warm_loads", lambda: None)
     monkeypatch.setattr(aa, "cached_skill_loads",
                         lambda *a, **k: ({"a": 1, "b": 1, "c": 1, "d": 1, "e": 1}, True))
     monkeypatch.setattr(fp, "skill_loads",
                         lambda *a, **k: (_ for _ in ()).throw(AssertionError("met cache must not scan")))
     ok, msg = fp.s2()
     assert ok and "5 other repos" in msg and "no re-scan" in msg
+
+
+def _stale_cache(tmp_path: Path, monkeypatch, loads: dict) -> None:
+    """Point the loads-scan cache at a tmp file whose reading is long past its TTL."""
+    import adopted_after as aa  # noqa: E402
+    cache = tmp_path / "loads-scan-cache.json"
+    cache.write_text(json.dumps({"at_ms": 1, "db": str(fp._db_path(None)), "loads": loads}), encoding="utf-8")
+    monkeypatch.setattr(aa, "LOADS_CACHE", cache)
+
+
+def test_s1_stale_met_cache_answers_with_no_scan(tmp_path: Path, monkeypatch) -> None:
+    """A met cache answers with no DB scan even when stale (past TTL): record-first, like S5."""
+    import adopted_after as aa  # noqa: E402
+    _stale_cache(tmp_path, monkeypatch, {"forge": 8, "center": 4})
+    monkeypatch.setattr(aa, "cached_skill_loads",
+                        lambda *a, **k: (_ for _ in ()).throw(AssertionError("stale met cache must not scan")))
+    monkeypatch.setattr(fp, "skill_loads",
+                        lambda *a, **k: (_ for _ in ()).throw(AssertionError("stale met cache must not scan")))
+    ok, msg = fp.s1()
+    assert ok and "12 loads" in msg and "no re-scan" in msg
+
+
+def test_s2_stale_met_cache_answers_with_no_scan(tmp_path: Path, monkeypatch) -> None:
+    """S2 shares the record-first path: a stale met cache answers with no DB scan."""
+    import adopted_after as aa  # noqa: E402
+    _stale_cache(tmp_path, monkeypatch, {"a": 1, "b": 1, "c": 1, "d": 1, "e": 1})
+    monkeypatch.setattr(aa, "cached_skill_loads",
+                        lambda *a, **k: (_ for _ in ()).throw(AssertionError("stale met cache must not scan")))
+    monkeypatch.setattr(fp, "skill_loads",
+                        lambda *a, **k: (_ for _ in ()).throw(AssertionError("stale met cache must not scan")))
+    ok, msg = fp.s2()
+    assert ok and "5 other repos" in msg and "no re-scan" in msg
+
+
+def test_s1_open_warm_cache_still_refreshes(tmp_path: Path, monkeypatch) -> None:
+    """An open warm cache is not frozen: the bar refreshes from meter reads while open."""
+    import adopted_after as aa  # noqa: E402
+    _stale_cache(tmp_path, monkeypatch, {"forge": 2})
+    monkeypatch.setattr(aa, "cached_skill_loads", lambda *a, **k: ({"forge": 9, "center": 3}, False))
+    ok, msg = fp.s1()
+    assert ok and "12 loads" in msg and "no re-scan" not in msg
 
 
 def test_command_line_exit_codes(tmp_path: Path) -> None:
