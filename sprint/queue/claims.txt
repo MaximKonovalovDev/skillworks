@@ -21,3 +21,12 @@ DR-1007-16 | 342-cure-100716 | 2026-10-08T05:35Z | skills/read-abort-guard/
 SCOUT | researcher-books-scout-6 | 2026-10-08T05:41Z | board row
 BK-1007-12 | 345-book-hexylhex | 2026-10-08T05:46Z | skills/hexyl-hex/
 SCOUT | researcher-doctor-scout-7 | 2026-10-08T06:45Z | board row
+DR-1007-17 | 348-cure-100717 | 2026-10-08T07:17Z | skills/fetch-github-first/
+
+SCOUT | researcher-books-scout-7 | 2026-10-08T07:22Z | board row
+BK-1007-13 | 351-book-hyperfine | 2026-10-08T07:27Z | skills/hyperfine-bench/
+SCOUT | researcher-doctor-scout-8 | 2026-10-08T07:43Z | board row
+DR-1007-18 | 354-cure-100718 | 2026-10-08T07:49Z | skills/grep-overflow-guard/
+SCOUT | researcher-books-scout-8 | 2026-10-08T08:10Z | board row
+BK-1007-14 | 357-book-lsdls | 2026-10-08T08:08Z | skills/lsd-ls/
+SCOUT | researcher-doctor-scout-9 |  | board row
