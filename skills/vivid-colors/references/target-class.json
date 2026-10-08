@@ -1,0 +1,1 @@
+{"direction": "down", "error_regex": "LS_COLORS|export|set -gx|8-bit|ansi|themes|cyan|RRGGBB|foreground|vivid generate|bashrc|fish", "id": "vivid-colors-miss", "tool": "vivid"}

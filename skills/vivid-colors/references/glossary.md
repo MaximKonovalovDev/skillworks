@@ -1,0 +1,46 @@
+# Glossary
+
+- vivid: the LS_COLORS generator on `README.md` line `6`.
+- LS_COLORS: the environment variable vivid generates on line `6`.
+- generator: what vivid is, on line `6`.
+- ls: the colorized consumer on line `7`.
+- fd: the file-find consumer on line `8`.
+- tree: the tree consumer on line `7`.
+- export: the bash builtin enabling a theme on line `36`.
+- bashrc: the shell RC file holding the export on line `33`.
+- molokai: the example theme on line `32` generated on line `36`.
+- fish: the shell using set -gx on line `42`.
+- set -gx: the fish command setting LS_COLORS on line `42`.
+- truecolor: the default 24-bit mode on line `59`.
+- 24-bit: the default color depth on line `59`.
+- 8-bit: the fallback depth forced with -m on line `63`.
+- --color-mode: the option forcing 8-bit on line `60`.
+- -m 8-bit: the short flag form on line `63`.
+- ansi: the theme reusing the terminal palette on line `68`.
+- 16-color: the terminal palette the ansi theme reuses on line `68`.
+- terminal theme: what the ansi theme follows across light and dark mode.
+- filetype database: the extension collection themes stay independent from.
+- dircolors: the one-file tool vivid splits into database plus themes.
+- RRGGBB: the color format on line `15`.
+- database: the filetype file living apart from themes.
+- themes: the color theme files chosen independent of extensions.
+- subfolder: the themes folder holding custom themes on line `79`.
+- explicit path: the direct theme path generate accepts on line `79`.
+- core: the molokai section holding directory plus symlink.
+- directory: the molokai entry with foreground cyan on line `27`.
+- cyan: the directory foreground in molokai on line `27`.
+- symlink: the molokai entry with foreground pink on line `30`.
+- pink: the symlink foreground in molokai on line `30`.
+- foreground: the color key; 23 hits from line `27`.
+- 27: the first `foreground` line setting directory cyan.
+- 30: the symlink `foreground` line setting pink.
+- 36: the first `export` line generating molokai.
+- 6: the first `LS_COLORS` line naming the generator.
+- 42: the fish `set -gx` line.
+- 63: the `-m 8-bit` export line.
+- 71: the `ansi` generate line.
+- 79: the custom-theme `subfolder` plus explicit-path line.
+- 15: the first depth line giving RRGGBB.
+- README.md: the docs file carrying setup plus modes plus themes claims.
+- molokai.yml: the theme file carrying foreground plus core entries.
+- vivid-colors-miss: the failure class id for color-theme misses.

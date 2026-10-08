@@ -1,0 +1,12 @@
+{
+  "skill": "vivid-colors",
+  "runs": 12,
+  "with_rate": 1.0,
+  "without_rate": 0.0,
+  "lift": 1.0,
+  "spread": 1.0,
+  "fingerprint": "57ad9c660e49a1e8ca1476e63e5e762e375c8146a6b6d8ba64890e4ff2a89897",
+  "sheet": "evals/vivid-colors_trials.jsonl",
+  "at": "2026-10-08T11:24Z",
+  "ok": true
+}

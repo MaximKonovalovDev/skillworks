@@ -1,0 +1,10 @@
+{"must": ["vivid", "LS_COLORS", "generator"], "q": "What does vivid generate and which variable carries it to ls?"}
+{"must": ["export", "vivid generate molokai", "bashrc"], "q": "Which export line in bashrc enables molokai through vivid generate?"}
+{"must": ["set -gx", "fish", "vivid generate molokai"], "q": "Which set -gx line enables molokai in fish?"}
+{"must": ["--color-mode", "8-bit", "truecolor"], "q": "Which --color-mode flag forces 8-bit over the truecolor default?"}
+{"must": ["ansi", "16-color", "terminal theme"], "q": "Which ansi theme reuses the 16-color terminal theme?"}
+{"must": ["themes", "subfolder", "explicit path"], "q": "Where does a custom theme live: themes subfolder or explicit path?"}
+{"must": ["cyan", "pink", "symlink"], "q": "In molokai which cyan entry and which pink symlink entry sit under core?"}
+{"must": ["RRGGBB", "24-bit", "dircolors"], "q": "Which RRGGBB spec translates to 24-bit unlike dircolors mixing?"}
+{"must": ["36", "export", "molokai"], "q": "Which README line 36 shows the export generating molokai?"}
+{"must": ["27", "foreground", "cyan"], "q": "Which molokai line 27 sets foreground cyan?"}
