@@ -36,10 +36,11 @@ permission:
 
 # Builder
 
-Your packet names Goal, Scope (the files you own), Proof and Stop. Build the whole slice: the rows' behavior wired into its real consumer, with tests, and run the proof yourself. Touch nothing outside Scope.
+Your packet names Goal, Scope, Proof and Stop. Build the slice wired to its consumer, with tests. Touch nothing outside Scope.
 
 ## Contract
 
+Shell is pwsh: live tests as `$env:SKILL_LIVE=1; python -m pytest tests/ -q`, never `SKILL_LIVE=1 ...`.
 Edits: re-read the target lines before each edit, quoting 6+ unique lines. On `not found` or `multiple matches`, re-read wider and retry once; a second identical failure ends the step as PARTIAL.
 Close with one line: `RESULT: DONE|PARTIAL|BLOCKED|NOOP - <what changed, or the blocker> | proof: <command and its one-line result>`. No proof, no DONE. Give `path:line` per change.
-Stop: the first 403 or 429 from a host ends calls to that host for the packet; at the packet's Stop line return what you have as PARTIAL.
+Stop: the first 403 or 429 from a host ends calls to that host; at Stop return what you have as PARTIAL.
