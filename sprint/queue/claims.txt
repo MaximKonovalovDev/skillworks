@@ -1,36 +1,4 @@
-O-011 | 312-pack-rebuild2 | 2026-10-07T19:33Z | packs/fleet-vol-1/
-SCOUT | researcher-doctor-scout-3 | 2026-10-07T19:45Z | board row DR-1007-13
-DR-1007-13 | 318-cure-100713 | 2026-10-07T19:48Z | skills/read-abort-guard/
-DR-1007-12 | 317-writeabort-fix | 2026-10-07T19:46Z | tools/install_fleet_skills.py
-SCOUT | researcher-books-scout-2 | 2026-10-07T20:04Z | board row
-BK-1007-8 | 322-book-gronjson | 2026-10-07T20:15Z | skills/gron-json/
-
-SCOUT | researcher-books-scout-3 | 2026-10-07T20:45Z | board row
-BK-1007-9 | 325-book-batcat | 2026-10-07T21:13Z | skills/bat-cat/
-SCOUT | researcher-doctor-scout-4 | 2026-10-07T21:55Z | board row
-DR-1007-14 | 328-cure-100714 | 2026-10-07T22:47Z | skills/github-file-guard/
-SCOUT | researcher-books-scout-4 | 2026-10-07T23:47Z | board row
-BK-1007-10 | 331-book-deltadiff | 2026-10-08T00:00Z | skills/delta-diff/
-SCOUT | researcher-doctor-scout-5 | 2026-10-08T02:01Z | board row
-DR-1007-15 | 334-cure-100715 | 2026-10-08T02:22Z | skills/edit-unique/
-O-023 | 336-wire-octokit | 2026-10-08T02:54Z | book2skill/gates.py
-SCOUT | researcher-books-scout-5 | 2026-10-08T02:55Z | board row
-BK-1007-11 | 339-book-sdreplace | 2026-10-08T03:25Z | skills/sd-replace/
-SCOUT | researcher-doctor-scout-6 | 2026-10-08T04:21Z | board row
-DR-1007-16 | 342-cure-100716 | 2026-10-08T05:35Z | skills/read-abort-guard/
-SCOUT | researcher-books-scout-6 | 2026-10-08T05:41Z | board row
-BK-1007-12 | 345-book-hexylhex | 2026-10-08T05:46Z | skills/hexyl-hex/
-SCOUT | researcher-doctor-scout-7 | 2026-10-08T06:45Z | board row
-DR-1007-17 | 348-cure-100717 | 2026-10-08T07:17Z | skills/fetch-github-first/
-
-SCOUT | researcher-books-scout-7 | 2026-10-08T07:22Z | board row
-BK-1007-13 | 351-book-hyperfine | 2026-10-08T07:27Z | skills/hyperfine-bench/
-SCOUT | researcher-doctor-scout-8 | 2026-10-08T07:43Z | board row
-DR-1007-18 | 354-cure-100718 | 2026-10-08T07:49Z | skills/grep-overflow-guard/
-SCOUT | researcher-books-scout-8 | 2026-10-08T08:10Z | board row
-BK-1007-14 | 357-book-lsdls | 2026-10-08T08:08Z | skills/lsd-ls/
 SCOUT | researcher-doctor-scout-9 |  | board row
-SCOUT | researcher-doctor-scout-9 | 2026-10-08T09:29Z | board row DR-1007-19
-DR-1007-19 | 360-cure-100719 | 2026-10-08T09:33Z | skills/edit-abort-guard/
-
 SCOUT | researcher-books-scout-9 | 2026-10-08T10:15Z | board row
+BK-1007-15 | 363-book-vivid | 2026-10-08T11:08Z | skills/vivid-colors/
+SCOUT | researcher-doctor-scout-10 | 2026-10-08T11:29Z | board row
