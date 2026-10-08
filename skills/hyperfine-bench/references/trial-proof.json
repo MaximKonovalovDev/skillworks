@@ -1,0 +1,12 @@
+{
+  "skill": "hyperfine-bench",
+  "runs": 12,
+  "with_rate": 1.0,
+  "without_rate": 0.0,
+  "lift": 1.0,
+  "spread": 1.0,
+  "fingerprint": "ccd3256b10f2aa898b13120e2aac046597fcb64a116f932bde2d754b41af7d2b",
+  "sheet": "evals/hyperfine-bench_trials.jsonl",
+  "at": "2026-10-08T07:34Z",
+  "ok": true
+}

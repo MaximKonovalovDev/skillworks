@@ -1,0 +1,45 @@
+# Glossary
+
+- hyperfine: the command-line benchmark tool on `README.md` line `56`.
+- benchmark: what hyperfine runs with statistics.
+- warmup: the warm-cache option on line `56`.
+- --warmup: the warmup flag spelling with example count 3.
+- parameter-scan: the parameterized benchmark option on line `77`.
+- num_threads: the example thread variable in the scan.
+- {num_threads}: the placeholder spelling inside the make command.
+- --shell=none: the default mode with no intermediate shell.
+- -S: the short flag enabling shell syntax.
+- shell spawning time: the startup time hyperfine subtracts.
+- OUTLIER_THRESHOLD: the outlier cutoff constant on line `11`.
+- 1.4826: the factor converting MAD to a deviation estimate.
+- modified Z-score: the score deciding outlier status.
+- modified_zscores: the helper import on line `17` with 2 hits from line `17`.
+- time_wall_clock: the default wall-time metric name.
+- memory_peak_resident: the default peak-memory metric name.
+- --metrics: the flag with a comma-separated list choosing metrics.
+- CSV: the export format for scripts.
+- JSON: the export format for data.
+- Markdown: the export format for reports.
+- --env: the flag setting benchmark environment variables.
+- OMP_NUM_THREADS: the example thread variable for env runs.
+- HYPERFINE_ITERATION: the per-run iteration variable for log names.
+- MIT License: one of the two offer licences.
+- Apache License 2.0: the other offer licence.
+- LICENSE-APACHE: the license file name proving the Apache side.
+- 56: the first `warmup` line opening the warmup option.
+- 59: the `warmup 3` example command line.
+- 112: the warmup mention in the shell section.
+- 77: the first `parameter-scan` line opening the scan option.
+- 79: the num_threads scan example line.
+- 84: the delay scan example line with step size.
+- 11: the first `OUTLIER_THRESHOLD` line defining the constant.
+- 14: the doc line naming the threshold test.
+- 26: the filter line applying the threshold.
+- 17: the first `modified_zscores` line importing the helper.
+- 23: the scores line calling the helper.
+- README.md: the docs file carrying warmup plus scan plus shell claims.
+- outlier_detection.rs: the source file carrying the outlier threshold.
+- warmup: the warmup token; 5 hits from line `56`.
+- OUTLIER_THRESHOLD: the threshold token; 3 hits from line `11`.
+- parameter-scan: the scan token; 3 hits from line `77`.
+- hyperfine-bench-miss: the failure class id for benchmark-timing misses.

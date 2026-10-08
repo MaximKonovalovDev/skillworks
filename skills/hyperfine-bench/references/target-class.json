@@ -1,0 +1,1 @@
+{"direction": "down", "error_regex": "warmup|OUTLIER_THRESHOLD|parameter-scan|modified_zscores", "id": "hyperfine-bench-miss", "tool": "hyperfine"}

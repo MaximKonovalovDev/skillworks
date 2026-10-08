@@ -1,0 +1,10 @@
+{"must": ["hyperfine", "warmup", "--warmup"], "q": "What does the warmup flag do for a hyperfine benchmark run?"}
+{"must": ["parameter-scan", "num_threads", "{num_threads}"], "q": "Which parameter-scan spelling varies num_threads with {num_threads}?"}
+{"must": ["--shell=none", "shell spawning time"], "q": "Which --shell=none default avoids the shell spawning time overhead?"}
+{"must": ["OUTLIER_THRESHOLD", "modified Z-score"], "q": "Which OUTLIER_THRESHOLD cutoff marks a modified Z-score outlier?"}
+{"must": ["time_wall_clock", "--metrics"], "q": "Which time_wall_clock metric does --metrics choose?"}
+{"must": ["CSV", "JSON", "Markdown"], "q": "Which CSV plus JSON plus Markdown exports cover scripts data reports?"}
+{"must": ["--env", "OMP_NUM_THREADS", "HYPERFINE_ITERATION"], "q": "Which --env OMP_NUM_THREADS plus HYPERFINE_ITERATION names per-run logs?"}
+{"must": ["MIT License", "Apache License 2.0"], "q": "Which MIT License plus Apache License 2.0 covers the slice?"}
+{"must": ["56", "warmup"], "q": "Which README line 56 shows the warmup option?"}
+{"must": ["11", "OUTLIER_THRESHOLD"], "q": "Which outlier_detection.rs line 11 defines OUTLIER_THRESHOLD?"}
