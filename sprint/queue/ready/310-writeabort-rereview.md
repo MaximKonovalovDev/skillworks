@@ -7,7 +7,7 @@ writer: builder
 attempt: 1
 origin_title: repair cure write-abort class (DR-1007-12)
 ---
-Review 303-cure-writeabort-repair, built by builder. Its record: C:\Users\me\Desktop\skillworks\sprint\queue\done\303-cure-writeabort-repair.md (if missing, judge the tree and say so). Rerun its proof yourself, read its diff, check DR-1007-12's done-when as written (12 trial runs with beat 12 without by 0.3; suite equal or better). You never edit.
+Review 303-cure-writeabort-repair, built by builder. Its record: C:\empire\skillworks\sprint\queue\done\303-cure-writeabort-repair.md (if missing, judge the tree and say so). Rerun its proof yourself, read its diff, check DR-1007-12's done-when as written (12 trial runs with beat 12 without by 0.3; suite equal or better). You never edit.
 
 Prior FAIL causes that must be gone: `python tests/live_proof.py write-abort-guard` ended `unknown skill` (missing FLEET wire in book2skill/gates.py plus installer list); stray root chunk.txt plus pycache; empty claim. Verify each is fixed or FAIL it again naming which remains.
 

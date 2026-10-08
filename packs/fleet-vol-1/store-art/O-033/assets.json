@@ -3,7 +3,7 @@
   "assets": [
     {
       "file": "assets/shot.png",
-      "from": "C:/Users/me/Desktop/autonomous-factory/products/skill-pack/fleet-pack/preview/screenshot-pairs.png",
+      "from": "C:/empire/autonomous-factory/products/skill-pack/fleet-pack/preview/screenshot-pairs.png",
       "what": "the customer's own picture screenshot-pairs.png",
       "bytes": 75954,
       "sha256": "ab6d679ee5c079ce2ff034004293552f11977321791a0f51274b1b26c900cb7c",
@@ -11,23 +11,23 @@
     },
     {
       "file": "assets/screenshot-pairs.png",
-      "from": "C:/Users/me/Desktop/autonomous-factory/products/skill-pack/fleet-pack/preview/screenshot-pairs.png",
+      "from": "C:/empire/autonomous-factory/products/skill-pack/fleet-pack/preview/screenshot-pairs.png",
       "what": "same-content factory twin picture for O-033's pack fleet-vol-1 (pack holds no pictures)",
       "sha256": "ab6d679ee5c079ce2ff034004293552f11977321791a0f51274b1b26c900cb7c",
       "bytes": 75954,
       "size": "1280x800",
       "twin": true,
-      "pack": "C:/Users/me/Desktop/skillworks/packs/fleet-vol-1"
+      "pack": "C:/empire/skillworks/packs/fleet-vol-1"
     }
   ],
   "order": "O-033",
-  "preview_dir": "C:/Users/me/Desktop/skillworks/packs/fleet-vol-1",
+  "preview_dir": "C:/empire/skillworks/packs/fleet-vol-1",
   "resolved_from": {
     "product": "order:demo-gif-for-fleet-vol-1-a-bad-command-t",
     "from_repo": "skillworks",
-    "pack_dir": "C:/Users/me/Desktop/skillworks/packs/fleet-vol-1",
+    "pack_dir": "C:/empire/skillworks/packs/fleet-vol-1",
     "twin_dirs": [
-      "C:/Users/me/Desktop/autonomous-factory/products/skill-pack/fleet-pack/preview"
+      "C:/empire/autonomous-factory/products/skill-pack/fleet-pack/preview"
     ]
   },
   "date": "2026-10-04"

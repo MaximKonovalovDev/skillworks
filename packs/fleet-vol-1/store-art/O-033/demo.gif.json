@@ -7,7 +7,7 @@
     "designs/O-033/demo.gif"
   ],
   "source": "real pwsh session on C:\\Users\\me\\AppData\\Local\\Temp\\gifcap-lBh2OX\\notes.txt (PATH scoped to C:\\Windows\\System32;C:\\Windows; Git usr/bin off so bare grep resolves as on stock Windows)",
-  "out": "C:\\Users\\me\\Desktop\\design-studio\\designs\\O-033\\demo.gif",
+  "out": "C:\\empire\\design-studio\\designs\\O-033\\demo.gif",
   "real": true,
   "word": "third",
   "transcript": {

@@ -14,7 +14,7 @@ The judge's PASS copies the ready packet here unchanged except this
 `judge:` field, which then reads `judge: PASS <date>`. Until then it
 reads `judge: pending`, and the mirror matches the ready file exactly.
 
-Review builder-cure-r11, built by builder. Its record: C:\Users\me\Desktop\skillworks\sprint\queue\done\builder-cure-r11.md. Rerun its proof yourself, read its diff, check its row DR-1006-3's done-when as written (partly is FAIL). You never edit.
+Review builder-cure-r11, built by builder. Its record: C:\empire\skillworks\sprint\queue\done\builder-cure-r11.md. Rerun its proof yourself, read its diff, check its row DR-1006-3's done-when as written (partly is FAIL). You never edit.
 
 Lead scoping (binding): F2P class-halving needs adoption plus the 48 h re-scan per the row; judge the trial proxy (12 runs with beat 12 without by 0.3). Concurrent dirty files are out of scope — judge only skills/bash-spawn-guard/, evals/bash-spawn-guard_trials.jsonl, tests/test_bash_spawn_guard.py.
 

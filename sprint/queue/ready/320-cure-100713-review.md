@@ -7,7 +7,7 @@ writer: builder
 attempt: 1
 origin_title: cure read-abort class v0.3.0 bump (DR-1007-13)
 ---
-Review 318-cure-100713, built by builder. Its record: C:\Users\me\Desktop\skillworks\sprint\queue\done\318-cure-100713.md (if missing, judge the tree and say so). Rerun its proof yourself, read its diff, check DR-1007-13's done-when as written (12 trial runs with beat 12 without by 0.3; suite equal or better; partly is FAIL). You never edit.
+Review 318-cure-100713, built by builder. Its record: C:\empire\skillworks\sprint\queue\done\318-cure-100713.md (if missing, judge the tree and say so). Rerun its proof yourself, read its diff, check DR-1007-13's done-when as written (12 trial runs with beat 12 without by 0.3; suite equal or better; partly is FAIL). You never edit.
 
 Run the skill checks and paste each result line: `python tests/live_proof.py read-abort-guard` ends proven; lint or distill check exit 0 (12 rules, body at most 2000 tokens, ASCII); grade 12 runs with/without plus lift; red replay one bad case fails before and passes now with outputs pasted; the bump is additive over v0.2.0 f4906a1, not a revert; `node sprint/check.mjs` PASS.
 

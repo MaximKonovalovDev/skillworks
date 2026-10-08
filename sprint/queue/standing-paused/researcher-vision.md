@@ -12,4 +12,4 @@ A gap: add one line under it: `Proposed (<YYYY-MM-DD>, researcher): <answer> | s
 
 Card: Goal, Scope (`VISION-TABLES.md` plus one card), Proof (links and the proof output), Stop (L 45 min). End with the RESULT line.
 
-Claims: C:/Users/me/Desktop/skillworks/sprint/queue/claims.txt (read and append exactly this path, never the bare basename).
+Claims: C:/empire/skillworks/sprint/queue/claims.txt (read and append exactly this path, never the bare basename).

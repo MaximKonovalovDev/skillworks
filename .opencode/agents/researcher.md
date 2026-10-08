@@ -7,6 +7,7 @@ temperature: 0.6
 options:
   reasoningEffort: high
 permission:
+  "skill-search_*": allow
   "github_*": allow
   "deepwiki_*": allow
   "arxiv_*": allow

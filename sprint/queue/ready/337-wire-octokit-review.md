@@ -7,7 +7,7 @@ writer: builder
 attempt: 1
 origin_title: wire octokit-request into FLEET (O-023)
 ---
-Review 336-wire-octokit, built by builder. Its record: C:\Users\me\Desktop\skillworks\sprint\queue\done\336-wire-octokit.md (if missing, judge the tree and say so). BK-1007-3 DONE 2a39744 landed the skill without a wire; this adds wire only. You never edit.
+Review 336-wire-octokit, built by builder. Its record: C:\empire\skillworks\sprint\queue\done\336-wire-octokit.md (if missing, judge the tree and say so). BK-1007-3 DONE 2a39744 landed the skill without a wire; this adds wire only. You never edit.
 
 Rerun and paste each result line: `python tests/live_proof.py octokit-request` ends proven (was unknown skill); `python tools/install_fleet_skills.py --to C:/Users/me/.config/opencode/skills --check octokit-request` exit 0; `node sprint/check.mjs` PASS.
 

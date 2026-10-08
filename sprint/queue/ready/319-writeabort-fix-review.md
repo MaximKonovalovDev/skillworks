@@ -7,7 +7,7 @@ writer: builder
 attempt: 1
 origin_title: narrow fix write-abort installer wire plus cleanup (DR-1007-12)
 ---
-Review 317-writeabort-fix, built by builder. Its record: C:\Users\me\Desktop\skillworks\sprint\queue\done\317-writeabort-fix.md (if missing, judge the tree and say so). This closes the 310 second-FAIL gaps; skill content stands proven (grade 1.0/0.0 lift 1.0, lint 12/24/763, live 6). You never edit.
+Review 317-writeabort-fix, built by builder. Its record: C:\empire\skillworks\sprint\queue\done\317-writeabort-fix.md (if missing, judge the tree and say so). This closes the 310 second-FAIL gaps; skill content stands proven (grade 1.0/0.0 lift 1.0, lint 12/24/763, live 6). You never edit.
 
 Rerun and paste each result line: `python tools/install_fleet_skills.py --to C:/Users/me/.config/opencode/skills --check write-abort-guard` exit 0; `python tests/live_proof.py write-abort-guard` ends proven; root chunk.txt gone plus no new pycache; claims.txt carries a DR-1007-12 line; `node sprint/check.mjs` PASS.
 

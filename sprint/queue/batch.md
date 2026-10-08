@@ -1,4 +1,4 @@
-# Next batch: skillworks (the keeper rewrites this file, 2026-10-08T15:44:42.376Z)
+# Next batch: skillworks (the keeper rewrites this file, 2026-10-08T16:55:27.933Z)
 
 Send every line below as ONE message of 10 Task calls: subagent_type = the role, description = the title, prompt = `packet: <name>` exactly. The keeper puts each packet's text into its call, so all of them run at once, live in your session. Width 10, CPU-heavy at most 3.
 
@@ -15,6 +15,6 @@ Send every line below as ONE message of 10 Task calls: subagent_type = the role,
 
 Not in this batch (readiness: researcher-toolsmith, lead2, pilot-installer, builder-book).
 
-Failed in the last 24 h (C:\Users\me\Desktop\skillworks\sprint\queue\failed; rewrite what still matters into ready/ under a new name, the rest is history):
+Failed in the last 24 h (C:\empire\skillworks\sprint\queue\failed; rewrite what still matters into ready/ under a new name, the rest is history):
 - 314-book-xsvcsv: no Goal, Scope, Proof, Stop line
 - 313-book-fzffuzzy: no Goal, Scope, Proof, Stop line

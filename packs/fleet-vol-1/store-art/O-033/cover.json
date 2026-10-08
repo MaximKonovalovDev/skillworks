@@ -50,14 +50,14 @@
     "shot-x": "0%",
     "shot-y": "0%"
   },
-  "listing": "C:/Users/me/Desktop/skillworks/packs/fleet-vol-1/listing.md",
+  "listing": "C:/empire/skillworks/packs/fleet-vol-1/listing.md",
   "toBeat": null,
   "landing": "packs/fleet-vol-1/from-design-studio/O-033/",
   "assetsFrom": "factory fleet-pack preview/ screenshot-pairs.png (same Fleet Vol 1 content, buyer-zip pairs table render)",
   "assets": [
     {
       "name": "shot.png",
-      "src": "C:/Users/me/Desktop/autonomous-factory/products/skill-pack/fleet-pack/preview/screenshot-pairs.png",
+      "src": "C:/empire/autonomous-factory/products/skill-pack/fleet-pack/preview/screenshot-pairs.png",
       "what": "the customer's own picture screenshot-pairs.png"
     }
   ]

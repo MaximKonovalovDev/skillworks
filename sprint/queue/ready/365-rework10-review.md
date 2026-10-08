@@ -7,7 +7,7 @@ writer: researcher
 attempt: 2
 origin_title: webfetch timeout sheet rework with real cases
 ---
-Review researcher-doctor-rework-10, built by researcher. Its record: C:\Users\me\Desktop\skillworks\sprint\queue\done\researcher-doctor-rework-10.md. Rerun its proof yourself, read its diff, check DR-1007-20's done-when as written (partly is FAIL). You never edit.
+Review researcher-doctor-rework-10, built by researcher. Its record: C:\empire\skillworks\sprint\queue\done\researcher-doctor-rework-10.md. Rerun its proof yourself, read its diff, check DR-1007-20's done-when as written (partly is FAIL). You never edit.
 
 This is attempt 2 after a FAIL for placeholder tasks. Verify specifically: (a) zero placeholders in evals/webfetch-timeout-1007h_trials.jsonl (real repos, real URL patterns, runnable tasks); (b) the claimed live runner replay (skills/webfetch-retry/scripts/run_fetch_retry.py 12 of 12); (c) the retied before count (63 at 13:02Z). Then the standard checks:
 

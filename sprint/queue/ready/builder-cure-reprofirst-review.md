@@ -7,7 +7,7 @@ writer: builder
 attempt: 1
 origin_title: cure repro-first gate (S50 trial)
 ---
-Review builder-cure-reprofirst, built by builder. Its record: C:\Users\me\Desktop\skillworks\sprint\queue\done\builder-cure-reprofirst.md (if missing, judge the tree and say so). Rerun the proofs yourself, read the diff, check DR-1007-5's done-when as written (trial proxy: 12 runs with beat 12 without by 0.3; suite equal or better). You never edit.
+Review builder-cure-reprofirst, built by builder. Its record: C:\empire\skillworks\sprint\queue\done\builder-cure-reprofirst.md (if missing, judge the tree and say so). Rerun the proofs yourself, read the diff, check DR-1007-5's done-when as written (trial proxy: 12 runs with beat 12 without by 0.3; suite equal or better). You never edit.
 
 Rerun and paste each result line: red replay (one aborted-task case fails before, passes now, with and without outputs pasted); `python tests/live_proof.py repro-first` ends proven (if unknown-skill, the FLEET wire is missing: rule FAIL naming exactly that gap, nothing else); lint or distill check exit 0 (10 or more pairs, body at most 2000 tokens, ASCII); grade 12 runs with/without plus lift; `node sprint/check.mjs` PASS.
 

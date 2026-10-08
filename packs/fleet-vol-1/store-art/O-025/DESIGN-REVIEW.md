@@ -1,7 +1,7 @@
 # DESIGN-REVIEW.md: rubric ds-quality-v1 v1 — 10/10 SHIP
 
 Rubric: ds-quality-v1 (10 fixed checks, ship floor 8/10). Scored by `node tools/judge.mjs`.
-Sample: C:\Users\me\Desktop\design-studio\designs\O-025\brief.json
+Sample: C:\empire\design-studio\designs\O-025\brief.json
 
 ## Score
 

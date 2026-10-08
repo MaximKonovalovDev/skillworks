@@ -31,9 +31,9 @@ SKILLS_DIR = ROOT / "skills"
 REPOS: dict[str, str] = {
     "engine2040": r"C:\engine2040",
     "forge": r"C:\forge",
-    "factory": r"C:\Users\me\Desktop\autonomous-factory",
-    "fp-research": r"C:\Users\me\Desktop\fp-research",
-    "marketing-studio": r"C:\Users\me\Desktop\marketing-studio",
+    "factory": r"C:\empire\autonomous-factory",
+    "fp-research": r"C:\empire\fp-research",
+    "marketing-studio": r"C:\empire\marketing-studio",
 }
 
 
