@@ -18,24 +18,9 @@
   },
   "tool_output": { "max_lines": 250, "max_bytes": 25000 },
   // 2026-10-03 (Maxim): only these providers: Muse 1.3 Go + free, Mimo, 9Router Opus 5.5 + Rgemini.
-  "enabled_providers": ["opencode-go","zen-proxy-muse","zen-proxy-mimo","9router"],
+  "enabled_providers": ["zen-proxy-muse","zen-proxy-mimo"],
   "provider": {
-    "opencode-go": {
-      "whitelist": [
-        "muse-spark-1.3-contributor"
-      ],
-      "models": {
-        "muse-spark-1.3-contributor": {
-          "id": "muse-spark-1.3-contributor",
-          "name": "Muse Spark 1.3 Contributor (Go, paid)",
-          "limit": {
-            "context": 1048576,
-            "input": 900000,
-            "output": 128000
-          }
-        }
-      }
-    },
+    
     "zen-proxy-muse": {
       "name": "Muse Spark 1.3 free via local retry proxy",
       "npm": "@ai-sdk/openai",
@@ -136,76 +121,7 @@
           }
         }
       }
-    },
-    "9router": {
-      "name": "9Router local gateway",
-      "npm": "@ai-sdk/openai-compatible",
-      "options": {
-        "baseURL": "http://127.0.0.1:20129/v1",
-        "apiKey": "9router-local-key",
-        "timeout": 3600000,
-        "chunkTimeout": 3600000
-      },
-      "whitelist": [
-        "opus-5.5",
-        "Rgemini"
-      ],
-      "models": {
-        "opus-5.5": {
-          "id": "cc/claude-opus-5-5",
-          "name": "Claude Opus 5.5 via 9Router (direct)",
-          "limit": {
-            "context": 1000000,
-            "input": 870000,
-            "output": 128000
-          },
-          "variants": {
-            "low": {
-              "reasoningEffort": "low"
-            },
-            "medium": {
-              "reasoningEffort": "medium"
-            },
-            "high": {
-              "reasoningEffort": "high"
-            },
-            "xhigh": {
-              "reasoningEffort": "xhigh"
-            },
-            "max": {
-              "reasoningEffort": "max"
-            }
-          }
-        },
-        "Rgemini": {
-          "id": "Rgemini",
-          "name": "Rgemini combo via 9Router (Opus 5.5)",
-          "limit": {
-            "context": 1000000,
-            "input": 870000,
-            "output": 128000
-          },
-          "variants": {
-            "low": {
-              "reasoningEffort": "low"
-            },
-            "medium": {
-              "reasoningEffort": "medium"
-            },
-            "high": {
-              "reasoningEffort": "high"
-            },
-            "xhigh": {
-              "reasoningEffort": "xhigh"
-            },
-            "max": {
-              "reasoningEffort": "max"
-            }
-          }
-        }
-      }
-    }
-  },
+    }},
   "mcp": {
     "deepwiki": {
       "type": "remote",
