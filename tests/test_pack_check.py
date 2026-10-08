@@ -373,6 +373,15 @@ def test_the_command_line_ends_with_one_result_line_and_the_exit_code_follows(fi
     assert r.returncode == 1 and r.stdout.strip() == f"RESULT FAIL: {tmp_path / 'nowhere'} is not a folder"
 
 
+def test_the_pack_folder_resolves_from_any_working_folder(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.chdir(tmp_path)  # far from the repo: CWD-relative resolve would miss
+    assert pc.resolve_pack_dir("fleet-vol-1") == REAL_PACK
+    assert pc.resolve_pack_dir("packs/fleet-vol-1") == REAL_PACK
+    assert pc.resolve_pack_dir(str(REAL_PACK)) == REAL_PACK
+    missing = pc.resolve_pack_dir("no-such-pack")
+    assert not missing.is_dir() and missing.name == "no-such-pack"
+
+
 def test_the_real_pack_files_match_what_the_listing_says() -> None:
     pack = json.loads((REAL_PACK / "pack.json").read_text(encoding="utf-8"))
     assert pack["slug"] == "fleet-vol-1" and [s["name"] for s in pack["skills"]] == ["pwsh-for-bash-writers", "real-browser-automation", "bevy-rust-ecs"]

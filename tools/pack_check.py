@@ -534,6 +534,40 @@ def check_pack(pack_dir: Path, *, root: Path = ROOT, dist: Path | None = None, o
     return rep
 
 
+def resolve_pack_dir(arg: str) -> Path:
+    """A pack folder that works from any folder: a CWD-relative path wins, else the same
+    path under the repo root, else a bare slug under packs/ (so `fleet-vol-1` finds
+    packs/fleet-vol-1 when run from another checkout like center)."""
+    p = Path(arg)
+    if p.is_absolute():
+        return p.resolve()
+    cwd_p = (Path.cwd() / p).resolve()
+    if cwd_p.is_dir():
+        return cwd_p
+    root_p = (ROOT / p).resolve()
+    if root_p.is_dir():
+        return root_p
+    slug_p = (ROOT / "packs" / p.name).resolve()
+    if slug_p.is_dir():
+        return slug_p
+    return cwd_p  # not found anywhere: report the CWD-relative path as before
+
+
+def resolve_dist_dir(arg: str | None) -> Path | None:
+    if arg is None:
+        return None
+    p = Path(arg)
+    if p.is_absolute():
+        return p.resolve()
+    cwd_p = (Path.cwd() / p).resolve()
+    if cwd_p.exists():
+        return cwd_p
+    root_p = (ROOT / p).resolve()
+    if root_p.exists():
+        return root_p
+    return cwd_p
+
+
 def main(argv: list[str]) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("pack", help="pack folder, e.g. packs/fleet-vol-1")
@@ -545,11 +579,11 @@ def main(argv: list[str]) -> int:
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     except AttributeError:
         pass
-    pack_dir = Path(args.pack).resolve()
+    pack_dir = resolve_pack_dir(args.pack)
     if not pack_dir.is_dir():
         print(f"RESULT FAIL: {args.pack} is not a folder")
         return 1
-    rep = check_pack(pack_dir, dist=Path(args.dist).resolve() if args.dist else None, offline=args.offline,
+    rep = check_pack(pack_dir, dist=resolve_dist_dir(args.dist), offline=args.offline,
                      factory=not args.no_factory)
     for level, what in rep.lines:
         print(f"{level} {what}")
