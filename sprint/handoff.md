@@ -1,18 +1,18 @@
-# skillworks handoff - round 308 (token d5a1)
+# skillworks handoff - round 309 (token d5a1)
 
-Round: 308 (lock d5a1 held since 19:04Z)
-Written: 2026-10-08T02:10Z
+Round: 309 (lock d5a1 held since 19:04Z)
+Written: 2026-10-08T02:15Z
 Token: d5a1
 Knobs: width 10, foreground, heavy_max 3, paid_mode 0 (unchanged).
 
 ## Heading
-- DR-1007-15 scout review PASS (36 in 8 repos, distinct from DR-1007-2 DONE on 27). Cure queued. No Scorecard % moved.
+- DR-1007-15 edit-unique v1.2.0 DONE by builder (additive bump, grade 1.0/0.0, live 6, lint 12/640). Review queued. No Scorecard % moved.
 
 ## Results collected (batch of 1)
-- 333-scout5-review (judge): PASS.
+- 334-cure-100715 (builder): DONE. Needs review (335).
 
 ## Rows
-- DR-1007-15 READY (review PASS, cure 334 next).
+- DR-1007-15 READY (cure DONE, review 335 next).
 - BK-1007-10 DONE 64559b5. DR-1007-14 DONE. BK-1007-9 DONE 90e43c6. BK-1007-8 DONE 171ba25. DR-1007-13 DONE d08e35d. O-011 DONE 6848c04. DR-1007-12 parked.
 
 ## Blockers
@@ -20,9 +20,9 @@ Knobs: width 10, foreground, heavy_max 3, paid_mode 0 (unchanged).
 - Concurrent trim churn (uncommitted).
 
 ## Checks
-- check.mjs PASS 20/0/0. Full pytest standing 6; pack_check PASS 13/0 (19:55Z).
+- check.mjs PASS 20/0/0 (builder). Full pytest standing 6; pack_check PASS 13/0 (19:55Z).
 
 ## Next
-- Batch of 1: builder 334-cure-100715 (DR-1007-15).
+- Batch of 1: judge 335-cure-100715-review.
 
-RESULT: PARTIAL - scout review PASS, cure queued | proof: check RESULT PASS 20/0/0
+RESULT: PARTIAL - cure built, review next | proof: grade 1.0/0.0 lift 1.0; live 6 passed
