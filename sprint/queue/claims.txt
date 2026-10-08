@@ -1,4 +1,3 @@
 SCOUT | researcher-doctor-scout-9 |  | board row
 SCOUT | researcher-books-scout-9 | 2026-10-08T10:15Z | board row
 BK-1007-15 | 363-book-vivid | 2026-10-08T11:08Z | skills/vivid-colors/
-SCOUT | researcher-doctor-scout-10 | 2026-10-08T11:29Z | board row
