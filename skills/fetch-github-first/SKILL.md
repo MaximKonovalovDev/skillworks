@@ -1,7 +1,7 @@
 ---
 name: fetch-github-first
-description: Use when fetching a GitHub repo, file, or release with the web fetch tool and hitting 403 or 404: check the gh API record first, pin the ref, and fall back to the contents call.
-version: 0.1.0
+description: Use when fetching a GitHub repo, file, or release with the web fetch tool and hitting 403 or 404 (github.com page 404, raw host 404, api.github.com 403 rate limit plus 404, guessed URL): check the gh API record first, pin the ref, and fall back to the contents call.
+version: 0.2.0
 author: skillworks
 tags: [github, fetch]
 license: MIT
