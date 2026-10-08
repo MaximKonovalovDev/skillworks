@@ -4,7 +4,7 @@ Date: 2026-10-03 | Owner role: researcher | Pattern: the 8-repo research pattern
 (zero-token hunt lane + topic list + Steal map reads, oldest-first).
 Scope: `research/hunt.md` + Steal map S01-S20 reads only. No code, no VISION edits.
 Proof: this file exists with discover-style queries + topic list + oldest-first
-read order, plus `node C:/Users/me/Desktop/center/vision-check.mjs skillworks`
+read order, plus `node C:/empire/center/vision-check.mjs skillworks`
 no FAIL and `node sprint/check.mjs` PASS.
 Stop: S 25 min per hunt pass — file cards + write the Last-read date back, no implementation.
 

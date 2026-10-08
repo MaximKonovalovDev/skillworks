@@ -35,7 +35,7 @@ Rules every loop shares. Center owns this file: `node loopkit.mjs update` copies
 - Steals: a scout works one part at a time (lowest score first), at most 3 licensed PINs per part, written under "Next steals" in the part's plan. No loose cards. An idea older than 5 days with no spike is archived. Tools and workspace are a part too.
 - Skills: a non-obvious win adds at most 5 lines to the part's skill; a skill line that matches a FAILED note is deleted.
 - Compact: every 5 rounds one compaction (finished rows, duplicate docs, stale ideas, dead code) with gates identical, logged in `team/compact-log.md` (or the handoff).
-- Coach: every 5 rounds, one change to a seat, note or skill, undone if the score did not rise in 3 rounds. Rule sheets: `C:/Users/me/Desktop/center/crews/_shared/` (part-owner, scout, compactor, coach).
+- Coach: every 5 rounds, one change to a seat, note or skill, undone if the score did not rise in 3 rounds. Rule sheets: `C:/empire/center/crews/_shared/` (part-owner, scout, compactor, coach).
 
 ## Stop
 - Ending a turn is not a stop. `[loop-keeper]` messages are not the owner.

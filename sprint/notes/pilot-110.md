@@ -25,7 +25,7 @@ No code, no commits. Opened every capture (READ SKILL.md + make.json below).
 |---|---|---|
 | 5 | `python -m pytest tests/ -q` | 427 passed, 113 skipped (93 s), exit 0 — same as pilot-108/109 |
 | 6 | `node sprint/check.mjs` | RESULT PASS 20 pass 0 warn 0 fail |
-| 7 | `node C:/Users/me/Desktop/center/arsenal.mjs --check skillworks` | RESULT PASS 11 pass 0 warn 0 fail |
+| 7 | `node C:/empire/center/arsenal.mjs --check skillworks` | RESULT PASS 11 pass 0 warn 0 fail |
 | 8 | `python tools/fleet_failures.py scan` | exit 0; top classes with counts + plain-reader text (`128 task: Task cancelled`, `113 edit: Could not find oldString ...`, `85 bash: Tool execution aborted`) — OK, no packet |
 | 9 | `python tools/pack_check.py packs/fleet-vol-1` | RESULT PASS 13 checks 0 warnings (cover + demo + screenshots all PASS) — unchanged since pilot-109 |
 | 9b | `python tools/pack_check.py <scratch>/badpack` (fail path) | RESULT FAIL `FAIL pack.json: cannot read (.../pack.json)` exit 1 — fail path names why, no packet |

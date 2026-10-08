@@ -25,7 +25,7 @@ live-proof.json, not pilot files). No code, no commits. Opened every capture
 |---|---|---|
 | 5 | `python -m pytest tests/ -q` | 427 passed, 113 skipped (66 s). FIXED vs pilot-107 (2 stale live-proof FAILs gone after 2c3025c reseal); improvement, no packet |
 | 6 | `node sprint/check.mjs` | RESULT PASS 20 pass 0 warn 0 fail |
-| 7 | `node C:/Users/me/Desktop/center/arsenal.mjs --check skillworks` | RESULT PASS 11/0/0 |
+| 7 | `node C:/empire/center/arsenal.mjs --check skillworks` | RESULT PASS 11/0/0 |
 | 8 | `python tools/fleet_failures.py scan` | exit 0; top classes with counts + plain-reader text (`180 task: Task cancelled`, `109 edit: Could not find oldString ...`, `109 bash: Tool execution aborted`) — OK, no packet |
 | 8b | `python tools/fleet_failures.py loads --from 2026-10-03T00:00Z --to 2026-10-04T00:00Z` | exit 0; `12 loads ... across 6 repos` — TS-1 exact-window still works on the real thing |
 | 9 | `python tools/pack_check.py packs/fleet-vol-1` | RESULT PASS 13 checks 0 warnings (cover + demo + screenshots all PASS) — was already PASS in pilot-107; screenshots now present, improvement not a defect, no packet |

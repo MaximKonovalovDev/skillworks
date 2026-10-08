@@ -1,13 +1,13 @@
 ---
 role: judge
-title: review book scout (the next licensed book or manual to read)
+title: review skill doctor (fleet failures to a red test and a brief)
 chain: review
-of: researcher-books
+of: researcher-doctor
 writer: researcher
 attempt: 1
-origin_title: book scout (the next licensed book or manual to read)
+origin_title: skill doctor (fleet failures to a red test and a brief)
 ---
-Review researcher-books, built by researcher. Its record: C:\empire\skillworks\sprint\queue\done\researcher-books.md. Rerun its proof yourself, read its diff, check its rows' done-when as written (partly is FAIL). You never edit.
+Review researcher-doctor, built by researcher. Its record: C:\empire\skillworks\sprint\queue\done\researcher-doctor.md. Rerun its proof yourself, read its diff, check its rows' done-when as written (partly is FAIL). You never edit.
 
 Run the check that fits what it made, and paste the result line of each:
 1. A skill (`skills/<name>/`): `python tests/live_proof.py <name>` ends `proven`; `python tools/skill_lint.py <name>` (or `python -m book2skill distill check --skill skills/<name>`) exit 0 (body at most 2000 tokens, every rule has a locator that exists, 10 or more pairs or trials, no scaffold text, ASCII); then 3 of its sample bad cases run once with and once without the skill, outputs pasted. The packet's red replay must have failed before and pass now.
@@ -20,7 +20,7 @@ Always, for every result: (a) `python -m pytest tests/ -q` and `node sprint/chec
 Your whole reply is at most 15 lines: `VERDICT: PASS|FAIL|BLOCKED`, what changed, the checks before and after (commands and numbers, the one real thing named), and how to revert it. A proof you cannot run is BLOCKED, never a guess.
 
 Its result, cut:
-<task id="ses_ee3dd7249ffep32QxWw45VRYtC" state="completed"> <task_result> RESULT: DONE - BK-1007-16 dust-du READY row plus 3 source files into work/dust-du/src plus evals/dust-du_trials.jsonl 12 tasks | proof: node sprint/check.mjs RESULT PASS 20 pass 0 warn 0 fail, https://api.github.com/repos/bootandy/dust spdx Apache-2.0, evals/dust-du_trials.jsonl 12 ids du-a01 to du-r04 </task_result> </task>
+<task id="ses_ee3dd7252ffemj9Vg9lqjtnhPC" state="completed"> <task_result> RESULT: DONE - DR-1007-21 READY task-subagent-guard 34 in 48 h plus evals/task-subagent-1007_trials.jsonl 12 run tasks | proof: sheet tasks 12 run 12 PASS plus node sprint/check.mjs RESULT PASS 20 pass plus scan generatedAt 2026-10-08T15:47Z </task_result> </task>
 
-Keeper facts: run researcher-books (@researcher), book scout (the next licensed book or manual to read).
-RESULT: DONE - BK-1007-16 dust-du READY row plus 3 source files into work/dust-du/src plus evals/dust-du_trials.jsonl 12 tasks | proof: node sprint/check.mjs RESULT PASS 20 pass 0 warn 0 fail, https://api.github.com/repos/bootandy/dust spdx Apache-2.0, evals/dust-du_trials.jsonl 12 ids du-a01 to du-...
+Keeper facts: run researcher-doctor (@researcher), skill doctor (fleet failures to a red test and a brief).
+RESULT: DONE - DR-1007-21 READY task-subagent-guard 34 in 48 h plus evals/task-subagent-1007_trials.jsonl 12 run tasks | proof: sheet tasks 12 run 12 PASS plus node sprint/check.mjs RESULT PASS 20 pass plus scan generatedAt 2026-10-08T15:47Z

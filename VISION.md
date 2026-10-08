@@ -8,7 +8,7 @@ Gives: improved skills for the other 8 loops (finish bars S1, S2: loads counted 
 
 Takes: the skill doctor and its `adopted.csv` from center (S1, S2); the factory's store lane to put one pack live (S3); a real demo GIF from marketing-studio or design-studio (ours is 43 bytes); a model judge from center so the eval grades what a skill answers, not words in its own chunks; real skills from engine2040 and forge to improve.
 
-Finish line: FINISH-LINE.md (node C:/Users/me/Desktop/center/finish.mjs skillworks)
+Finish line: FINISH-LINE.md (node C:/empire/center/finish.mjs skillworks)
 
 Research tables: VISION-TABLES.md
 

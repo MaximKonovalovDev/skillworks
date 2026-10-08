@@ -51,7 +51,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import finish_proof as fp  # noqa: E402  (one place for the record path, the database path and which skills count use)
 
-EMPIRE = Path(os.environ.get("EMPIRE_JSON") or "C:/Users/me/Desktop/center/empire.json")
+EMPIRE = Path(os.environ.get("EMPIRE_JSON") or "C:/empire/center/empire.json")
 WINDOW_H = 48
 MIN_ACTIVITY = 0.5     # the after window needs this share of the before window's shell calls
 MIN_SHELL = 100        # and at least this many shell calls

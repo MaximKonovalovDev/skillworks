@@ -23,7 +23,7 @@ No code, no commits.
 |---|---|---|
 | 5 | `python -m pytest tests/ -q` | 333 passed, 107 skipped (59 s) |
 | 6 | `node sprint/check.mjs` | 20 pass, 0 warn, 1 FAIL: `board: DONE without a commit SHA: K-48` (Evidence cell is `Nit fixed: vol0 831 B`, no SHA; DONE SHA deba548 lives only in handoff round 105; the line's only hex `7cefd5f` sits in What). NOT filed: check.mjs header says a FAIL is the lead's first packet, the keeper carries it. Handoff 105 claims PASS 20/0/0 on unchanged committed board. |
-| 7 | `node C:/Users/me/Desktop/center/arsenal.mjs --check skillworks` | RESULT PASS 11/0/0 |
+| 7 | `node C:/empire/center/arsenal.mjs --check skillworks` | RESULT PASS 11/0/0 |
 | 8 | `python tools/fleet_failures.py scan` | exit 0; top classes with counts and plain-reader error text (`173 task: Task cancelled`, `98 edit: Could not find oldString ...`, `71 bash: Tool execution aborted`) — OK, no packet |
 | 9 | `python tools/pack_check.py packs/fleet-vol-1` | RESULT PASS (10 checks, 3 store-asset NEEDS); stub dir → `FAIL pack.json: cannot read ...` + RESULT FAIL exit 1 — fail path names why, no packet |
 

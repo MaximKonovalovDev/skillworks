@@ -8,7 +8,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 const NAME = "skillworks";
 const MARKER = "Run the skillworks loop from `sprint/board.md` toward `VISION.md`";
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const CENTER_VISION = "C:/Users/me/Desktop/center/vision-check.mjs";
+const CENTER_VISION = "C:/empire/center/vision-check.mjs";
 const out = [];
 const say = (level, what) => out.push([level, what]);
 const read = (rel) => { try { return readFileSync(join(ROOT, rel), "utf8").replace(/\r\n/g, "\n"); } catch { return null; } };

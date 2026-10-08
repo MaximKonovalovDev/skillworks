@@ -19,7 +19,7 @@ Good: the failure class fell by half or more.
 Proof: the 3 rows and the percent each.
 
 ## J3 The MCP server lists every skill
-Start: `python -m pytest tests/test_mcp_schema.py tests/test_mcp_skills_dir.py -q` in C:/Users/me/Desktop/skillworks.
+Start: `python -m pytest tests/test_mcp_schema.py tests/test_mcp_skills_dir.py -q` in C:/empire/skillworks.
 Steps: run it.
 Good: it passes.
 Proof: the printed result line.

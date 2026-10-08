@@ -1,7 +1,7 @@
 {
-  "updated": "2026-10-08T19:36:40Z",
+  "updated": "2026-10-08T20:38:27Z",
   "knobs": {
-    "width": {"value":10,"min":1,"max":30,"step":1,"why":"helpers in one batch"},
+    "width": {"value":1,"min":1,"max":30,"step":1,"why":"helpers in one batch"},
     "dispatch": {"value":"foreground","why":"owner 2026-09-28: every helper seen live"},
     "heavy_max": {"value":3,"min":1,"max":10,"step":1,"why":"CPU-heavy packets in one batch"},
     "helper_max_min": {"value":90,"min":20,"max":240,"step":10,"why":"a helper past this is stopped so its batch ends"},
@@ -41,6 +41,11 @@
     {"at":"2026-10-06T23:13:14Z","knob":"width","from":8,"to":10,"by":"Maxim (Loop Boss)"},
     {"at":"2026-10-08T06:18:16Z","knob":"mcp:arxiv.enabled","from":"on","to":"off","by":"Maxim"},
     {"at":"2026-10-08T16:43:43Z","knob":"mcp:skill-search.added","from":"none","to":"python C:/empire/skillworks/mcp_server/server.py for researcher","by":"Maxim"},
-    {"at":"2026-10-08T19:36:40Z","knob":"agent:builder.variant","from":"high","to":"xhigh","by":"Maxim"}
+    {"at":"2026-10-08T19:36:40Z","knob":"agent:builder.variant","from":"high","to":"xhigh","by":"Maxim"},
+    {"at":"2026-10-08T19:43:00Z","knob":"width","from":10,"to":4,"by":"Maxim (Loop Boss)"},
+    {"at":"2026-10-08T19:43:09Z","knob":"width","from":4,"to":2,"by":"Maxim (Loop Boss)"},
+    {"at":"2026-10-08T20:37:25Z","knob":"width","from":2,"to":1,"by":"Maxim (Loop Boss)"},
+    {"at":"2026-10-08T20:37:29Z","knob":"width","from":1,"to":2,"by":"Maxim (Loop Boss)"},
+    {"at":"2026-10-08T20:38:27Z","knob":"width","from":2,"to":1,"by":"Maxim (Loop Boss)"}
   ]
 }

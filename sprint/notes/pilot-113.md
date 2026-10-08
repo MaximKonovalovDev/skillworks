@@ -28,7 +28,7 @@ below).
 |---|---|---|
 | 7 | `python -m pytest tests/ -q` | 579 passed, 140 skipped (97 s), exit 0 — up from pilot-112 434/116 (BK-1005-2 repair suite) |
 | 8 | `node sprint/check.mjs` | RESULT PASS 20 pass 0 warn 0 fail |
-| 9 | `node C:/Users/me/Desktop/center/arsenal.mjs --check skillworks` | RESULT PASS 13 pass 0 warn 0 fail — up from pilot-112 11 (new tool selftests) |
+| 9 | `node C:/empire/center/arsenal.mjs --check skillworks` | RESULT PASS 13 pass 0 warn 0 fail — up from pilot-112 11 (new tool selftests) |
 | 10 | `python tools/fleet_failures.py scan` | exit 0; classes with counts in plain-reader text (`108 edit: Could not find oldString ...`, `85 task: Task cancelled`, `82 websearch: StatusCode ...`, `72 bash: Tool execution aborted`, `66 websearch: Missing key at [Q]`) — OK, no packet |
 | 11 | `python tools/pack_check.py packs/fleet-vol-1` | RESULT PASS 13/0/0, exit 0 — pilot-112 stale-zip FAIL FIXED (zip resealed), no packet |
 | 12 | `python tools/pack_check.py <scratch>/badpack` (fail path) | RESULT FAIL `FAIL pack.json: cannot read (.../pack.json)` exit 1 — fail path names why, no packet |

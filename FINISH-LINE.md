@@ -1,7 +1,7 @@
 # Finish line: skillworks (2026-10-03, bars rewritten 2026-10-04)
 
 What "done" means for skillworks, as bars: skills that make the other loops better, and packs people can buy.
-`node C:/Users/me/Desktop/center/finish.mjs skillworks` measures every bar; exit 0 means finished.
+`node C:/empire/center/finish.mjs skillworks` measures every bar; exit 0 means finished.
 Maxim's GO 2026-10-03 ("skillworks is for skills getting better over time"); drafted by Claude Code.
 Maxim's YES 2026-10-04: S1 and S2 counted installs and were met on day one, so they now count real loads; S5 and S6 added.
 

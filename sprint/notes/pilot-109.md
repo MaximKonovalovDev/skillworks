@@ -25,7 +25,7 @@ below).
 |---|---|---|
 | 5 | `python -m pytest tests/ -q` | 427 passed, 113 skipped (100 s), exit 0 — same as pilot-108, reseal still green |
 | 6 | `node sprint/check.mjs` | RESULT PASS 20 pass 0 warn 0 fail |
-| 7 | `node C:/Users/me/Desktop/center/arsenal.mjs --check skillworks` | RESULT PASS 11 pass 0 warn 0 fail |
+| 7 | `node C:/empire/center/arsenal.mjs --check skillworks` | RESULT PASS 11 pass 0 warn 0 fail |
 | 8 | `python tools/fleet_failures.py scan` | exit 0; top classes with counts + plain-reader text (`163 task: Task cancelled`, `109 edit: Could not find oldString ...`, `109 bash: Tool execution aborted`) — OK, no packet |
 | 9 | `python tools/pack_check.py packs/fleet-vol-1` | RESULT PASS 13 checks 0 warnings (cover + demo + screenshots all PASS) — unchanged since pilot-108 |
 | 9b | `python tools/pack_check.py <scratch>/badpack` (fail path) | RESULT FAIL `FAIL pack.json: cannot read (.../pack.json)` exit 1 — fail path names why, no packet |

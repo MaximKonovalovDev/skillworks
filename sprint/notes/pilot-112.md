@@ -26,7 +26,7 @@ tests` empty). No code, no commits. Opened every capture (READ SKILL.md
 |---|---|---|
 | 7 | `python -m pytest tests/ -q` | 434 passed, 116 skipped (44 s), exit 0 — up from pilot-111 427/113 (new edit-unique tests) |
 | 8 | `node sprint/check.mjs` | RESULT PASS 20 pass 0 warn 0 fail |
-| 9 | `node C:/Users/me/Desktop/center/arsenal.mjs --check skillworks` | RESULT PASS 11 pass 0 warn 0 fail |
+| 9 | `node C:/empire/center/arsenal.mjs --check skillworks` | RESULT PASS 11 pass 0 warn 0 fail |
 | 10 | `python tools/fleet_failures.py scan` | exit 0; classes with counts in plain-reader text (`131 task: Task cancelled`, `123 edit: Could not find oldString ...`, `87 bash: Tool execution aborted`, `33 edit: Found multiple matches ...`, `23 read missing: 000-tool-sprint.md`) — OK, no packet (read-missing reflects deleted queue files, environmental) |
 | 11 | `python tools/pack_check.py packs/fleet-vol-1` | RESULT FAIL: fleet-vol-1 (2 findings), exit 1 — NEW vs pilot-111 PASS. Filed packet pilot-112-stale-zip.md |
 | 12 | `python tools/pack_check.py <scratch>/badpack` (fail path) | RESULT FAIL `FAIL pack.json: cannot read (.../pack.json)` exit 1 — fail path names why, no packet |

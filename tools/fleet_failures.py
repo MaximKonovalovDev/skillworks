@@ -33,7 +33,7 @@ sys.path.insert(0, str(HERE))
 import finish_proof as fp  # noqa: E402  (one loads counter: S1/S2 and `loads` share skill_loads)
 
 STATE_DIR = Path(os.environ.get("SKILLDOCTOR_DIR") or "C:/Users/me/.empire/state/skilldoctor/")
-EMPIRE = Path(os.environ.get("EMPIRE_JSON") or "C:/Users/me/Desktop/center/empire.json")
+EMPIRE = Path(os.environ.get("EMPIRE_JSON") or "C:/empire/center/empire.json")
 WINDOW_H = 48
 
 FAMILY = {

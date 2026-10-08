@@ -6,7 +6,7 @@
 <task_result>
 Goal: bar S3 (first tested pack for sale, live on a store) — proof today `python tools/finish_proof.py s3` → `open: no listing.md has a 'Live listing: https://...' line yet`; gap is listing/publish readiness, not pipeline.
 Scope: `sprint/steals.md` only (plus the required claim line in `sprint/queue/claims.txt`).
-Proof: donor file read live https://github.com/openclaw/clawhub/blob/00f356544bd4624542cf10b69b5f8097fe397b7a/convex/lib/skillPublish.ts (repo license.spdx_id MIT, default branch main, commit 2026-10-03, read 2026-10-03); own-fleet tool `factory preflight` via `node C:/Users/me/Desktop/center/arsenal.mjs --list` (buyer-file gate: upload zip, store copy, price, AI disclosure); arXiv snippets 2609.39065/2603.21019/2607.02345/2606.23416 read 2026-10-03; homes verified by grep in `book2skill/export.py` and `tools/finish_proof.py` 2026-10-03.
+Proof: donor file read live https://github.com/openclaw/clawhub/blob/00f356544bd4624542cf10b69b5f8097fe397b7a/convex/lib/skillPublish.ts (repo license.spdx_id MIT, default branch main, commit 2026-10-03, read 2026-10-03); own-fleet tool `factory preflight` via `node C:/empire/center/arsenal.mjs --list` (buyer-file gate: upload zip, store copy, price, AI disclosure); arXiv snippets 2609.39065/2603.21019/2607.02345/2606.23416 read 2026-10-03; homes verified by grep in `book2skill/export.py` and `tools/finish_proof.py` 2026-10-03.
 Stop: M 25 min; no 429 hit, GitHub stayed open.
 
 Rejects (one line each, nowhere else):

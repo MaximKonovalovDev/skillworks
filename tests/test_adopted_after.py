@@ -486,7 +486,7 @@ def test_a_corrupt_cache_and_a_missing_database_are_a_miss_never_a_raise(skillwo
 @live
 def test_the_port_reproduces_the_before_numbers_center_counted_in_the_same_window() -> None:
     """Same window, same database: every `before` number of the record and the total shell calls of center's baseline."""
-    base = Path("C:/Users/me/Desktop/center/sprint/notes/skill-feed-baseline-2026-10-03.json")
+    base = Path("C:/empire/center/sprint/notes/skill-feed-baseline-2026-10-03.json")
     if not (fp.ADOPTED.is_file() and base.is_file() and aa.EMPIRE.is_file() and fp._db_path(None).is_file()):
         pytest.skip("the private record, center's baseline or the history is not on this PC")
     doc = json.loads(base.read_text(encoding="utf-8"))

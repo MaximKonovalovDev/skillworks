@@ -123,6 +123,7 @@
       }
     }},
   "mcp": {
+    "skill-search": {"type":"local","command":["python","C:/empire/skillworks/mcp_server/server.py"],"enabled":true,"timeout":30000},
     "deepwiki": {
       "type": "remote",
       "url": "https://mcp.deepwiki.com/mcp",
@@ -133,7 +134,7 @@
       "type": "local",
       "command": [
         "node",
-        "C:/Users/me/Desktop/center/mcp/github-mcp.mjs"
+        "C:/empire/center/mcp/github-mcp.mjs"
       ],
       "enabled": true,
       "timeout": 20000
@@ -157,6 +158,7 @@
     "arxiv_*": "deny",
     "deepwiki_*": "deny",
     "arsenal_*": "deny",
-    "web-search_*": "deny"
+    "web-search_*": "deny",
+    "skill-search_*": "deny"
   }
 }

@@ -16,3 +16,6 @@
 {"at":"2026-10-08T10:53:49.961Z","journey":"J1","score":9,"note":"install seconds, tests pass, eval PASS","evidence":"C:\\Users\\me\\AppData\\Local\\Temp\\opencode\\j1-stranger + RESULT PASS"}
 {"at":"2026-10-08T10:53:51.645Z","journey":"J4","score":8,"note":"Skill text identical single green full still red","evidence":"C:/Users/me/AppData/Local/Temp/opencode/j4tmp/bash-spawn-guard"}
 {"at":"2026-10-08T10:53:53.288Z","journey":"J2","score":9,"note":"Nine halved classes prove S5 met","evidence":"C:/Users/me/.empire/state/skilldoctor/adopted.csv"}
+{"at":"2026-10-08T21:40:27.060Z","journey":"J4","score":8,"note":"Identical text, check green, copy list undocumented","evidence":"AEB9598B x3 + --check exit 0"}
+{"at":"2026-10-08T21:40:27.269Z","journey":"J1","score":7,"note":"old silent-skip fixed; manual omits eval --work","evidence":"git-one-branch --check exit 0, 18 passed 33.43s, eval 14/14 rate 1.0"}
+{"at":"2026-10-08T21:40:27.481Z","journey":"J2","score":10,"note":"CSV clear, three halves verified, trivial math","evidence":"adopted.csv rows 9->1, 6->0, 60->10"}

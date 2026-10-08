@@ -6,71 +6,210 @@
   "stop",
   "new",
   "say",
-  "archive"
+  "archive",
+  "chat",
+  "open"
  ],
- "loaded": "2026-10-03T03:53:04.714Z",
- "code": "2026-10-03T03:53:04.698Z",
+ "loaded": "2026-10-08T16:55:27.376Z",
+ "code": "2026-10-08T16:55:27.371Z",
  "reload": "hot",
- "alive": "2026-10-03T04:08:11.581Z",
- "busy": true,
+ "alive": "2026-10-08T16:55:27.888Z",
+ "busy": false,
  "queue": {
-  "ready": 12,
+  "ready": 74,
   "running": 0,
   "waiting": 0,
-  "done": 4,
-  "failed": 0,
+  "done": 307,
+  "failed": 2,
   "standing": {
-   "packets": 7,
+   "packets": 13,
    "running": 0,
    "resting": 0
   }
  },
  "batch": {
   "mode": "foreground",
-  "width": 2,
+  "width": 10,
   "running": 0,
-  "sent": 2,
-  "sentAt": "2026-10-03T03:56:44.599Z",
-  "next": 2
+  "sent": 0,
+  "sentAt": null,
+  "next": 10
  },
- "session": "ses_f00b1947bffefVaE7u4BHEzfmw",
- "at": "2026-10-03T04:08:11.579Z",
- "decision": "running",
- "reason": "busy, last event 0m ago",
+ "session": "ses_ee83eb511ffeFWl4GAuDafBxlu",
+ "at": "2026-10-08T16:46:30.969Z",
+ "decision": "stopped",
+ "reason": "the owner said stop (\"PAUSE\")",
  "continues": 0,
  "retries": 0,
- "title": "Skillworks sprint loop from board.md",
+ "title": "skillworks /sprint loop",
  "todo": null,
- "helpers": "1 helpers active now, 2 this hour",
+ "helpers": "0 helpers active now, 1 this hour",
  "callFixes": {
-  "since": "2026-10-03T03:53:04.712Z",
+  "since": "2026-10-08T15:26:29.192Z",
   "backgrounded": 0,
   "todoFilled": 0,
   "routed": 0,
   "resultAsked": 0,
-  "packets": 2
+  "packets": 10
  },
- "lastActivity": "2026-10-03T04:08:12.325Z",
+ "lastActivity": "2026-10-08T16:55:27.375Z",
  "readinessSeen": [
   [
    "legacy|planner|research merge (hard judge of the cards)",
    "{\"body\":\"skillworks crew, research merge seat. Read the research cards filed since the last `Merge:` line in `research/INDEX.md` (skip with `RESULT: NOOP - no new cards`). Drop duplicates, reject a card with no existing home or no runnable proof, score the rest 1-5 on net lines deleted, fit with its home, the strength of its proof and low effort, and accept the best (no quota): each accepted card becomes a board row with baseline, metric and proof. A rejected card stays with one `REJECTED <date>: <why>` line.\\n\\nWrite one `Merge: <UTC> | cards N | accepted A | rejected R | dupes D` line in `research/INDEX.md`. Your reply is at most 15 lines, ending with the RESULT line.\",\"fm\":{\"role\":\"planner\",\"title\":\"research merge (hard judge of the cards)\"}}"
+  ],
+  [
+   "legacy|pilot|pilot (the user's view)",
+   "{\"body\":\"skillworks crew, pilot seat. Run only when the product changed: `git log --since=<date of the newest sprint/notes/pilot-view-r*.md> --oneline -- book2skill mcp_server skills tools` prints a commit. None: `RESULT: NOOP - nothing to re-view`. Use the product from a clean start the way its user would, as far as it exists today; include `python -m book2skill make` on a small docs folder; run `python -m pytest tests/ -q` and every command the board says a user runs. Open every capture or output you make. Each defect becomes a one-off packet in `sprint/queue/ready/` with Goal, Scope, Proof and Stop; say what the user sees differently.\\n\\nCard: Goal (what a user tried), Scope (`sprint/queue/ready/`, `sprint/notes/`), Proof (captures and outputs), Stop (M 30 min). End with the RESULT line.\",\"fm\":{\"role\":\"pilot\",\"title\":\"pilot (the user's view)\"}}"
+  ],
+  [
+   "legacy|planner|planner (rows from the vision)",
+   "{\"body\":\"skillworks crew, planner seat. Run only when something changed: a result came back BLOCKED or FAIL since your last run, `sprint/inbox.md` has an unticked item, a finish bar changed (`node C:/empire/center/finish.mjs skillworks`), or `sprint/board.md` has no TOP or READY row. Otherwise `RESULT: NOOP - no input changed`. There is no quota of rows: a row is added only when it moves an open finish bar (S1 and S2 first, then S3) or fixes a failure a judge named, and each names its Scorecard row in `VISION-TABLES.md`, a done-when with `F2P:` (fails today, passes after) and `P2P:` (passes today, must keep passing) commands, and its owner role. While `node C:/empire/center/vision-check.mjs skillworks` FAILs on the vision tables themselves (not on a finish bar proof), fix those first: 5 or more Scorecard rows with 3 or more real competitors each (with sources), 3 or more Open gaps. Before a new row, check it is no repeat of the archived ones (`archive/2026-10-03/board-done.md`, Read by path: searches skip `archive/`). A PARKED row (BLOCKED with a `PARKED` line) stays parked until its stated trigger happens.\\n\\nCard: Goal (the rows or vision sections), Scope (`sprint/board.md`, `VISION-TABLES.md`), Proof (the vision check and the board check output), Stop (M 30 min). End with the RESULT line.\",\"fm\":{\"role\":\"planner\",\"title\":\"planner (rows from the vision)\"}}"
+  ],
+  [
+   "board|C:\\empire\\skillworks\\sprint\\board.md|K-43",
+   "| K-43 | READY | R1 book-to-skill in hours, with receipts | [PIPE] [STEAL-AUDIT] Graded audit: three cost numbers per skill (always-loaded name+description, on-trigger body, on-demand references/), body budget 2000 tokens, description 40-1024 chars with a trigger phrase, name/dir kebab check, broken-link check. Donor asale-ai/anything-to-skill `src/audit.rs` (Apache-2.0 read live 2026-10-03, ideas only, card 2026-10-03-P1.md Card 1). Home book2skill/audit.py; keep `total_tokens` additive. Trainer: `make` prints the same flag (the 920 KB docs trial made a 30,110-token skill) | audit on skills/progit-branching prints the three numbers and flags an over-budget fixture + `python -m pytest tests/ -q` green; `python -m book2skill make` on a fixture over 14000 tokens prints `over budget` | builder |  |"
+  ],
+  [
+   "board|C:\\empire\\skillworks\\sprint\\board.md|K-48",
+   "| K-48 | READY | R6 shop proof (sales, demos, price evidence) | [PIPE] [NC-FREE-REAL-EVAL-1003] Fix center deep audit 6 (inbox EB-2026-10-03-S66, K-27 verdict a DONE 7cefd5f): (1) build.py gate NC source never priced plus vol0-sample.md line 5 paid Vol 1 $10 removed plus SKILL.md scaffold MIT line fixed, (2) strip Gutenberg header/footer from freud/james chapters/notes.md at build time, (3) eval grades SKILL answers not source chunks and fails on broken skill, (4) demo/demo.gif real or Demo line removed (today 43 B), (5) patterns.md 174 B stub fixed or deleted, (6) VISION one measured number per row (today freud 0.5 vs 0.833). No repeat K-27 K-28 K-39 (archive read 2026-10-03). Serves S3 | F2P: vol0-sample.md has no paid Vol 1 $10 line plus build.py refuses price on NC source plus eval fails on broken skill plus demo real or no Demo line plus patterns.md not 174 B stub plus freud notes.md has no Gutenberg header plus VISION one number per row (today all 6 fail); P2P: `node sprint/check.mjs` PASS (today 20/0/0) plus `node C:/empire/center/vision-check.mjs skillworks` PASS (today 7 pass 0 fail) plus `python -m pytest tests/` green outside tests/test_export_zip.py (today 146 passed, 4 ZIP fails are K-41 work) | builder | Inbox EB-2026-10-03-S66 Maxim fix all 6. Finish 3/4 S3 open S1 S2 met. Today: vol0 line 5 $10, build.py MIT no gate, eval.py chunks, demo 43 B, patterns 174 B, notes header, VISION 0.5 vs 0.833 |"
+  ],
+  [
+   "board|C:\\empire\\skillworks\\sprint\\board.md|TS-2",
+   "| TS-2 | READY | R1 book-to-skill in hours, with receipts | [TOOL] distill kit: book2skill distill plan (reading packets of at most 6000 tokens with locators) and distill check (body at most 2000 tokens, every rule has a locator that exists in the chunks, 10 or more pairs or trials, no scaffold text, ASCII), tools/skill_lint.py as its CLI, prompts/distill-v2.md replacing the unused 12-line prompt; the gates of tests/skill_gates.py move into book2skill/gates.py (one code path) | F2P: distill check on skills/freud-dream-psychology exits 1 and names the scaffold text and missing locators; on skills/pwsh-for-bash-writers exits 0; distill plan on work/progit-branching writes packets of at most 6000 tokens. P2P: python -m pytest tests/ -q green. Closes K-43 | researcher | Donors: anthropics/skills skill-creator scripts/quick_validate.py and package_skill.py (Apache-2.0, LICENSE.txt in its folder read 2026-10-04), asale-ai/anything-to-skill src/audit.rs (Apache-2.0). First job: the cure smith's first skill must pass it. Used by: cure smith, book smith, judge |"
+  ],
+  [
+   "board|C:\\empire\\skillworks\\sprint\\board.md|TS-3",
+   "| TS-3 | READY | R2 honest eval gate (Q&A pass rate blocks ship) | [TOOL] skill trial runner: tools/skill_trial.py sheet (the task sheet from evals/NAME_trials.jsonl) and grade (reads work/trials/NAME/with.jsonl and without.jsonl, scores by code: must, must_not, run output; writes skills/NAME/references/trial-proof.json with the keys runs, with_rate, without_rate, lift, spread, fingerprint; finish bar S6 reads runs, with_rate and lift) | F2P: grade on a 12-task fixture prints both rates and the lift and exits 1 under 10 runs, a with-skill rate under 0.8 or a lift under 0.3; an answer to a run task with no run output is refused. P2P: python -m pytest tests/ -q green. Supersedes the parked K-42 | researcher | Donors: anthropics/skills skill-creator scripts/aggregate_benchmark.py and its with-skill versus baseline layout (Apache-2.0), ai-evos/agent-skills shared/eval_framework.py baseline lift (Apache-2.0, read 2026-10-03). First job: the installer's stranger run of the cure smith's first skill, 12 tasks. Used by: installer, judge, book smith |"
+  ],
+  [
+   "board|C:\\empire\\skillworks\\sprint\\board.md|TS-5",
+   "| TS-5 | READY | R6 shop proof (sales, demos, price evidence) | [TOOL] pack gate: tools/pack_check.py PACK_DIR stages a scratch copy laid out like a factory product (listing folder, listing/price.txt, one zip in dist, JUDGE.md with our judge PASS) and calls the factory buyer-file gate audit() from engine/publish_preflight.py read-only (arsenal; that script only accepts folders under the factory products folder, so the tool imports audit and does not run its command line), and adds ours: licence credit per skill, no NonCommercial price, live and trial proofs current, ZIP importable with SKILL.md at the root, price evidence URLs answer 200, demo over 10 KB, no scaffold text, publish-readiness fields; prints findings and RESULT PASS or FAIL. Lands the 3 open S3 lines of sprint/steals.md in one tool | F2P: pack_check on a stub pack folder prints FAIL with the named findings and exits 1; on a fixture pack that is right prints RESULT PASS; python tools/finish_proof.py s3 is unchanged. P2P: python -m pytest tests/ -q green | researcher | Donors: factory preflight (own, arsenal), openclaw/clawhub convex/lib/skillPublish.ts (MIT, pinned in steals.md), cchao123/skills-manager marketplace fields (MIT). First job: the pack maker's fix list for the Fleet Vol 1 folder. Used by: pack maker, installer, judge |"
+  ],
+  [
+   "board|C:\\empire\\skillworks\\sprint\\board.md|DR-1004-1",
+   "| DR-1004-1 | READY | R1 book-to-skill in hours, with receipts | [DOCTOR] builder no-edit runs in engine2040, 43 of 108 builder runs a day in 1 repo, read docs ARCHITECTURE plus CODELAW plus RUST-QUALITY under MIT and Apache-2.0 read live 2026-10-04, skill engine-builder | F2P: the class falls by half in 48 h in repos that load the skill, 12 trial runs with the skill beat 12 without by 0.3. P2P: python tests/live_proof.py still proves every skill, python -m pytest tests/ -q green | builder | Before 43 no-edit of 108 builder runs in 24 h per center metrics import 2026-10-04 plus 13 of 35 builder sessions no-edit in 48 h per local read-only scan 2026-10-04. Trials evals/engine-builder_trials.jsonl sheet 12 tasks RESULT PASS, grade RESULT FAIL exit 1 with no arms yet. Proposal and 5 sessions in the private brief, never committed |"
+  ],
+  [
+   "board|C:\\empire\\skillworks\\sprint\\board.md|DR-1004-3",
+   "| DR-1004-3 | READY | R1 book-to-skill in hours, with receipts | [DOCTOR] researcher repo reads guessed in 7 repos, about 29 misses a day, read gh CLI cli/cli under MIT read live 2026-10-04 plus own fleet failure corpus under own licence, skill repo-read-first | F2P: the class falls by half in 48 h in repos that load the skill, 12 trial runs with the skill beat 12 without by 0.3. P2P: python tests/live_proof.py still proves every skill, python -m pytest tests/ -q green | builder | Before 57 guess-shaped reads in 48 h per local read-only scan 2026-10-04 plus skillworks share 19. Trials evals/repo-read-first_trials.jsonl sheet 12 tasks RESULT PASS, grade RESULT FAIL with no arms yet. 5 sessions in the private brief, never committed |"
+  ],
+  [
+   "board|C:\\empire\\skillworks\\sprint\\board.md|DR-1004-2",
+   "| DR-1004-2 | READY | R1 book-to-skill in hours, with receipts | [DOCTOR] edit stale oldString misses in 9 repos, 98 misses in 48 h, read fleet failure corpus under own licence plus PowerShell-Docs about Parsing plus about Special Characters under CC-BY-4.0 text and MIT code read live 2026-10-03, skill edit-reread | F2P: the class falls by half in 48 h in repos that load the skill, 12 trial runs with the skill beat 12 without by 0.3. P2P: python tests/live_proof.py still proves every skill, python -m pytest tests/ -q green | builder | Before 98 Could-not-find misses in 48 h per local read-only scan 2026-10-04 plus 77 sessions with oldString errors. Trials evals/edit-reread_trials.jsonl sheet 12 tasks RESULT PASS, grade RESULT FAIL with no arms yet. 5 sessions in the private brief, never committed |"
+  ],
+  [
+   "board|C:\\empire\\skillworks\\sprint\\board.md|DR-1005-7",
+   "| DR-1005-7 | READY | R1 book-to-skill in hours, with receipts | [DOCTOR] RED baseline plus trials registry for S5 with required red_runs baseline in trial plus numbered run registry plus change log so S5 proof is a query. Serves R1 fixes S5 open | F2P: first real before-to-after halving recorded with RED baseline in run form. P2P: python -m pytest tests/ -q green plus node sprint/check.mjs PASS plus loads scan unchanged | builder | Inbox EB-2026-10-05-S47. No repeat per board plus archive 2026-10-03 plus 2026-10-04 read 2026-10-05 |"
+  ],
+  [
+   "board|C:\\empire\\skillworks\\sprint\\board.md|BK-1005-2",
+   "| BK-1005-2 | READY | R4 domain packs beyond dev wrappers | [BOOK] Legal book supply Bevy plus docs slice with Bevy engine Apache-2.0 plus MIT plus Bevy cheatbook code MIT-0 plus Playwright docs CC-BY-4.0 plus PowerShell docs CC-BY plus MIT code as next slices each small and mapped to one fleet failure class. Serves R4 | F2P: one new BK row names source SHA plus license read live plus 12-task sheet. P2P: work stays ignored plus python -m pytest tests/ -q green plus node sprint/check.mjs PASS | builder | Inbox EB-2026-10-05-S49. No repeat per board plus archive 2026-10-03 plus 2026-10-04 read 2026-10-05. NC plus SA plus AGPL never sold |"
+  ],
+  [
+   "board|C:\\empire\\skillworks\\sprint\\board.md|BK-1006-1",
+   "| BK-1006-1 | READY | R1 book-to-skill in hours, with receipts | [BOOK] pwsh-docs skill from MicrosoftDocs slash PowerShell-Docs at a3de8f22: parsing quoting comparison splatting redirection and chain rules for the pwsh confusion class, sources in work/pwsh-docs/src/ git-ignored never committed, licence CC-BY-4.0 text plus MIT code read live 2026-10-06, trials evals/pwsh-docs_trials.jsonl 12 tasks | F2P: python tools/skill_trial.py grade --skill pwsh-docs on 12 runs shows with_rate 0.8 or more and lift 0.3 or more over bare baseline. P2P: python -m pytest tests/ -q green and node sprint/check.mjs PASS | builder | source https://github.com/MicrosoftDocs/PowerShell-Docs commit a3de8f22552170e70852470d46cd52cd9ca471ec on main pushed 2026-09-24, 11 files downloaded 2026-10-06 into work/pwsh-docs/src/ sha256 parsing=6a5e639918465a92f11ca674a78c02b849638600aba8d703c1c61d6a3ebfcc84 special_characters=3dbfaaf25dd6b6225e480f29d3cedff413f80148157bb2b63312b6d26adaea16 quoting_rules=d73b84a68aa11f0623a91ee18d656230098ec7bf656da44a9a7f4e0d472752d2 pwsh=6237731762df03b74e9768c30a228d9f03ab6ba98c39b03d6635e7e237cc3bb2 comparison_operators=c3d217e1f47a9f6152e12f73eba5bc43f89b7333309615e41f33c142da689e91 operators=55a186503066c250aedace3a478574e1a7e6e92af694792df64deedbb7fe3cc1 pipelines=41867fc30785979dbba303619288e52d0fdcb2c107d51788ad82f070499ef15e pipeline_chain_operators=c6ab48e5191dd6379cb9ba3b1ae3573e8fc362eda360c14e74e5e3abcdaf4ec0 redirection=6d8b9e2ee7b79d8a716e24d3d49167c8ec30a3fbdf52879494bcff41b6ae21f2 splatting=5d9b431897e714988a4f9cb9bba0d411e3851b71debdcddd6ff173c467149b41 automatic_variables=802cf17e9a5f2bd392f6502f52c1ec6e1f6e03fb091b338d9a6e8517595e3e93, API licence spdx NOASSERTION with LICENSE blob sha 94574aed04248524d851614509a28acc7c886a61 CC-BY-4.0 plus LICENSE-CODE blob sha c2b3b06c9ed273f1a5ed177c71e571ae410f1ecc MIT read live 2026-10-06, use pwsh confusion class with pwsh family 144 in failures.json 48h window plus edit oldString 108 plus DR-1005-1 with 128 pwsh-family calls, all 5 run commands replayed live today with pwsh exit 0 as pinned. No repeat per board plus archive 2026-10-03 plus 2026-10-04 read 2026-10-06 |"
+  ],
+  [
+   "board|C:\\empire\\skillworks\\sprint\\board.md|DR-1006-1",
+   "| DR-1006-1 | READY | R1 book-to-skill in hours, with receipts | [DOCTOR] webfetch github 403 plus 404 misses in 5 repos, 75 a day, read gh CLI cli slash cli under MIT read live 2026-10-06 plus github docs under CC-BY-4.0 read live 2026-10-06 plus own fleet failure corpus under own MIT licence read live 2026-10-06, skill fetch-github-first | F2P: the class falls by half in 48 h in repos that load the skill, 12 trial runs with the skill beat 12 without by 0.3. P2P: python tests/live_proof.py still proves every skill, python -m pytest tests/ -q green | builder | Before 150 webfetch github 403 plus 404 misses in 48 h per scan 2026-10-06 plus center 135 asset-vault 10 across 5 repos. Trials evals/fetch-github-first_trials.jsonl sheet 12 tasks RESULT PASS. 5 sessions in the private brief, never committed |"
+  ],
+  [
+   "board|C:\\empire\\skillworks\\sprint\\board.md|DR-1006-2",
+   "| DR-1006-2 | READY | R1 book-to-skill in hours, with receipts | [DOCTOR] task Task cancelled after dispatch, 42 a day in 5 repos, read own fleet failure corpus under own MIT licence read live 2026-10-06 plus repo LICENSE MIT read live 2026-10-06, skill task-scope version bump | F2P: the class falls by half in 48 h in repos that load the skill, 12 trial runs with the skill beat 12 without by 0.3. P2P: python tests/live_proof.py still proves every skill, python -m pytest tests/ -q green | builder | Before 85 Task cancelled in 48 h per scan 2026-10-06 with engine2040 43 plus forge 28 plus fp-research 7 plus center 2 plus marketing-studio 5 and 0 loads in 48 h. Trials evals/task-scope_trials.jsonl sheet 12 tasks. Repair 2026-10-06: trial grade PASS 12 runs with 1.0 without 0.0 lift 1.0, live proven, committed d9e06fb judge PASS with note, class-halve pending adoption plus 48 h. 5 sessions in the private brief, skill committed d9e06fb |"
+  ],
+  [
+   "board|C:\\empire\\skillworks\\sprint\\board.md|BK-1006-3",
+   "| BK-1006-3 | READY | R1 book-to-skill in hours, with receipts | [BOOK] gh-cli-manual skill from cli slash cli at 17142e08: host-aware gh api calling plus repo-record-first plus explicit-host precedence plus api_host scope plus CLI syntax for the doctor GitHub-call class, sources in work/gh-cli-manual/src/ git-ignored never committed, licence MIT read live 2026-10-06, trials evals/gh-cli-manual_trials.jsonl 12 tasks | F2P: python tools/skill_trial.py grade --skill gh-cli-manual on 12 runs shows with_rate 0.8 or more and lift 0.3 or more over bare baseline. P2P: python -m pytest tests/ -q green and node sprint/check.mjs PASS | builder | source https://github.com/cli/cli commit 17142e08db2e300b37e6da1ddcfb651eb6d9c587 on trunk committed 2026-10-05 pushed 2026-10-06, 10 files downloaded 2026-10-06 into work/gh-cli-manual/src/ sha256 README=5816da6f27253e6e source=ac46c3d230cfd16c api-and-hosts=e248df6eec28911e api-host=cbbd621e31c76ee1 syntax=7e82ec0d35b5f06e gh-vs-hub=d95917e620e2da40 layout=e4b3d67e9688a396 accounts=6e2caa34b4680fed dev=6a078c39b8fcb438 docs-readme=f8c91cca135f6ba8, API licence spdx MIT with LICENSE blob sha b6a58a9572cbd7e4550f8205a9c4fd199cd442f2 read live 2026-10-06, use doctor GitHub-call class with webfetch 403 api 62 plus webfetch 404 github 36 plus raw 30 plus api 26 plus get_file_contents misses 23 plus search failures 19 plus repomap missing 18 in failures.json 48h window and DR-1004-3 with 57 guess-shaped reads, complements BK-1004-2 READY which covers REST docs while this covers CLI surface, all 4 run commands replayed live today with gh exit 0 as pinned. No repeat per board plus archive 2026-10-03 plus 2026-10-04 read 2026-10-06 |"
+  ],
+  [
+   "changed|C:/Users/me/.empire/state/skilldoctor/lanes.json|pack.token",
+   "\"faa7fa8c\""
+  ],
+  [
+   "board|C:\\empire\\skillworks\\sprint\\board.md|BK-1007-1",
+   "| BK-1007-1 | READY | R1 book-to-skill in hours, with receipts | [BOOK] ripgrep-search skill from BurntSushi slash ripgrep at 3fce3b5b: literal versus regex plus recursive scoping plus gitignore hidden binary filtering plus glob and file-type narrowing plus config file for the edit miss classes, sources in work/ripgrep-search/src/ git-ignored never committed, licence Unlicense plus MIT read live 2026-10-07, trials evals/ripgrep-search_trials.jsonl 12 tasks | F2P: python tools/skill_trial.py grade --skill ripgrep-search on 12 runs shows with_rate 0.8 or more and lift 0.3 or more over bare baseline. P2P: python -m pytest tests/ -q green and node sprint/check.mjs PASS | builder | source https://github.com/BurntSushi/ripgrep commit 3fce3b5bb0236da2df6d99672afb8a719642eca7 on master pushed 2026-08-04, 2 files downloaded 2026-10-07 into work/ripgrep-search/src/ sha256 GUIDE=156337b59d9813beadc8f7489e9e86da9eec2c09e755e6baa31ec2c40c7e77eb FAQ=4359aaf42d65b787d70c94085108c3f4cf3d4169284b5fb60a98085caaa13c81, API licence spdx Unlicense with UNLICENSE blob plus LICENSE-MIT blob read live 2026-10-07, use edit oldString 104 plus multiple matches 27 in failures scan 48h window plus O-005 fp-research edit-guard half, complements BK-1004-2 READY which covers REST docs while this covers search precision, all 4 run commands replayed live today with rg exit 0 as pinned. No repeat per board plus archive 2026-10-03 plus 2026-10-04 read 2026-10-07. Skill files landed 32247f3 judge PASS ripgrep-finish-review (proven 11, grade 1.0/0.25 lift 0.75), wire lines held for gates.py convergence with O-006 plus O-008. DONE 341cee3 convergence (wire plus credit, judge PASS finish-review, proven 11, grade 1.0/0.25 lift 0.75) |"
+  ],
+  [
+   "board|C:\\empire\\skillworks\\sprint\\board.md|DR-1006-6",
+   "| DR-1006-6 | READY | R1 book-to-skill in hours, with receipts | [DOCTOR] bash policy-denied calls after pipe or shell git reach, 130 a day in 12 repos, read own fleet failure corpus under own MIT licence read live 2026-10-06, skill bash-allowlist version bump | F2P: the class falls by half in 48 h in repos that load the skill, 12 trial runs with the skill beat 12 without by 0.3. P2P: python tests/live_proof.py still proves every skill, python -m pytest tests/ -q green | builder | Before 260 denied in 48 h per scan 2026-10-06 plus 3 loads in 48 h per loads forge 2 engine2040 1 plus compare UP. Trials evals/bash-allowlist_trials.jsonl sheet 12 tasks ba-b07 to ba-b12 plus ba-g01 to ba-g06 RESULT PASS. Red 2026-10-06 grade on new sheet with stale arms with_rate 0.5 RESULT FAIL. 3 loaded sessions in the private brief with zero denied after load, gap is fresh-shape coverage. Prior row DR-1005-4 DONE, no open denied row, no claim in last 3 h named it. No repeat per board plus archive read 2026-10-06. 037 judge FAIL 2026-10-06 (row done-when needs 48 h adoption, trials swapped not added, red unauditable), one repair queued. Repair DONE 2026-10-06 (trials 17 tasks +5 no narrowing, red/green recorded ba-nested/sleep/lanes, grade 17 runs 1.0/0.0 lift 1.0), review next. v1.1.0 landed 5b484b5 judge PASS repair-review (trials +5 ADD-only, red auditable, grade 17-run 1.0/0.0) |"
+  ],
+  [
+   "board|C:\\empire\\skillworks\\sprint\\board.md|DR-1006-5",
+   "| DR-1006-5 | READY | R1 book-to-skill in hours, with receipts | [DOCTOR] read Offset out of range misses, 14 a day in 6 repos, read own fleet failure corpus under own MIT licence read live 2026-10-06, skill read-offset-guard version bump | F2P: the class falls by half in 48 h in repos that load the skill, 12 trial runs with the skill beat 12 without by 0.3. P2P: python tests/live_proof.py still proves every skill, python -m pytest tests/ -q green | builder | Before 28 Offset out of range in 48 h per scan 2026-10-06 plus 0 loads in 48 h per loads. Trials evals/read-offset-guard_trials.jsonl sheet 12 tasks RESULT PASS. 5 sessions in the private brief, skill installed shared read-offset-guard. Prior brief 2026-10-05 before 18 under-bar PARTIAL, now 14 a day over-bar plus still 0 loads. Distinct from DR-1004-2 edit-reread plus DR-1006-4 edit-verify which cover oldString misses, this clamps offsets before read. No repeat per board plus archive read 2026-10-06. r7 judge PASS 2026-10-06 v1.1.0 (grade 1.0/0.0 lift 1.0), held for v1.2.0 review then land both. v1.2.0 landed 32c8d66 judge PASS stacked r7+r9 (run_offset 22/22, lint 18 rules 816 tok, grade 1.0/0.0) |"
+  ],
+  [
+   "board|C:\\empire\\skillworks\\sprint\\board.md|DR-1006-4",
+   "| DR-1006-4 | READY | R1 book-to-skill in hours, with receipts | [DOCTOR] lint-after-edit prompt upgrade for edit oldString misses, 105 in 48 h, verify-edited-files plus lint suffix from cline aider donors under Apache-2.0 read live 2026-10-06, skill edit-verify new | F2P: the class falls by half in 48 h in repos that load the skill, 12 trial runs with the skill beat 12 without by 0.3. P2P: python tests/live_proof.py still proves every skill, python -m pytest tests/ -q green | builder | Before 105 Could-not-find misses in 48 h per scan 2026-10-06 top class. Donors cline cline at cd80a20 plus aider-ai aider at 5dc9490 Apache-2.0 read live 2026-10-06 plus sst opencode edit.ts MIT read live 2026-10-06. Cards 2026-10-06-tool-use-discipline-prompts plus 2026-10-06-edit-miss-guards. Trials evals/edit-verify_trials.jsonl sheet 12 tasks. Distinct from DR-1004-2 edit-reread which reads before edit, this verifies plus lints after edit. Inbox EB-2026-10-06-S50 trial 1 of 5. 4 remain judge score-risk plus repro-first plus batch-first plus brief-gate. Repair 2026-10-06: re-proved land-ready (live 6, lint 12 rules 639 tok, grade 1.0/0.0 lift 1.0), no in-scope defect; seat_guard clears on land, class-halve needs adoption plus 48 h. 036 judge PASS 2026-10-06 land-worthy (live 6 proven, grade 1.0/0.0 lift 1.0, pytest 606 green, check 20/0/0). v0.2.0 bump built 2026-10-06 r10 (5 new pairs 12->17, all proofs green), review next. v0.2.0 landed 97a4250 judge PASS r10-review (5 failed-before pairs now pass, grade 1.0/0.0) |"
+  ],
+  [
+   "changed|C:/Users/me/.empire/state/skilldoctor/lanes.json|book.token",
+   "\"1adbcc34\""
+  ],
+  [
+   "changed|C:/Users/me/.empire/state/skilldoctor/lanes.json|install.token",
+   "\"086a1668\""
+  ],
+  [
+   "changed|C:/Users/me/.empire/state/skilldoctor/lanes.json|doctor.token",
+   "\"6e3b920d\""
+  ],
+  [
+   "board|C:\\empire\\skillworks\\sprint\\board.md|BK-1007-4",
+   "| BK-1007-4 | READY | R1 book-to-skill in hours, with receipts | [BOOK] fd-find skill from sharkdp slash fd at 14dcd92f: hidden plus ignore plus glob plus type plus exclude plus exec file-find scoping for the glob and read-missing class, sources in work/fd-find/src/ git-ignored never committed, licence Apache-2.0 read live 2026-10-07, trials evals/fd-find_trials.jsonl 12 tasks. Serves R1 plus R4 | F2P: python tools/skill_trial.py grade --skill fd-find on 12 runs shows with_rate 0.8 or more and lift 0.3 or more over bare baseline. P2P: python -m pytest tests/ -q green and node sprint/check.mjs PASS | builder | source https://github.com/sharkdp/fd commit 14dcd92fb76ca0ebc2e82671a275f67c790d25fc on master pushed 2026-10-06, 2 files downloaded 2026-10-07 into work/fd-find/src/ sha256 README=9c4547aa703c8bf3 fd.1=0bbd91030f10ad0d, API licence spdx Apache-2.0 with LICENSE-APACHE blob sha c9d7204e8fdba6af0aaf780bb023502055e7b8a4 plus LICENSE-MIT blob sha dfc8683cfb605eeb4949f7ca68b4a60352a27e6d read live 2026-10-07, use glob ripgrep execution failed 6 plus grep JSON record exceeded 5 plus read missing claims 9 plus lock 4 plus 000-tool-sprint 7 plus package 4 in failures scan 48h generatedAt 2026-10-07T07:47Z with no open row on glob or claim-lock misses, complements BK-1007-1 DONE ripgrep-search precision while this covers file-find scoping before reading, all 4 run commands replayed live 2026-10-07 with rg exit 0 as pinned, trials evals/fd-find_trials.jsonl 12 tasks ff-a01 to ff-a08 plus ff-r01 to ff-r04. No repeat per board plus archive 2026-10-03 plus 2026-10-04 plus git log grep fd-find read 2026-10-07. Serves R1 plus R4 |"
+  ],
+  [
+   "board|C:\\empire\\skillworks\\sprint\\board.md|DR-1006-3",
+   "| DR-1006-3 | READY | R1 book-to-skill in hours, with receipts | [DOCTOR] bash ChildProcess.kill spawn kills, 33 a day in 7 repos, read own fleet failure corpus under own MIT licence read live 2026-10-06, skill bash-spawn-guard version bump | F2P: the class falls by half in 48 h in repos that load the skill, 12 trial runs with the skill beat 12 without by 0.3. P2P: python tests/live_proof.py still proves every skill, python -m pytest tests/ -q green | builder | Before 66 kills in 48 h per scan 2026-10-06 plus 4 loads in 48 h per loads center 1 forge 2 fp-research 1 plus compare UP. Trials evals/bash-spawn-guard_trials.jsonl sheet 12 tasks sg2-b01 to sg2-g06. 5 sessions in the private brief, skill committed 11c6070 judge PASS 034, grade 12 runs 1.0/0.0 lift 1.0, class-halve pending adoption plus 48 h. r4 repair PASS 2026-10-06 (test 7 passed live 7 proven), r5 v1.2.0 FAIL paperwork (no with/without for 5 new pairs, proven 25->25), repair queued builder-cure-r5-repair. v1.2.0 landed 1bf87c1 judge PASS 2026-10-06 (live 8 proven, test 8 passed, lint 22 rules 939 tok). v1.3.0 built 2026-10-06 r11 (22->27 pairs, live 9, grade 1.0/0.0), review next. v1.3.0 landed 0af4040 judge PASS r11-review (pairs 22->27, live 8->9, lint 27 rules 1093 tok) |"
+  ],
+  [
+   "changed|C:/Users/me/.empire/state/skilldoctor/lanes.json|product.token",
+   "\"a91bdcd4\""
+  ],
+  [
+   "changed|C:/Users/me/.empire/state/metrics.json|imported",
+   "\"2026-10-07T07:56:19.848Z\""
+  ],
+  [
+   "changed|C:/Users/me/.empire/state/skilldoctor/lanes.json|planner.token",
+   "\"5f90a804\""
+  ],
+  [
+   "changed|C:/empire/skillworks/sprint/lead2-run.json|at",
+   "\"2026-10-07T18:14:16.361Z\""
   ]
  ],
  "shellFixes": {
-  "since": "2026-10-03T03:53:04.711Z",
+  "since": "2026-10-08T15:26:29.192Z",
   "total": 1,
   "head": 1,
   "last": [
    {
-    "at": "2026-10-03T03:58:46.942Z",
-    "from": "git status --short --untracked-files=all | head -n 100; echo \"---CHECKIGNORE---\"; git check-ignore -v work/freud-dream-p...",
-    "to": "git status --short --untracked-files=all | Select-Object -First 100; echo \"---CHECKIGNORE---\"; git check-ignore -v work/..."
+    "at": "2026-10-08T15:31:50.656Z",
+    "from": "git log --oneline -5 -- tools/install_fleet_skills.py; echo ---; git diff HEAD -- tools/install_fleet_skills.py | head -...",
+    "to": "git log --oneline -5 -- tools/install_fleet_skills.py; echo ---; git diff HEAD -- tools/install_fleet_skills.py | Select..."
    }
   ]
  },
- "lastCommand": "997c8170-9df0-4ae9-b075-ffeabb1da878",
- "commandSeen": "2026-10-02T22:13:05.723Z",
- "command": "sprint: sent GO to the sprint session with 4 facts",
- "commandAt": "2026-10-03T03:53:34.736Z"
+ "lastCommand": "4d70280f-e81d-42b5-abd3-e385523fe4eb",
+ "commandSeen": "2026-10-03T23:50:17.083Z",
+ "command": "go: sent GO to the sprint session with 2 facts",
+ "commandAt": "2026-10-08T15:26:28.761Z",
+ "retired": [
+  "ses_ef3ca8ecaffeH1zbGwWZnwBQRx",
+  "ses_ef0b4641affet5Ns1JjlxPIbxF",
+  "ses_eef3420dbffenIAy5rMqhE70v1",
+  "ses_eeebc2110ffeErzce9EN52vfns",
+  "ses_eee6712ebffejev1hHbp5qFTH3",
+  "ses_eee4a62e8ffenLgWcLnTTcPp7i",
+  "ses_eeaf119b2ffecJw9i1ymlEK2F0",
+  "ses_eea855c78ffeqrqDSu1sVsbeZX",
+  "ses_ee8cf5126ffeiTU1c8g7zT2YLN",
+  "ses_ee8814010ffeOTdwKRqyH2A1X1"
+ ],
+ "said": "Paused. No dispatch, nothing landed. RESULT: BLOCKED - PAUSE received, 10 results unrecorded | proof: none",
+ "knobsSeen": "2026-10-06T00:14:22Z",
+ "knobsSeenAt": "2026-10-06T13:06:58.245Z",
+ "freshCtxAt": "2026-10-07T19:05:06.036Z",
+ "resume": "say GO in the skillworks /sprint session, press GO in the popper, or run /sprint there"
 }

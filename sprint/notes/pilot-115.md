@@ -28,7 +28,7 @@ ships nowhere (both export paths hold). No packet per K-54.
 | 7 | `python -m pytest tests/ -q` | 1 failed, 585 passed, 143 skipped (72 s). ONLY failure: `test_seat_guard::test_real_skills_tree_has_no_untracked_files` flags 5 untracked files under `skills/playwright-docs/` — the concurrent builder-book-r3 run (claimed BK-1006-2 12:23Z, same minute) mid-build, not clean-HEAD product. Round 220 handoff reports 586 green on a clean tree; 585+1=586 matches. No packet (round dirt, cf. pilot-114 honesty note) |
 | 8 | fetch-red re-proof (pilot-114's 3 reds vs a8b4cfe) | `tests/test_fetch_github_first.py` 3 passed 3 skipped; `-k "pairs_md or live_proof and fetch"` 16 passed; gate needle `cli/cli (MIT)` with paren restored at `book2skill/gates.py:61` — all 3 reds FIXED, no packet |
 | 9 | `node sprint/check.mjs` | RESULT PASS 20 pass 0 warn 0 fail |
-| 10 | `node C:/Users/me/Desktop/center/arsenal.mjs --check skillworks` | RESULT PASS 13 pass 0 warn 0 fail (every arsenal tool's test) |
+| 10 | `node C:/empire/center/arsenal.mjs --check skillworks` | RESULT PASS 13 pass 0 warn 0 fail (every arsenal tool's test) |
 | 11 | `python tools/fleet_failures.py scan` | exit 0; classes with counts in plain-reader text (`123 edit: Could not find oldString ...`, `83 task: Task cancelled`, `82 websearch: StatusCode ...`, `73 bash: Tool execution aborted`, `66 bash: Unknown: ChildProcess.kill ...`) — OK, no packet |
 | 12 | `python tools/pack_check.py packs/fleet-vol-1` | RESULT PASS 13/0/0, exit 0 — holds, no packet |
 | 13 | `python tools/pack_check.py <scratch>/badpack` (fail path) | RESULT FAIL `FAIL pack.json: cannot read (.../pack.json)` exit 1 — fail path names why, no packet |

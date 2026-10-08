@@ -26,7 +26,7 @@ Opened every capture (READ SKILL.md + make.json below).
 |---|---|---|
 | 5 | `python -m pytest tests/ -q` | 427 passed, 113 skipped (84 s), exit 0 — same as pilot-108/109/110 |
 | 6 | `node sprint/check.mjs` | RESULT PASS 20 pass 0 warn 0 fail |
-| 7 | `node C:/Users/me/Desktop/center/arsenal.mjs --check skillworks` | RESULT PASS 11 pass 0 warn 0 fail |
+| 7 | `node C:/empire/center/arsenal.mjs --check skillworks` | RESULT PASS 11 pass 0 warn 0 fail |
 | 8 | `python tools/fleet_failures.py scan` | exit 0; top classes with counts + plain-reader text (`131 task: Task cancelled`, `118 edit: Could not find oldString ...`, `86 bash: Tool execution aborted`) — OK, no packet |
 | 8b | `python tools/fleet_failures.py loads --from 2026-10-03T00:00Z --to 2026-10-04T00:00Z` | exit 0; `0 loads ... across 0 repos: none` — was 12 loads across 6 repos in pilot-108; tool code unchanged since 0217c83 (git log), live opencode.db rotated (2 GB, written today); environmental, not a product defect, not filed (TS-1 DONE/owned) |
 | 8c | `python tools/fleet_failures.py loads --from 2026-10-04T00:00Z --to 2026-10-05T00:00Z` | exit 0; `25 loads ... across 7 repos` — loads counting works on the real thing |

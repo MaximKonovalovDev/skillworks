@@ -20,7 +20,7 @@
 ## Check sweep
 - `python -m pytest tests/ -q`: 1 failed, 640 passed, 166 skipped in 74s. Only failure: tests/test_seat_guard.py::test_real_skills_tree_has_no_untracked_files (19 untracked files; includes this pilot's skills/pilot-240-view/ plus in-flight DR-1006-12 read-abort-guard skill files). Re-run after pilot scratch removal below.
 - `node sprint/check.mjs`: RESULT PASS 20/0/0.
-- `node C:/Users/me/Desktop/center/arsenal.mjs --check skillworks`: RESULT PASS 13/0/0.
+- `node C:/empire/center/arsenal.mjs --check skillworks`: RESULT PASS 13/0/0.
 - `python tools/fleet_failures.py scan`: top classes with counts + plain error text, e.g. `172 edit: Could not find oldString...`, `109 bash: Unknown: ChildProcess.kill ...`, `96 bash: Tool execution aborted`, `82 websearch: StatusCode...`, `66 websearch: Missing key...` — readable, no defect.
 - `python tools/pack_check.py packs/fleet-vol-1`: RESULT PASS (12 pass, 1 warning: price-evidence URLs no answer; store assets present; zips current).
 

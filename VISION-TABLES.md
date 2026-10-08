@@ -1,6 +1,6 @@
 # VISION tables: skillworks (moved out of VISION.md 2026-10-03)
 
-The research tables of `VISION.md`. The planner and the lead edit them here (the vision researcher seat retired 2026-10-04; the toolsmith updates a Parts row when its tool lands); `VISION.md` stays the short top every agent re-reads. `node C:/Users/me/Desktop/center/vision-check.mjs skillworks` reads both files as one text.
+The research tables of `VISION.md`. The planner and the lead edit them here (the vision researcher seat retired 2026-10-04; the toolsmith updates a Parts row when its tool lands); `VISION.md` stays the short top every agent re-reads. `node C:/empire/center/vision-check.mjs skillworks` reads both files as one text.
 
 ## Scorecard: skillworks against the best (percent of our final bar)
 

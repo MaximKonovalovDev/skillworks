@@ -5,7 +5,7 @@ MCP dev research teams. Builds MCP servers, gateways, sec gates. MCP is agent to
 The proof that this vision is met: `node sprint/check.mjs`.
 
 This file is the ground the research loop reaches for. The current research
-crew owns bounded sweeps; `node C:/Users/me/Desktop/center/vision-check.mjs
+crew owns bounded sweeps; `node C:/empire/center/vision-check.mjs
 mcp-forge` FAILs until the Scorecard, Parts, gaps and Steal map below are filled
 in and kept fresh. Filling them is the loop's first work.
 

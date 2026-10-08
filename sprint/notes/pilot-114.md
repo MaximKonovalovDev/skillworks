@@ -28,7 +28,7 @@ every capture (READ SKILL.md + make.json + test + sources + proof below).
 |---|---|---|
 | 7 | `python -m pytest tests/ -q` | 3 failed, 583 passed, 143 skipped (181 s) — NEW RED vs pilot-113 579/140 green. All 3 in fetch-github-first (DR-1006-1, committed 2f6f3c0). Filed packet pilot-114-fetch-red.md |
 | 8 | `node sprint/check.mjs` | RESULT PASS 20 pass 0 warn 0 fail |
-| 9 | `node C:/Users/me/Desktop/center/arsenal.mjs --check skillworks` | RESULT PASS 13 pass 0 warn 0 fail |
+| 9 | `node C:/empire/center/arsenal.mjs --check skillworks` | RESULT PASS 13 pass 0 warn 0 fail |
 | 10 | `python tools/fleet_failures.py scan` | exit 0; classes with counts in plain-reader text (`110 edit: Could not find oldString ...`, `85 task: Task cancelled`, `82 websearch: StatusCode ...`, `72 bash: Tool execution aborted`, `66 bash: Unknown: ChildProcess.kill ...`) — OK, no packet |
 | 11 | `python tools/pack_check.py packs/fleet-vol-1` | RESULT PASS 13/0/0, exit 0 — holds, no packet |
 | 12 | `python tools/pack_check.py <scratch>/badpack` (fail path) | RESULT FAIL `FAIL pack.json: cannot read (.../pack.json)` exit 1 — fail path names why, no packet |

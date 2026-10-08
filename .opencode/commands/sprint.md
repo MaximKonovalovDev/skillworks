@@ -16,7 +16,7 @@ row on the board, and the loop goes on. `round` = one round, then hand off.
 `VISION-TABLES.md`: the Scorecard (us against the best, in percent of our own
 final bar), Parts vs the best, Open gaps and the Steal map. The proof
 that the vision is met: `python -m pytest tests/ -q`. Every board row names the Scorecard row it
-moves. While `node C:/Users/me/Desktop/center/vision-check.mjs skillworks` FAILs,
+moves. While `node C:/empire/center/vision-check.mjs skillworks` FAILs,
 the vision is the first work: the planner fills it.
 Direction (Maxim 2026-10-03): skillworks is the trainer of the fleet. Its first
 work is skills other repos load (finish bars S1 and S2 count real loads, the TOP rows of the
@@ -99,7 +99,7 @@ for a build) and Goal, Scope, Proof and Stop lines, or the keeper refuses it.
    then `git push origin HEAD:main`. Start the next round in the same turn.
 
 **Every 5 rounds, the retro (never in other rounds):** read
-`sprint/queue/checks.md` and the keeper log; run `node C:/Users/me/Desktop/center/empire.mjs
+`sprint/queue/checks.md` and the keeper log; run `node C:/empire/center/empire.mjs
 metrics skillworks` only once, the shell kills it at 2 minutes. Name the worst
 repeated failure with its number and write one
 `PROPOSAL: <file> | <change> | <number now>` handoff line. Center applies at

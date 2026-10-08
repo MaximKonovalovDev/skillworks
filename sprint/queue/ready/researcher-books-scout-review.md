@@ -7,11 +7,11 @@ writer: researcher
 attempt: 1
 origin_title: scout next book slice (book lane)
 ---
-Review researcher-books-scout, built by researcher. Its record: C:\Users\me\Desktop\skillworks\sprint\queue\done\researcher-books-scout.md. Rerun its proof yourself, read its diff, check its rows' done-when as written (partly is FAIL). You never edit.
+Review researcher-books-scout, built by researcher. Its record: C:\empire\skillworks\sprint\queue\done\researcher-books-scout.md. Rerun its proof yourself, read its diff, check its rows' done-when as written (partly is FAIL). You never edit.
 
 Run the check that fits what it made, and paste the result line of each:
 1. A skill (`skills/<name>/`): `python tests/live_proof.py <name>` ends `proven`; `python tools/skill_lint.py <name>` (or `python -m book2skill distill check --skill skills/<name>`) exit 0 (body at most 2000 tokens, every rule has a locator that exists, 10 or more pairs or trials, no scaffold text, ASCII); then 3 of its sample bad cases run once with and once without the skill, outputs pasted. The packet's red replay must have failed before and pass now.
-2. A tool (`tools/`, `book2skill/`): its test, `node C:/Users/me/Desktop/center/arsenal.mjs --check skillworks`, the `sprint/steals.md` line says `landed <sha>`, and the first job's output exists (open it).
+2. A tool (`tools/`, `book2skill/`): its test, `node C:/empire/center/arsenal.mjs --check skillworks`, the `sprint/steals.md` line says `landed <sha>`, and the first job's output exists (open it).
 3. A pack (`packs/<slug>/`): `python tools/pack_check.py packs/<slug>` ends `RESULT PASS`; the licence line of every source matches `references/sources.md`; no NonCommercial source has a price.
 4. An install: `python tools/install_fleet_skills.py --to C:/Users/me/.config/opencode/skills --check <name>` exit 0, `opencode debug skill --pure` lists it, the `adopted.csv` row has its before number.
 
