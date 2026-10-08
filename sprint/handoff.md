@@ -1,32 +1,27 @@
-# skillworks handoff - round 345 (token d5a1) RETRO
+# skillworks handoff - round 346 (token d5a1)
 
-Round: 345 (lock d5a1 held since 19:04Z)
-Written: 2026-10-08T05:20Z
+Round: 346 (lock d5a1 held since 19:04Z)
+Written: 2026-10-08T05:25Z
 Token: d5a1
 Knobs: width 10, foreground, heavy_max 3, paid_mode 0 (unchanged).
 
 ## Heading
-- BK-1007-15 vivid-colors skill DONE by builder (grade 1.0/0.0, live 19, FLEET wired). Review queued. No Scorecard % moved.
+- R1 vivid-colors skill LANDED 1c85cc0 (grade 1.0/0.0 lift 1.0, live 19, suite 893 plus 2, all paths owned). No Scorecard % moved.
 
 ## Results collected (batch of 1)
-- fresh builder 363: DONE. Needs review (364).
+- fresh judge 364: PASS. LANDED 1c85cc0.
 
 ## Rows
-- BK-1007-15 READY (build DONE, review 364 next).
+- BK-1007-15 DONE 1c85cc0 judge PASS 364.
 - DR-1007-19 DONE 6bc3375. BK-1007-14 DONE df932f5. DR-1007-18 DONE 0b82666. BK-1007-13 DONE 4aa6aca. BK-1007-12 DONE 06ed811. DR-1007-16 DONE 25bfbb9. BK-1007-11 DONE 0194669. O-023 DONE verified. DR-1007-15 DONE 5734d03. BK-1007-10 DONE 64559b5. DR-1007-14 DONE. BK-1007-9 DONE 90e43c6. BK-1007-8 DONE 171ba25. DR-1007-13 DONE d08e35d. O-011 DONE 6848c04. DR-1007-12 parked.
 
 ## Blockers
-- Keeper repeat-cap: fresh titles every dispatch (holding). Standing suite c02 golden plus seat-untracked.
+- Keeper repeat-cap: fresh titles every dispatch (holding). Board churns under trim (44 lines; rows move in and out).
 
 ## Checks
-- check.mjs PASS 20/0/0 (builder). pack_check PASS 13/0 (02:30Z lead rerun).
-
-## Retro (round 345, import 11:06Z)
-- Judge PASS 65 of 79 (82.3%), tokens per PASS 3.7M (ticked up, still near best), per commit 2.5M. Fail rate 1.6%.
-- Only FAIL head is handled 336. Dead wall time still climbing (+223 min): single-width batches idle the loop between keeper ticks.
-- PROPOSAL (standing): skills/edit-verify/SKILL.md | add planner-plus-lead trigger shapes for oldString misses | edit-oldString 10 (+8) in 48h
+- check.mjs PASS 20/0/0. Full pytest baseline c02 plus seat-untracked; pack_check PASS 13/0 (02:30Z lead rerun).
 
 ## Next
-- Batch of 1: judge 364 vivid sign-off (BK-1007-15).
+- Batch of 1: researcher doctor tenth sweep encore (packet ready).
 
-RESULT: PARTIAL - vivid built, review next | proof: grade 1.0/0.0 lift 1.0; live 19 passed
+RESULT: DONE - 1 landed (1c85cc0) | proof: commit 1c85cc0; grade 1.0/0.0 lift 1.0
