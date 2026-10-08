@@ -25,6 +25,11 @@ Meter reads are cached beside the record in after-scan-cache.json (install windo
 15 minutes), each store saved at once so a run killed at its timeout keeps what it measured. Fills still come
 only from a fresh snapshot; the cache only answers guard checks and `waits` reasons fast.
 
+The S1/S2 meter-read cache lives here too (cached_skill_loads, file loads-scan-cache.json): one 24 h
+skill-loads scan of the multi-GB history costs minutes, past the proof budget, so the trailing-24 h
+reading is reused 15 minutes (about 1% of the window). Counting is never reimplemented here: a miss
+delegates to finish_proof.skill_loads, so the bar meaning cannot drift.
+
 Needs the OpenCode database (read-only) and center's empire.json (repo name to folder), both read at run time.
 """
 from __future__ import annotations
@@ -356,6 +361,87 @@ def _store_after(cache_file: Path | None, now_ms: float, calls: dict, hours: dic
         _save_cache(cache_file, doc)
     except OSError:
         pass
+
+
+# S1/S2 meter-read cache (shared home; finish_proof.py s1/s2 read it through cached_skill_loads).
+# Same shape as the sibling's inline cache ({at_ms, db, loads}; hours/skills keys are only
+# checked when present), so files written on either side stay readable on the other.
+LOADS_CACHE = Path("C:/Users/me/.empire/state/skilldoctor/loads-scan-cache.json")
+LOADS_TTL = 900
+
+
+def _loads_hit(cache_file: Path | None, db_label: str, hours: float, names: list[str], now_ms: float,
+               ttl: float = LOADS_TTL) -> dict[str, int] | None:
+    """Fresh cached per-repo loads, else None (a missing or unreadable cache is a miss, never fatal)."""
+    if cache_file is None:
+        return None
+    try:
+        doc = json.loads(cache_file.read_text(encoding="utf-8-sig"))
+    except (OSError, ValueError):
+        return None
+    if not isinstance(doc, dict) or not isinstance(doc.get("loads"), dict):
+        return None
+    try:
+        at_ms = float(doc.get("at_ms", 0))
+    except (TypeError, ValueError):
+        return None
+    if now_ms - at_ms >= ttl * 1000:
+        return None
+    if doc.get("db") != db_label:
+        return None
+    if "hours" in doc and doc["hours"] != hours:
+        return None
+    if "skills" in doc and sorted(doc["skills"]) != sorted(names):
+        return None
+    try:
+        return {str(r): int(n) for r, n in doc["loads"].items()}
+    except (TypeError, ValueError):
+        return None
+
+
+def _loads_store(cache_file: Path | None, db_label: str, hours: float, names: list[str],
+                 loads: dict[str, int], now_ms: float) -> None:
+    """Save one reading at once (a cache that cannot be written is skipped, never fatal)."""
+    if cache_file is None:
+        return
+    try:
+        cache_file.parent.mkdir(parents=True, exist_ok=True)
+        payload = {"at_ms": now_ms, "db": db_label, "hours": hours, "skills": sorted(names),
+                   "loads": {str(r): int(n) for r, n in loads.items()}}
+        fd, tmp = tempfile.mkstemp(dir=str(cache_file.parent), prefix=".loads-scan-cache-", suffix=".tmp")
+        with os.fdopen(fd, "w", encoding="utf-8", newline="") as fh:
+            fh.write(json.dumps(payload))
+        os.replace(tmp, cache_file)
+    except (OSError, ValueError):
+        pass
+
+
+def cached_skill_loads(db: Path | None = None, *, hours: float | None = None, now_ms: float | None = None,
+                       skills: Path | None = None, own: Path | None = None,
+                       cache_file: Path | None = None, ttl: float = LOADS_TTL) -> tuple[dict[str, int] | None, bool]:
+    """Per-repo loads of this repo's skills for the S1/S2 breadth path: cached meter reads when
+    fresh, else one database scan (so the second proof run answers from the cache).
+
+    The bar meaning is unchanged: counting always delegates to finish_proof.skill_loads (a `skill`
+    tool call naming a skill of this repo, in a session that ran in another repo). The default
+    database (db=None) answers from the default cache file; a file given on the command line or
+    by a test is read as it is, never from the cache (pass an explicit cache_file to cache it,
+    as tests do). Returns (loads, from_cache); loads is None when the database file is missing."""
+    path = fp._db_path(db)
+    if not path.is_file():
+        return None, False
+    cache = LOADS_CACHE if (cache_file is None and db is None) else cache_file
+    now = time.time() * 1000 if now_ms is None else now_ms
+    h = fp.HOURS if hours is None else hours
+    names = sorted(fp._skill_names(skills or fp.SKILLS))
+    if cache is not None:
+        hit = _loads_hit(cache, str(path), h, names, now, ttl)
+        if hit is not None:
+            return hit, True
+    loads = fp.skill_loads(path, hours=h, now_ms=now, skills=skills, own=own)
+    if cache is not None:
+        _loads_store(cache, str(path), h, names, loads, now)
+    return loads, False
 
 
 def plan(rows: list[list[str]], now_ms: float, db: Path, dirs: list[tuple[str, str]], meta: dict[str, str] | None = None,

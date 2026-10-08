@@ -375,6 +375,112 @@ def test_the_command_line_status_prints_one_line_per_row_and_a_summary(world: Wo
     assert lines[-1] == "0 after numbers would be filled, 0 due rows wait for a comparable window, 2 not due yet"
 
 
+# ------------------------------------------------------------------ the S1/S2 breadth cache (shared home)
+
+class SkillWorld:
+    """A skills folder, an own repo and two other repos, with an OpenCode-shaped database of skill calls."""
+
+    def __init__(self, tmp: Path) -> None:
+        self.tmp = tmp
+        self.skills = tmp / "me" / "skills"
+        for name in ("alpha", "beta"):
+            (self.skills / name).mkdir(parents=True)
+            (self.skills / name / "SKILL.md").write_text("---\nname: %s\n---\n" % name, encoding="utf-8")
+        self.own = tmp / "me"
+        (self.own / ".git").mkdir()
+        self.repos = {}
+        for name in ("forge", "center"):
+            d = tmp / name
+            (d / ".git").mkdir(parents=True)
+            self.repos[name] = d
+        self.db = tmp / "opencode.db"
+        con = sqlite3.connect(self.db)
+        con.execute("create table session (id text, directory text, time_updated integer)")
+        con.execute("create table part (session_id text, time_created integer, data text)")
+        con.commit()
+        con.close()
+        self.cache = tmp / "loads-scan-cache.json"
+
+    def load(self, sid: str, directory: Path, skill: str, at_ms: float, tool: str = "skill") -> None:
+        con = sqlite3.connect(self.db)
+        if not con.execute("select 1 from session where id = ?", (sid,)).fetchone():
+            con.execute("insert into session values (?, ?, ?)", (sid, str(directory), at_ms))
+        data = json.dumps({"type": "tool", "tool": tool, "state": {"input": {"name": skill}}})
+        con.execute("insert into part values (?, ?, ?)", (sid, at_ms, data))
+        con.commit()
+        con.close()
+
+    def cached(self, **kw):
+        kw.setdefault("skills", self.skills)
+        kw.setdefault("own", self.own)
+        kw.setdefault("cache_file", self.cache)
+        return aa.cached_skill_loads(self.db, **kw)
+
+
+@pytest.fixture()
+def skillworld(tmp_path: Path) -> SkillWorld:
+    return SkillWorld(tmp_path)
+
+
+def test_cached_skill_loads_counts_only_real_loads_then_answers_from_cache(skillworld: SkillWorld, monkeypatch) -> None:
+    skillworld.load("s1", skillworld.repos["forge"], "alpha", NOW - HOUR)
+    skillworld.load("s1", skillworld.repos["forge"], "alpha", NOW - 2 * HOUR)
+    skillworld.load("s2", skillworld.repos["center"], "beta", NOW - 3 * HOUR)
+    skillworld.load("s3", skillworld.own, "alpha", NOW - HOUR)            # this repo itself does not count
+    skillworld.load("s4", skillworld.repos["forge"], "stranger", NOW - HOUR)  # another repo's skill does not count
+    skillworld.load("s5", skillworld.repos["forge"], "alpha", NOW - HOUR, tool="bash")  # not a skill call
+    loads, from_cache = skillworld.cached(now_ms=NOW)
+    assert loads == {"forge": 2, "center": 1} and from_cache is False
+    assert fp.skill_loads(skillworld.db, skills=skillworld.skills, own=skillworld.own) == loads, "the cache keeps the bar meaning"
+
+    def broken(*a, **k):
+        raise AssertionError("the second call must reuse the loads cache, not rescan")
+
+    monkeypatch.setattr(fp, "skill_loads", broken)
+    again, from_cache = skillworld.cached(now_ms=NOW)
+    assert again == loads and from_cache is True
+    assert not [p for p in skillworld.tmp.iterdir() if p.name.endswith(".tmp")], "the file is replaced atomically, no scratch file left"
+
+
+def test_an_explicit_database_without_a_cache_file_is_read_as_it_is(skillworld: SkillWorld, monkeypatch) -> None:
+    """Production rule: a file given on the command line or by a test never answers from the cache."""
+    skillworld.load("s1", skillworld.repos["forge"], "alpha", NOW - HOUR)
+    calls = 0
+    orig = fp.skill_loads
+
+    def counting(*a, **k):
+        nonlocal calls
+        calls += 1
+        return orig(*a, **k)
+
+    monkeypatch.setattr(fp, "skill_loads", counting)
+    first, hit = aa.cached_skill_loads(skillworld.db, skills=skillworld.skills, own=skillworld.own, now_ms=NOW)
+    second, hit2 = aa.cached_skill_loads(skillworld.db, skills=skillworld.skills, own=skillworld.own, now_ms=NOW)
+    assert (first, second) == ({"forge": 1}, {"forge": 1}) and (hit, hit2) == (False, False) and calls == 2
+
+
+def test_a_stale_cache_or_a_different_window_rescans(skillworld: SkillWorld) -> None:
+    skillworld.load("s1", skillworld.repos["forge"], "alpha", NOW - HOUR)
+    loads, _ = skillworld.cached(now_ms=NOW)
+    assert loads == {"forge": 1}
+    doc = json.loads(skillworld.cache.read_text(encoding="utf-8"))
+    doc["at_ms"] = NOW - (aa.LOADS_TTL * 1000 + 1)
+    skillworld.cache.write_text(json.dumps(doc), encoding="utf-8")
+    aged, hit = skillworld.cached(now_ms=NOW)
+    assert aged == loads and hit is False, "a reading older than the TTL is measured again"
+    other, hit = skillworld.cached(now_ms=NOW, hours=48)
+    assert other == {"forge": 1} and hit is False, "a different window is not answered from the cache"
+
+
+def test_a_corrupt_cache_and_a_missing_database_are_a_miss_never_a_raise(skillworld: SkillWorld, tmp_path: Path) -> None:
+    skillworld.load("s1", skillworld.repos["forge"], "alpha", NOW - HOUR)
+    skillworld.cache.write_text("not json", encoding="utf-8")
+    loads, hit = skillworld.cached(now_ms=NOW)
+    assert loads == {"forge": 1} and hit is False
+    missing, hit = aa.cached_skill_loads(tmp_path / "gone.db", cache_file=tmp_path / "c.json", now_ms=NOW)
+    assert missing is None and hit is False
+
+
 # ------------------------------------------------------------------ against the real history (private, live only)
 
 @live
