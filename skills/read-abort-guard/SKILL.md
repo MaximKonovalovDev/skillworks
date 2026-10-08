@@ -1,7 +1,7 @@
 ---
 name: read-abort-guard
-description: Use when a file read comes back Tool execution aborted after a long call (large file in one read, rerun after the abort, chained reads, no offset and no limit, foreground wait, unclaimed queue packet read, whole brief after handoff): never rerun the whole read, slice to a small offset window with a limit and a timeout, run one slice alone, then report with PASS.
-version: 0.3.0
+description: Use when a file read comes back Tool execution aborted after a long call (large file in one read, rerun after the abort, chained reads, no offset and no limit, foreground wait, unclaimed queue packet read, whole brief after handoff, transcript unbounded read, asset-manifest first screen): never rerun the whole read, slice to a small offset window with a limit and a timeout, run one slice alone, then report with PASS.
+version: 0.4.0
 author: skillworks
 tags: [reads]
 license: MIT

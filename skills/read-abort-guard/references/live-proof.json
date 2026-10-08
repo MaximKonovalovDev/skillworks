@@ -1,9 +1,9 @@
 {
   "skill": "read-abort-guard",
-  "fingerprint": "4da6ce8774d256173e96e50794adb9e64876f0cc4bcba91a3a0c0f9554a4b7dc",
-  "date": "2026-10-07T19:56Z",
+  "fingerprint": "b8c1bd4ea0ea828e1f5d4e768325f62e3a39c129082bcdfac9896f1d446d5a02",
+  "date": "2026-10-08T05:37Z",
   "command": "SKILL_LIVE=1 python -m pytest tests/test_read_abort_guard.py -q",
-  "result": "6 passed in 3.94s",
+  "result": "6 passed in 6.41s",
   "versions": {
     "python": "3.13.14",
     "os": "Windows-10-10.0.19045-SP0",
