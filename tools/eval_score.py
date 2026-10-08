@@ -41,6 +41,7 @@ import argparse
 import hashlib
 import json
 import math
+import random
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -88,6 +89,30 @@ def mean_stderr(xs: list[float]) -> tuple[float, float]:
         return mean, 0.0
     var = sum((x - mean) ** 2 for x in xs) / (n - 1)
     return mean, math.sqrt(var / n)
+
+
+# Steal (fresh port, MIT): seed-fixed 95 percent percentile bootstrap CI idea from
+# michaelofengenden/agenttimebench (MIT, arXiv 2610.09944)
+# https://github.com/michaelofengenden/agenttimebench/blob/main/duration_following/metrics.py
+# (task_bootstrap there; geometric-mean deviation there). Rewritten here for lift
+# paired diffs (arithmetic mean; geometric undefined for -1,0,1) stdlib only.
+def task_bootstrap_ci(scores: list[float], seed: int = 0) -> tuple[float, float]:
+    """Seed-fixed 95 percent percentile bootstrap CI for the mean."""
+    n = len(scores)
+    if n == 0:
+        return 0.0, 0.0
+    if n == 1:
+        return float(scores[0]), float(scores[0])
+    rng = random.Random(seed)
+    n_boot = 2000
+    means = []
+    for _ in range(n_boot):
+        s = sum(scores[rng.randrange(n)] for _ in range(n)) / n
+        means.append(s)
+    means.sort()
+    lo = means[int(0.025 * n_boot)]
+    hi = means[int(0.975 * n_boot) - 1]
+    return lo, hi
 
 
 def grade_qa(items: list[dict], blobs: list[str]) -> dict:
@@ -147,6 +172,7 @@ def lift_with_stderr(tasks: list[dict], with_rows: list[dict],
         for t in tasks
     ]
     lift, lift_stderr = mean_stderr(diffs)
+    ci_lo, ci_hi = task_bootstrap_ci(diffs)
     runs = len(tasks)
     with_rate = round(sum(1.0 if with_out[t["id"]] else 0.0 for t in tasks) / runs, 4)
     without_rate = round(sum(1.0 if without_out[t["id"]] else 0.0 for t in tasks) / runs, 4)
@@ -156,6 +182,8 @@ def lift_with_stderr(tasks: list[dict], with_rows: list[dict],
         "without_rate": without_rate,
         "lift": round(lift, 4),
         "lift_stderr": round(lift_stderr, 4),
+        "lift_ci_lo": round(ci_lo, 4),
+        "lift_ci_hi": round(ci_hi, 4),
     }
 
 
@@ -214,6 +242,8 @@ def cmd_report(args: argparse.Namespace) -> int:
         "without_rate": trials["without_rate"] if trials else None,
         "lift": trials["lift"] if trials else None,
         "lift_stderr": trials["lift_stderr"] if trials else None,
+        "lift_ci_lo": trials["lift_ci_lo"] if trials else None,
+        "lift_ci_hi": trials["lift_ci_hi"] if trials else None,
         "trials_note": trials_note,
         "fingerprint": hashlib.sha256(canonical.encode("utf-8")).hexdigest(),
         "at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%MZ"),

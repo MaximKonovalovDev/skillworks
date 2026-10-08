@@ -127,6 +127,34 @@ def _check_paths(skilldir: Path, out: Path, dest: Path) -> None:
         )
 
 
+# Reproducible-ZIP pattern (donor: pypa/hatch, MIT,
+# https://github.com/pypa/hatch/blob/main/backend/src/hatchling/builders/utils.py:
+# get_reproducible_timestamp default 1580601600, normalize_file_permissions,
+# set_zip_info_mode; wheel.py WheelArchive fixes ZipInfo time_tuple).
+# Ported fresh in our style: fixed ZipInfo time_tuple (SOURCE_DATE_EPOCH-aware)
+# and normalized perms (644/755); stdlib zipfile only.
+_REPRODUCIBLE_EPOCH_DEFAULT = 1580601600
+
+
+def _reproducible_time_tuple() -> tuple:
+    """Fixed ZipInfo date_time so the same bytes hash the same (SOURCE_DATE_EPOCH-aware)."""
+    raw = os.environ.get("SOURCE_DATE_EPOCH", "").strip()
+    try:
+        stamp = int(raw) if raw else _REPRODUCIBLE_EPOCH_DEFAULT
+    except ValueError:
+        stamp = _REPRODUCIBLE_EPOCH_DEFAULT
+    return datetime.fromtimestamp(stamp, timezone.utc).timetuple()[:6]
+
+
+def _normalized_zip_mode(full: str) -> int:
+    """Executable stays 755, everything else 644, whatever the checkout umask was."""
+    try:
+        mode = os.stat(full).st_mode
+    except OSError:
+        return 0o644
+    return 0o755 if (mode & 0o111) else 0o644
+
+
 def _write_zip(dest: Path, zip_path: Path) -> list[str]:
     """Bundle the exported copy as a store-ready ZIP (K-41, STEAL-ZIP).
 
@@ -137,7 +165,10 @@ def _write_zip(dest: Path, zip_path: Path) -> list[str]:
     (``out/<target>/<name>.zip``), never inside it, so a later export never copies
     the archive into itself. Donor idea: yusufkaraaslan/Skill_Seekers
     ``cli/adaptors/claude.py`` (MIT, read live 2026-10-03); stdlib zipfile only.
+    Reproducible-ZIP donor: pypa/hatch (MIT, link above); entries share one fixed
+    time_tuple and normalized perms so reruns are byte-identical.
     """
+    stamp = _reproducible_time_tuple()
     names: list[str] = []
     with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as bundle:
         for here, dirs, files in os.walk(dest):
@@ -154,7 +185,12 @@ def _write_zip(dest: Path, zip_path: Path) -> list[str]:
                 arc = os.path.relpath(full, dest).replace(os.sep, "/")
                 if arc.startswith(".") or "/." in arc:
                     continue
-                bundle.write(full, arc)
+                info = zipfile.ZipInfo(arc, date_time=stamp)
+                info.compress_type = zipfile.ZIP_DEFLATED
+                info.create_system = 3
+                info.external_attr = (_normalized_zip_mode(full) << 16)
+                with open(full, "rb") as handle:
+                    bundle.writestr(info, handle.read())
                 names.append(arc)
     return names
 

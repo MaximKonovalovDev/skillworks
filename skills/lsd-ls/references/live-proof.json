@@ -1,9 +1,9 @@
 {
   "skill": "lsd-ls",
   "fingerprint": "a3c8b79d60ac3d0bcbacd52d72b93237be8460da18cb32a7ec84b72bbdbc3f6a",
-  "date": "2026-10-08T08:17Z",
+  "date": "2026-10-08T21:51Z",
   "command": "SKILL_LIVE=1 python -m pytest tests/test_lsd_ls.py -q",
-  "result": "19 passed in 3.95s",
+  "result": "19 passed in 8.80s",
   "versions": {
     "python": "3.13.14",
     "os": "Windows-10-10.0.19045-SP0",

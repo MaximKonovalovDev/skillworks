@@ -1,0 +1,12 @@
+{
+  "skill": "brooks-law-team",
+  "runs": 12,
+  "with_rate": 1.0,
+  "without_rate": 0.0,
+  "lift": 1.0,
+  "spread": 1.0,
+  "fingerprint": "917eb6f2a0c7b5ed581503e594e55a812cac4efe1576a786cbc4e38d95b49894",
+  "sheet": "evals/brooks-law-team_trials.jsonl",
+  "at": "2026-10-08T22:40Z",
+  "ok": true
+}

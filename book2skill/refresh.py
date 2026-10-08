@@ -15,10 +15,23 @@ def fingerprint(workdir: Path) -> str:
     return digest.hexdigest()
 
 
+# Idea ported fresh from eudicots/Cactus (BSD-3-Clause,
+# https://github.com/eudicots/Cactus/blob/main/cactus/site.py):
+# fingerprint_extensions config + only-rebuild-changed. Rebuilt here in
+# our style as a content-hash compare so refresh and pack zips skip
+# stale-ZIP rebuilds when the stored fingerprint matches.
+def needs_rebuild(fingerprint_file: Path, current_hash: str) -> bool:
+    """True when the stored fingerprint is missing or differs; False when same."""
+    if not fingerprint_file.exists():
+        return True
+    stored = fingerprint_file.read_text(encoding="utf-8").strip()
+    return stored != current_hash
+
+
 def refresh(workdir: Path) -> dict:
     lock = workdir / ".skillworks.lock"
     current = fingerprint(workdir)
-    if lock.exists() and lock.read_text(encoding="utf-8").strip() == current:
+    if not needs_rebuild(lock, current):
         receipt = {"stage": "refresh", "changed": False, "fingerprint": current}
         (workdir / "receipt.json").write_text(json.dumps(receipt, indent=2), encoding="utf-8")
         return receipt

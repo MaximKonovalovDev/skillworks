@@ -15,6 +15,8 @@ from __future__ import annotations
 
 import argparse
 import filecmp
+import hashlib
+import json
 import shutil
 import sys
 from pathlib import Path
@@ -54,6 +56,54 @@ def stale(name: str, dest_root: Path) -> list[str]:
         have = {p.relative_to(dest) for p in dest.rglob("*") if p.is_file()}
         problems += [f"extra {rel.as_posix()}" for rel in sorted(have - set(want))]
     return problems
+
+
+# Ported from skillsgate/skillsgate (MIT, https://github.com/skillsgate/skillsgate)
+# Donor shape apps/desktop/skills-lock.json: version 1 with skills map of name to source and computedHash-sha256
+# Fresh port in this repo style: sha256 per skill payload, drift when hash differs or entry missing.
+LOCK_VERSION = 1
+
+
+def _hash_entry(data) -> str:
+    """sha256 hex of a skill payload given as str or bytes."""
+    if isinstance(data, str):
+        data = data.encode("utf-8")
+    return hashlib.sha256(data).hexdigest()
+
+
+def write_lock(path, entries) -> Path:
+    """Write a versioned hash lock for entries map of name to payload."""
+    lock = Path(path)
+    lock.parent.mkdir(parents=True, exist_ok=True)
+    skills = {}
+    for name in sorted(entries):
+        skills[name] = {"source": "fleet", "computedHash-sha256": _hash_entry(entries[name])}
+    doc = {"version": LOCK_VERSION, "skills": skills}
+    lock.write_text(json.dumps(doc, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    return lock
+
+
+def lock_drift(path, entries) -> bool:
+    """True when any payload hash differs or any entry is missing from the lock."""
+    lock = Path(path)
+    try:
+        doc = json.loads(lock.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return True
+    if not isinstance(doc, dict):
+        return True
+    if doc.get("version") != LOCK_VERSION:
+        return True
+    skills = doc.get("skills")
+    if not isinstance(skills, dict):
+        return True
+    for name in entries:
+        entry = skills.get(name)
+        if not isinstance(entry, dict):
+            return True
+        if entry.get("computedHash-sha256") != _hash_entry(entries[name]):
+            return True
+    return False
 
 
 def install(name: str, dest_root: Path) -> list[str]:

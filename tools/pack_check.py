@@ -34,6 +34,7 @@ import json
 import os
 import re
 import shutil
+import stat
 import sys
 import tempfile
 import urllib.error
@@ -56,6 +57,44 @@ SELLABLE = ("MIT", "Apache-2.0", "BSD-3-Clause", "BSD-2-Clause", "CC-BY-4.0", "I
 TEMPLATE_LEFT = ("{{", "}}", "<what>", "$X.00", "TODO", "TBD", "lorem ipsum", "one line, 60-110 characters")
 PRIVATE = re.compile(r"Users[\\/]me\b|Desktop[\\/]|[A-Za-z]:[\\/]empire\b|engine2040|autonomous-factory|fp-research|marketing-studio|jobhunt|design-studio|forge-data|\.empire", re.I)
 JUNK = re.compile(r"(^|/)(\.DS_Store|Thumbs\.db|__pycache__|node_modules|\.git|\.env)(/|$)|\.(pyc|log|tmp|bak)$", re.I)
+# Safe-archive guard ported from sickn33/agentic-awesome-skills (MIT,
+# https://github.com/sickn33/agentic-awesome-skills/blob/main/skills/skill-installer/scripts/package_skill.py):
+# SAFE_ARCHIVE_NAME_RE, should_include symlink/junk/extension guard, safe_user_path traversal guard,
+# forward-slash ZIP paths. Rewritten in this repo read-only zip_problems style.
+SAFE_ARCHIVE_NAME_RE = re.compile(r"^(?!/)(?![A-Za-z]:)(?!.*(?:^|/)\.\.(?:/|$))[^\\]+$")
+SAFE_JUNK_EXTS = frozenset({".pyc", ".pyo", ".log", ".tmp", ".bak", ".swp", ".swo", ".orig", ".rej"})
+
+
+def safe_user_path(name: str) -> str | None:
+    """Forward-slash member name when it stays inside the archive, else None (absolute, drive, .., empty part)."""
+    norm = name.replace("\\", "/")
+    if not norm or norm.startswith("/") or re.match(r"^[A-Za-z]:", norm):
+        return None
+    if any(p in ("", "..") for p in norm.split("/")):
+        return None
+    if SAFE_ARCHIVE_NAME_RE.match(norm) is None:
+        return None
+    return norm
+
+
+def should_include(name: str) -> bool:
+    """Donor include guard as a gate: False for junk dirs, junk files and junk extensions."""
+    if JUNK.search(name):
+        return False
+    low = name.lower()
+    if low.endswith(tuple(SAFE_JUNK_EXTS)):
+        return False
+    base = low.rsplit("/", 1)[-1]
+    if base.endswith("~") or base.startswith("._"):
+        return False
+    return True
+
+
+def _is_symlink(info: zipfile.ZipInfo) -> bool:
+    """A zip entry that would extract as a symlink (POSIX file-type bits in external_attr)."""
+    return stat.S_ISLNK(info.external_attr >> 16)
+
+
 SECTIONS = pack_build.REQUIRED_SECTIONS  # one list of headings and fields: tools/pack_build.py writes the starter from the same constants
 FIELDS = pack_build.LISTING_FIELDS
 ASSET_KINDS = {"cover": 5_000, "demo": 10_000, "screenshots": 5_000}
@@ -278,10 +317,13 @@ def zip_problems(source: "Path | bytes") -> tuple[list[str], dict[str, bytes]]:
             dup = sorted({n for n in names if names.count(n) > 1})
             if dup:
                 problems.append(f"duplicate paths {dup[:3]}")
-            unsafe = [n for n in names if n.startswith("/") or re.match(r"^[A-Za-z]:", n) or any(p in ("", "..") for p in n.split("/"))]
+            unsafe = [n for n in names if safe_user_path(n) is None]
             if unsafe:
                 problems.append(f"unsafe paths {unsafe[:3]}")
-            junk = [n for n in names if JUNK.search(n)]
+            links = [n for i, n in zip(infos, names) if _is_symlink(i)]
+            if links:
+                problems.append(f"symlink entries {links[:3]}")
+            junk = [n for n in names if not should_include(n)]
             if junk:
                 problems.append(f"junk files {junk[:3]}")
             long = [n for n in names if len(n) > 150]

@@ -175,12 +175,18 @@ def _clean_chunk(full: str) -> tuple[str | None, bool, bool]:
     return "\n".join(lines), True, False
 
 
+# Steal: scope router + disclaimer lane, ported fresh from pras-ops/indian-business-ops-skills
+# (MIT, https://github.com/pras-ops/indian-business-ops-skills/blob/main/skills/gst-compliance/SKILL.md
+# plus DISCLAIMER.md): a NOT-for line keeps the skill in its lane, a verify-before-act
+# footer sends regulated steps back to the source. No donor text copied.
 def _scaffold_body(name: str) -> str:
     return (
         f"\n# {name}\n\nBuilt from owned sources. "
         "Start with `chapters/notes.md`, then `glossary.md`, "
         "`patterns.md`, `cheatsheet.md`. Use when the trigger "
         "topic matches this skill description.\n"
+        "NOT for: topics outside this skill (leave them to the skill that owns them).\n"
+        "Verify before acting: check the source before any regulated, filed, or paid step.\n"
     )
 
 

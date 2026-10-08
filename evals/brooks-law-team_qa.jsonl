@@ -1,0 +1,10 @@
+{"q": "When should an agent load brooks-law-team for staffing or replanning a late project?", "must": ["staffing or replanning"]}
+{"q": "How do I run brooks-law-team from the command line with --input and --out?", "must": ["scripts/brooks_law_team.py", "--input", "--out"]}
+{"q": "What does the first word of stdout tell me on a PLAN or HOLD run?", "must": ["first word of stdout"]}
+{"q": "What does brooks-law-team print on PLAN success and what is the exit code?", "must": ["PLAN", "exit 0"]}
+{"q": "What happens when the plan input is bad: which error, exit code, and is anything written?", "must": ["ERROR", "exit 2", "nothing written"]}
+{"q": "How many talk channels does a team of 5 have and what formula gives it?", "must": ["10", "n*(n-1)/2"]}
+{"q": "When must I hold late additions on a short clock instead of adding people?", "must": ["short clock", "HOLD"]}
+{"q": "How big is a surgical team before it must split into a second team?", "must": ["7", "split"]}
+{"q": "How many design owners pass the integrity gate and what fails it?", "must": ["integrity", "2"]}
+{"q": "What files does a run write into the report dir?", "must": ["report.json", "plan.txt"]}

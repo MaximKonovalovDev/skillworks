@@ -1,0 +1,154 @@
+{
+  "version": 1,
+  "project": "pwsh-for-bash-writers",
+  "created_at": "2026-10-08T12:00:00.000Z",
+  "updated_at": "2026-10-08T12:00:00.000Z",
+  "bullets": [
+    {
+      "id": "9f1a2b3c",
+      "content": "Keep file work out of the shell: use Read with offset and limit instead of head, tail, or sed -n; Grep instead of grep; Glob instead of find and ls; Edit instead of sed -i; Write instead of heredocs and echo redirection.",
+      "category": "strategy",
+      "helpful_count": 5,
+      "harmful_count": 0,
+      "created_at": "2026-10-08T12:00:00.000Z",
+      "updated_at": "2026-10-08T12:00:00.000Z",
+      "source_session": null,
+      "tags": [
+        "pwsh",
+        "files"
+      ]
+    },
+    {
+      "id": "4d5e6f70",
+      "content": "Default to single quotes for shell text; put node -e, pwsh -Command, and python -c code in single quotes so the outer pwsh does not expand dollars, and write anything longer than one line to a file with the Write tool and run it by path.",
+      "category": "strategy",
+      "helpful_count": 4,
+      "harmful_count": 0,
+      "created_at": "2026-10-08T12:00:00.000Z",
+      "updated_at": "2026-10-08T12:00:00.000Z",
+      "source_session": null,
+      "tags": [
+        "pwsh",
+        "quoting"
+      ]
+    },
+    {
+      "id": "1a2b3c4d",
+      "content": "Use -LiteralPath for any file name you did not make yourself, because -Path treats brackets, star, and question mark as wildcards; quote native glob patterns for programs with -g instead of letting the shell expand them.",
+      "category": "strategy",
+      "helpful_count": 3,
+      "harmful_count": 0,
+      "created_at": "2026-10-08T12:00:00.000Z",
+      "updated_at": "2026-10-08T12:00:00.000Z",
+      "source_session": null,
+      "tags": [
+        "pwsh",
+        "paths"
+      ]
+    },
+    {
+      "id": "5e6f7081",
+      "content": "Start a server with cmd.exe redirecting to logs/server.log and read the log tail, never pipe a server into Select-Object and never use Start-Process for servers; check $LASTEXITCODE yourself because a failing program never stops the script.",
+      "category": "strategy",
+      "helpful_count": 3,
+      "harmful_count": 0,
+      "created_at": "2026-10-08T12:00:00.000Z",
+      "updated_at": "2026-10-08T12:00:00.000Z",
+      "source_session": null,
+      "tags": [
+        "pwsh",
+        "servers",
+        "exit-code"
+      ]
+    },
+    {
+      "id": "b3c4d5e6",
+      "content": "Bash habits fail on this pwsh with is not recognized or parser errors: grep, head, tail, wc, sed, awk, find, touch, seq, xargs, date -u, VAR=value prefixes, export, for-do loops, and heredocs all need their pwsh form from the pairs table.",
+      "category": "pitfall",
+      "helpful_count": 5,
+      "harmful_count": 0,
+      "created_at": "2026-10-08T12:00:00.000Z",
+      "updated_at": "2026-10-08T12:00:00.000Z",
+      "source_session": null,
+      "tags": [
+        "pwsh",
+        "bash-habits"
+      ]
+    },
+    {
+      "id": "c4d5e6f7",
+      "content": "Double-quoted dollars need braces or subexpressions: \"$name: x\" does not parse so write \"${name}: x\", \"$o.a\" prints the object so write \"$($o.a)\", \"price $450\" loses the number so use single quotes, and a backslash never escapes a quote.",
+      "category": "pitfall",
+      "helpful_count": 4,
+      "harmful_count": 0,
+      "created_at": "2026-10-08T12:00:00.000Z",
+      "updated_at": "2026-10-08T12:00:00.000Z",
+      "source_session": null,
+      "tags": [
+        "pwsh",
+        "quoting"
+      ]
+    },
+    {
+      "id": "d5e6f708",
+      "content": "The double-ampersand chain works only between two commands in pwsh 7 and never after foreach, if, or while; after a statement use a semicolon with if ($?) instead of &&.",
+      "category": "pitfall",
+      "helpful_count": 2,
+      "harmful_count": 0,
+      "created_at": "2026-10-08T12:00:00.000Z",
+      "updated_at": "2026-10-08T12:00:00.000Z",
+      "source_session": null,
+      "tags": [
+        "pwsh",
+        "chaining"
+      ]
+    },
+    {
+      "id": "e6f70819",
+      "content": "Native traps lie quietly: plain diff compares file names not contents, find is the old Windows find.exe, curl means Invoke-WebRequest so write curl.exe, powershell is 5.1 so write pwsh, /c/ paths fail so write C:/, and a here-string opener must end its line with the closer starting its line.",
+      "category": "pitfall",
+      "helpful_count": 3,
+      "harmful_count": 0,
+      "created_at": "2026-10-08T12:00:00.000Z",
+      "updated_at": "2026-10-08T12:00:00.000Z",
+      "source_session": null,
+      "tags": [
+        "pwsh",
+        "natives",
+        "paths"
+      ]
+    }
+  ],
+  "stats": {
+    "total_sessions": 1,
+    "total_reflections": 1,
+    "total_bullets_added": 8,
+    "total_bullets_pruned": 0,
+    "total_bullets_merged": 0
+  },
+  "config": {
+    "max_bullets": 200,
+    "dedup_threshold": 0.85,
+    "prune_threshold": -2,
+    "categories": [
+      "strategy",
+      "pitfall",
+      "domain",
+      "tool_use",
+      "pattern"
+    ],
+    "reflection_prompt": null,
+    "curation_prompt": null,
+    "auto_inject": true,
+    "max_inject_tokens": 4000,
+    "min_score_to_inject": 1,
+    "max_reflection_rounds": 3,
+    "min_traces_for_reflection": 5,
+    "stale_bullet_ttl_days": 14,
+    "inject_categories": [
+      "pitfall",
+      "domain"
+    ],
+    "tag_matching": true
+  }
+}
