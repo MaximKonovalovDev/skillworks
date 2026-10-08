@@ -1301,7 +1301,12 @@ const makeKeeper = async ({ client, worktree, directory }, options) => {
   // helpers read 185 times a day; center's size-check FAILs past 20 dead lines).
   const CLAIM_TTL_MS = 2 * 60 * 60_000;
   const claimAt = (line) => {
-    const m = String(line.split("|")[2] ?? "").match(/(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2})(?::(\d{2}))?/);
+    // Pipe claims read field 3; helpers that append `id date files` with no
+    // pipes (2026-10-08: 100 dateless-looking lines in engine2040 claims.txt
+    // no release ever ended) read the whole line, so their dates age out too.
+    const parts = String(line).split("|");
+    const field = parts.length > 1 ? parts[2] ?? "" : String(line);
+    const m = String(field).match(/(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2})(?::(\d{2}))?/);
     const t = m ? Date.parse(`${m[1]}T${m[2]}:${m[3] ?? "00"}Z`) : NaN;
     return Number.isFinite(t) ? t : null;
   };

@@ -32,3 +32,5 @@ BK-1007-14 | 357-book-lsdls | 2026-10-08T08:08Z | skills/lsd-ls/
 SCOUT | researcher-doctor-scout-9 |  | board row
 SCOUT | researcher-doctor-scout-9 | 2026-10-08T09:29Z | board row DR-1007-19
 DR-1007-19 | 360-cure-100719 | 2026-10-08T09:33Z | skills/edit-abort-guard/
+
+SCOUT | researcher-books-scout-9 | 2026-10-08T10:15Z | board row
