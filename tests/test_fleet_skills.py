@@ -5,6 +5,7 @@ A skill that is not built yet is skipped, never faked.
 """
 import pytest
 
+import live_proof
 import skill_gates as g
 
 
@@ -60,3 +61,15 @@ def test_fleet_skill_matches_its_last_live_proof(name: str) -> None:
     if not _built(name):
         pytest.skip(f"{name} not built yet")
     g.check_proof(name)
+
+
+def test_reseal_keeps_a_fresh_seal() -> None:
+    """big22: a re-run with the same fingerprint and result must not rewrite the proof (else the zip re-stales)."""
+    assert live_proof.same_seal({"fingerprint": "abc", "result": "3 passed in 1.00s"}, "abc", "3 passed in 1.00s")
+
+
+def test_reseal_rewrites_a_changed_skill() -> None:
+    """big22: a changed fingerprint (or a new result) still reseals, so the bar does not move."""
+    assert not live_proof.same_seal({"fingerprint": "abc", "result": "3 passed in 1.00s"}, "def", "3 passed in 1.00s")
+    assert not live_proof.same_seal({"fingerprint": "abc", "result": "3 passed in 1.00s"}, "abc", "4 passed in 1.00s")
+    assert not live_proof.same_seal({}, "abc", "3 passed in 1.00s")

@@ -38,6 +38,14 @@ def versions() -> dict:
     return out
 
 
+def same_seal(existing: dict, fingerprint: str, result: str) -> bool:
+    """A fresh seal stands: the same fingerprint and the same result line mean a re-run must not rewrite the proof.
+
+    Rewriting would bump the date (and versions text), which re-stales the pack zip hours after a green rebuild.
+    A changed skill still fails the fingerprint match below, so the bar does not move."""
+    return existing.get("fingerprint") == fingerprint and existing.get("result") == result
+
+
 def prove(name: str) -> bool:
     test_file = g.test_file_for(name)
     if not (g.SKILLS / name / "SKILL.md").is_file() or not test_file.is_file():
@@ -51,9 +59,19 @@ def prove(name: str) -> bool:
         print(f"{name}: NOT proven. {tail}")
         print("\n".join(r.stdout.strip().splitlines()[-25:]))
         return False
+    fingerprint = g.fingerprint(name)
+    proof_path = g.SKILLS / name / "references" / g.PROOF_NAME
+    if proof_path.is_file():
+        try:
+            existing = json.loads(proof_path.read_text(encoding="utf-8"))
+        except ValueError:
+            existing = {}
+        if same_seal(existing, fingerprint, tail):
+            print(f"{name}: still proven. {tail}")
+            return True
     proof = {
         "skill": name,
-        "fingerprint": g.fingerprint(name),
+        "fingerprint": fingerprint,
         "date": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%MZ"),
         "command": f"SKILL_LIVE=1 python -m pytest tests/{test_file.name} -q",
         "result": tail,
@@ -62,7 +80,6 @@ def prove(name: str) -> bool:
     (g.SKILLS / name / "references" / g.PROOF_NAME).write_text(json.dumps(proof, indent=2) + "\n", encoding="utf-8", newline="\n")
     print(f"{name}: proven. {tail}")
     return True
-
 
 def main(argv: list[str]) -> int:
     names = argv or sorted(g.FLEET_SKILLS)

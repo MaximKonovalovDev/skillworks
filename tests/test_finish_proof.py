@@ -187,6 +187,62 @@ def test_s3_a_pack_folder_counts_only_when_pack_check_passes(tmp_path: Path, mon
     assert ok and "fleet-vol-1" in msg and "https://shop.example/fleet" in msg
 
 
+def test_s1_met_cache_answers_with_no_scan(tmp_path: Path, monkeypatch) -> None:
+    """S1 record-first: a fresh cache that already proves the bar is met with no database scan."""
+    import time as _time
+    cache = tmp_path / "loads-scan-cache.json"
+    cache.write_text(json.dumps({"at_ms": _time.time() * 1000, "db": str(fp._db_path(None)),
+                                 "loads": {"forge": 8, "center": 4}}), encoding="utf-8")
+    monkeypatch.setattr(fp, "LOADS_CACHE", cache)
+    calls = []
+    monkeypatch.setattr(fp, "skill_loads", lambda *a, **k: calls.append(1) or {})
+    ok, msg = fp.s1()
+    assert ok and "12 loads" in msg and "no re-scan" in msg and calls == []
+
+
+def test_s1_open_cache_answers_from_cached_meter_reads(tmp_path: Path, monkeypatch) -> None:
+    """S1 open but fresh cache: no re-scan inside the TTL, the cached meter reads answer."""
+    import time as _time
+    cache = tmp_path / "loads-scan-cache.json"
+    cache.write_text(json.dumps({"at_ms": _time.time() * 1000, "db": str(fp._db_path(None)),
+                                 "loads": {"forge": 2}}), encoding="utf-8")
+    monkeypatch.setattr(fp, "LOADS_CACHE", cache)
+    calls = []
+    monkeypatch.setattr(fp, "skill_loads", lambda *a, **k: calls.append(1) or {})
+    ok, msg = fp.s1()
+    assert not ok and "2 loads" in msg and "cached meter reads" in msg and calls == []
+
+
+def test_s1_explicit_path_scans_as_is_despite_a_met_cache(tmp_path: Path, monkeypatch) -> None:
+    """A file given by a test (like on the command line) is read as it is, never from the cache."""
+    import time as _time
+    skills, own, db = _world(tmp_path)
+    monkeypatch.setattr(fp, "SKILLS", skills)
+    monkeypatch.setattr(fp, "ROOT", own)
+    cache = tmp_path / "loads-scan-cache.json"
+    cache.write_text(json.dumps({"at_ms": _time.time() * 1000, "db": str(fp._db_path(None)),
+                                 "loads": {"forge": 50}}), encoding="utf-8")
+    monkeypatch.setattr(fp, "LOADS_CACHE", cache)
+    ok, msg = fp.s1(db)
+    assert not ok and "0 loads" in msg
+
+
+def test_s1_stale_cache_rescans_and_stores(tmp_path: Path, monkeypatch) -> None:
+    """A stale cache is a miss: the database is scanned and the cache is refreshed."""
+    import time as _time
+    skills, own, db = _world(tmp_path)
+    monkeypatch.setattr(fp, "SKILLS", skills)
+    monkeypatch.setattr(fp, "ROOT", own)
+    cache = tmp_path / "loads-scan-cache.json"
+    cache.write_text(json.dumps({"at_ms": _time.time() * 1000 - (fp.LOADS_TTL + 60) * 1000,
+                                 "db": str(fp._db_path(None)), "loads": {"forge": 50}}), encoding="utf-8")
+    monkeypatch.setattr(fp, "LOADS_CACHE", cache)
+    ok, msg = fp.s1()
+    assert not ok and "0 loads" in msg and "cached" not in msg and "no re-scan" not in msg
+    doc = json.loads(cache.read_text(encoding="utf-8"))
+    assert doc["loads"] == {} and _time.time() * 1000 - doc["at_ms"] < 60_000
+
+
 def test_command_line_exit_codes(tmp_path: Path) -> None:
     run = lambda *a: subprocess.run([sys.executable, str(ROOT / "tools" / "finish_proof.py"), *a], capture_output=True, text=True)  # noqa: E731
     assert run("nope").returncode == 2
