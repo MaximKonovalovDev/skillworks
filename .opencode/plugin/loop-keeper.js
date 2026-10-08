@@ -416,6 +416,9 @@ const shellOf = (dir) => {
   return "";
 };
 
+// A DONE that did nothing (sentinel "unchanged, no packet") holds the seat like NOOP.
+const UNCHANGED_RE = /\b(unchanged|no packet|nothing (new|to do)|no change)/i;
+
 // The keeper itself. LoopKeeper (the shell at the end of this file) runs it and swaps in a fresh
 // copy when this file changes.
 const createSeatReadiness = function createSeatReadiness({ read, file, claimsFile, now = Date.now, seen = new Map() }) {
@@ -525,9 +528,10 @@ const createSeatReadiness = function createSeatReadiness({ read, file, claimsFil
     if (String(item.key ?? "").startsWith("legacy|")) {
       // A legacy trigger is the seat's own packet: an empty (NOOP) run consumes
       // it, so the seat holds until redefined; a DONE run re-arms it, so a
-      // productive seat stays eligible without a redefinition.
+      // productive seat stays eligible without a redefinition. A DONE that
+      // reports nothing changed is an empty run too: it holds like NOOP.
       seen.delete(item.key);
-      if (/\bRESULT:\s*NOOP\b/i.test(String(text))) {
+      if (/\bRESULT:\s*NOOP\b/i.test(String(text)) || (/\bRESULT:\s*DONE\b/i.test(String(text)) && UNCHANGED_RE.test(String(text)))) {
         seen.set(item.key, item.stamp);
         while (seen.size > 256) seen.delete(seen.keys().next().value);
       }
@@ -1364,7 +1368,9 @@ const makeKeeper = async ({ client, worktree, directory }, options) => {
       releaseClaims(job.id);
       if (seatReadiness.complete(job.readiness, text, failed)) write({ readinessSeen: [...readySeen] });
       // center coder-rows 2026-09-29: NOOP every 3-4 minutes for an hour, because the lead sent the resting seat again.
-      if (failed || now() - job.started < 2 * 60_000 || /RESULT:\s*(?:NOOP|BLOCKED)\b/.test(text)) {
+      // A standing DONE that reports nothing changed rests like NOOP, so an idle
+      // legacy seat stops re-arming at once.
+      if (failed || now() - job.started < 2 * 60_000 || /RESULT:\s*(?:NOOP|BLOCKED)\b/.test(text) || (/\bRESULT:\s*DONE\b/i.test(String(text)) && UNCHANGED_RE.test(String(text)))) {
         const row = standingNoops.get(job.standing) ?? 0;
         standingNoops.set(job.standing, row + 1);
         standingRest.set(job.standing, now() + 30 * 2 ** Math.min(row, 2) * 60_000);
