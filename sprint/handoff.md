@@ -1,30 +1,29 @@
-# skillworks handoff - round 367 (token d5a1)
+# skillworks handoff - round 368 (token d5a1)
 
-Round: 367 (lock d5a1 held since 08:43Z)
-Written: 2026-10-09T09:15Z
+Round: 368 (lock d5a1 held since 11:24Z)
+Written: 2026-10-09T11:24Z
 Token: d5a1
 Knobs: width 1, foreground batches (keeper batch stale, lead decides per owner GO).
 
 ## Heading
-- Owner asks all-repo inbox waves. Boundary: this loop owns skillworks only; other repos' loops own their inboxes via center fan-out. Skillworks inbox read: ~40 open, 10 ticked to rows, ~30 unticked. Cure wave continues meanwhile.
+- Second crash, same rule: interrupted cure left claim DR-1006-2 10:16Z but no skill diff. Replanned as pinned light retry 373 (no full suite, hard 25 min box).
 
 ## Batch sent (ONE message, 1 Task call, prompt exactly packet:<name>)
-- builder builder-cure.
+- builder 373-cure-taskscope-retry.
 
 ## Rows
-- AD-1006-1 plus AD-1006-2 READY (fresh clocks, halving due 2026-10-11).
-- DR-1006-6 DONE 8be1132. DR-1006-5 DONE e59af71. DR-1006-4 DONE 1c00f0e. DR-1006-3 DONE fe43b04.
-- Next cure claims first unclaimed READY [DOCTOR] (DR-1006-2 task-cancelled expected: engine2040 43 plus forge 28).
+- DR-1006-2 stays READY (crash claim reused, no double-claim).
+- DONE this wave: DR-1006-6 8be1132, DR-1006-5 e59af71, DR-1006-4 1c00f0e, DR-1006-3 fe43b04.
+- AD-1006-1 plus AD-1006-2 READY (clocks to 2026-10-11).
 
 ## Blockers
-- ~30 unticked inbox items need planner rowing (LEAD2 fixes S130 S131, SIZE S254 S255, STEAL wave S27-S38, AUDIT wave S51-S56, SOLVERS rewrites S100 S196 S215 S216). Planner wave queued behind cure wave.
-- Cross-repo waves belong to center plus each repo's lead; proposing via center inbox, not dispatching there (own paths only).
+- Two interrupted runs this session (installer, cure). Pattern: long runs die; fix is smaller boxes plus no full suite in builder packets (judge runs it).
 
 ## Checks
 - node sprint/check.mjs PASS 20/0/0 (standing).
-- Commit 50642c4 (2 files, clean).
+- Commit e5a31a1 (1 file, clean). Tree nearly clean except keeper runtime.
 
 ## Next
-- Collect cure result, review, land. Then planner inbox-rowing wave, then cli.py fix plus rollback guard.
+- Collect retry, review, land. Then planner inbox-rowing wave.
 
-RESULT: PARTIAL - inbox triaged into waves, cure dispatched | proof: RESULT PASS: 20 pass, 0 warn, 0 fail
+RESULT: PARTIAL - crash replanned as light retry 373, result pending | proof: RESULT PASS: 20 pass, 0 warn, 0 fail
