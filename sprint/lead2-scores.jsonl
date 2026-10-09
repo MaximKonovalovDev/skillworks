@@ -19,3 +19,9 @@
 {"at":"2026-10-08T21:40:27.060Z","journey":"J4","score":8,"note":"Identical text, check green, copy list undocumented","evidence":"AEB9598B x3 + --check exit 0"}
 {"at":"2026-10-08T21:40:27.269Z","journey":"J1","score":7,"note":"old silent-skip fixed; manual omits eval --work","evidence":"git-one-branch --check exit 0, 18 passed 33.43s, eval 14/14 rate 1.0"}
 {"at":"2026-10-08T21:40:27.481Z","journey":"J2","score":10,"note":"CSV clear, three halves verified, trivial math","evidence":"adopted.csv rows 9->1, 6->0, 60->10"}
+{"at":"2026-10-09T00:41:36.098Z","journey":"J1","score":10,"note":"pipe-run installs clean, test passes 1.6s","evidence":"C:/Users/me/AppData/Local/Temp/j1-pipe-run"}
+{"at":"2026-10-09T00:41:36.341Z","journey":"J4","score":8,"note":"six of seven match, forge keeps older wording","evidence":"C:/empire/forge/.opencode/skills/bash-spawn-guard/SKILL.md"}
+{"at":"2026-10-09T00:41:36.572Z","journey":"J3","score":8,"note":"tests green 6 passed, help silent, search-only listing","evidence":"tests/test_mcp_schema.py"}
+{"at":"2026-10-09T02:01:16.960Z","journey":"J1","score":10,"note":"re-walk clean copy dry-run pass 2.73s","evidence":"C:/Users/me/AppData/Local/Temp/j1-pipe-run-rewalk"}
+{"at":"2026-10-09T02:01:17.429Z","journey":"J4","score":10,"note":"8/8 match, per-file missing names each","evidence":"tools/install_fleet_skills.py"}
+{"at":"2026-10-09T02:01:17.842Z","journey":"J3","score":9,"note":"help speaks handshake green, browse still guesswork","evidence":"mcp_server/server.py"}

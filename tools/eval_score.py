@@ -261,6 +261,11 @@ def cmd_report(args: argparse.Namespace) -> int:
     else:
         print(trials_note)
     print(f"proof {out}")
+    min_rate = getattr(args, "min_rate", None)
+    if min_rate is not None and qa["rate"] < min_rate:
+        print(f"FAIL rate {qa['rate']} below --min-rate {min_rate}")
+        print("RESULT FAIL")
+        return 1
     print("RESULT PASS")
     return 0
 
@@ -275,6 +280,8 @@ def main(argv: list[str] | None = None) -> int:
     rep.add_argument("--trials", default=None, help="trials dir (default work/trials/<skill>/)")
     rep.add_argument("--evals", default=None, help="evals dir (default evals/)")
     rep.add_argument("--out", default=None, help="report path (default work/eval-score/<skill>-eval-score.json)")
+    rep.add_argument("--min-rate", type=float, default=None,
+                     help="fail when QA rate is below this (e.g. 0.6 export gate)")
     rep.set_defaults(func=cmd_report)
     args = parser.parse_args(argv)
     return args.func(args)

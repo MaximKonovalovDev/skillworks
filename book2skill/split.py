@@ -9,7 +9,12 @@ OVERLAP = 200
 
 
 def split(workdir: Path, chunk: int = CHUNK, overlap: int = OVERLAP) -> dict:
-    text = (workdir / "full_text.txt").read_text(encoding="utf-8")
+    src = workdir / "full_text.txt"
+    if not src.is_file():
+        raise FileNotFoundError(f"split: {src} missing: run extract first")
+    text = src.read_text(encoding="utf-8")
+    if not text.strip():
+        raise ValueError(f"split: {src} empty: run extract first")
     chunks: list[str] = []
     i = 0
     while i < len(text):

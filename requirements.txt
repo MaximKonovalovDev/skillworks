@@ -3,5 +3,5 @@ pypdf>=4.0
 python-docx>=1.1
 pdfplumber>=0.11
 beautifulsoup4>=4.12
-pytest>=8.0
+pytest==9.1.1
 # markitdown lives in .tools/py (TS-4: python -m pip install --target .tools/py "markitdown[pdf,docx]"), never machine-wide

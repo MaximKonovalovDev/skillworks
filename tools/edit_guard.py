@@ -56,8 +56,6 @@ def closest(target_lines: list[str], want: str, top: int = 3) -> list[tuple[int,
 def diagnose(target_path: str, text: str, old: str) -> list[str]:
     lines: list[str] = []
     lines.append(REFUSAL + f" in {target_path}")
-    t_lines = text.splitlines(keepends=True)
-    o_lines = old.splitlines(keepends=True)
     t_disp = text.splitlines()
     lines.append(
         f"file: {len(t_disp)} lines, endings {ending_style(text)}, "

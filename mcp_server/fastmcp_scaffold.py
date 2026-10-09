@@ -11,9 +11,7 @@ so swapping backends changes nothing about the tool.
 """
 from __future__ import annotations
 
-import inspect
-import xml.etree.ElementTree as ET
-from pathlib import Path
+# Cold-start is stdlib-shim fast: xml/path/inspect stay lazy inside functions.
 
 TOOL_NAME = "list_chapters"
 TOOL_DESCRIPTION = (
@@ -62,6 +60,7 @@ def _prettify(stem: str) -> str:
 
 def _find_opf(epub: Path) -> Path | None:
     """Locate the OPF package file: container.xml first, else first *.opf."""
+    import xml.etree.ElementTree as ET  # lazy: keep cold import fast
     container = epub / CONTAINER_PATH
     if container.is_file():
         try:
@@ -80,6 +79,7 @@ def _find_opf(epub: Path) -> Path | None:
 
 def _ncx_labels(ncx: Path) -> dict[str, str]:
     """Map content src -> nav label from an NCX file (empty when unreadable)."""
+    import xml.etree.ElementTree as ET  # lazy: keep cold import fast
     labels: dict[str, str] = {}
     try:
         root = ET.parse(str(ncx)).getroot()
@@ -110,6 +110,8 @@ def _rel(epub: Path, base: Path, href: str) -> str:
 
 def _spine_chapters(epub: Path, opf: Path) -> list[dict] | None:
     """Chapters in spine order with NCX titles. None when no spine to follow."""
+    import xml.etree.ElementTree as ET  # lazy: keep cold import fast
+    from pathlib import Path  # lazy: keep cold import fast
     try:
         root = ET.parse(str(opf)).getroot()
     except (ET.ParseError, OSError):
@@ -177,6 +179,7 @@ def list_chapters(epub_dir: str) -> list[dict]:
     """List chapters of an unpacked EPUB directory in reading order."""
     if not isinstance(epub_dir, str) or not epub_dir.strip():
         raise ValueError("epub_dir is required (non-empty string)")
+    from pathlib import Path  # lazy: keep cold import fast
     epub = Path(epub_dir).expanduser()
     if not epub.exists():
         raise ValueError(f"epub_dir not found: {epub_dir!r}")
@@ -192,6 +195,7 @@ def list_chapters(epub_dir: str) -> list[dict]:
 
 def _input_schema() -> dict:
     """Derive list_chapters inputSchema from its signature (server.py trick)."""
+    import inspect  # lazy: keep cold import fast
     sig = inspect.signature(list_chapters)
     props: dict = {}
     required: list = []

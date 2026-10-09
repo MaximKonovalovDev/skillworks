@@ -227,7 +227,7 @@ def check_buyer_files(pack_dir: Path, rep: Report) -> None:
             rep.add("FAIL", slot_finding(name, slots))
 
 
-def check_listing(pack_dir: Path, pack: dict, skills: Path, rep: Report) -> tuple[str, bool]:
+def check_listing(pack_dir: Path, pack: dict, skills: Path, rep: Report, price_txt_text=None) -> tuple[str, bool]:
     path = pack_dir / "listing.md"
     if not path.is_file():
         rep.add("FAIL", "listing.md is missing")
@@ -249,7 +249,7 @@ def check_listing(pack_dir: Path, pack: dict, skills: Path, rep: Report) -> tupl
     stated = field(text, "Price")
     price = PRICE.search(stated or "")
     price_txt = pack_dir / "price.txt"
-    canon = PRICE.search(price_txt.read_text(encoding="utf-8")) if price_txt.is_file() else None
+    canon = PRICE.search(price_txt_text or (price_txt.read_text(encoding="utf-8") if price_txt.is_file() else "")) if (price_txt_text or price_txt.is_file()) else None
     if not price or float(price[1]) != float(pack["price_usd"]) or not canon or float(canon[1]) != float(pack["price_usd"]):
         rep.add("FAIL", f"price: listing says {stated!r}, price.txt says {canon[0] if canon else 'nothing'}, pack.json says ${pack['price_usd']:g}; all three must match")
     else:
@@ -456,8 +456,8 @@ def check_assets(pack_dir: Path, listing: str, live: bool, rep: Report) -> None:
                 f = pack_dir / rel
                 if not f.is_file():
                     bad.append(f"{rel} does not exist")
-                elif f.stat().st_size < floor:
-                    bad.append(f"{rel} is {f.stat().st_size} bytes, want {floor}+")
+                elif (st := f.stat()).st_size < floor:
+                    bad.append(f"{rel} is {st.st_size} bytes, want {floor}+")
                 elif not any(f.read_bytes()[:12].startswith(mg) for mg in IMAGE_MAGIC) and not rel.lower().endswith((".mp4", ".webm")):
                     bad.append(f"{rel} is not a PNG, GIF or JPEG")
             if bad:
@@ -513,15 +513,15 @@ def judge_text(slug: str, ok: bool) -> str:
     return "\n".join(lines) + "\n"
 
 
-def stage_factory_product(pack_dir: Path, pack: dict, dist: Path, tmp: Path, own_ok: bool) -> Path:
+def stage_factory_product(pack_dir: Path, pack: dict, dist: Path, tmp: Path, own_ok: bool, listing_text=None, price_txt_text=None) -> Path:
     """A scratch copy laid out like a factory product: listing/itch.md plus listing/price.txt, exactly one buyer
     zip in dist/, JUDGE.md with our own verdict. Written to tmp (never committed), read back by audit()."""
     product = tmp / pack["slug"]
     shutil.rmtree(product, ignore_errors=True)
     (product / "listing").mkdir(parents=True)
     (product / "dist").mkdir(parents=True)
-    (product / "listing" / "itch.md").write_text((pack_dir / "listing.md").read_text(encoding="utf-8"), encoding="utf-8")
-    shutil.copy2(pack_dir / "price.txt", product / "listing" / "price.txt")
+    (product / "listing" / "itch.md").write_text(listing_text if listing_text is not None else (pack_dir / "listing.md").read_text(encoding="utf-8"), encoding="utf-8")
+    (product / "listing" / "price.txt").write_bytes(price_txt_text.encode("utf-8")) if price_txt_text else shutil.copy2(pack_dir / "price.txt", product / "listing" / "price.txt")
     paid = dist / f"{pack['slug']}.zip"
     shutil.copy2(paid, product / "dist" / paid.name)
     (product / "JUDGE.md").write_text(judge_text(pack["slug"], own_ok), encoding="utf-8")
@@ -529,7 +529,7 @@ def stage_factory_product(pack_dir: Path, pack: dict, dist: Path, tmp: Path, own
 
 
 def check_factory_preflight(pack_dir: Path, pack: dict, dist: Path, rep: Report, *,
-                            enabled: bool = True, audit: Callable | None = None) -> None:
+                            enabled: bool = True, audit: Callable | None = None, listing_text=None, price_txt_text=None) -> None:
     """Run the factory buyer-file gate audit() on the staged copy; each of its findings is a FAIL. When the gate
     script is not on this machine the gate warns instead of failing, so the pack still stands on our own checks."""
     if not enabled:
@@ -542,7 +542,7 @@ def check_factory_preflight(pack_dir: Path, pack: dict, dist: Path, rep: Report,
     if not (dist / f"{pack['slug']}.zip").is_file():
         return  # check_zips already recorded the missing buyer file
     with tempfile.TemporaryDirectory(prefix="pack-factory-") as tmp:
-        product = stage_factory_product(pack_dir, pack, dist, Path(tmp), rep.count("FAIL") == 0)
+        product = stage_factory_product(pack_dir, pack, dist, Path(tmp), rep.count("FAIL") == 0, listing_text, price_txt_text)
         try:
             findings = audit(product)
         except Exception as err:  # noqa: BLE001 - see load_factory_audit
@@ -563,16 +563,16 @@ def check_pack(pack_dir: Path, *, root: Path = ROOT, dist: Path | None = None, o
     pack = check_manifest(pack_dir, rep)
     if pack is None:
         return rep
-    skills = root / "skills"
+    skills = root / "skills"; price_file = pack_dir / "price.txt"; price_txt_text = price_file.read_text(encoding="utf-8") if price_file.is_file() else None
     check_skills(pack, skills, rep, skill_problems)
-    listing, live = check_listing(pack_dir, pack, skills, rep)
+    listing, live = check_listing(pack_dir, pack, skills, rep, price_txt_text)
     check_buyer_files(pack_dir, rep)
     if listing:
         check_evidence(listing, rep, offline, fetch)
         check_assets(pack_dir, listing, live, rep)
     resolved = dist or root / "dist"
     check_zips(pack_dir, pack, skills, resolved, rep)
-    check_factory_preflight(pack_dir, pack, resolved, rep, enabled=factory, audit=factory_audit)
+    check_factory_preflight(pack_dir, pack, resolved, rep, enabled=factory, audit=factory_audit, listing_text=listing, price_txt_text=price_txt_text)
     return rep
 
 

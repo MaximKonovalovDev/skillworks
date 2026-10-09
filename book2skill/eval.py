@@ -327,8 +327,8 @@ def run_eval(workdir: Path, skilldir: Path, qa_path: Path) -> dict:
             proof_record = json.loads(proof_path.read_text(encoding="utf-8"))
             for err in validate_trial_proof(proof_record):
                 warnings.warn(err)
-        except Exception:
-            pass
+        except (OSError, ValueError) as exc:
+            warnings.warn(f"trial-proof.json unreadable: {exc}")
     skilldir.mkdir(parents=True, exist_ok=True)
     (skilldir / "eval_report.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
     print(json.dumps(report, indent=2))

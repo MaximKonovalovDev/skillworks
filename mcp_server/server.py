@@ -22,15 +22,6 @@ SKILLS_DIR_ENV_VARS = ("SKILLWORKS_SKILLS_DIR", "SKILLS_DIR")
 _CLI_SKILLS_DIR: Path | None = None
 
 
-def _parse_skills_dir_override(argv: list[str]) -> Path | None:
-    for i, arg in enumerate(argv):
-        if arg == "--skills-dir" and i + 1 < len(argv):
-            return Path(argv[i + 1])
-        if arg.startswith("--skills-dir="):
-            return Path(arg.split("=", 1)[1])
-    return None
-
-
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Minimal stdio MCP server: skill_search + skill_preview over built skills. Speaks JSON-RPC over stdio with initialize / tools/list / tools/call. Tools: skill_search (the list entry -- use a broad query to browse) and skill_preview (README-then-SKILL.md head for inspect-before-install).",

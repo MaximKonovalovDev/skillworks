@@ -14,12 +14,17 @@ With no skill names, every fleet skill that is built is copied.
 from __future__ import annotations
 
 import argparse
+import difflib
 import filecmp
 import hashlib
 import json
 import shutil
 import sys
 from pathlib import Path
+
+# STEAL S (J4) idea from twpayne/chezmoi (MIT): source-state kept in the repo,
+# verify names each drifted file and diff shows the per-file change, apply converges it.
+# Fresh port below (stale/file_diff/install): no chezmoi code copied.
 
 ROOT = Path(__file__).resolve().parent.parent
 SKILLS = ROOT / "skills"
@@ -41,6 +46,21 @@ def payload(name: str) -> list[Path]:
     return out
 
 
+# STEAL S idea from lirantal/lockfile-lint (Apache-2.0, https://github.com/lirantal/lockfile-lint):
+# installed set validated against the manifest, files outside it are refused.
+# Fresh code below (outside_manifest): no lockfile-lint code copied.
+
+
+def outside_manifest(name: str, dest_root: Path) -> list[str]:
+    """Posix rel paths in the copy outside the payload manifest (extras fail the check)."""
+    dest = dest_root / name
+    if not dest.is_dir():
+        return []
+    want = {rel.as_posix() for rel in payload(name)}
+    have = {p.relative_to(dest).as_posix() for p in dest.rglob("*") if p.is_file()}
+    return sorted(have - want)
+
+
 def stale(name: str, dest_root: Path) -> list[str]:
     """What differs between the source and the copy: missing, changed or extra files."""
     base, dest = SKILLS / name, dest_root / name
@@ -52,10 +72,19 @@ def stale(name: str, dest_root: Path) -> list[str]:
             problems.append(f"missing {rel.as_posix()}")
         elif not filecmp.cmp(base / rel, target, shallow=False):
             problems.append(f"changed {rel.as_posix()}")
-    if dest.is_dir():
-        have = {p.relative_to(dest) for p in dest.rglob("*") if p.is_file()}
-        problems += [f"extra {rel.as_posix()}" for rel in sorted(have - set(want))]
+    problems += [f"extra {rel}" for rel in outside_manifest(name, dest_root)]
     return problems
+
+
+def file_diff(name: str, dest_root: Path, rel_posix: str, max_lines: int = 40) -> list[str]:
+    """Unified diff lines for one changed file (fresh code; text with replace)."""
+    try:
+        a = (SKILLS / name / rel_posix).read_text(encoding="utf-8", errors="replace").splitlines()
+        b = (dest_root / name / rel_posix).read_text(encoding="utf-8", errors="replace").splitlines()
+    except OSError:
+        return []
+    diff = list(difflib.unified_diff(a, b, fromfile=f"a/{rel_posix}", tofile=f"b/{rel_posix}", lineterm=""))
+    return diff[:max_lines]
 
 
 # Ported from skillsgate/skillsgate (MIT, https://github.com/skillsgate/skillsgate)
@@ -139,6 +168,10 @@ def main(argv: list[str]) -> int:
         if args.check:
             problems = stale(name, dest_root)
             print(f"{'STALE' if problems else 'ok   '} {name}: {'; '.join(problems) if problems else 'copy matches the source'}")
+            for line in problems:
+                if line.startswith("changed "):
+                    for dl in file_diff(name, dest_root, line[8:]):
+                        print(f"  diff {dl}")
             worst = 1 if problems else worst
         else:
             changes = install(name, dest_root)

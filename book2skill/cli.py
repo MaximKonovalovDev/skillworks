@@ -99,14 +99,10 @@ def extract(src: str, out: str, include: str | None, engine: str) -> None:
 @click.option("--work", required=True)
 def split(work: str) -> None:
     """Stage 2: 5k-char chunks."""
-    receipt = index_mod_split(work)
-    click.echo(f"split into {receipt['chunks']} chunks")
-
-
-def index_mod_split(work: str) -> dict:
     from . import split as split_mod
 
-    return split_mod.split(Path(work))
+    receipt = split_mod.split(Path(work))
+    click.echo(f"split into {receipt['chunks']} chunks")
 
 
 @main.command(name="index")

@@ -165,6 +165,19 @@ def human_summary(report):
     return chr(10).join(lines)
 
 
+def _check_description(description):
+    desc_reasons=[]
+    dlen=len(description)
+    if not description:
+        desc_reasons.append('description missing')
+    else:
+        if not (DESC_MIN <= dlen <= DESC_MAX):
+            desc_reasons.append(f'description {dlen} chars, want {DESC_MIN}-{DESC_MAX}')
+        if not any(m in description.lower() for m in TRIGGER_MARKERS):
+            desc_reasons.append('description needs a trigger phrase like ' + chr(39) + 'Use when ...' + chr(39))
+    return (desc_reasons, dlen, not desc_reasons)
+
+
 def audit(skilldir: Path) -> dict:
     skilldir = Path(skilldir)
     rows = []
@@ -207,18 +220,9 @@ def audit(skilldir: Path) -> dict:
     if total > TOTAL_BUDGET:
         flags.append(f"skill over budget ({total} > {TOTAL_BUDGET} tokens)")
 
-    desc_reasons: list[str] = []
-    dlen = len(description)
-    if not description:
-        desc_reasons.append("description missing")
-    else:
-        if not (DESC_MIN <= dlen <= DESC_MAX):
-            desc_reasons.append(f"description {dlen} chars, want {DESC_MIN}-{DESC_MAX}")
-        if not any(m in description.lower() for m in TRIGGER_MARKERS):
-            desc_reasons.append("description needs a trigger phrase like 'Use when ...'")
+    desc_reasons, dlen, description_ok = _check_description(description)
     if desc_reasons:
         flags.extend(f"description: {r}" for r in desc_reasons)
-    description_ok = not desc_reasons
 
     name_reasons: list[str] = []
     if not name:
