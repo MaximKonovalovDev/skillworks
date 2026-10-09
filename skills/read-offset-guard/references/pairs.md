@@ -104,6 +104,50 @@ $n = @(Get-Content -LiteralPath target.txt).Count; $o = [Math]::Max(0, [Math]::M
 ```
 prints: `count 7 clamp offset 6 lines PASS huge-32`
 
+### ro-past27
+bad (throws: Offset .* is out of range):
+```
+throw 'Offset 84 is out of range for this file (27 lines) on a far past-end read'
+```
+good:
+```
+$n = @(Get-Content -LiteralPath target.txt).Count; $o = [Math]::Max(0, [Math]::Min(84, $n - 1)); "count $n clamp offset $o lines PASS past-27"
+```
+prints: `count 7 clamp offset 6 lines PASS past-27`
+
+### ro-huge1734
+bad (throws: Offset .* is out of range):
+```
+throw 'Offset 1735 is out of range for this file (1734 lines) on a huge one-past-end'
+```
+good:
+```
+$n = @(Get-Content -LiteralPath target.txt).Count; $o = [Math]::Max(0, [Math]::Min(1735, $n - 1)); "length $n clamp offset $o step PASS huge-1734"
+```
+prints: `length 7 clamp offset 6 step PASS huge-1734`
+
+### ro-queue36
+bad (throws: Offset .* is out of range):
+```
+throw 'Offset 36 is out of range for this file (32 lines) just past the queue end'
+```
+good:
+```
+$n = @(Get-Content -LiteralPath target.txt).Count; $o = [Math]::Max(0, [Math]::Min(36, $n - 1)); $l = [Math]::Min(10, $n - $o); "clamp limit offset $o lines $l PASS queued-36"
+```
+prints: `clamp limit offset 6 lines 1 PASS queued-36`
+
+### ro-huge106
+bad (throws: Offset .* is out of range):
+```
+throw 'Offset 7593 is out of range for this file (106 lines) on a huge jump'
+```
+good:
+```
+$n = @(Get-Content -LiteralPath target.txt).Count; $o = [Math]::Max(0, [Math]::Min(7593, $n - 1)); "count $n clamp offset $o lines PASS huge-106"
+```
+prints: `count 7 clamp offset 6 lines PASS huge-106`
+
 ## Clamp every offset and step
 
 ### ro-jump
@@ -316,3 +360,14 @@ good:
 $n = @(Get-Content -LiteralPath target.txt).Count; $t = @(Get-Content -LiteralPath target.txt -Tail 2); "tail clamp offset $n lines $($t.Count) PASS handoff-135"
 ```
 prints: `tail clamp offset 7 lines 2 PASS handoff-135`
+
+### ro-tail13
+bad (throws: Offset .* is out of range):
+```
+throw 'Offset 14 is out of range for this file (13 lines) one past the small end'
+```
+good:
+```
+$n = @(Get-Content -LiteralPath target.txt).Count; $t = @(Get-Content -LiteralPath target.txt -Tail 2); "tail clamp offset $n lines $($t.Count) PASS tail-13"
+```
+prints: `tail clamp offset 7 lines 2 PASS tail-13`

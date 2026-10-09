@@ -1,9 +1,9 @@
 {
   "skill": "read-offset-guard",
-  "fingerprint": "bbcba86d7e6367d5442d8de9baeb365d7e42b766c9b59aa916cae7eff40dfe38",
-  "date": "2026-10-07T19:26Z",
+  "fingerprint": "e1781a1ab7ed06a59d1101c59fe946195625c11640f85efe58d03f20a07115e9",
+  "date": "2026-10-09T06:43Z",
   "command": "SKILL_LIVE=1 python -m pytest tests/test_read_offset_guard.py -q",
-  "result": "6 passed in 2.83s",
+  "result": "6 passed in 3.69s",
   "versions": {
     "python": "3.13.14",
     "os": "Windows-10-10.0.19045-SP0",

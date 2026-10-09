@@ -1,7 +1,7 @@
 ---
 name: read-offset-guard
 description: Use when reading a file with offset and limit, and when a read call comes back Offset N is out of range for this file
-version: 1.3.1
+version: 1.4.0
 author: skillworks
 tags: [read]
 license: MIT (skill text and scripts, original work)
@@ -25,6 +25,7 @@ The full bad and good runs are `references/pairs.md`, the machine list is `refer
 - Always pass a small limit with `Select-Object -First 3` on every read [src: references/pairs.md#ro-nolimit]
 - Short-circuit an empty file with `if ($n -eq 0)` reporting 0 lines and never clamping into [0, -1] [src: references/pairs.md#ro-empty0]
 - Re-check a board near 133 lines with `(Get-Content target.txt).Count` before jumping past 130 [src: references/pairs.md#ro-board180]
+- Clamp a far past-end read near 27 lines with `(Get-Content target.txt).Count` before jumping to 84 [src: references/pairs.md#ro-past27]
 
 ## Clamp every offset and step
 

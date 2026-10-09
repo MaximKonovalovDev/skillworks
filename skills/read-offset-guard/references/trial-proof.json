@@ -1,12 +1,16 @@
 {
   "skill": "read-offset-guard",
-  "runs": 12,
-  "with_rate": 1.0,
+  "runs": 13,
+  "with_rate": 0.9231,
   "without_rate": 0.0,
-  "lift": 1.0,
-  "spread": 1.0,
-  "fingerprint": "6aee12ca2d3f63096a2ff704d6efb33ff3bff3643c5294ad17313bbc14722164",
+  "lift": 0.9231,
+  "spread": 0.9231,
+  "with_median": 1.0,
+  "with_p10": 1.0,
+  "without_median": 0.0,
+  "without_p10": 0.0,
+  "fingerprint": "0b52561a92ecc7a2edb7a37df27b84e262136fe6796418a6499e097c8d1ba3fd",
   "sheet": "evals/read-offset-guard_trials.jsonl",
-  "at": "2026-10-06T17:48Z",
+  "at": "2026-10-09T06:43Z",
   "ok": true
 }

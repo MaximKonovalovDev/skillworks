@@ -30,3 +30,8 @@ Each fragment below is a substring of the real `bad_text` of the named pair. The
 - `Offset 620 is out of range for this file (555 lines)`: long-index read at offset 620. Pair `ro-index555`
 - `Offset 560 is out of range for this file (554 lines)`: long-index read at offset 560. Pair `ro-index554`
 - `Offset 100000 is out of range for this file (32 lines)`: huge-jump read at offset 100000. Pair `ro-huge32`
+- `Offset 84 is out of range for this file (27 lines)`: far past-end read at offset 84. Pair `ro-past27`
+- `Offset 1735 is out of range for this file (1734 lines)`: huge one-past-end read at offset 1735. Pair `ro-huge1734`
+- `Offset 36 is out of range for this file (32 lines)`: just-past-the-queue-end read at offset 36. Pair `ro-queue36`
+- `Offset 14 is out of range for this file (13 lines)`: one-past-the-small-end read at offset 14. Pair `ro-tail13`
+- `Offset 7593 is out of range for this file (106 lines)`: huge-jump read at offset 7593. Pair `ro-huge106`
