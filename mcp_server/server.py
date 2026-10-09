@@ -8,6 +8,7 @@ No dependencies, no network. Scope is honest: search + preview only, no generati
 from __future__ import annotations
 
 import argparse
+import hashlib
 import inspect
 import json
 import os
@@ -43,6 +44,76 @@ def _skills_dir() -> Path:
 CACHE_HINT = {"ttlMs": 3600000, "scope": "public"}
 
 EVAL_GATE = 0.6
+
+# Attested trust tier -- steal from roli-lpci/sigistry-marketplace@a7a30de (licence MIT,
+# https://github.com/roli-lpci/sigistry-marketplace/blob/a7a30de6bb3e6ba7b60e5b885513721f0a155743/scripts/verify-plugins.mjs
+# + .claude-plugin/attestations.json). Written fresh in our style; no donor code copied.
+# Code-only scope disclaimer: attestation covers SKILL.md bytes only, not prose claims,
+# eval scores, or install safety. Local-only: reads ATTESTATIONS_FILE from disk, never
+# fetched from the network (no socket/urllib/requests). Name-collision guard: exact
+# case-sensitive skill-name match; slashes, backslashes and ".." never match.
+ATTESTATIONS_FILE = ROOT / ".claude-plugin" / "attestations.json"
+_ATTESTATIONS_PINNED: dict[str, str] = {}
+TRUST_VERIFIED = "verified"
+TRUST_UNVERIFIED = "attested-unverified"
+
+
+def _attestations() -> dict[str, str]:
+    """Pinned skill-name -> sha256 map from the local attestations file (local-only)."""
+    global _ATTESTATIONS_PINNED
+    try:
+        raw = json.loads(ATTESTATIONS_FILE.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+    if isinstance(raw, dict) and isinstance(raw.get("skills"), dict):
+        raw = raw["skills"]
+    if not isinstance(raw, dict):
+        return {}
+    pinned: dict[str, str] = {}
+    for key, val in raw.items():
+        if not isinstance(key, str) or not isinstance(val, str):
+            continue
+        if not key or "/" in key or "\\" in key or ".." in key:
+            continue
+        pinned[key] = val
+    _ATTESTATIONS_PINNED = pinned
+    return dict(pinned)
+
+
+def _skill_sha256(name: str) -> str:
+    """Hex sha256 of one skill SKILL.md bytes; empty on missing or bad names."""
+    if not isinstance(name, str) or not name:
+        return ""
+    if "/" in name or "\\" in name or ".." in name:
+        return ""
+    try:
+        data = (_skills_dir() / name / "SKILL.md").read_bytes()
+    except OSError:
+        return ""
+    return hashlib.sha256(data).hexdigest()
+
+
+def _is_attested(name: str) -> bool:
+    """True when live SKILL.md sha matches pinned sha (verify-at-pinned-sha)."""
+    if not isinstance(name, str) or not name:
+        return False
+    if "/" in name or "\\" in name or ".." in name:
+        return False
+    pinned = _attestations()
+    if name not in pinned:
+        return False
+    expected = pinned[name]
+    if not isinstance(expected, str) or not expected:
+        return False
+    live = _skill_sha256(name)
+    if not live:
+        return False
+    return live.strip().lower() == expected.strip().lower()
+
+
+def _trust_for(name: str) -> str:
+    """Search-result trust field: verified only at pinned sha, else attested-unverified."""
+    return TRUST_VERIFIED if _is_attested(name) else TRUST_UNVERIFIED
 
 
 def _parse_skill_frontmatter(text: str) -> dict:
@@ -106,6 +177,8 @@ def _skill_meta(name: str) -> dict:
         pass
     above_gate = rate >= EVAL_GATE
     installed = (base / name / "SKILL.md").exists()
+    attested = _is_attested(name)
+    trust = TRUST_VERIFIED if attested else TRUST_UNVERIFIED
     return {
         "version": version,
         "author": author,
@@ -117,6 +190,8 @@ def _skill_meta(name: str) -> dict:
         "eval_rate": rate,
         "above_gate": above_gate,
         "installed": installed,
+        "attested": attested,
+        "trust": trust,
     }
 
 _DESCRIPTIONS = {
@@ -172,7 +247,7 @@ def _search(query: str, skill: str | None = None, limit: int = 5) -> list[dict]:
          "author": m["author"], "downloads": m["downloads"], "installs": m["installs"],
          "stars": m["stars"], "tags": m["tags"], "verified": m["verified"],
          "eval_rate": m["eval_rate"], "above_gate": m["above_gate"],
-         "installed": m["installed"]}
+         "installed": m["installed"], "attested": m["attested"], "trust": m["trust"]}
         for g, ir, d, s, n, f, h, m in scored[:limit]
     ]
 
@@ -372,3 +447,4 @@ def main(argv: list[str] | None = None) -> None:
 
 if __name__ == "__main__":
     main()
+

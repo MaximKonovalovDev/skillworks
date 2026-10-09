@@ -1,7 +1,7 @@
 ---
 name: bash-allowlist
 description: Use when a bash shell call comes back prevents you from using this specific tool call after a pipe or shell git reach
-version: 1.1.0
+version: 1.2.0
 author: skillworks
 tags: [shell]
 license: MIT (skill text and scripts, original work)
@@ -41,6 +41,14 @@ The full bad and good runs are `references/pairs.md`, the machine list is `refer
 - Poll health with `Invoke-RestMethod` alone, never prefix with sleep nor pipe through convert [src: references/pairs.md#ba-sleep]
 - Never chain inline code with `node -e`, write longer code to a temp file and run one single call [src: references/pairs.md#ba-inline]
 - Never pipe a helper with `node tools/lanes.mjs` through formatting, run one single call with no pipe [src: references/pairs.md#ba-lanes]
+
+## Fresh shapes (v1.2.0)
+
+- Never stash with `git stash` piped to formatting, run one single status with no pipe [src: references/pairs.md#ba-stash]
+- Preview changes with `git diff --stat` alone, never pipe through formatting nor echo [src: references/pairs.md#ba-diffpipe]
+- Never revert with `git checkout` chained to echo, make the change with the `Edit` tool [src: references/pairs.md#ba-checkout]
+- Run `node tools/lanes.mjs` alone with echo-free output, never pipe through formatting [src: references/pairs.md#ba-lanes-echo]
+- Never chain `Get-Date` to another call, write longer code to a temp file and run one single call [src: references/pairs.md#ba-getdate]
 
 ## When a call is denied
 

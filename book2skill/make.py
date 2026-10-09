@@ -10,6 +10,7 @@ from __future__ import annotations
 import contextlib
 import io
 import json
+import time
 from pathlib import Path
 
 from . import audit as audit_mod
@@ -41,6 +42,21 @@ def _quiet(fn, *args, **kwargs):
         return fn(*args, **kwargs)
 
 
+# Steal from chieri518/bmo_robot@3375445 (MIT, https://github.com/chieri518/bmo_robot/blob/3375445391e748eb6f9606a09ced29900df26d17/metrics.py): measure() perf_counter contextmanager + record() one row (stages+total, then reset); here timings ride along in the existing make.json write.
+@contextlib.contextmanager
+def _measure(timings: dict, stage: str):
+    start = time.perf_counter()
+    try:
+        yield timings
+    finally:
+        timings[stage] = round(time.perf_counter() - start, 3)
+
+
+def _record(result: dict, timings: dict, total_start: float) -> None:
+    result["timings"] = timings
+    result["total_s"] = round(time.perf_counter() - total_start, 3)
+
+
 def make(src: str, name: str, description: str, qa: Path, work: Path | None = None,
          skill: Path | None = None, include: str | None = None, targets: tuple[str, ...] = (),
          out: Path | None = None, rebuild: bool = False, say=print, engine: str = "classic") -> dict:
@@ -55,33 +71,42 @@ def make(src: str, name: str, description: str, qa: Path, work: Path | None = No
 
     result: dict = {"name": name, "source": src, "skill": str(skill), "work": str(work), "stages": {}}
     stages = result["stages"]
+    timings: dict[str, float] = {}
+    total_start = time.perf_counter()
+    result["timings"] = timings
 
-    stages["extract"] = extract_mod.extract(src, work, include=include, engine=engine)
+    with _measure(timings, "extract"):
+        stages["extract"] = extract_mod.extract(src, work, include=include, engine=engine)
     say(f"extract  {stages['extract']['kind']}, {stages['extract']['chars']} chars"
         + (f", {stages['extract']['files']} files" if "files" in stages["extract"] else ""))
-    stages["split"] = split_mod.split(work)
+    with _measure(timings, "split"):
+        stages["split"] = split_mod.split(work)
     say(f"split    {stages['split']['chunks']} chunks")
-    stages["index"] = index_mod.build_index(work)
+    with _measure(timings, "index"):
+        stages["index"] = index_mod.build_index(work)
     say(f"index    {stages['index']['records']} records")
 
-    kept = (skill / "SKILL.md").is_file() and "SKILL.md" not in build_mod.scaffold_leftovers(skill)
-    if kept and not rebuild:
-        stages["build"] = {"stage": "build", "skipped": "SKILL.md was written by an author; --rebuild overwrites it"}
-        say("build    skipped: SKILL.md already has an author (--rebuild overwrites it)")
-    else:
-        stages["build"] = build_mod.build(work, skill, name, description)
-        say(f"build    {skill}")
+    with _measure(timings, "build"):
+        kept = (skill / "SKILL.md").is_file() and "SKILL.md" not in build_mod.scaffold_leftovers(skill)
+        if kept and not rebuild:
+            stages["build"] = {"stage": "build", "skipped": "SKILL.md was written by an author; --rebuild overwrites it"}
+            say("build    skipped: SKILL.md already has an author (--rebuild overwrites it)")
+        else:
+            stages["build"] = build_mod.build(work, skill, name, description)
+            say(f"build    {skill}")
 
-    report = _quiet(eval_mod.run_eval, work, skill, Path(qa))
-    stages["eval"] = {"total": report["total"], "passed": report["passed"], "rate": report["rate"]}
-    say(f"eval     {report['passed']}/{report['total']} = {report['rate']:.3f} (gate {export_mod.GATE})")
-    audit = _quiet(audit_mod.audit, skill)
-    stages["audit"] = {"files": len(audit["sections"]), "total_tokens": audit["total_tokens"],
-                       "body_tokens": audit.get("body_tokens"), "over_budget": audit.get("over_budget", False)}
-    audit_line = f"audit    {len(audit['sections'])} files, {audit['total_tokens']} tokens"
-    if audit.get("over_budget"):
-        audit_line += f" (over budget: body {audit.get('body_tokens')} > {audit.get('body_budget')})"
-    say(audit_line)
+    with _measure(timings, "eval"):
+        report = _quiet(eval_mod.run_eval, work, skill, Path(qa))
+        stages["eval"] = {"total": report["total"], "passed": report["passed"], "rate": report["rate"]}
+        say(f"eval     {report['passed']}/{report['total']} = {report['rate']:.3f} (gate {export_mod.GATE})")
+    with _measure(timings, "audit"):
+        audit = _quiet(audit_mod.audit, skill)
+        stages["audit"] = {"files": len(audit["sections"]), "total_tokens": audit["total_tokens"],
+                           "body_tokens": audit.get("body_tokens"), "over_budget": audit.get("over_budget", False)}
+        audit_line = f"audit    {len(audit['sections'])} files, {audit['total_tokens']} tokens"
+        if audit.get("over_budget"):
+            audit_line += f" (over budget: body {audit.get('body_tokens')} > {audit.get('body_budget')})"
+        say(audit_line)
 
     left = build_mod.scaffold_leftovers(skill)
     result["placeholders"] = left
@@ -89,16 +114,21 @@ def make(src: str, name: str, description: str, qa: Path, work: Path | None = No
 
     result["gate"] = "pass" if report["rate"] >= export_mod.GATE else "refused"
     if report["rate"] < export_mod.GATE:
+        _record(result, timings, total_start)
         _write_make_receipt(work, result)
         raise SystemExit(f"eval gate refused: rate {report['rate']:.3f} below {export_mod.GATE:.1f}; fix the skill, not the test")
     if targets and left:
+        _record(result, timings, total_start)
         _write_make_receipt(work, result)
         raise SystemExit("export held: " + ", ".join(left) + " still hold the scaffold text; write them first (a pack with placeholder text is not shipped)")
     stages["export"] = []
-    for target in targets:
-        receipt = _quiet(export_mod.export, skill, target, out, eval_report=report)
-        stages["export"].append(receipt)
-        say(f"export   {receipt['dest']}")
+    if targets:
+        with _measure(timings, "export"):
+            for target in targets:
+                receipt = _quiet(export_mod.export, skill, target, out, eval_report=report)
+                stages["export"].append(receipt)
+                say(f"export   {receipt['dest']}")
+    _record(result, timings, total_start)
     _write_make_receipt(work, result)
     say(f"receipt  {work / 'make.json'}")
     return result

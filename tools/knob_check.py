@@ -140,6 +140,43 @@ def check(knobs_path: Path, scan_paths: list[Path]) -> tuple[list[Finding], int]
     return findings, 0
 
 
+CORPUS_DIR = ROOT / "tests" / "fixtures" / "knobs"
+
+
+def run_corpus_file(knobs_path: Path) -> tuple[list[Finding], int]:
+    """Corpus runner: one knob file, valid exits 0, invalid exits 2."""
+    try:
+        defined = read_defined(knobs_path)
+    except (OSError, ValueError) as exc:
+        return [Finding("unreadable", knobs_path.name, f"{knobs_path.name}:1 {exc}")], 2
+    hard = check_unknown_and_types(defined)
+    if hard:
+        tagged = [
+            Finding(f.kind, f.key, f"{knobs_path.name}:1 {f.detail}".strip())
+            for f in hard
+        ]
+        return tagged, 2
+    reads = {key: [f"{knobs_path.name}:1"] for key in defined}
+    dead = cross_check(defined, reads)
+    if dead:
+        return dead, 1
+    return [], 0
+
+
+def run_corpus_dirs(valid_dir: Path, invalid_dir: Path) -> list[str]:
+    """Sweep valid/*.json (expect 0) and invalid/*.json (expect 2); return errors."""
+    errors: list[str] = []
+    for path in sorted(valid_dir.glob("*.json")):
+        _, code = run_corpus_file(path)
+        if code != 0:
+            errors.append(f"{path.name}: expected exit 0, got {code}")
+    for path in sorted(invalid_dir.glob("*.json")):
+        _, code = run_corpus_file(path)
+        if code != 2:
+            errors.append(f"{path.name}: expected exit 2, got {code}")
+    return errors
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Knob unknown-key and dead-knob gate.")
     parser.add_argument("--knobs", default=str(ROOT / ".opencode" / "knobs.json"))

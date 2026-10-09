@@ -19,3 +19,8 @@ Each fragment below is a substring of the real `bad_text` of the named pair. The
 - `Start-Sleep`: sleep-prefixed health poll piped to convert. Pair `ba-sleep`
 - `node -e`: inline code chained to echo and formatting. Pair `ba-inline`
 - `tools/lanes.mjs`: helper piped to formatting. Pair `ba-lanes`
+- `git stash`: stash piped to formatting, never stash in the loop. Pair `ba-stash`
+- `git diff`: diff piped to formatting chained to echo. Pair `ba-diffpipe`
+- `git checkout`: checkout chained to echo, use the Edit tool. Pair `ba-checkout`
+- `tools/lanes.mjs`: helper piped to formatting chained to echo. Pair `ba-lanes-echo`
+- `Get-Date`: date chained to node piped to formatting. Pair `ba-getdate`

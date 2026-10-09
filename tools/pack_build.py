@@ -99,10 +99,98 @@ LISTING_SECTIONS = (
     ("Store assets", "store assets"),
     ("Files", None),
     ("Changelog", None),
+    ("Trust", None),
 )
 REQUIRED_SECTIONS = tuple(key for _, key in LISTING_SECTIONS if key)
 STARTER_FILES = ("listing.md", "README-buyer.md", "vol0-sample.md", "price.txt")
 SLOT_RE = re.compile(r"\{\{slot:\s*(.*?)\}\}")
+
+
+# Changelog bump ported from maziyarpanahi/openmed@08c368f (Apache-2.0,
+# https://github.com/maziyarpanahi/openmed/blob/08c368f558691776a5867442f5bf893e369f801e/scripts/release/changelog.py):
+# conventional-commit subject parse + strongest major/minor/patch + Keep-a-Changelog line render +
+# minimum-bump guard. Rewritten here stdlib-only with a small subject-line match.
+CONVENTIONAL_RE = re.compile(r"^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\(.+\))?(!)?:\s*\S")
+_BUMP_RANK = {"patch": 0, "minor": 1, "major": 2}
+
+
+def commit_bump(msg: str) -> str:
+    """The semver bump one conventional-commit subject asks for (major/minor/patch)."""
+    text = msg or ""
+    first = text.splitlines()[0] if text.strip() else ""
+    if "BREAKING CHANGE" in text:
+        return "major"
+    m = CONVENTIONAL_RE.match(first.strip())
+    if m and m.group(3):
+        return "major"
+    if m and m.group(1) == "feat":
+        return "minor"
+    return "patch"
+
+
+def strongest_bump(msgs) -> str:
+    """The strongest bump of many commit subjects (major wins, then minor, else patch)."""
+    best = "patch"
+    for msg in msgs or ():
+        bump = commit_bump(msg)
+        if _BUMP_RANK[bump] > _BUMP_RANK[best]:
+            best = bump
+    return best
+
+
+def bump_version(version: str, bump: str) -> str:
+    """The next semver after a bump (1.2.3 + major -> 2.0.0, minor -> 1.3.0, patch -> 1.2.4)."""
+    major, minor, patch = (int(x) for x in str(version).strip().split("."))
+    if bump == "major":
+        return f"{major + 1}.0.0"
+    if bump == "minor":
+        return f"{major}.{minor + 1}.0"
+    return f"{major}.{minor}.{patch + 1}"
+
+
+def minimum_version(old: str, bump: str) -> str:
+    """The smallest new version a bump allows (the minimum-bump guard floor)."""
+    return bump_version(old, bump)
+
+
+def _semver_tuple(version: str) -> tuple[int, int, int]:
+    parts = str(version).strip().split(".")
+    return (int(parts[0]), int(parts[1]), int(parts[2]))
+
+
+def meets_minimum_bump(old: str, new: str, bump: str) -> bool:
+    """True when new is at least the minimum bump over old (the guard the starter line promises)."""
+    return _semver_tuple(new) >= _semver_tuple(minimum_version(old, bump))
+
+
+def changelog_line(today: str, version: str, bump: str) -> str:
+    """One Keep-a-Changelog style line: date, version and the computed minimum bump (no slot)."""
+    return f"- {today}: version {version} assembled. minimum {bump} bump (Keep a Changelog). Proof lines above say what was run."
+
+
+# Attested-tier listing lines ported from roli-lpci/sigistry-marketplace@a7a30de (MIT,
+# .claude-plugin/attestations.json + scripts/verify-plugins.mjs): code-verified badge + pinned sha +
+# scope disclaimer + collision guard, never a catalog slot. Rewritten here as computed starter lines.
+TRUST_BADGE = "code-verified"
+
+
+def check_trust_collision(names) -> None:
+    """Refuse a skill named like the Trust section (the collision guard): it would read as the badge."""
+    lowered = [str(n).lower() for n in (names or [])]
+    if "trust" in lowered:
+        raise ValueError("skill name 'trust' collides with the ## Trust badge section")
+
+
+def trust_lines(slug: str, sha: str, names=()) -> list[str]:
+    """Computed Trust lines: badge + pinned sha + scope disclaimer + collision guard (never a catalog slot line)."""
+    check_trust_collision([slug, *((names or ()))])
+    pin = (sha or "unpinned").strip() or "unpinned"
+    return [
+        f"- Verified: `{TRUST_BADGE}` -- the Proof lines above ran against real programs; records are in `proof/`.",
+        f"- Pinned source: `{pin}` (the commit the proofs ran against).",
+        f"- Scope: this Trust covers `{slug}` only, not the whole catalog.",
+        "- Collision guard: no skill in this pack is named `trust`, so the badge line cannot be mistaken for a skill.",
+    ]
 
 
 def load_pack(pack_dir: Path) -> dict:
@@ -216,7 +304,7 @@ def proof_line(name: str, skills: Path) -> str:
         return f"- `{name}`: {slot('date and N passed from skills/' + name + '/references/live-proof.json; run python tests/live_proof.py ' + name)}"
 
 
-def listing_starter(pack: dict, skills: Path, today: str) -> str:
+def listing_starter(pack: dict, skills: Path, today: str, commits: tuple = (), sha: str = "unpinned") -> str:
     """listing.md with every field and heading of LISTING_FIELDS and LISTING_SECTIONS, prefilled from pack.json."""
     slug, title, version, vol0 = pack["slug"], pack["title"], pack["version"], pack["vol0"]
     price = f"${pack['price_usd']:g}"
@@ -264,7 +352,8 @@ def listing_starter(pack: dict, skills: Path, today: str) -> str:
                          f"- screenshots: needed: {slot('how many real captures, their size and what each shows')}"],
         "Files": [f"- `{slug}.zip`: the paid pack (README.md, LICENSES.md, manifest.json, skills/, zips/, proof/).",
                   f"- `{slug}-vol0.zip`: the free Vol 0 skill (SKILL.md at the root, NOTICE.md)."],
-        "Changelog": [f"- {today}: version {version} assembled. {slot('what was tested, and what is still open')}"],
+        "Changelog": [changelog_line(today, version, strongest_bump(commits))],
+        "Trust": trust_lines(slug, sha, names),
     }
     out = [f"# {title}", "", f"Tagline: {slot('one line of 60 to 110 characters: what the pack does for the buyer')}", ""]
     out += [f"{key}: {fields[key]}" for key in LISTING_FIELDS]
