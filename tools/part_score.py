@@ -200,8 +200,8 @@ def _workspace() -> str:
             timeout=10,
             cwd=str(ROOT),
         ).stdout.strip() or "UNKNOWN"
-    except Exception:
-        sha = "UNKNOWN"
+    except Exception as exc:
+        sha = f"UNKNOWN (git rev-parse failed: {exc})"
     try:
         branch = subprocess.run(
             ["git", "branch", "--show-current"],
@@ -210,8 +210,8 @@ def _workspace() -> str:
             timeout=10,
             cwd=str(ROOT),
         ).stdout.strip() or "UNKNOWN"
-    except Exception:
-        branch = "UNKNOWN"
+    except Exception as exc:
+        branch = f"UNKNOWN (git branch failed: {exc})"
     skills = len(list(ROOT.glob("skills/*/SKILL.md"))) if (ROOT / "skills").is_dir() else "UNKNOWN"
     tests = len(list(ROOT.glob("tests/test_*.py"))) if (ROOT / "tests").is_dir() else "UNKNOWN"
     return (

@@ -58,24 +58,30 @@ def find_price_markers(skilldir: Path) -> list[str]:
             (skilldir / "price.txt").read_text(encoding="utf-8")
         ):
             marks.append("price.txt names a price")
-    except OSError:
-        pass
+    except OSError as e:
+        raise OSError(f"price.txt unreadable in {skilldir}: {e}") from e
+    except ValueError as e:
+        raise ValueError(f"price.txt corrupt in {skilldir}: {e}") from e
     try:
         if (skilldir / "pack.json").is_file():
             data = json.loads((skilldir / "pack.json").read_text(encoding="utf-8"))
             price = data.get("price_usd")
             if isinstance(price, (int, float)) and price > 0:
                 marks.append(f"pack.json price_usd {price:g}")
-    except (OSError, ValueError):
-        pass
+    except OSError as e:
+        raise OSError(f"pack.json unreadable in {skilldir}: {e}") from e
+    except ValueError as e:
+        raise ValueError(f"pack.json corrupt in {skilldir}: {e}") from e
     try:
         if (skilldir / "listing.md").is_file():
             for line in (skilldir / "listing.md").read_text(encoding="utf-8").splitlines():
                 if line.strip().lower().startswith(("- price", "price")) and _PRICE_RE.search(line):
                     marks.append(f"listing.md prices it ({line.strip()[:60]})")
                     break
-    except OSError:
-        pass
+    except OSError as e:
+        raise OSError(f"listing.md unreadable in {skilldir}: {e}") from e
+    except ValueError as e:
+        raise ValueError(f"listing.md corrupt in {skilldir}: {e}") from e
     return marks
 
 

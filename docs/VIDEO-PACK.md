@@ -1,28 +1,28 @@
 # VIDEO-PACK spec
 
-Video skill pack for small makers.
-One pack, three skills, one price.
+Video pack for small makers.
+One pack, one skill, one price idea.
 
-## Skills
+## Built now
 
-1. cut - trim clips, cut gaps, add captions.
-   Test: cut a 2 min clip to under 60 sec, words stay in sync.
+Built: `skills/video-cut/SKILL.md` trims clips and makes shorts.
+Built: `packs/video-ffmpeg/SKILL.md` holds thin ffmpeg verbs.
+Built: `packs/video-ffmpeg/server.py` runs the prove step.
+Shape to copy: `packs/fleet-vol-1/pack.json` shows a real pack file.
 
-2. voice - clean voice, fix levels, remove noise.
-   Test: noisy phone clip passes loud and clear, no hiss.
+## Planned, not built
 
-3. publish - size, title, thumb, post to each site.
-   Test: one clip ships to Shorts, TikTok, X with right sizes.
+Voice clean-up is planned, not built. No files yet. Lead decides.
+Publish step is planned, not built. No files yet. Lead decides.
+Cut lives in video-cut today. The other two wait for lead choice.
 
-## Price tier idea
+## Price idea
 
-Single tier: $29 for all three skills.
-Free sample: cut only, one short clip.
-Bundle later with other packs after 3 packs sell.
+Single tier idea: $29 for the pack.
+Free sample idea: cut only, one short clip.
+Copy the fleet pack shape for price and listing.
 
-## Gumroad mapping
+## Prove
 
-Product: video-pack.zip holds cut, voice, publish.
-Price file: packs/video/pack.json price = 29.
-Listing: title, what it does, sample clip, proof lines.
-Vol 0: free cut sample links to paid pack page.
+Run `python packs/video-ffmpeg/server.py --selftest` from repo root.
+Green means SELFTEST PASS.

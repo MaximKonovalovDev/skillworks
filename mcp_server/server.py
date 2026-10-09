@@ -45,6 +45,13 @@ CACHE_HINT = {"ttlMs": 3600000, "scope": "public"}
 
 EVAL_GATE = 0.6
 
+# Capability allowlist -- idea-only from arXiv:2601.17549 (MCPSec
+# capability-attestation; reference-only, no code copied). Server-claimed
+# perms must match this pinned allowlist, else installs refuse loudly.
+# Written fresh in our style; local-only SKILL.md frontmatter read, never
+# fetched from the network (no socket/urllib/requests).
+CAPABILITY_ALLOWLIST = frozenset({"search", "preview", "install"})
+
 # Attested trust tier -- steal from roli-lpci/sigistry-marketplace@a7a30de (licence MIT,
 # https://github.com/roli-lpci/sigistry-marketplace/blob/a7a30de6bb3e6ba7b60e5b885513721f0a155743/scripts/verify-plugins.mjs
 # + .claude-plugin/attestations.json). Written fresh in our style; no donor code copied.

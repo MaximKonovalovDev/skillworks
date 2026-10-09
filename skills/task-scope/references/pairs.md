@@ -93,6 +93,39 @@ Set-Content -LiteralPath claims.txt -Value 'item two'; 'description check skip d
 ```
 prints: `description check skip dispatched diff checks PASS`
 
+### ts-retryseq
+bad (throws: Task cancelled):
+```
+throw 'Task cancelled on task retry in fresh lane without claim stragglers cancelled'
+```
+good:
+```
+$c = Get-Content -LiteralPath queue.txt | Select-Object -First 1; Set-Content -LiteralPath claims.txt -Value ('retry ' + $c); 'retry lane claim sequence diff checks PASS claimed sequenced'
+```
+prints: `retry lane claim sequence diff checks PASS`
+
+### ts-topicdedupe
+bad (throws: Task cancelled):
+```
+throw 'Task cancelled on task two research topics at once duplicate cancelled'
+```
+good:
+```
+$ls = Get-Content -LiteralPath claims.txt; Set-Content -LiteralPath claims.txt -Value 'research one'; 'research dedupe skip duplicate diff checks PASS topics deduped'
+```
+prints: `research dedupe skip duplicate diff checks PASS`
+
+### ts-vagueclaim
+bad (throws: Task cancelled):
+```
+throw 'Task cancelled on task vague single token no claim cancelled'
+```
+good:
+```
+Set-Content -LiteralPath claims.txt -Value 'one item fix'; 'vague description claim one item diff checks PASS claimed'
+```
+prints: `vague description claim one item diff checks PASS`
+
 ## Bound the fan-out
 
 ### ts-fanout
@@ -150,6 +183,17 @@ $c = Get-Content -LiteralPath queue.txt | Select-Object -First 1; Set-Content -L
 ```
 prints: `orchestrator sequence one claim diff checks PASS`
 
+### ts-capbound
+bad (throws: Task cancelled):
+```
+throw 'Task cancelled on task four parallel captures at once stragglers cancelled'
+```
+good:
+```
+$b = 1..3 | ForEach-Object { "capture $_" }; 'capture bounded three join diff checks PASS joined'
+```
+prints: `capture bounded three join diff checks PASS`
+
 ## Slice long work
 
 ### ts-slice
@@ -195,3 +239,14 @@ good:
 Set-Content -LiteralPath report.txt -Value 'RESULT: DONE - one item'; 'RESULT one line record unverified pending joined output'
 ```
 prints: `RESULT one line record unverified pending`
+
+### ts-repairchain
+bad (throws: Task cancelled):
+```
+throw 'Task cancelled on task repair chain three fixes no receipt lost'
+```
+good:
+```
+Set-Content -LiteralPath slice3.txt -Value 'receipt three'; 'repair chain slice receipt resume diff checks PASS chained'
+```
+prints: `repair chain slice receipt resume diff checks PASS`

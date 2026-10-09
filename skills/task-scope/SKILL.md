@@ -1,7 +1,7 @@
 ---
 name: task-scope
 description: Use when fanning out parallel subagent task runs: claim one item per run, join each batch before the next
-version: 1.1.0
+version: 1.2.0
 author: skillworks
 tags: [orchestration]
 license: MIT (skill text and scripts, original work)
@@ -21,6 +21,9 @@ The full bad and good runs are `references/pairs.md`, the machine list is `refer
 - Check round state with `Get-Content round.txt` and dispatch only when the lane token names new work [src: references/pairs.md#ts-eligible]
 - Never dispatch the same description twice in one session with `Set-Content claims.txt`: check the claims file for already-dispatched descriptions, not just queue items [src: references/pairs.md#ts-dupdesc]
 - Record every dispatched description with `Set-Content claims.txt` and skip it when it appears again [src: references/pairs.md#ts-descclaim]
+- Sequence a retry in a fresh lane with `Set-Content claims.txt` claiming the lane before the retry so the straggler is not cancelled [src: references/pairs.md#ts-retryseq]
+- Dedupe research topics with `Set-Content claims.txt` recording the first topic and skipping the duplicate [src: references/pairs.md#ts-topicdedupe]
+- Never dispatch a vague single token with `Set-Content claims.txt`: write one item before dispatch [src: references/pairs.md#ts-vagueclaim]
 
 ## Bound the fan-out (no straggler cancels)
 
@@ -31,6 +34,7 @@ The full bad and good runs are `references/pairs.md`, the machine list is `refer
 - Fan out parallel runs with `Select-Object -First 1` claiming one item per run and join before the next batch [src: references/pairs.md#ts-onefan]
 - Fire a land batch with `ForEach-Object` bounded to three and join it before the next batch [src: references/pairs.md#ts-landbatch]
 - Sequence an orchestrator fan-out with `Select-Object -First 1` claiming one item then the rest in order [src: references/pairs.md#ts-orchseq]
+- Cap parallel captures with `1..3` and join before the next batch [src: references/pairs.md#ts-capbound]
 
 ## Slice long work (no lost cancels)
 
@@ -38,6 +42,7 @@ The full bad and good runs are `references/pairs.md`, the machine list is `refer
 - Resume a long repair with `Get-Content slice2.txt` reading the last receipt first [src: references/pairs.md#ts-resume]
 - Make reruns idempotent with `Set-Content rerun.txt` so a resume gives the same result [src: references/pairs.md#ts-idempotent]
 - Report the run with `Set-Content report.txt` listing claim, output, RESULT line, and unverified gaps [src: references/pairs.md#ts-report]
+- Chain repairs with `Set-Content slice3.txt` writing one receipt per fix and resuming from it [src: references/pairs.md#ts-repairchain]
 
 ## When a run is cancelled
 

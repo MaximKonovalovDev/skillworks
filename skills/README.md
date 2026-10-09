@@ -1,6 +1,6 @@
 # skills
 
-One folder per Agent Skill: 59 skill folders plus `_template`.
+One folder per Agent Skill: 70+ skill folders plus `_template` (see `skills/` for the current list).
 
 - Each skill folder has a `SKILL.md` with `name` and `description`. It may also have `references/`, `scripts/`, `tests/` and `evals/`.
 - Open first: the `SKILL.md` of the skill you work on, for example `bash-abort-guard/SKILL.md`.

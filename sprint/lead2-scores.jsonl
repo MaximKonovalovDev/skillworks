@@ -33,3 +33,6 @@
 {"at":"2026-10-09T07:17:06.792Z","journey":"J2","score":10,"note":"halves hold empty gaps persist up pending","evidence":"C:/Users/me/.empire/state/skilldoctor/adopted.csv"}
 {"at":"2026-10-09T07:17:07.089Z","journey":"J3","score":10,"note":"install verb pins refuse mismatch green","evidence":"6 passed + 4 passed"}
 {"at":"2026-10-09T07:17:07.416Z","journey":"J4","score":10,"note":"SKILL identical stale outside flagged JSON","evidence":"AEB9598B951BEFEF354C6E5C756178F1D6271B11663C617C0BF6488FF90C82AD"}
+{"at":"2026-10-09T10:22:23.530Z","journey":"J1","score":10,"note":"Copied skill to scratch, dry-run run and refuse all matched docs exactly","evidence":"C:/Users/me/AppData/Local/Temp/opencode/j1-pipe-run/out/receipt.json"}
+{"at":"2026-10-09T10:22:23.705Z","journey":"J2","score":10,"note":"Three adopted skills show over seventy percent failure reduction each","evidence":"C:/Users/me/.empire/state/skilldoctor/adopted.csv"}
+{"at":"2026-10-09T10:22:23.864Z","journey":"J3","score":10,"note":"Both MCP schema tests passed quickly with zero setup needed","evidence":"6 passed in 1.99s"}

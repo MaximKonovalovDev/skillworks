@@ -61,7 +61,7 @@ def score_item(must: list[str], blob: str) -> tuple[float, str]:
     """Score one QA item with partial credit. Returns (score, reasoning)."""
     words = [str(w) for w in (must or []) if str(w)]
     if not words:
-        return FULL, "no must-words (vacuous pass)"
+        return FAIL, "empty must (loud fail: no must-words defined)"
     lowered = (blob or "").lower()
     missing = [w for w in words if w.lower() not in lowered]
     found = len(words) - len(missing)

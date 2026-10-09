@@ -18,8 +18,8 @@ def test_score_item_full_partial_fail_and_reasoning() -> None:
     assert score == 0.5 and "beta" in why  # reasoning names the miss
     score, why = es.score_item(["alpha", "beta"], "nothing relevant")
     assert score == 0.0 and "hard fail" in why
-    score, _ = es.score_item([], "anything")
-    assert score == 1.0  # vacuous pass, matches the gate's all([]) == True
+    score, why = es.score_item([], "anything")
+    assert score == 0.0 and "empty must" in why  # loud fail, no vacuous pass
 
 
 def test_score_item_case_insensitive() -> None:
@@ -147,3 +147,13 @@ def test_command_line_report(tmp_path: Path) -> None:
          "--evals", str(evals), "--out", str(out)],
         capture_output=True, text=True)
     assert run.returncode == 0 and "weighted_rate" in run.stdout
+
+def test_score_item_empty_must_fails_loud() -> None:
+    for must in ([], None, [""]):
+        score, why = es.score_item(must, "anything")
+        assert score == 0.0 and "empty must" in why
+    qa = es.grade_qa([{"q": "q1", "must": []}], ["anything"])
+    assert qa["rate"] == 0.0
+    assert qa["weighted_rate"] == 0.0
+    assert qa["failure_score"] == 1.0
+    assert "rate" in qa and "weighted_rate" in qa

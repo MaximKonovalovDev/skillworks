@@ -5,3 +5,4 @@ DR-1006-5 | builder-cure | 2026-10-09T06:15Z | skills/read-offset-guard/
 DR-1006-4 | builder-cure | 2026-10-09T07:27Z | skills/edit-verify/
 DR-1006-3 | builder-cure | 2026-10-09T08:14Z | skills/bash-spawn-guard/
 INSTALL-COVERALL-RETRY | pilot-installer | 2026-10-09T08:50Z | all-using-repos
+DR-1006-2 | builder-cure | 2026-10-09T10:16Z | skills/task-scope/

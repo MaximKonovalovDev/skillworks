@@ -237,47 +237,6 @@ def _render_page_code(page, out: list[str]) -> int:
         fences += 1
     return fences
 
-
-def _pdf_tables_as_markdown(path: Path, max_pages: int) -> tuple[str, int, bool]:
-    """pdfplumber lattice/line tables rendered as pipe rows (jsvine/pdfplumber, MIT).
-
-    Returns (markdown, table_count, skipped). Skipped is True when the document
-    exceeds max_pages; the caller records it instead of stalling a manual.
-    """
-    import pdfplumber
-
-    with pdfplumber.open(str(path)) as pdf:
-        if len(pdf.pages) > max_pages:
-            return "", 0, True
-        blocks: list[str] = []
-        count = 0
-        for page in pdf.pages:
-            if not _page_has_vectors(page):
-                continue
-            count += _render_lattice_tables(page, blocks)
-    if not blocks:
-        return "", 0, False
-    return "## Tables\n\n" + "\n".join(blocks), count, False
-
-
-def _pdf_code_as_markdown(path: Path, max_pages: int) -> tuple[str, int, bool]:
-    """Monospaced-font (Courier) lines grouped into fenced blocks via pdfplumber chars."""
-    import pdfplumber
-
-    with pdfplumber.open(str(path)) as pdf:
-        if len(pdf.pages) > max_pages:
-            return "", 0, True
-        out: list[str] = []
-        fences = 0
-        for page in pdf.pages:
-            if not _page_has_vectors(page):
-                continue
-            fences += _render_page_code(page, out)
-    if not out:
-        return "", 0, False
-    return "## Code\n\n" + "\n\n".join(out), fences, False
-
-
 def _read_pdf_markitdown(path: Path) -> tuple[str, dict]:
     """markitdown text plus pdfplumber table/code recovery (both MIT)."""
     _ensure_local_tools()
@@ -312,13 +271,6 @@ def _read_pdf_markitdown(path: Path) -> tuple[str, dict]:
         "code_skipped": code_skipped,
     }
     return (text + ("\n\n" + extra if extra else "")).strip(), info
-
-
-def _pdf_page_count(path: Path) -> int:
-    from pypdf import PdfReader
-
-    return len(PdfReader(str(path)).pages)
-
 
 def _epub_attr(tag, name):
     """Safe BeautifulSoup attr read that never raises.

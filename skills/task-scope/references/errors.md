@@ -19,3 +19,8 @@ Each fragment below is a substring of the real `bad_text` of the named pair. The
 - `Task cancelled`: land batch fired at once with stragglers. Pair `ts-landbatch`
 - `Task cancelled`: orchestrator wide fan-out with stragglers. Pair `ts-orchseq`
 - `Task cancelled`: same description dispatched twice, second cancelled as duplicate. Pair `ts-descclaim`
+- `Task cancelled`: retry in a fresh lane without a claim. Pair `ts-retryseq`
+- `Task cancelled`: four parallel captures at once with stragglers. Pair `ts-capbound`
+- `Task cancelled`: two research topics at once as duplicates. Pair `ts-topicdedupe`
+- `Task cancelled`: vague single token with no claim. Pair `ts-vagueclaim`
+- `Task cancelled`: repair chain of three fixes with no receipt. Pair `ts-repairchain`
