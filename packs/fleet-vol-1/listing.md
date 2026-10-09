@@ -95,7 +95,7 @@ The full credit lines are in `LICENSES.md` inside the zip.
 
 Each skill has a live proof: its tests ran against real programs and the skill still matches the fingerprint stored then.
 
-- `pwsh-for-bash-writers`: 2026-10-07, 7 passed (one of them runs all 49 pairs in pwsh 7.6.3).
+- `pwsh-for-bash-writers`: 2026-10-09, 7 passed (one of them runs all 49 pairs in pwsh 7.6.3).
 - `real-browser-automation`: 2026-10-07, 11 passed (real Edge and Chrome against 127.0.0.1).
 - `bevy-rust-ecs`: 2026-10-07, 42 passed (names and file lines checked against the 0.19.1 source tree; nothing compiled).
 
@@ -121,3 +121,4 @@ Cover, demo and screenshots are delivered (paths below); none is faked. The page
 
 - 2026-10-04: version 1.0.0 assembled. Contents tested, listing written, store assets requested.
 - 2026-10-04: live on Gumroad at the Live listing line above; price $19 and the AI disclosure line stay as written.
+

@@ -51,38 +51,62 @@ _H = re.compile(r"\b[0-9a-f]{7,40}\b", re.I)
 _N = re.compile(r"\d+")
 _WS = re.compile(r"\s+")
 _URL = re.compile(r"https?://([^/\s)\"']+)[^\s)\"']*")
+_WWW = re.compile(r"^www\.")
+_DENIED = re.compile(r"prevents you from using this specific tool call")
+_CD_FLAG = re.compile(r"\s*cd\s")
+_TERM = re.compile(r"The term '([^']+)'")
+_STATUS_CODE = re.compile(r"status code", re.I)
+_CODE_NUM = re.compile(r"\b(\d{3}) (?:GET|POST|HEAD)\b")
+_HOST2 = re.compile(r"https?://(?:www\.)?([^/\s)]+)")
+_NOTFOUND_PREFIX = re.compile(r"^File not found:\s*")
+_CD_PREFIX = re.compile(r"^\s*cd\s+(\"[^\"]*\"|'[^']*'|\S+)\s*(?:&&|;)\s*")
+_SPLIT_CHAIN = re.compile(r"\|\||&&|[|;\n]")
+_TOOL2 = re.compile(r"^(git|gh|cargo|node|npm|npx|dotnet|python|py|pwsh|powershell)$", re.I)
+_QUOTED = re.compile(r"\"[^\"]*\"|'[^']*'")
+_CD_SIMPLE = re.compile(r"^\s*cd\s+\S+\s*(?:&&|;)\s*")
+_DOLLAR = re.compile(r"^\$\w+\s*=\s*\(?")
+_WORD = re.compile(r"^[\w.-]+$")
+_NORM_CACHE: dict[str, str] = {}
+_NORM_CACHE_MAX = 4096
+
+
+def _host(m: re.Match) -> str:
+    return "<" + _WWW.sub("", m.group(1)) + ">"
 
 
 def norm(s: object) -> str:
     """Same blanking as the fleet meter: hosts, quotes, paths, ids, hashes, numbers."""
-    t = _ANSI.sub("", str(s or ""))
-
-    def _host(m: re.Match) -> str:
-        return "<" + re.sub(r"^www\.", "", m.group(1)) + ">"
-
+    key = s if isinstance(s, str) else str(s or "")
+    hit = _NORM_CACHE.get(key)
+    if hit is not None:
+        return hit
+    t = _ANSI.sub("", key)
     t = _URL.sub(_host, t)
     t = _Q.sub("Q", t)
     t = _P.sub("PATH", t)
     t = _ID.sub("ID", t)
     t = _H.sub("H", t)
     t = _N.sub("N", t)
-    return _WS.sub(" ", t).strip()[:80]
+    res = _WS.sub(" ", t).strip()[:80]
+    if len(_NORM_CACHE) < _NORM_CACHE_MAX:
+        _NORM_CACHE[key] = res
+    return res
 
 
 def head_of(cmd: object) -> str:
-    c = re.sub(r"^\s*cd\s+(\"[^\"]*\"|'[^']*'|\S+)\s*(?:&&|;)\s*", "", str(cmd or "")).strip()
-    first = re.split(r"\|\||&&|[|;\n]", c)[0].replace("\"", "").replace("'", "").replace("`", "").strip().split()
-    two = 2 if first and re.match(r"^(git|gh|cargo|node|npm|npx|dotnet|python|py|pwsh|powershell)$", first[0], re.I) else 1
+    c = _CD_PREFIX.sub("", str(cmd or "")).strip()
+    first = _SPLIT_CHAIN.split(c)[0].replace("\"", "").replace("'", "").replace("`", "").strip().split()
+    two = 2 if first and _TOOL2.match(first[0]) else 1
     return " ".join(first[:two])[:40]
 
 
 def chained_of(cmd: object) -> list[str]:
-    c = re.sub(r"\"[^\"]*\"|'[^']*'", "Q", str(cmd or ""))
-    c = re.sub(r"^\s*cd\s+\S+\s*(?:&&|;)\s*", "", c)
+    c = _QUOTED.sub("Q", str(cmd or ""))
+    c = _CD_SIMPLE.sub("", c)
     out: list[str] = []
-    for chunk in re.split(r"\|\||&&|[|;\n]", c)[1:]:
-        w = re.sub(r"^\$\w+\s*=\s*\(?", "", chunk.strip()).split()[0] if chunk.strip().split() else ""
-        if w and re.match(r"^[\w.-]+$", w) and w not in out:
+    for chunk in _SPLIT_CHAIN.split(c)[1:]:
+        w = _DOLLAR.sub("", chunk.strip()).split()[0] if chunk.strip().split() else ""
+        if w and _WORD.match(w) and w not in out:
             out.append(w)
     return out[:3]
 
@@ -132,7 +156,7 @@ def classify_call(tool: str, status: str, err: str, out40: str, cmd: str, filep:
     """Meter-compatible outcome, flag, fingerprint and head for one tool call."""
     wrongshell = tool == "bash" and (notrec > 0 or devnull > 0)
     outcome = "error" if status == "error" else ("hidden" if wrongshell else "ok")
-    denied = bool(re.search(r"prevents you from using this specific tool call", err))
+    denied = bool(_DENIED.search(err))
     if denied:
         flag: str | None = "denied"
     elif wrongshell:
@@ -141,7 +165,7 @@ def classify_call(tool: str, status: str, err: str, out40: str, cmd: str, filep:
         flag = "missing"
     elif tool in ("grep", "glob") and status == "completed" and out40.startswith("No files found"):
         flag = "empty"
-    elif tool == "bash" and re.match(r"\s*cd\s", cmd or ""):
+    elif tool == "bash" and _CD_FLAG.match(cmd or ""):
         flag = "cd"
     else:
         flag = None
@@ -153,16 +177,16 @@ def classify_call(tool: str, status: str, err: str, out40: str, cmd: str, filep:
             fps = f"{tool} denied: {head or '?'}{(' + ' + ', '.join(more)) if more else ''}"
         elif wrongshell:
             if notrec > 0:
-                m = re.search(r"The term '([^']+)'", term or "")
+                m = _TERM.search(term or "")
                 fps = f"bash pwsh: '{m.group(1) if m else '?'}' is not a pwsh command"
             else:
                 fps = "bash pwsh: 2>/dev/null"
-        elif tool == "webfetch" and re.search(r"status code", err, re.I):
-            code = (re.search(r"\b(\d{3}) (?:GET|POST|HEAD)\b", err) or [None, "?"])[1]
-            hm = re.search(r"https?://(?:www\.)?([^/\s)]+)", err)
+        elif tool == "webfetch" and _STATUS_CODE.search(err):
+            code = (_CODE_NUM.search(err) or [None, "?"])[1]
+            hm = _HOST2.search(err)
             fps = f"webfetch {code} {hm.group(1) if hm else '?'}"
         elif err.startswith("File not found"):
-            body = norm(re.sub(r"^File not found:\s*", "", err)).replace("PATH", base_of(filep) or "PATH")
+            body = norm(_NOTFOUND_PREFIX.sub("", err)).replace("PATH", base_of(filep) or "PATH")
             fps = f"read missing: {body}"
         else:
             fps = f"{tool}: {norm(err or out40)}"
@@ -172,11 +196,13 @@ def classify_call(tool: str, status: str, err: str, out40: str, cmd: str, filep:
 def family_of(tool: str, cmd: str, text: str) -> set[str]:
     """Failure families a call belongs to (one entry per family per call)."""
     hit: set[str] = set()
-    if _BEVY.search((cmd or "") + " " + (text or "")):
+    _c = cmd or ""
+    _t = text or ""
+    if _BEVY.search(_c) or _BEVY.search(_t):
         hit.add("bevy")
     if tool != "bash":
         return hit
-    out, cmd = text or "", cmd or ""
+    out, cmd = _t, _c
     if _PW_NOTREC.search(out) or _PW_PARSER.search(out) or _PW_DEVNULL.search(out):
         hit.add("pwsh")
     if (_PW_AMBIG.search(out) and _PW_DATEU.search(cmd)) or (_PW_FLAG_OUT.search(out) and _PW_FLAG_CMD.search(cmd)):
@@ -262,14 +288,22 @@ def scan_db(db: Path, hours: float, dirs: list[tuple[str, str]], now_ms: float |
              + (" and time_created <= ?" if hi is not None else "")
              + " and json_extract(data,'$.type')='tool'")
         args = (lo,) if hi is None else (lo, hi)
+        repo_cache: dict[str, str] = {}
+        agent_cache: dict[str, str] = {}
         for sid, tool, status, err, cmd, filep, out40, out400, notrec, term, devnull in con.execute(q, args):
             scanned += 1
             if status not in ("completed", "error"):
                 continue
             tool, status = tool or "", status or ""
             err, cmd, filep, out40, out400 = err or "", cmd or "", filep or "", out40 or "", out400 or ""
-            repo = repo_of(sess.get(sid), dirs)
-            agent = (agents.get(sid) or "?").removesuffix("-paid")
+            repo = repo_cache.get(sid)
+            if repo is None:
+                repo = repo_of(sess.get(sid), dirs)
+                repo_cache[sid] = repo
+            agent = agent_cache.get(sid)
+            if agent is None:
+                agent = (agents.get(sid) or "?").removesuffix("-paid")
+                agent_cache[sid] = agent
             _o, _f, fps, _h = classify_call(tool, status, err, out40, cmd, filep, notrec or 0, term or "", devnull or 0)
             if fps:
                 fails += 1

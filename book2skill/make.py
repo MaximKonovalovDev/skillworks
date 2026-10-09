@@ -113,23 +113,21 @@ def make(src: str, name: str, description: str, qa: Path, work: Path | None = No
     say("fill     " + (", ".join(left) + " still hold the scaffold text (a person or agent writes them)" if left else "nothing left to write"))
 
     result["gate"] = "pass" if report["rate"] >= export_mod.GATE else "refused"
-    if report["rate"] < export_mod.GATE:
+    try:
+        if report["rate"] < export_mod.GATE:
+            raise SystemExit(f"eval gate refused: rate {report['rate']:.3f} below {export_mod.GATE:.1f}; fix the skill, not the test")
+        if targets and left:
+            raise SystemExit("export held: " + ", ".join(left) + " still hold the scaffold text; write them first (a pack with placeholder text is not shipped)")
+        stages["export"] = []
+        if targets:
+            with _measure(timings, "export"):
+                for target in targets:
+                    receipt = _quiet(export_mod.export, skill, target, out, eval_report=report)
+                    stages["export"].append(receipt)
+                    say(f"export   {receipt['dest']}")
+    finally:
         _record(result, timings, total_start)
         _write_make_receipt(work, result)
-        raise SystemExit(f"eval gate refused: rate {report['rate']:.3f} below {export_mod.GATE:.1f}; fix the skill, not the test")
-    if targets and left:
-        _record(result, timings, total_start)
-        _write_make_receipt(work, result)
-        raise SystemExit("export held: " + ", ".join(left) + " still hold the scaffold text; write them first (a pack with placeholder text is not shipped)")
-    stages["export"] = []
-    if targets:
-        with _measure(timings, "export"):
-            for target in targets:
-                receipt = _quiet(export_mod.export, skill, target, out, eval_report=report)
-                stages["export"].append(receipt)
-                say(f"export   {receipt['dest']}")
-    _record(result, timings, total_start)
-    _write_make_receipt(work, result)
     say(f"receipt  {work / 'make.json'}")
     return result
 

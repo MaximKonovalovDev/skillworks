@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import json
 import math
+import os
 from pathlib import Path
 
 
@@ -15,12 +16,18 @@ _CACHE: dict = {}
 
 def _load_corpus(workdir: Path) -> tuple:
     key = str(Path(workdir).resolve())
-    paths = sorted((Path(workdir) / 'chunks').glob('*.txt'))
-    stats = [p.stat() for p in paths]
-    fp = tuple((p.name, s.st_size, s.st_mtime_ns) for p, s in zip(paths, stats))
+    chunk_dir = Path(workdir) / 'chunks'
+    try:
+        with os.scandir(chunk_dir) as it:
+            entries = [(e.name, e.stat()) for e in it if e.name.endswith('.txt') and e.is_file()]
+    except FileNotFoundError:
+        entries = []
+    rows = sorted((name, st.st_size, st.st_mtime_ns) for name, st in entries)
+    fp = tuple(rows)
     hit = _CACHE.get(key)
     if hit is not None and hit[0] == fp:
         return hit[1], hit[2], hit[3]
+    paths = [chunk_dir / name for name, _size, _mtime in rows]
     texts = [p.read_text(encoding='utf-8').lower() for p in paths]
     lens = [len(t.split()) or 1 for t in texts]
     _CACHE[key] = (fp, paths, texts, lens)

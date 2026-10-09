@@ -48,6 +48,7 @@ Archived 2026-10-08 (size fix): 31 closed items moved verbatim to sprint/inbox-a
 - [ ] EB-2026-10-09-S54 from center (campaign, 2026-10-09) [AUDIT-CAMPAIGN-HARNESS-WORK] | Fix eval example in .opencode/skills/skill-eval-harness/SKILL.md:17 missing required --work (AUDIT lap 4) | why: command fails Missing option --work as written | done when done when: the doc example runszdan
 - [ ] EB-2026-10-09-S55 from center (campaign, 2026-10-09) [AUDIT-CAMPAIGN-SPRINT-SEEDS] | Fix stale seeds path + seat count in .opencode/commands/sprint.md:31 (AUDIT lap 4) | why: names missing center/crews/skillworks path and says 11 seats, 13 standing | done when done when: sprint.md names the existing crews path and seat count matches standing dir
 - [ ] EB-2026-10-09-S56 from center (campaign, 2026-10-09) [AUDIT-CAMPAIGN-README-INSTALL] | Add Setup section to README.md with pip install -r requirements.txt + Python 3.10+ (AUDIT lap 4) | why: stranger hits ModuleNotFoundError; README never references requirements.txt | done when done when: rg -n 'pip install' README.md prints the setup line
+- [ ] EB-2026-10-09-S89 from center (Maxim, 2026-10-09) | Add named quarantine block plus used-by line | why: default check hits flakes, S1-S6 PASS but 0 packs used by products | done when quarantine block exists, each met bar prints its user or no outside user yet
 
 ## Done
 

@@ -45,3 +45,37 @@ def test_dry_run_writes_nothing(tmp_path, monkeypatch):
     with redirect_stdout(io.StringIO()):
         assert inst.main(['--to', str(fresh), '--dry-run', 'demo']) == 0
     assert not (fresh / 'demo').exists()
+
+def test_fleet_bulk_includes_pipe_run():
+    assert "pipe-run" in inst.FLEET
+    assert (inst.SKILLS / "pipe-run" / "SKILL.md").is_file()
+def test_classify_three_way_states(tmp_path, monkeypatch):
+    dest = _prep(tmp_path, monkeypatch)
+    assert inst.main(["--to", str(dest), "demo"]) == 0
+    assert inst.classify("demo", dest) == []
+    (dest / "demo" / "SKILL.md").write_text("local", encoding="utf-8")
+    states = {d["file"]: d["state"] for d in inst.classify("demo", dest)}
+    assert states["SKILL.md"] == "live-drifted"
+    (dest / "demo" / "SKILL.md").write_text("v1", encoding="utf-8")
+    (inst.SKILLS / "demo" / "SKILL.md").write_text("v2", encoding="utf-8")
+    states = {d["file"]: d["state"] for d in inst.classify("demo", dest)}
+    assert states["SKILL.md"] == "repo-ahead"
+    (dest / "demo" / "SKILL.md").write_text("local2", encoding="utf-8")
+    states = {d["file"]: d["state"] for d in inst.classify("demo", dest)}
+    assert states["SKILL.md"] == "conflict"
+    (dest / "demo" / "extra.md").write_text("x", encoding="utf-8")
+    states = {d["file"]: d["state"] for d in inst.classify("demo", dest)}
+    assert states["extra.md"] == "extra"
+def test_check_json_typed_states(tmp_path, monkeypatch):
+    import json as _json
+    dest = _prep(tmp_path, monkeypatch)
+    assert inst.main(["--to", str(dest), "demo"]) == 0
+    buf = io.StringIO()
+    with redirect_stdout(buf):
+        rc = inst.main(["--to", str(dest), "--check", "--json", "demo"])
+    assert rc == 0
+    assert "states" in buf.getvalue()
+    doc = _json.loads(buf.getvalue().strip().splitlines()[-1])
+    assert doc["skill"] == "demo"
+    assert doc["ok"] is True
+

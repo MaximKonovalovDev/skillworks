@@ -89,6 +89,11 @@ FLEET_SKILLS = {
     "lsd-ls": ["lsd-rs/lsd"],
     "vivid-colors": ["sharkdp/vivid"],
     "brooks-law-team": [],
+    "game-patterns-free": ["munificent/game-programming-patterns"],
+    "behavetree-how": ["BehaviorTree/BehaviorTree.CPP"],
+    "netcode-patterns": ["ValveSoftware/GameNetworkingSockets"],
+    "dora-delivery": ["dora.dev"],
+    "fd-find": ["sharkdp/fd"],
 }
 # Installed in forge, whose `node scripts/check.mjs` bans some English words.
 FORGE_SAFE = {"pwsh-for-bash-writers", "git-one-branch", "cron-skip-clean", "pipe-run", "inbox-file-reader"}
@@ -209,32 +214,29 @@ def _fm_unclosed(value: str) -> bool:
     return False
 
 
-def lint_frontmatter_text(text: str, path: str = "SKILL.md", required: tuple[str, ...] = ("name", "description")) -> list[dict]:
-    """Typed file:line frontmatter issues for one Markdown document (stdlib-only).
-
-    Covers the 7 frontcheck types: missing (no block), empty (no fields),
-    yaml (unparseable line), type (list/scalar, not a mapping), required
-    (a required key is absent), warning (null/empty value); io is only
-    produced by lint_frontmatter_file below. Valid >- and | block scalars
-    fold exactly like frontmatter() so shipped skills stay clean.
-    """
-    req = tuple(required)
+def _fm_find_raw(text: str, path: str) -> tuple[list[str] | None, list[dict] | None]:
+    """Delimiter scan for lint_frontmatter_text: raw block lines or an early issue."""
     lines = text.splitlines()
     if not lines or lines[0].strip() != "---":
-        return [_fm_issue(path, 1, "missing", "No YAML frontmatter found")]
+        return None, [_fm_issue(path, 1, "missing", "No YAML frontmatter found")]
     close = None
     for i in range(1, len(lines)):
         if lines[i].strip() == "---":
             close = i
             break
     if close is None:
-        return [_fm_issue(path, 1, "missing", "No YAML frontmatter found (unterminated)")]
+        return None, [_fm_issue(path, 1, "missing", "No YAML frontmatter found (unterminated)")]
     raw = lines[1:close]
     if not raw or all(not ln.strip() for ln in raw):
-        return [_fm_issue(path, 1, "empty", "Frontmatter delimiters present but empty")]
+        return None, [_fm_issue(path, 1, "empty", "Frontmatter delimiters present but empty")]
     meaningful = [ln for ln in raw if ln.strip() and not ln.strip().startswith("#")]
     if not meaningful:
-        return [_fm_issue(path, 2, "empty", "Frontmatter parsed as null (empty or comments only)")]
+        return None, [_fm_issue(path, 2, "empty", "Frontmatter parsed as null (empty or comments only)")]
+    return raw, None
+
+
+def _fm_scan_rows(raw: list[str], path: str) -> tuple[tuple | None, list | None]:
+    """Row scan for lint_frontmatter_text: (values, key lines, stray rows, list hit) or an early yaml issue."""
     values: dict[str, str] = {}
     key_line: dict[str, int] = {}
     stray: list[tuple[int, str]] = []
@@ -256,12 +258,12 @@ def lint_frontmatter_text(text: str, path: str = "SKILL.md", required: tuple[str
         if stripped.startswith("#"):
             continue
         if "\t" in ln:
-            return [_fm_issue(path, file_line, "yaml", "YAML parse error: tab indentation at " + str(path) + ":" + str(file_line))]
+            return None, [_fm_issue(path, file_line, "yaml", "YAML parse error: tab indentation at " + str(path) + ":" + str(file_line))]
         indented = ln[:1] in (" ", "\t")
         if indented and prev_key is not None and prev_key in values:
             continue
         if indented and prev_key is None:
-            return [_fm_issue(path, file_line, "yaml", "YAML parse error: bad indentation at " + str(path) + ":" + str(file_line))]
+            return None, [_fm_issue(path, file_line, "yaml", "YAML parse error: bad indentation at " + str(path) + ":" + str(file_line))]
         s = stripped
         if s == "-" or s.startswith("- "):
             if list_hit is None:
@@ -280,12 +282,34 @@ def lint_frontmatter_text(text: str, path: str = "SKILL.md", required: tuple[str
             block_key = key
             continue
         if _fm_unclosed(val):
-            return [_fm_issue(path, file_line, "yaml", "YAML parse error: unclosed scalar at " + str(path) + ":" + str(file_line))]
+            return None, [_fm_issue(path, file_line, "yaml", "YAML parse error: unclosed scalar at " + str(path) + ":" + str(file_line))]
         if len(val) >= 2 and val[0] == val[-1] and val[0] in ("'", '"'):
             val = val[1:-1]
         values[key] = val.strip()
         key_line[key] = file_line
         prev_key = key
+    return (values, key_line, stray, list_hit), None
+
+
+def lint_frontmatter_text(text: str, path: str = "SKILL.md", required: tuple[str, ...] = ("name", "description")) -> list[dict]:
+    """Typed file:line frontmatter issues for one Markdown document (stdlib-only).
+
+    Covers the 7 frontcheck types: missing (no block), empty (no fields),
+    yaml (unparseable line), type (list/scalar, not a mapping), required
+    (a required key is absent), warning (null/empty value); io is only
+    produced by lint_frontmatter_file below. Valid >- and | block scalars
+    fold exactly like frontmatter() so shipped skills stay clean.
+    """
+    req = tuple(required)
+    raw, early = _fm_find_raw(text, path)
+    if early is not None:
+        return early
+    assert raw is not None
+    scanned, early = _fm_scan_rows(raw, path)
+    if early is not None:
+        return early
+    assert scanned is not None
+    values, key_line, stray, list_hit = scanned
     if list_hit is not None and not values and not stray:
         return [_fm_issue(path, 2, "type", "Frontmatter must be a mapping, got list")]
     if not values and stray:

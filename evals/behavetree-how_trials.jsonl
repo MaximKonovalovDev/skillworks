@@ -2,3 +2,11 @@
 {"id": "t02", "kind": "run", "task": "Run the checker on a tree whose root tag lacks BTCPP_format and quote the error line and the exit code", "must": ["ERROR"], "exit": 2}
 {"id": "t03", "kind": "answer", "task": "When a child answers FAILURE inside a Sequence, does the Sequence keep ticking the later children?", "must": ["Sequence"], "must_not": ["ticks every child even after FAILURE"]}
 {"id": "t04", "kind": "answer", "task": "Does behavetree-how compile C++ code or drive a robot over the network?", "must": ["no network"]}
+{"id": "t05", "kind": "run", "task": "Run the checker on a tree where an Inverter decorator has two children and quote the error line", "must": ["exactly one child"], "exit": 2}
+{"id": "t06", "kind": "run", "task": "Run the checker on a tree with a SubTree ID NoSuchTree and quote the error line", "must": ["NoSuchTree"], "exit": 2}
+{"id": "t07", "kind": "run", "task": "Run the checker on a tree where a leaf tag has element children and quote the error line", "must": ["must not have children"], "exit": 2}
+{"id": "t08", "kind": "run", "task": "Run the checker with --input pointing at a missing file and quote the first word of stdout and the exit code", "must": ["ERROR", "missing input"], "exit": 2}
+{"id": "t09", "kind": "answer", "task": "Which five node types does BehaviorTree.CPP define in basic_types.h?", "must": ["ACTION", "CONDITION", "CONTROL", "DECORATOR", "SUBTREE"]}
+{"id": "t10", "kind": "answer", "task": "What does tree.tickWhileRunning do and which statuses can a tick return?", "must": ["tickWhileRunning", "RUNNING", "SUCCESS", "FAILURE"]}
+{"id": "t11", "kind": "answer", "task": "What does halt do to a RUNNING child and which status follows?", "must": ["halt", "IDLE"]}
+{"id": "t12", "kind": "answer", "task": "What root tag and format value does a tree file need and which tree is the entry by convention?", "must": ["BTCPP_format", "MainTree"]}

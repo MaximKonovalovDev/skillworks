@@ -1,0 +1,12 @@
+{"id":"g01","kind":"answer","task":"How do processInput, update and render drive the game loop each frame?","must":["processInput","render"],"run":null}
+{"id":"g02","kind":"answer","task":"How do InputComponent and PhysicsComponent compose Bjorn in the component pattern code?","must":["InputComponent","Bjorn"],"run":null}
+{"id":"g03","kind":"answer","task":"How does the bytecode VM interpret switch dispatch each instruction in the code?","must":["interpret","bytecode"],"run":null}
+{"id":"g04","kind":"answer","task":"What does the Singleton pattern code check when the singleton instance is null?","must":["singleton","null"],"run":null}
+{"id":"g05","kind":"answer","task":"Which section groups the Game Loop pattern and what Contents headings list it?","must":["Sequencing Patterns","Game Loop"],"run":null}
+{"id":"g06","kind":"answer","task":"What license covers the chapter prose and is it ever sold with this free skill?","must":["NonCommercial","never sold"],"run":null}
+{"id":"g07","kind":"answer","task":"Which component classes split input, physics and graphics for Bjorn?","must":["PhysicsComponent","GraphicsComponent"],"run":null}
+{"id":"g08","kind":"answer","task":"What Contents heading names the update step and where is the Sample Code heading for the loop?","must":["Contents","Sample Code"],"run":null}
+{"id":"g09","kind":"answer","task":"Where does the skill say the MIT code comes from and which chapter structure was kept?","must":["code/cpp","structure only"],"run":null}
+{"id":"g10","kind":"answer","task":"What does the skill index list for patterns with MIT code and where is the source repo?","must":["MIT code","game-programming-patterns"],"run":null}
+{"id":"g11","kind":"answer","task":"Which section holds the Update Method pattern and what does its Skeleton entity update do?","must":["Update Method","Sequencing Patterns"],"run":null}
+{"id":"g12","kind":"answer","task":"How does the Object Pool keep ParticlePool free blocks with POOL_SIZE and firstAvailable_?","must":["ParticlePool","POOL_SIZE"],"run":null}

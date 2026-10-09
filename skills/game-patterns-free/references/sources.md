@@ -2,7 +2,7 @@
 
 Progressive disclosure: read SKILL.md first, then only the chunk listed here that matches the task.
 
-Licence: CC BY-NC-SA 3.0 (source) — NonCommercial, never sold; share free under the same licence.
+Licence: CC BY-NC-SA 3.0 (source) - NonCommercial, never sold; share free under the same licence.
 - `0000.txt`
 - `0001.txt`
 - `0002.txt`

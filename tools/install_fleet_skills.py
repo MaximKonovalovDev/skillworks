@@ -30,10 +30,11 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 SKILLS = ROOT / "skills"
-FLEET = ["pwsh-for-bash-writers", "git-one-branch", "real-browser-automation", "bevy-rust-ecs", "engine-builder", "repo-read-first", "edit-reread", "edit-unique", "task-scope", "bash-abort-guard", "ready-file-check", "bash-allowlist", "bash-spawn-guard", "read-offset-guard", "cargo-book", "fetch-github-first", "playwright-docs", "edit-verify", "websearch-retry", "repomap-guard", "edit-identical", "keeper-ready", "read-abort-guard", "edit-abort-guard", "ripgrep-search", "axios-get", "octokit-request", "judge-score-risk", "repro-first", "batch-first", "brief-gate", "yq-jq", "gron-json", "write-abort-guard", "bat-cat", "delta-diff", "sd-replace", "github-file-guard", "hexyl-hex", "hyperfine-bench", "grep-overflow-guard", "lsd-ls", "vivid-colors"]
+FLEET = ["pwsh-for-bash-writers", "git-one-branch", "real-browser-automation", "bevy-rust-ecs", "engine-builder", "repo-read-first", "edit-reread", "edit-unique", "task-scope", "bash-abort-guard", "ready-file-check", "bash-allowlist", "bash-spawn-guard", "read-offset-guard", "cargo-book", "fetch-github-first", "playwright-docs", "edit-verify", "websearch-retry", "repomap-guard", "edit-identical", "keeper-ready", "read-abort-guard", "edit-abort-guard", "ripgrep-search", "axios-get", "octokit-request", "judge-score-risk", "repro-first", "batch-first", "brief-gate", "yq-jq", "gron-json", "write-abort-guard", "bat-cat", "delta-diff", "sd-replace", "github-file-guard", "hexyl-hex", "hyperfine-bench", "grep-overflow-guard", "lsd-ls", "vivid-colors", "pipe-run", "game-patterns-free"]
 # Source-only files: the pair list and its checker, and the proof that the live tests passed.
 SKIP_FILES = {"live-proof.json", "pairs.json", "run_pairs.py", "pairs_to_md.py"}
 SKIP_DIRS = {"export", "__pycache__", ".pytest_cache"}
+RECORD_FILENAME = ".install-record.json"
 
 
 def payload(name: str) -> list[Path]:
@@ -59,7 +60,7 @@ def outside_manifest(name: str, dest_root: Path) -> list[str]:
     if not dest.is_dir():
         return []
     want = {rel.as_posix() for rel in payload(name)}
-    have = {p.relative_to(dest).as_posix() for p in dest.rglob("*") if p.is_file()}
+    have = {p.relative_to(dest).as_posix() for p in dest.rglob("*") if p.is_file() and p.name != RECORD_FILENAME}
     return sorted(have - want)
 
 
@@ -87,6 +88,63 @@ def file_diff(name: str, dest_root: Path, rel_posix: str, max_lines: int = 40) -
         return []
     diff = list(difflib.unified_diff(a, b, fromfile=f"a/{rel_posix}", tofile=f"b/{rel_posix}", lineterm=""))
     return diff[:max_lines]
+
+# STEAL M idea from dotdrift/dotdrift (MIT, https://github.com/dotdrift/dotdrift):
+# 3-way drift via sha256 repo vs live vs record: repo-ahead when live matches record, live-drifted when repo matches record, conflict when both differ.
+# Fresh code below, no donor code copied.
+# STEAL S idea from tuck/tuck (Apache-2.0, https://github.com/tuck/tuck):
+# typed check states with json flag, additive only, existing check output unchanged.
+# Fresh code below, no donor code copied.
+def _sha256_file(path: Path):
+    try:
+        return hashlib.sha256(path.read_bytes()).hexdigest()
+    except OSError:
+        return None
+def _record_path(name: str, dest_root: Path) -> Path:
+    return dest_root / name / RECORD_FILENAME
+def _load_record(name: str, dest_root: Path):
+    try:
+        doc = json.loads(_record_path(name, dest_root).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+    return doc if isinstance(doc, dict) else {}
+def _save_record(name: str, dest_root: Path) -> None:
+    rec = {}
+    for rel in payload(name):
+        h = _sha256_file(SKILLS / name / rel)
+        if h is not None:
+            rec[rel.as_posix()] = h
+    try:
+        _record_path(name, dest_root).write_text(json.dumps(rec, indent=2, sort_keys=True) + chr(10), encoding="utf-8")
+    except OSError:
+        pass
+def classify(name: str, dest_root: Path):
+    states = []
+    record = _load_record(name, dest_root)
+    base = SKILLS / name
+    dest = dest_root / name
+    for rel in payload(name):
+        posix = rel.as_posix()
+        repo_h = _sha256_file(base / rel)
+        live = dest / rel
+        if not live.is_file():
+            states.append({"file": posix, "state": "missing"})
+            continue
+        live_h = _sha256_file(live)
+        if live_h == repo_h:
+            continue
+        rec_h = record.get(posix)
+        if rec_h is None:
+            states.append({"file": posix, "state": "changed"})
+        elif live_h == rec_h:
+            states.append({"file": posix, "state": "repo-ahead"})
+        elif repo_h == rec_h:
+            states.append({"file": posix, "state": "live-drifted"})
+        else:
+            states.append({"file": posix, "state": "conflict"})
+    for rel in outside_manifest(name, dest_root):
+        states.append({"file": rel, "state": "extra"})
+    return states
 
 
 # Ported from skillsgate/skillsgate (MIT, https://github.com/skillsgate/skillsgate)
@@ -170,6 +228,7 @@ def install(name: str, dest_root: Path, dry_run=False):
     for line in changes:
         if line.startswith('extra '):
             (dest / line[6:]).unlink()
+    _save_record(name, dest_root)
     return changes
 
 
@@ -177,6 +236,7 @@ def main(argv: list[str]) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--to", required=True, help="skills folder to install into (its children are the skill folders)")
     ap.add_argument("--check", action="store_true", help="only compare; exit 1 when a copy is stale")
+    ap.add_argument("--json", action="store_true", help="with --check print typed JSON states per file (missing, changed, extra, repo-ahead, live-drifted, conflict; ok when clean)")
     ap.add_argument('--dry-run', action='store_true', help='only preview; print what would change and write nothing')
     ap.add_argument("skills", nargs="*")
     args = ap.parse_args(argv)
@@ -198,6 +258,8 @@ def main(argv: list[str]) -> int:
                 if line.startswith("changed "):
                     for dl in file_diff(name, dest_root, line[8:]):
                         print(f"  diff {dl}")
+            if args.json:
+                print(json.dumps({"skill": name, "ok": not problems, "states": classify(name, dest_root)}, sort_keys=True))
             worst = 1 if problems else worst
         elif args.dry_run:
             problems = stale(name, dest_root)

@@ -56,11 +56,14 @@ def _fence_kind(line: str) -> tuple[str, int] | None:
         if n < 3:
             return None
         return (ch * 3, n)
-    if len(s) >= 4 and set(s) == {"-"}:
-        return ("----", len(s))
-    if len(s) >= 4 and set(s) == {"="}:
-        return ("====", len(s))
-    return None
+    if ch != "-" and ch != "=":
+        return None
+    if len(s) < 4:
+        return None
+    for c in s:
+        if c != ch:
+            return None
+    return ("----" if ch == "-" else "====", len(s))
 
 
 def is_fence(line: str) -> bool:
@@ -68,20 +71,13 @@ def is_fence(line: str) -> bool:
     return _fence_kind(line) is not None
 
 
-def iter_headings(text: str) -> list[tuple[int, str, int]]:
-    """Headings outside fenced blocks as (level, title, lineno) triples.
-
-    Only the matching delimiter closes a block, so a merge-conflict
-    ``=======`` line inside a ``----`` listing block stays hidden content.
-    Closing run must reach the opening run (5-backtick open needs 5+ to
-    close), so a short 3-backtick line inside a long fence stays content.
-    """
+def _headings_from_lines(lines: list[str]) -> list[tuple[int, str, int]]:
+    """Single-pass scan: one _fence_kind call per line feeds fence+headings."""
     found: list[tuple[int, str, int]] = []
     open_fence: tuple[str, int] | None = None
-    for lineno, line in enumerate(text.splitlines()):
-        if is_fence(line):
-            info = _fence_kind(line)
-            assert info is not None
+    for lineno, line in enumerate(lines):
+        info = _fence_kind(line)
+        if info is not None:
             kind, n = info
             if open_fence is None:
                 open_fence = info
@@ -95,6 +91,8 @@ def iter_headings(text: str) -> list[tuple[int, str, int]]:
             continue
         if open_fence is not None:
             continue
+        if line[:1] != "#" and line[:1] != "=":
+            continue
         m = HEADING_RE.match(line)
         if not m:
             continue
@@ -102,6 +100,17 @@ def iter_headings(text: str) -> list[tuple[int, str, int]]:
         level = len(marks) if marks.startswith("#") else len(marks) - 1
         found.append((level, title[:TITLE_CAP].rstrip(), lineno))
     return found
+
+
+def iter_headings(text: str) -> list[tuple[int, str, int]]:
+    """Headings outside fenced blocks as (level, title, lineno) triples.
+
+    Only the matching delimiter closes a block, so a merge-conflict
+    ``=======`` line inside a ``----`` listing block stays hidden content.
+    Closing run must reach the opening run (5-backtick open needs 5+ to
+    close), so a short 3-backtick line inside a long fence stays content.
+    """
+    return _headings_from_lines(text.splitlines())
 
 
 # Slug NFKD rule ported fresh from django/django (BSD-3-Clause,
@@ -114,11 +123,11 @@ def slug(title: str) -> str:
     return (out[:SLUG_CAP].rstrip("-") or "chapter")
 
 
-def detect_chapters(text: str) -> list[dict]:
-    """One row per heading: title (80-char cap), level, line and a distinct slug."""
+def detect_chapters_from_lines(lines: list[str]) -> list[dict]:
+    """One scan from already-split lines: no second splitlines, same rows."""
     rows: list[dict] = []
     seen: set[str] = set()
-    for level, title, lineno in iter_headings(text):
+    for level, title, lineno in _headings_from_lines(lines):
         base = slug(title)
         name, n = base, 2
         while name in seen:
@@ -129,13 +138,18 @@ def detect_chapters(text: str) -> list[dict]:
     return rows
 
 
+def detect_chapters(text: str) -> list[dict]:
+    """One row per heading: title (80-char cap), level, line and a distinct slug."""
+    return detect_chapters_from_lines(text.splitlines())
+
+
 def split_chapters(workdir: Path, skilldir: Path, name: str, description: str,
                    head_chars: int = HEAD_CHARS) -> dict:
     """Split full_text.txt at its headings and write the fixed skill shape."""
     build_mod.validate_name(name, skilldir)
     text = (workdir / "full_text.txt").read_text(encoding="utf-8")
     lines = text.splitlines()
-    chapters = detect_chapters(text)
+    chapters = detect_chapters_from_lines(lines)
     fell_back = not chapters
     if fell_back:
         chapters = [{"title": "Notes", "level": 1, "line": 0, "slug": "notes"}]
@@ -149,6 +163,7 @@ def split_chapters(workdir: Path, skilldir: Path, name: str, description: str,
     outdir = skilldir / "chapters"
     outdir.mkdir(parents=True, exist_ok=True)
     width = max(2, len(str(len(bounds))))
+    total_chars = 0
     for i, (start, end, ch) in enumerate(bounds, 1):
         if fell_back:
             body_lines = lines[start:end]
@@ -157,8 +172,9 @@ def split_chapters(workdir: Path, skilldir: Path, name: str, description: str,
         else:
             body_lines = lines[start + 1:end]
         excerpt = "\n".join(body_lines).strip()[:head_chars].rstrip()
-        (outdir / f"{i:0{width}d}-{ch['slug']}.md").write_text(
-            f"## {ch['title']}\n\n{excerpt}\n", encoding="utf-8")
+        content = f"## {ch['title']}\n\n{excerpt}\n"
+        (outdir / f"{i:0{width}d}-{ch['slug']}.md").write_text(content, encoding="utf-8")
+        total_chars += len(content)
     noncommercial = build_mod.is_noncommercial_text(description)
     licence = build_mod.NC_LICENSE if noncommercial else "MIT"
     skilldir.mkdir(parents=True, exist_ok=True)
@@ -169,7 +185,6 @@ def split_chapters(workdir: Path, skilldir: Path, name: str, description: str,
     )
     for fname, stub in build_mod.STUB_FILES.items():
         (skilldir / fname).write_text(stub, encoding="utf-8")
-    total_chars = sum(len((outdir / p).read_text(encoding="utf-8")) for p in sorted(outdir.iterdir()))
     receipt = {
         "stage": "split_chapters",
         "skill": str(skilldir),

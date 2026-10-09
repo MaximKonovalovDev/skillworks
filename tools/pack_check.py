@@ -338,7 +338,11 @@ def check_evidence(listing: str, rep: Report, offline: bool, fetch: Callable[[st
         rep.ok(f"price evidence: {len(urls)} seller pages answer")
 
 
-def zip_problems(source: "Path | bytes") -> tuple[list[str], dict[str, bytes]]:
+def zip_problems(source: "Path | bytes", _cache: dict | None = None) -> tuple[list[str], dict[str, bytes]]:
+    if isinstance(source, bytes) and _cache is not None:
+        hit = _cache.get(id(source))
+        if hit is not None and hit[0] is source:
+            return hit[1]
     problems, members = [], {}
     try:
         with zipfile.ZipFile(io.BytesIO(source) if isinstance(source, bytes) else source) as z:
@@ -368,17 +372,19 @@ def zip_problems(source: "Path | bytes") -> tuple[list[str], dict[str, bytes]]:
                 members[n] = z.read(i)
     except (OSError, zipfile.BadZipFile) as err:
         problems.append(f"cannot read ({err})")
+    if isinstance(source, bytes) and _cache is not None:
+        _cache[id(source)] = (source, (problems, members))
     return problems, members
 
 
-def differs(actual: dict[str, bytes], expected: dict[str, bytes]) -> str:
+def differs(actual: dict[str, bytes], expected: dict[str, bytes], _cache: dict | None = None) -> str:
     """What differs between a zip's members and a fresh build, by content. A zip inside a zip is compared by its own
     members, because the compressed bytes depend on the zlib version of the machine that built it."""
     gone, extra = sorted(set(expected) - set(actual)), sorted(set(actual) - set(expected))
     changed = []
     for name in sorted(set(actual) & set(expected)):
         a, e = actual[name], expected[name]
-        same = zip_problems(a)[1] == zip_problems(e)[1] if name.endswith(".zip") else a == e
+        same = zip_problems(a, _cache)[1] == zip_problems(e, _cache)[1] if name.endswith(".zip") else a == e
         if not same:
             changed.append(name)
     return "; ".join(x for x in (f"missing {gone[:3]}" if gone else "", f"extra {extra[:3]}" if extra else "", f"changed {changed[:3]}" if changed else "") if x)
@@ -399,8 +405,9 @@ def check_zips(pack_dir: Path, pack: dict, skills: Path, dist: Path, rep: Report
             rep.add("FAIL", f"dist: {p.name} is missing (python tools/pack_build.py {pack_dir.as_posix()})")
     if not paid.is_file() or not free.is_file():
         return
+    _zip_cache: dict = {}
     problems, members = zip_problems(paid)
-    if len(paid.read_bytes()) > pack_build.MAX_BUNDLE_BYTES:
+    if paid.stat().st_size > pack_build.MAX_BUNDLE_BYTES:
         problems.append("bundle over the size cap")
     for need in ("README.md", "LICENSES.md", "manifest.json"):
         if need not in members:
@@ -421,7 +428,7 @@ def check_zips(pack_dir: Path, pack: dict, skills: Path, dist: Path, rep: Report
         if inner is None:
             problems.append(f"zips/{name}.zip missing")
         else:
-            ip, im = zip_problems(inner)
+            ip, im = zip_problems(inner, _zip_cache)
             problems += [f"zips/{name}.zip: {x}" for x in ip]
             if "SKILL.md" not in im:
                 problems.append(f"zips/{name}.zip: SKILL.md is not at the root")
@@ -449,7 +456,7 @@ def check_zips(pack_dir: Path, pack: dict, skills: Path, dist: Path, rep: Report
     leaked = [n for n, d in members.items() if n.endswith((".md", ".json", ".mjs", ".py", ".txt")) and PRIVATE.search(d.decode("utf-8", "replace"))]
     if leaked:
         problems.append(f"private path or another repo's name in {leaked[:3]}")
-    stale = differs({n: d for n, d in members.items() if n != "manifest.json"}, pack_build.pack_files(pack_dir, pack, skills))
+    stale = differs({n: d for n, d in members.items() if n != "manifest.json"}, pack_build.pack_files(pack_dir, pack, skills), _zip_cache)
     if stale:
         problems.append(f"the file is stale ({stale}): the skills, README-buyer.md or pack.json changed since it was built (python tools/pack_build.py)")
     if problems:
@@ -461,7 +468,7 @@ def check_zips(pack_dir: Path, pack: dict, skills: Path, dist: Path, rep: Report
     fp += [] if "SKILL.md" in fm else ["SKILL.md is not at the root"]
     if "NOTICE.md" not in fm or pack["vol0"]["licence"] not in fm.get("NOTICE.md", b"").decode("utf-8", "replace"):
         fp.append("NOTICE.md with the licence is missing")
-    stale = differs(fm, zip_problems(pack_build.build_vol0_zip(pack, skills))[1])
+    stale = differs(fm, zip_problems(pack_build.build_vol0_zip(pack, skills), _zip_cache)[1], _zip_cache)
     if stale:
         fp.append(f"the file is stale ({stale}); python tools/pack_build.py")
     if fp:

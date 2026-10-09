@@ -1,0 +1,16 @@
+{
+  "skill": "netcode-patterns",
+  "runs": 12,
+  "with_rate": 1.0,
+  "without_rate": 0.0,
+  "lift": 1.0,
+  "spread": 1.0,
+  "with_median": 1.0,
+  "with_p10": 1.0,
+  "without_median": 0.0,
+  "without_p10": 0.0,
+  "fingerprint": "8c85a127275b6848b849b63b84652c05d9dcfe1f506b21409208c1f5474c00bb",
+  "sheet": "evals/netcode-patterns_trials.jsonl",
+  "at": "2026-10-09T06:45Z",
+  "ok": true
+}

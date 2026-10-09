@@ -60,14 +60,21 @@ def _ascii_escape(chars: str) -> str:
     return " ".join(f"U+{ord(c):04X}" for c in chars)
 
 
+_PROMPT_CACHE = None
+
+
 def prompt_version() -> str:
+    global _PROMPT_CACHE
+    if _PROMPT_CACHE is not None:
+        return _PROMPT_CACHE
     """Version stamp of the distill prompt fragment (llm pattern, like build.py)."""
     try:
         text = PROMPT_FILE.read_text(encoding="utf-8")
     except OSError:
         return "inline"
     m = re.search(r"^version:\s*(\S+)", text, re.M)
-    return m.group(1) if m else "unversioned"
+    _PROMPT_CACHE = m.group(1) if m else "unversioned"
+    return _PROMPT_CACHE
 
 
 def _tokens(chars: int) -> int:
@@ -98,7 +105,7 @@ def plan(workdir: Path, packet_tokens: int = PACK_TOKENS) -> dict:
         })
 
     for path in chunk_files:
-        n = len(path.read_text(encoding="utf-8"))
+        n = path.stat().st_size  # bytes~=chars; no big-file read
         if cur and _tokens(cur_chars + n) > packet_tokens:
             flush()
             cur, cur_chars = [], 0
@@ -149,7 +156,12 @@ def _trials(skilldir: Path, root: Path) -> int:
     trials = root / "evals" / f"{skilldir.name}_trials.jsonl"
     if not trials.is_file():
         return 0
-    return sum(1 for ln in trials.read_text(encoding="utf-8").splitlines() if ln.strip())
+    count = 0
+    with trials.open(encoding="utf-8") as fh:
+        for ln in fh:
+            if ln.strip():
+                count += 1
+    return count
 
 
 def _chunk_refs_ok(body: str, skilldir: Path, workdir: Path | None) -> tuple[int, list[str]]:

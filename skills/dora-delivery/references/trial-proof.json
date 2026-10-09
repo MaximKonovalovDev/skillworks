@@ -1,0 +1,16 @@
+{
+  "skill": "dora-delivery",
+  "runs": 12,
+  "with_rate": 1.0,
+  "without_rate": 0.0,
+  "lift": 1.0,
+  "spread": 1.0,
+  "with_median": 1.0,
+  "with_p10": 1.0,
+  "without_median": 0.0,
+  "without_p10": 0.0,
+  "fingerprint": "029b722e539d4b9dbe09698450b170d699e3d7e8b35fe9658df17db7c692f33c",
+  "sheet": "evals/dora-delivery_trials.jsonl",
+  "at": "2026-10-09T07:10Z",
+  "ok": true
+}

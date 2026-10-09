@@ -1,9 +1,9 @@
 {
   "skill": "bash-allowlist",
   "fingerprint": "436ef043ab738b5f784bcda49d0639767bc5f772a00cf035853edc6f02107d69",
-  "date": "2026-10-09T06:01Z",
+  "date": "2026-10-09T07:08Z",
   "command": "SKILL_LIVE=1 python -m pytest tests/test_bash_allowlist.py -q",
-  "result": "6 passed in 3.74s",
+  "result": "6 passed in 3.33s",
   "versions": {
     "python": "3.13.14",
     "os": "Windows-10-10.0.19045-SP0",

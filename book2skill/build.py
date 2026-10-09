@@ -128,8 +128,16 @@ _GUTENBERG_LINE_HINTS = (
 
 def strip_gutenberg_boilerplate(text: str) -> tuple[str, bool]:
     """Drop PG blurb lines no marker strip can see; plain prose untouched."""
+    # Fast path: one C-level scan skips splitlines + per-line lowers when no
+    # hint is present (plain books); same (text, False) as the loop below.
+    if not any(h in text.lower() for h in _GUTENBERG_LINE_HINTS):
+        return text, False
     lines = text.splitlines()
-    kept = [ln for ln in lines if not any(h in ln.lower() for h in _GUTENBERG_LINE_HINTS)]
+    kept: list[str] = []
+    for ln in lines:
+        ll = ln.lower()
+        if not any(h in ll for h in _GUTENBERG_LINE_HINTS):
+            kept.append(ln)
     if len(kept) == len(lines):
         return text, False
     return "\n".join(kept), True

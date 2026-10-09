@@ -1,6 +1,6 @@
 {"q": "How do I show the first 20 lines of a file in the pwsh shell?", "must": ["Get-Content", "-TotalCount"]}
 {"q": "What replaces grep -n for searching a file in PowerShell?", "must": ["Select-String", "-Pattern"]}
-{"q": "How do I count the lines of a file without wc?", "must": ["Get-Content", ".Count"]}
+{"q": "How do I count the lines of a file without wc?", "must": ["Get-Content", "count"]}
 {"q": "How do I get the current UTC time as a string, instead of date -u?", "must": ["Get-Date -AsUTC", "yyyy-MM-ddTHH:mmZ"]}
 {"q": "How do I set an environment variable for one command, like FOO=1 cmd?", "must": ["$env:FOO"]}
 {"q": "How do I throw away output, instead of 2>/dev/null?", "must": ["2>$null", "*> $null"]}

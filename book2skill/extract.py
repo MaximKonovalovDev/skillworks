@@ -170,8 +170,8 @@ def _read_pdf_classic(path: Path) -> tuple[str, int]:
 
             with pdfplumber.open(str(path)) as pdf:
                 pages = [(page.extract_text() or "") for page in pdf.pages]
-        except Exception:
-            pass
+        except Exception as exc:
+            raise ValueError(f"classic pdfplumber fallback failed ({exc}); install .tools/py per TS-4") from exc
     return "\n".join(pages), len(pages)
 
 

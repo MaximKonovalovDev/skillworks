@@ -184,8 +184,10 @@ def audit(skill: str) -> None:
     """Stage 5: token-cost report."""
     import contextlib
     import io
+    import json
     with contextlib.redirect_stdout(io.StringIO()):
-        audit_mod.audit(Path(skill))
+        report = audit_mod.audit(Path(skill))
+    click.echo(json.dumps(report, indent=2))
 
 
 @main.command()
