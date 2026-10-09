@@ -1,29 +1,29 @@
-# skillworks handoff - round 361 (token d5a1)
+# skillworks handoff - round 362 (token d5a1)
 
-Round: 361 (lock d5a1 held since 22:05Z)
-Written: 2026-10-09T01:55Z
+Round: 362 (lock d5a1 held since 22:05Z)
+Written: 2026-10-09T02:10Z
 Token: d5a1
 Knobs: width 1, foreground batches (keeper batch stale, lead decides per owner GO BIG).
 
 ## Heading
-- Cure DONE third: edit-verify re-proved v0.3.0 (same shapes, no new pairs, proofs resealed, grade 12 runs 1.0/0.0). Review names the reseal-only call.
+- Big upgrade lands third: DR-1006-4 DONE (edit-verify re-proved, lift 1.0). Three rows closed this wave; spawn-guard bump next.
 
 ## Batch sent (ONE message, 1 Task call, prompt exactly packet:<name>)
-- builder builder-cure.
+- judge 370-cure-editverify-reproof-review.
 
 ## Rows
-- DR-1006-4 stays READY until judged PASS (review 370 queued; reseal-only needs the judge's call).
-- DR-1006-6 DONE 8be1132. DR-1006-5 DONE e59af71. DR-1006-3 spawn-guard still unclaimed.
+- DR-1006-4 DONE 1c00f0e (judge PASS 370; reseal-only, 2 files).
+- DR-1006-6 DONE 8be1132. DR-1006-5 DONE e59af71.
+- Next cure claims first unclaimed READY [DOCTOR] (DR-1006-3 spawn-guard expected).
 
 ## Blockers
-- Class at 138 misses 0 loads: cover-all-repos adoption still the gap. Installer recount after this verdict.
+- cli.py:81 SyntaxError still open (pipeline lane). Adoption plus 48 h clocks run on AD rows.
 
 ## Checks
-- Builder: lint PASS, focused 7 passed, full 1136/37 none tracing, check.mjs 20/0/0.
-- Commit 4c6ea86 (2 files, clean).
+- Judge reran: live 7, lint 22/981 PASS, grade 12 runs 1.0/0.0, suite 1138/37 none tracing, check 20/0/0.
+- Commit dbd7b8c (2 files, clean).
 
 ## Next
-- judge 370-cure-editverify-reproof-review. PASS reseals and row DONE; FAIL keeps READY with reason.
-- Then builder-cure DR-1006-3 spawn-guard, then installer recount, cli.py fix queued.
+- builder-cure DR-1006-3 spawn-guard bump. Then installer recount in all using repos.
 
-RESULT: PARTIAL - edit-verify re-proved, review dispatched | proof: RESULT PASS: 20 pass, 0 warn, 0 fail
+RESULT: DONE - DR-1006-4 re-proved and landed, wave continues | proof: 1c00f0e and RESULT PASS: 20 pass, 0 warn, 0 fail
