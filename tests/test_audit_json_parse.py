@@ -8,6 +8,13 @@ stdout only) plus a parse_report guard (raw_decode) for combined text.
 """
 import json
 import sys
+from pathlib import Path as _Path
+
+# Bare `pytest <file>` does not put the repo root on sys.path (only
+# `python -m pytest` and `pytest tests/` do via cwd/rootdir), so insert
+# root and tests dir before importing skill_gates/book2skill.
+sys.path.insert(0, str(_Path(__file__).resolve().parents[1]))
+sys.path.insert(0, str(_Path(__file__).resolve().parent))
 
 import pytest
 
