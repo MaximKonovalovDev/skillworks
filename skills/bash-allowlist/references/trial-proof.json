@@ -5,8 +5,12 @@
   "without_rate": 0.0,
   "lift": 1.0,
   "spread": 1.0,
+  "with_median": 1.0,
+  "with_p10": 1.0,
+  "without_median": 0.0,
+  "without_p10": 0.0,
   "fingerprint": "5bdb8ca9633c62321db06511e467431baba8d82da843a0e37aa98ba46f37be0b",
   "sheet": "evals/bash-allowlist_trials.jsonl",
-  "at": "2026-10-07T16:21Z",
+  "at": "2026-10-09T06:01Z",
   "ok": true
 }
