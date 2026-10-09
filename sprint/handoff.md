@@ -1,29 +1,30 @@
-# skillworks handoff - round 366 (token d5a1)
+# skillworks handoff - round 367 (token d5a1)
 
-Round: 366 (lock d5a1 held since 08:43Z)
-Written: 2026-10-09T09:05Z
+Round: 367 (lock d5a1 held since 08:43Z)
+Written: 2026-10-09T09:15Z
 Token: d5a1
 Knobs: width 1, foreground batches (keeper batch stale, lead decides per owner GO).
 
 ## Heading
-- Cover-all DONE: all 4 bumped skills installed everywhere they are used (globals were STALE or missing), fresh 48 h clocks boarded, 380 loads in 48 h across 4 repos. Big upgrade wave complete.
+- Owner asks all-repo inbox waves. Boundary: this loop owns skillworks only; other repos' loops own their inboxes via center fan-out. Skillworks inbox read: ~40 open, 10 ticked to rows, ~30 unticked. Cure wave continues meanwhile.
 
 ## Batch sent (ONE message, 1 Task call, prompt exactly packet:<name>)
-- pilot 372-installer-coverall-retry.
+- builder builder-cure.
 
 ## Rows
-- AD-1006-1 plus AD-1006-2 carry fresh baselines (spawn-guard 1011, allowlist 1011, offset 1106, edit-verify 1497); both stay READY for the 48 h halving read.
-- Wave total: DR-1006-6 DONE 8be1132, DR-1006-5 DONE e59af71, DR-1006-4 DONE 1c00f0e, DR-1006-3 DONE fe43b04.
+- AD-1006-1 plus AD-1006-2 READY (fresh clocks, halving due 2026-10-11).
+- DR-1006-6 DONE 8be1132. DR-1006-5 DONE e59af71. DR-1006-4 DONE 1c00f0e. DR-1006-3 DONE fe43b04.
+- Next cure claims first unclaimed READY [DOCTOR] (DR-1006-2 task-cancelled expected: engine2040 43 plus forge 28).
 
 ## Blockers
-- 8 adopted rows wait, 0 filled (clocks fresh, none due). Halving read due 2026-10-11.
-- Queued behind: cli.py:81 SyntaxError (pipeline), backup-rollback guard row, DR-1006-2 plus DR-1004-1 cures.
+- ~30 unticked inbox items need planner rowing (LEAD2 fixes S130 S131, SIZE S254 S255, STEAL wave S27-S38, AUDIT wave S51-S56, SOLVERS rewrites S100 S196 S215 S216). Planner wave queued behind cure wave.
+- Cross-repo waves belong to center plus each repo's lead; proposing via center inbox, not dispatching there (own paths only).
 
 ## Checks
-- Installer: 4/4 ok copy matches, stranger trial 12 runs 1.0/0.0 lift 1.0 PASS, check.mjs 20/0/0, nesting clean.
-- Commit 892c45d (2 files, clean).
+- node sprint/check.mjs PASS 20/0/0 (standing).
+- Commit 50642c4 (2 files, clean).
 
 ## Next
-- Halving watch 2026-10-11 on AD rows. Next wave: DR-1006-2 cure plus cli.py fix.
+- Collect cure result, review, land. Then planner inbox-rowing wave, then cli.py fix plus rollback guard.
 
-RESULT: DONE - big upgrade wave complete, 4 rows landed plus cover-all install | proof: 892c45d and RESULT PASS: 20 pass, 0 warn, 0 fail
+RESULT: PARTIAL - inbox triaged into waves, cure dispatched | proof: RESULT PASS: 20 pass, 0 warn, 0 fail
