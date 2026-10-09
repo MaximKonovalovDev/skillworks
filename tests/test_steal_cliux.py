@@ -71,4 +71,10 @@ def test_audit_scroll_is_short(tmp_path):
     (skill / "SKILL.md").write_text("---\nname: s\ndescription: Use when testing audit scroll with enough words to pass checks here.\n---\nBody text here.\n", encoding="utf-8")
     (skill / "glossary.md").write_text("# Glossary\n\nwritten\n", encoding="utf-8")
     result = CliRunner().invoke(main, ["audit", "--skill", str(skill)])
-    assert len(result.output.splitlines()) <= 10, result.output
+    # Contract: stdout holds pretty JSON (~32 lines) for machines,
+    # stderr holds the 5-line human summary for scroll. CliRunner.output
+    # mixes both (37 lines) by design, so scroll means stderr only.
+    import json as _json
+    assert result.exit_code == 0, result.output
+    _json.loads(result.stdout)
+    assert len(result.stderr.splitlines()) <= 10, result.output

@@ -5,8 +5,12 @@
   "without_rate": 0.5833,
   "lift": 0.4167,
   "spread": 0.4167,
-  "fingerprint": "78da3073f8c2654b1eb394cb3013b25e259199f759d43f9d8efc050ed09dad85",
+  "with_median": 1.0,
+  "with_p10": 1.0,
+  "without_median": 1.0,
+  "without_p10": 0.0,
+  "fingerprint": "61b28be0878b63ea5bde5aa6cd9f90e0b59917409c31a8af5da8448543a68bfa",
   "sheet": "evals/rust-book_trials.jsonl",
-  "at": "2026-10-04T13:25Z",
+  "at": "2026-10-09T09:41Z",
   "ok": true
 }

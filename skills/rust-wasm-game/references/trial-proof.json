@@ -1,0 +1,16 @@
+{
+  "skill": "rust-wasm-game",
+  "runs": 12,
+  "with_rate": 1.0,
+  "without_rate": 0.0,
+  "lift": 1.0,
+  "spread": 1.0,
+  "with_median": 1.0,
+  "with_p10": 1.0,
+  "without_median": 0.0,
+  "without_p10": 0.0,
+  "fingerprint": "7387f82be3155c50f711ed363ea62bde21a1fd5868017947e1352c4763d778a4",
+  "sheet": "evals/rust-wasm-game_trials.jsonl",
+  "at": "2026-10-09T09:54Z",
+  "ok": true
+}

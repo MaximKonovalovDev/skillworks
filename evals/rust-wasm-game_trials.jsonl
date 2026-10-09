@@ -1,0 +1,12 @@
+{"id": "rw-a01", "kind": "answer", "task": "Boot a wasm game module: mark the entry, log readiness, and set the panic hook.", "must": ["wasm_bindgen", "JsValue::from_str", "set_once"], "must_not": ["just ship it"]}
+{"id": "rw-a02", "kind": "answer", "task": "Get the 2d canvas handle: find the element, cast it, and take the context.", "must": ["HtmlCanvasElement", "CanvasRenderingContext2d", "get_element_by_id"], "must_not": ["just ship it"]}
+{"id": "rw-a03", "kind": "answer", "task": "Model a sprite atlas JSON file with trims per frame.", "must": ["Sheet", "spriteSourceSize", "serde"], "must_not": ["just ship it"]}
+{"id": "rw-a04", "kind": "answer", "task": "Load a bitmap and its atlas JSON without blocking the page.", "must": ["HtmlImageElement::new", "JsFuture::from", "forget()"], "must_not": ["just ship it"]}
+{"id": "rw-a05", "kind": "answer", "task": "Run a per-frame callback that re-queues itself forever.", "must": ["request_animation_frame", "LoopClosure", "SharedLoopClosure"], "must_not": ["just ship it"]}
+{"id": "rw-a06", "kind": "answer", "task": "Split logic from drawing on a fixed tick with debt tracking.", "must": ["trait Game", "FRAME_SIZE", "accumulated_delta"], "must_not": ["just ship it"]}
+{"id": "rw-a07", "kind": "answer", "task": "Track held keys across frames from window events.", "must": ["KeyboardEvent", "pressed_keys", "contains_key"], "must_not": ["just ship it"]}
+{"id": "rw-a08", "kind": "answer", "task": "Animate a character through poses with crashes and landings.", "must": ["RedHatBoyStateMachine", "knock_out", "land_on"], "must_not": ["just ship it"]}
+{"id": "rw-a09", "kind": "answer", "task": "Test whether two sprites touch using boxes.", "must": ["bounding_box", "intersects", "Rect"], "must_not": ["just ship it"]}
+{"id": "rw-a10", "kind": "answer", "task": "Extend an endless scrolling level as the cursor runs out.", "must": ["timeline", "TIMELINE_MINIMUM", "stone_and_platform"], "must_not": ["just ship it"]}
+{"id": "rw-a11", "kind": "answer", "task": "Play a sound effect from Rust through the browser audio stack.", "must": ["AudioContext", "decode_audio_data", "play_sound"], "must_not": ["just ship it"]}
+{"id": "rw-a12", "kind": "answer", "task": "Report DOM errors cleanly and test browser seams.", "must": ["anyhow", "wasm_bindgen_test", "wasm-pack test"], "must_not": ["just ship it"]}

@@ -1,0 +1,12 @@
+{"q":"How many board planes does the small encoder use and what are the first two?","must":["seven planes","own stones"]}
+{"q":"Which two colors sit on the first board planes?","must":["opp stones","board planes"]}
+{"q":"How is liberty count split across planes?","must":["liberty count","three planes"]}
+{"q":"Which plane marks ko point and which marks to-play?","must":["ko point","to-play"]}
+{"q":"What does MCTSNode store for wins?","must":["MCTSNode","win_counts"]}
+{"q":"Which counter tracks num_rollouts and visit count per child?","must":["num_rollouts","visit count"]}
+{"q":"Which score picks the next branch and what temperature tunes exploration?","must":["uct_score","temperature"]}
+{"q":"Which select_move rule picks by most visits?","must":["select_move","most visits"]}
+{"q":"How does a random playout end and how is it scored?","must":["random playout","tromp-taylor"]}
+{"q":"What stdlib only rule keeps no nets at runtime?","must":["stdlib only","no nets"]}
+{"q":"Which encode_board call turns a board into planes and what does num_points count?","must":["encode_board","num_points"]}
+{"q":"How does encode_point map a point by row-major order on 9x9?","must":["encode_point","row-major","9x9"]}

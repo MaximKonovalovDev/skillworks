@@ -1,0 +1,12 @@
+{"q": "How do you boot a Rust wasm game module in the browser?", "must": ["wasm_bindgen", "JsValue::from_str", "set_once"]}
+{"q": "How do you get the 2d canvas handle for drawing?", "must": ["HtmlCanvasElement", "CanvasRenderingContext2d", "get_element_by_id"]}
+{"q": "How do you model a sprite atlas JSON file?", "must": ["Sheet", "spriteSourceSize", "serde"]}
+{"q": "How do you load images and JSON without blocking the page?", "must": ["HtmlImageElement::new", "JsFuture::from", "forget()"]}
+{"q": "How do you run a per-frame callback in the browser?", "must": ["request_animation_frame", "LoopClosure", "SharedLoopClosure"]}
+{"q": "How do you split game logic from drawing at a fixed tick?", "must": ["trait Game", "FRAME_SIZE", "accumulated_delta"]}
+{"q": "How do you track held keys across frames?", "must": ["KeyboardEvent", "pressed_keys", "contains_key"]}
+{"q": "How do you animate a character through its poses?", "must": ["RedHatBoyStateMachine", "knock_out", "land_on"]}
+{"q": "How do you test whether two sprites touch?", "must": ["bounding_box", "intersects", "Rect"]}
+{"q": "How do you build an endless scrolling level?", "must": ["timeline", "TIMELINE_MINIMUM", "stone_and_platform"]}
+{"q": "How do you play sound effects from Rust?", "must": ["AudioContext", "decode_audio_data", "play_sound"]}
+{"q": "How do you report errors and test browser code?", "must": ["anyhow", "wasm_bindgen_test", "wasm-pack test"]}

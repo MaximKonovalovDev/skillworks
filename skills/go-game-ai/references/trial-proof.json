@@ -1,0 +1,16 @@
+{
+  "skill": "go-game-ai",
+  "runs": 12,
+  "with_rate": 1.0,
+  "without_rate": 0.0,
+  "lift": 1.0,
+  "spread": 1.0,
+  "with_median": 1.0,
+  "with_p10": 1.0,
+  "without_median": 0.0,
+  "without_p10": 0.0,
+  "fingerprint": "703b5dc0dccf82d362417596102d19ed6a54f34735f7c073c547e589020ea83c",
+  "sheet": "evals/go-game-ai_trials.jsonl",
+  "at": "2026-10-09T09:52Z",
+  "ok": true
+}

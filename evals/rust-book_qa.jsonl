@@ -1,0 +1,12 @@
+{"must": ["E0382", "clone"], "q": "A String moved with let s2 = s1 cannot use s1 again. Which compiler code rejects it, and which two fixes does the book sanction?"}
+{"must": ["E0502", "scope"], "q": "An immutable borrow r1 is still used later when a mutable borrow r2 is created. Which rule breaks, which code is reported, and how does closing the scope fix it?"}
+{"must": ["&str", "deref"], "q": "Why does the book rewrite first_word to take &str instead of &String, and what conversion lets &String callers still compile?"}
+{"must": ["E0004", "catch-all"], "q": "A match on Option handles Some but forgets None. Which code rejects it, and which two remedies does the book sanction?"}
+{"must": ["?", "compatible"], "q": "When is the ? operator allowed, and what must the enclosing function return for a Result value?"}
+{"must": ["longest", "elision"], "q": "Why does the borrow checker reject an unannotated longest function over two &str inputs, and what is the sanctioned signature?"}
+{"must": ["Box", "recursive"], "q": "Which smart pointer holds a recursive cons list with a single owner, and why does the recursion need it?"}
+{"must": ["push", "get"], "q": "How do you grow a Vec and how do you read one element safely when the index may be wrong: which methods, and what happens with brackets past the end?"}
+{"must": ["push_str", "E0277"], "q": "How do you append a string slice versus one character to a String, and which code refuses integer indexing into a String?"}
+{"must": ["entry", "or_insert"], "q": "How do you insert into a HashMap only when the key is absent, and what does or_insert return for word counts?"}
+{"must": ["panic", "backtrace"], "q": "What does panic print and unwind, which variable shows the backtrace, and where do you start reading it?"}
+{"must": ["expect", "NotFound"], "q": "Why does production code prefer expect over unwrap, and which ErrorKind arm creates a missing file instead of panicking?"}

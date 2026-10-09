@@ -90,3 +90,13 @@ before vendoring anything.
  * ValveSoftware/GameNetworkingSockets (BSD-3-Clause) — https://github.com/ValveSoftware/GameNetworkingSockets — connection states, send flags and P2P vocab ideas for skills/netcode-patterns; own words, no code copied.
  * DORA research program (CC-BY-4.0) — https://dora.dev/ — four delivery metrics plus capability checklist ideas for skills/dora-delivery; own words, no text copied.
  * gepa-ai/gepa (MIT) — https://github.com/gepa-ai/gepa — seed-plus-child Pareto trial-ledger shape ideas behind tools/trial-ledger.mjs; ideas only, no code copied.
+
+ * Finska, Modern Game Testing (Packt, 2023, owned copy read 2026-10-09 as work/b1-testing/full_text.txt git-ignored; publisher page https://www.packtpub.com verified live 2026-10-09) - playtest plus perf checklist rules for skills/game-testing-check; own words and own examples, short terms only, no text copied.
+
+ * Wolverson, Hands-on Rust (Pragmatic Bookshelf, 2021, owned copy code read 2026-10-09 from work/inbox-books git-ignored; upstream https://pragprog.com/titles/hwrust/hands-on-rust/ verified live 2026-10-09) - Flappy plus drunkard plus intent rules for skills/handsrust-code; own words and own examples, short names only, no text copied.
+
+ * Brenden Matthews, Idiomatic Rust (Manning, 2024, ISBN 9781633437463, owned copy read 2026-10-09 from work/b1-idiomatic/ git-ignored; upstream https://www.manning.com/books/idiomatic-rust verified live 2026-10-09) - naming plus borrowing plus iterator plus error plus builder rules for skills/idiomatic-rust; own words and own examples, short tokens only, no text copied.
+
+ * Blandy Orendorff Tindall, Programming Rust (O'Reilly, 3rd edition early release 2025-03-13, owned EPUB read 2026-10-09 as work/b1-progrust git-ignored; upstream https://doc.rust-lang.org/book/ verified live 2026-10-09) - ownership plus borrows plus threads plus C-boundary rules for skills/systems-rust; own words and own examples, short quotes only, no text copied.
+
+ * Mara Holmes, Refactoring to Rust (Manning, 2025, owned copy PDF read 2026-10-09 from work/b1-transition/ git-ignored; catalogue https://www.manning.com/books/refactoring-to-rust verified live 2026-10-09) - C plus Python plus JS to Rust port rules for skills/refactoring-to-rust; own words and own examples, short API names only, no text copied.

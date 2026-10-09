@@ -33,7 +33,9 @@ __all__ = [
     "ROOT", "SKILLS", "FLEET_SKILLS", "FORGE_SAFE", "LIVE", "live",
     "PROOF_NAME", "BODY_TOKEN_BUDGET", "TOTAL_TOKEN_BUDGET", "QA_MIN",
     "EVAL_GATE", "LICENSES", "JARGON",
-    "frontmatter", "FRONTMATTER_ISSUE_TYPES", "lint_frontmatter_text", "lint_frontmatter_file", "body_of", "body_tokens", "skill_files", "skill_text",
+    "frontmatter", "FRONTMATTER_ISSUE_TYPES", "lint_frontmatter_text", "lint_frontmatter_file", "body_of", "body_tokens", "body_words", "skill_files", "skill_text",
+    "REQUIRED_PROPERTIES", "OPTIONAL_PROPERTIES", "ALLOWED_PROPERTIES", "RECOMMENDED_PROPERTIES",
+    "NAME_REGEX", "NAME_MAX_LENGTH", "DESCRIPTION_MAX_LENGTH", "BODY_WORDS_WARNING", "BODY_WORDS_ERROR",
     "forge_english_hits", "check_code_syntax_and_markers", "check_format", "check_sources", "check_eval",
     "test_file_for", "fingerprint", "check_proof",
 ]
@@ -94,6 +96,12 @@ FLEET_SKILLS = {
     "netcode-patterns": ["ValveSoftware/GameNetworkingSockets"],
     "dora-delivery": ["dora.dev"],
     "fd-find": ["sharkdp/fd"],
+    "game-testing-check": ["Modern Game Testing"],
+    "handsrust-code": ["Hands-on Rust"],
+    "idiomatic-rust": ["9781633437463"],
+    "systems-rust": ["Programming Rust"],
+    "refactoring-to-rust": ["Refactoring to Rust"],
+    "rust-book": ["rust-lang/book"],
 }
 # Installed in forge, whose `node scripts/check.mjs` bans some English words.
 FORGE_SAFE = {"pwsh-for-bash-writers", "git-one-branch", "cron-skip-clean", "pipe-run", "inbox-file-reader"}
@@ -191,6 +199,85 @@ def frontmatter(text: str) -> dict[str, str]:
 FRONTMATTER_ISSUE_TYPES = ("missing", "empty", "yaml", "type", "required", "warning", "io")
 
 _BLOCK_SCALARS = (">", ">-", ">+", "|", "|-", "|+")
+# Ported from tripleyak/SkillForge@cf947c9 scripts/frontmatter.py + scripts/_constants.py (MIT):
+# https://github.com/tripleyak/SkillForge
+# Strict-subset frontmatter keys + NAME_REGEX + word budgets, stdlib-only
+# (no PyYAML: keep our string parser above, add the strict-subset check + regexes).
+# Repo extension: "version" is allowed here (fleet skills carry version);
+# the donor set has no version key.
+REQUIRED_PROPERTIES = {"name", "description"}
+OPTIONAL_PROPERTIES = {
+    "license",
+    "version",
+    "allowed-tools",
+    "metadata",
+    "model",
+    "context",
+    "agent",
+    "hooks",
+    "user-invocable",
+    "when_to_use",
+    "argument-hint",
+    "arguments",
+    "disable-model-invocation",
+    "disallowed-tools",
+    "effort",
+    "background",
+    "paths",
+    "shell",
+}
+ALLOWED_PROPERTIES = REQUIRED_PROPERTIES | OPTIONAL_PROPERTIES
+RECOMMENDED_PROPERTIES = {"license"}
+NAME_REGEX = r"^[a-z][a-z0-9-]*[a-z0-9]$|^[a-z]$"
+NAME_MAX_LENGTH = 64
+DESCRIPTION_MAX_LENGTH = 1024
+BODY_WORDS_WARNING = 1500
+BODY_WORDS_ERROR = 5000
+_GATE_NAME_RE = re.compile(NAME_REGEX)
+
+
+def body_words(text: str) -> int:
+    return len(body_of(text).split())
+
+
+def _gatefront_strict_issues(values, key_line, text, path):
+    issues = []
+    for key in sorted(values):
+        if key not in ALLOWED_PROPERTIES:
+            ln = key_line.get(key, 2)
+            issues.append(_fm_issue(path, ln, "warning", "Unknown field: " + repr(key) + " at " + str(path) + ":" + str(ln)))
+    for field in sorted(RECOMMENDED_PROPERTIES):
+        if field not in values:
+            issues.append(_fm_issue(path, 2, "warning", "Missing recommended field: " + repr(field)))
+    name = values.get("name", "")
+    if name.strip() and name.strip().lower() not in ("null", "~", "none"):
+        n = name.strip()
+        if len(n) > NAME_MAX_LENGTH:
+            ln = key_line.get("name", 2)
+            issues.append(_fm_issue(path, ln, "warning", "Field " + repr("name") + " too long at " + str(path) + ":" + str(ln)))
+        elif not _GATE_NAME_RE.fullmatch(n):
+            ln = key_line.get("name", 2)
+            issues.append(_fm_issue(path, ln, "warning", "Field " + repr("name") + " malformed at " + str(path) + ":" + str(ln)))
+        elif "--" in n:
+            ln = key_line.get("name", 2)
+            issues.append(_fm_issue(path, ln, "warning", "Field " + repr("name") + " has consecutive hyphens at " + str(path) + ":" + str(ln)))
+    desc = values.get("description", "")
+    if desc.strip() and desc.strip().lower() not in ("null", "~", "none"):
+        d = desc.strip()
+        if len(d) > DESCRIPTION_MAX_LENGTH:
+            ln = key_line.get("description", 2)
+            issues.append(_fm_issue(path, ln, "warning", "Field " + repr("description") + " too long at " + str(path) + ":" + str(ln)))
+    try:
+        wc = body_words(text)
+    except Exception:
+        wc = 0
+    if wc > BODY_WORDS_ERROR:
+        issues.append(_fm_issue(path, 1, "warning", "SKILL.md body is " + str(wc) + " words, budget " + str(BODY_WORDS_ERROR) + " at " + str(path) + ":1"))
+    elif wc > BODY_WORDS_WARNING:
+        issues.append(_fm_issue(path, 1, "warning", "SKILL.md body is " + str(wc) + " words, budget " + str(BODY_WORDS_WARNING) + " at " + str(path) + ":1"))
+    return issues
+
+
 
 
 def _fm_issue(path: str, line: int, typ: str, msg: str) -> dict:
@@ -291,7 +378,7 @@ def _fm_scan_rows(raw: list[str], path: str) -> tuple[tuple | None, list | None]
     return (values, key_line, stray, list_hit), None
 
 
-def lint_frontmatter_text(text: str, path: str = "SKILL.md", required: tuple[str, ...] = ("name", "description")) -> list[dict]:
+def lint_frontmatter_text(text: str, path: str = "SKILL.md", required: tuple[str, ...] = ("name", "description"), strict: bool = False) -> list[dict]:
     """Typed file:line frontmatter issues for one Markdown document (stdlib-only).
 
     Covers the 7 frontcheck types: missing (no block), empty (no fields),
@@ -332,16 +419,18 @@ def lint_frontmatter_text(text: str, path: str = "SKILL.md", required: tuple[str
             issues.append(_fm_issue(path, key_line[key], "warning", "Field " + repr(key) + " is null"))
         elif v in ('""', "''"):
             issues.append(_fm_issue(path, key_line[key], "warning", "Field " + repr(key) + " is empty string"))
+    if strict:
+        issues.extend(_gatefront_strict_issues(values, key_line, text, path))
     return issues
 
 
-def lint_frontmatter_file(path, required: tuple[str, ...] = ("name", "description")) -> list[dict]:
+def lint_frontmatter_file(path, required: tuple[str, ...] = ("name", "description"), strict: bool = False) -> list[dict]:
     """Typed file:line frontmatter issues for one file on disk (adds the io type)."""
     try:
         text = Path(path).read_text(encoding="utf-8")
     except OSError as e:
         return [_fm_issue(str(path), 1, "io", "Cannot read: " + str(e))]
-    return lint_frontmatter_text(text, path=str(path), required=required)
+    return lint_frontmatter_text(text, path=str(path), required=required, strict=strict)
 
 
 def body_of(text: str) -> str:

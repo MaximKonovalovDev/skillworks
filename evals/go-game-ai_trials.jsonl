@@ -1,0 +1,12 @@
+{"id":"t01","kind":"answer","task":"State the planes count and the first plane stones.","must":["seven planes","own stones"],"must_not":["just ship it"],"q":"State the planes count and the first plane stones."}
+{"id":"t02","kind":"answer","task":"Name the two colors on the first board planes.","must":["opp stones","board planes"],"must_not":["just ship it"],"q":"Name the two colors on the first board planes."}
+{"id":"t03","kind":"answer","task":"How is liberty count split across planes?","must":["liberty count","three planes"],"must_not":["just ship it"],"q":"How is liberty count split across planes?"}
+{"id":"t04","kind":"answer","task":"Which planes mark ko point and to-play?","must":["ko point","to-play"],"must_not":["just ship it"],"q":"Which planes mark ko point and to-play?"}
+{"id":"t05","kind":"answer","task":"What does MCTSNode store for wins?","must":["MCTSNode","win_counts"],"must_not":["just ship it"],"q":"What does MCTSNode store for wins?"}
+{"id":"t06","kind":"answer","task":"Which counter tracks rollouts and visit count?","must":["num_rollouts","visit count"],"must_not":["just ship it"],"q":"Which counter tracks rollouts and visit count?"}
+{"id":"t07","kind":"answer","task":"Which score picks the branch and what tunes it?","must":["uct_score","temperature"],"must_not":["just ship it"],"q":"Which score picks the branch and what tunes it?"}
+{"id":"t08","kind":"answer","task":"Which call picks the move by most visits?","must":["select_move","most visits"],"must_not":["just ship it"],"q":"Which call picks the move by most visits?"}
+{"id":"t09","kind":"answer","task":"How does a random playout end and score?","must":["random playout","tromp-taylor"],"must_not":["just ship it"],"q":"How does a random playout end and score?"}
+{"id":"t10","kind":"answer","task":"What runtime rule keeps stdlib only with no nets?","must":["stdlib only","no nets"],"must_not":["just ship it"],"q":"What runtime rule keeps stdlib only with no nets?"}
+{"id":"t11","kind":"answer","task":"Which encoder call builds planes and counts points?","must":["encode_board","num_points"],"must_not":["just ship it"],"q":"Which encoder call builds planes and counts points?"}
+{"id":"t12","kind":"answer","task":"How does encode_point map by row-major on 9x9?","must":["encode_point","row-major","9x9"],"must_not":["just ship it"],"q":"How does encode_point map by row-major on 9x9?"}
