@@ -5,8 +5,12 @@
   "without_rate": 0.0,
   "lift": 1.0,
   "spread": 1.0,
+  "with_median": 1.0,
+  "with_p10": 1.0,
+  "without_median": 0.0,
+  "without_p10": 0.0,
   "fingerprint": "b831bab1990821e4e3df2c8827ec5d8310dadb5fa4195838dfe22c7ab0cb3a09",
   "sheet": "evals/bash-spawn-guard_trials.jsonl",
-  "at": "2026-10-07T02:06Z",
+  "at": "2026-10-09T08:21Z",
   "ok": true
 }
