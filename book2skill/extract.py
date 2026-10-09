@@ -13,8 +13,10 @@ from __future__ import annotations
 import fnmatch
 import json
 import os
+import random
 import re
 import sys
+import time
 import urllib.request
 import zipfile
 from pathlib import Path
@@ -32,6 +34,30 @@ ENGINES = ("classic", "markitdown", "auto")
 # pdfplumber table/code recovery runs only under this page count; above it the
 # markitdown PDF path keeps markitdown text and says so in the receipt.
 _PDF_ENRICH_MAX_PAGES = 150
+
+# Retry bound shaped by litl/backoff (MIT, https://github.com/litl/backoff/blob/main/backoff/_sync.py:
+# max_tries/max_time/giveup/on_giveup; _wait_gen.py expo; _jitter.py full_jitter). Reimplemented here, not pasted.
+def with_retry(fn, tries=3, giveup=(ValueError,), base=0.01, sleep=time.sleep, on_giveup=None):
+    """Run fn() up to tries times; expo backoff with full jitter; giveup types fail fast."""
+    last = None
+    for attempt in range(1, tries + 1):
+        try:
+            return fn()
+        except giveup as exc:
+            exc.retry_tries = attempt
+            if on_giveup is not None:
+                on_giveup({"tries": attempt, "cause": exc})
+            raise
+        except Exception as exc:
+            last = exc
+            exc.retry_tries = attempt
+            if attempt >= tries:
+                if on_giveup is not None:
+                    on_giveup({"tries": attempt, "cause": exc})
+                raise
+            sleep(random.uniform(0, base * (2 ** (attempt - 1))))
+    raise last
+
 
 
 # Gutenberg header/footer markers (idea from kiasar/gutenberg_cleaner, MIT:
@@ -224,7 +250,7 @@ def _read_pdf_markitdown(path: Path) -> tuple[str, dict]:
     _ensure_local_tools()
     from markitdown import MarkItDown
 
-    text = MarkItDown(enable_builtins=True).convert(str(path)).text_content or ""
+    text = with_retry(lambda: MarkItDown(enable_builtins=True).convert(str(path)).text_content or "")
     tables_md, table_count, tables_skipped = _pdf_tables_as_markdown(path, _PDF_ENRICH_MAX_PAGES)
     code_md, fence_count, code_skipped = _pdf_code_as_markdown(path, _PDF_ENRICH_MAX_PAGES)
     extra = "\n\n".join(b for b in (tables_md, code_md) if b)
@@ -297,7 +323,7 @@ def _read_epub_markitdown(path: Path) -> tuple[str, dict]:
     _ensure_local_tools()
     from markitdown import MarkItDown
 
-    text = MarkItDown(enable_builtins=True).convert(str(path)).text_content or ""
+    text = with_retry(lambda: MarkItDown(enable_builtins=True).convert(str(path)).text_content or "")
     return text, {}
 
 
@@ -327,7 +353,7 @@ def _read_docx_markitdown(path: Path) -> str:
     _ensure_local_tools()
     from markitdown import MarkItDown
 
-    return MarkItDown(enable_builtins=True).convert(str(path)).text_content or ""
+    return with_retry(lambda: MarkItDown(enable_builtins=True).convert(str(path)).text_content or "")
 
 
 def md_counts(text: str) -> dict:
@@ -381,6 +407,7 @@ def extract(src: str, workdir: Path, strip_gutenberg: bool = True, include: str 
                         raise ValueError(f"markitdown PDF failed ({exc}); install .tools/py per TS-4") from exc
                     text, pages = _read_pdf_classic(path)
                     kind, engine_used = "pdf", "classic-fallback"
+                    enrich = {"note": "markitdown failed after {} tries: {}".format(getattr(exc, "retry_tries", 3), exc)}
             else:
                 text, pages = _read_pdf_classic(path)
                 kind = "pdf"
@@ -394,6 +421,7 @@ def extract(src: str, workdir: Path, strip_gutenberg: bool = True, include: str 
                         raise ValueError(f"markitdown EPUB failed ({exc}); install .tools/py per TS-4") from exc
                     text, pages = _read_epub_classic(path)
                     kind, engine_used = "epub", "classic-fallback"
+                    enrich = {"note": "markitdown failed after {} tries: {}".format(getattr(exc, "retry_tries", 3), exc)}
             else:
                 text, pages = _read_epub_classic(path)
                 kind = "epub"
@@ -405,6 +433,7 @@ def extract(src: str, workdir: Path, strip_gutenberg: bool = True, include: str 
                     if engine == "markitdown":
                         raise ValueError(f"markitdown DOCX failed ({exc}); install .tools/py per TS-4") from exc
                     text, kind, engine_used = _read_docx(path), "docx", "classic-fallback"
+                    enrich = {"note": "markitdown failed after {} tries: {}".format(getattr(exc, "retry_tries", 3), exc)}
             else:
                 text, kind = _read_docx(path), "docx"
         else:
@@ -425,3 +454,4 @@ def extract(src: str, workdir: Path, strip_gutenberg: bool = True, include: str 
     receipt = {"stage": "extract", **meta}
     (workdir / "receipt.json").write_text(json.dumps(receipt, indent=2), encoding="utf-8")
     return receipt
+

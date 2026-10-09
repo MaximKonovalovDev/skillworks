@@ -27,6 +27,7 @@ import hashlib
 import io
 import json
 import re
+import struct
 import sys
 import zipfile
 from pathlib import Path
@@ -38,6 +39,47 @@ import install_fleet_skills as inst  # noqa: E402  (the one definition of which 
 
 STAMP = (2026, 1, 1, 0, 0, 0)
 MAX_BUNDLE_BYTES = 5 * 1024 * 1024
+MIN_COVER_WIDTH = 1280
+MIN_COVER_HEIGHT = 720
+
+# Cover dimensions ported from image-size/image-size (MIT, https://github.com/image-size/image-size):
+# lib/detector.ts firstBytes dispatch + lib/types/png.ts IHDR reader.
+# Rewritten here stdlib-only with struct reads of the PNG IHDR and GIF header.
+PNG_MAGIC = b"\x89PNG\r\n\x1a\n"
+GIF_MAGICS = (b"GIF87a", b"GIF89a")
+
+
+def cover_dimensions(path):
+    # (width, height) of a PNG or GIF cover from its header stdlib-only.
+    # Raises FileNotFoundError when missing and ValueError when not PNG or GIF.
+    p = Path(path)
+    if not p.is_file():
+        raise FileNotFoundError(f"cover not found: {p}")
+    data = p.read_bytes()
+    if data[:8] == PNG_MAGIC:
+        if len(data) < 24:
+            raise ValueError(f"truncated PNG cover: {p}")
+        (length,) = struct.unpack(">I", data[8:12])
+        if data[12:16] != b"IHDR":
+            raise ValueError(f"PNG cover first chunk is not IHDR: {p}")
+        if length < 13 or len(data) < 24:
+            raise ValueError(f"truncated PNG IHDR: {p}")
+        (width, height) = struct.unpack(">II", data[16:24])
+        return (width, height)
+    if data[:6] in GIF_MAGICS:
+        if len(data) < 10:
+            raise ValueError(f"truncated GIF cover: {p}")
+        (width, height) = struct.unpack("<HH", data[6:10])
+        return (width, height)
+    raise ValueError(f"not a PNG or GIF cover: {p}")
+
+
+def cover_warning(path):
+    # Warning when a store cover is smaller than the minimum, else None.
+    (width, height) = cover_dimensions(path)
+    if width < MIN_COVER_WIDTH or height < MIN_COVER_HEIGHT:
+        return f"{Path(path).name} is {width}x{height}, want {MIN_COVER_WIDTH}x{MIN_COVER_HEIGHT}+"
+    return None
 
 # The shape of a listing.md, once. The starter below writes it and tools/pack_check.py requires it: both read these two
 # constants, so the starter and the gate cannot disagree. The headings are in the order of packs/fleet-vol-1/listing.md.

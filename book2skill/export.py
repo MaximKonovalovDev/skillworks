@@ -195,6 +195,43 @@ def _write_zip(dest: Path, zip_path: Path) -> list[str]:
     return names
 
 
+# Steal: same-version re-export gate (clawhub slug+semver-duplicate refuse).
+# Donor: openclaw/clawhub (MIT,
+# https://github.com/openclaw/clawhub/blob/main/convex/lib/skillPublish.ts:
+# normalizeSkillSlug + semver.valid + "Version X already exists" refuse BEFORE
+# artifact write; cf. issue #3677 orphan-ZIP leak). Ported fresh in our style:
+# normalize the slug, compare SKILL.md version vs the existing dest
+# .lock.json version, and refuse (exit 2, one line) before any rmtree/copytree/ZIP.
+def _normalize_slug(slug: str) -> str:
+    """Lowercase file-safe slug so `Demo_Skill` and `demo-skill` count as one."""
+    return re.sub(r"[^a-z0-9]+", "-", slug.lower()).strip("-")
+
+
+def _refuse_same_version(skilldir: Path, dest: Path) -> None:
+    """Refuse a silent same-version re-export before any artifact is touched."""
+    lock_path = dest / ".lock.json"
+    if not lock_path.is_file():
+        return
+    try:
+        existing = json.loads(lock_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return
+    current_version = skill_version(skilldir).strip()
+    existing_version = str(existing.get("version", "")).strip()
+    if not current_version or not existing_version:
+        return
+    if _normalize_slug(str(existing.get("name", ""))) != _normalize_slug(skilldir.name):
+        return
+    if existing_version == current_version:
+        msg = (
+            f"export refused: Version {current_version} of '{skilldir.name}' already exists "
+            f"in {dest}; bump SKILL.md version to ship again"
+        )
+        err = SystemExit(msg)
+        err.code = 2
+        raise err
+
+
 def skill_version(skilldir: Path) -> str:
     """Version from SKILL.md frontmatter (K-18); default 0.1.0 when missing."""
     try:
@@ -227,6 +264,7 @@ def export(skilldir: Path, target: str, out: Path, eval_report: dict | None = No
         raise SystemExit("export held: " + ", ".join(left) + " still hold the scaffold text; write them first (a pack with placeholder text is not shipped)")
     dest = out / target / skilldir.name
     _check_paths(skilldir, out, dest)
+    _refuse_same_version(skilldir, dest)
     if dest.exists():
         shutil.rmtree(dest)
     shutil.copytree(skilldir, dest, ignore=_own_output_ignore(skilldir, out, dest))

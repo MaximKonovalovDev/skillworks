@@ -9,7 +9,9 @@ broken-link checks. total_tokens stays additive over sections.
 from __future__ import annotations
 
 import json
+import os
 import re
+import sys
 from pathlib import Path
 
 BODY_BUDGET = 2000
@@ -98,14 +100,69 @@ def _skill_files(skilldir: Path) -> list[Path]:
     for path in sorted(skilldir.rglob("*.md")):
         try:
             rel = path.relative_to(skilldir)
-        except ValueError:
-            continue
+        except ValueError as e:
+            raise RuntimeError('audit: file ' + str(path) + ' outside skill dir ' + str(skilldir) + ': ' + str(e)) from e
         if "export" in rel.parts:
             continue
         if path.is_symlink():
             continue
         files.append(path)
     return files
+
+
+# Human summary ported fresh from yasik/skills (MIT, https://github.com/yasik/skills)
+# docs/terminal-report.md plus skills/terminal-report/scripts/termstyle.py:
+# NO_COLOR and non-TTY auto degrade, header plus rule chunking, hbar.
+# Ideas only, zero dep, wording is ours.
+def _color_enabled():
+    if "NO_COLOR" in os.environ:
+        return False
+    try:
+        return sys.stderr.isatty()
+    except OSError as e:
+        print('audit: isatty check failed: ' + str(e), file=sys.stderr)
+        return False
+
+
+def _paint(text, code):
+    if not _color_enabled():
+        return text
+    esc = chr(27)
+    return esc + "[" + code + "m" + text + esc + "[0m"
+
+
+def _hbar(used, budget, width=20):
+    if budget <= 0:
+        filled = width if used > 0 else 0
+    else:
+        filled = min(width, int(round(width * used / budget)))
+    bar = "#" * filled + "-" * (width - filled)
+    if not _color_enabled():
+        return "[" + bar + "]"
+    color = "32" if used <= budget else "31"
+    esc = chr(27)
+    return "[" + esc + "[" + color + "m" + bar + esc + "[0m]"
+
+
+def human_summary(report):
+    skill = str(report.get("skill", ""))
+    label = Path(skill).name if skill else "skill"
+    body = int(report.get("body_tokens", 0) or 0)
+    budget = int(report.get("body_budget", BODY_BUDGET) or BODY_BUDGET)
+    total = int(report.get("total_tokens", 0) or 0)
+    over = bool(report.get("over_budget", False))
+    header = _paint("audit  " + label, "1")
+    rule = _paint("-" * 40, "2")
+    body_bar = _hbar(body, budget)
+    total_bar = _hbar(total, TOTAL_BUDGET)
+    if over:
+        status = _paint("over budget: body " + str(body) + " > " + str(budget) + " tokens", "31")
+    else:
+        status = _paint("ok: body " + str(body) + " <= " + str(budget) + " tokens", "32")
+    lines = [header, rule, "body   " + str(body) + " / " + str(budget) + " tokens " + body_bar, "total  " + str(total) + " / " + str(TOTAL_BUDGET) + " tokens " + total_bar, status]
+    for flag in report.get("flags", []):
+        lines.append("- " + str(flag))
+    return chr(10).join(lines)
 
 
 def audit(skilldir: Path) -> dict:
@@ -120,8 +177,8 @@ def audit(skilldir: Path) -> dict:
 
     try:
         skill_text = (skilldir / "SKILL.md").read_text(encoding="utf-8")
-    except OSError:
-        skill_text = ""
+    except OSError as e:
+        raise FileNotFoundError('audit: SKILL.md unreadable in ' + str(skilldir) + ': ' + str(e)) from e
     fm = _frontmatter(skill_text)
     name = fm.get("name", "")
     description = fm.get("description", "")
@@ -139,8 +196,8 @@ def audit(skilldir: Path) -> dict:
                 continue
             try:
                 ref_chars += len(path.read_text(encoding="utf-8"))
-            except OSError:
-                continue
+            except OSError as e:
+                raise OSError('audit: cannot read reference file ' + str(path) + ': ' + str(e)) from e
     references_tokens = _tokens(ref_chars)
 
     flags: list[str] = []
@@ -179,8 +236,8 @@ def audit(skilldir: Path) -> dict:
     for path in _skill_files(skilldir):
         try:
             text = path.read_text(encoding="utf-8")
-        except OSError:
-            continue
+        except OSError as e:
+            raise OSError('audit: cannot read skill file ' + str(path) + ': ' + str(e)) from e
         for target in LINK_RE.findall(text):
             t = target.strip().split()[0] if target.strip() else ""
             t = t.split("#")[0]
@@ -189,8 +246,8 @@ def audit(skilldir: Path) -> dict:
             candidate = (path.parent / t).resolve() if not Path(t).is_absolute() else Path(t)
             try:
                 inside = candidate == skilldir.resolve() or skilldir.resolve() in candidate.parents
-            except OSError:
-                inside = False
+            except OSError as e:
+                raise OSError('audit: cannot resolve link target ' + repr(target.strip()) + ' in file ' + str(path) + ': ' + str(e)) from e
             if not candidate.is_file() and not (inside and False):
                 # Only flag relative links that do not resolve to a file.
                 broken_links.append({"file": str(path.relative_to(skilldir)), "target": target.strip()})
@@ -212,4 +269,5 @@ def audit(skilldir: Path) -> dict:
         "flags": flags,
     }
     print(json.dumps(report, indent=2))
+    print(human_summary(report), file=sys.stderr)
     return report

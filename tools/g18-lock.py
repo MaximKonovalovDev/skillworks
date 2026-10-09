@@ -29,8 +29,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_SKILLS = ROOT / "skills"
 
-EXACT = re.compile(r"^\d+\.\d+\.\d+$")
-RANGE_HINT = re.compile(r"[\^~*|<>\s]|x|X|\|\||\.\.|-")
+# Version gate idiom from pypa/packaging (BSD-2-Clause): single VERSION_PATTERN + InvalidVersion.
+# https://github.com/pypa/packaging/blob/main/src/packaging/version.py
+VERSION_PATTERN = r"\d+\.\d+\.\d+"
+_VERSION_RE = re.compile(rf"^{VERSION_PATTERN}$")
+class InvalidVersion(ValueError): pass
 
 
 def _utcnow() -> str:
@@ -49,17 +52,8 @@ def source_pin() -> str:
     return "worktree"
 
 
-def is_exact(version: str) -> bool:
-    return bool(EXACT.match(str(version).strip()))
-
-
 def is_range(version: str) -> bool:
-    v = str(version).strip()
-    if not v:
-        return True
-    if EXACT.match(v):
-        return False
-    return True
+    return _VERSION_RE.match(str(version).strip()) is None
 
 
 def parse_frontmatter(text: str) -> dict:

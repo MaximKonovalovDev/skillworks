@@ -28,7 +28,7 @@ def _inside(child: Path, parent: Path) -> bool:
 
 def _check_places(src: str, work: Path, skill: Path) -> None:
     if _inside(work, skill) or _inside(skill, work):
-        raise ValueError(f"--work {work} and --skill {skill} must not sit inside each other")
+        raise ValueError(f"--work {work} and --skill {skill} must not sit inside each other: keep work output and the skill apart or the next run would read or overwrite its own output")
     if Path(src).is_dir():
         for label, place in (("--work", work), ("--skill", skill)):
             if _inside(place, Path(src)):
@@ -89,20 +89,20 @@ def make(src: str, name: str, description: str, qa: Path, work: Path | None = No
 
     result["gate"] = "pass" if report["rate"] >= export_mod.GATE else "refused"
     if report["rate"] < export_mod.GATE:
-        _write(work, result)
+        _write_make_receipt(work, result)
         raise SystemExit(f"eval gate refused: rate {report['rate']:.3f} below {export_mod.GATE:.1f}; fix the skill, not the test")
     if targets and left:
-        _write(work, result)
+        _write_make_receipt(work, result)
         raise SystemExit("export held: " + ", ".join(left) + " still hold the scaffold text; write them first (a pack with placeholder text is not shipped)")
     stages["export"] = []
     for target in targets:
         receipt = _quiet(export_mod.export, skill, target, out, eval_report=report)
         stages["export"].append(receipt)
         say(f"export   {receipt['dest']}")
-    _write(work, result)
+    _write_make_receipt(work, result)
     say(f"receipt  {work / 'make.json'}")
     return result
 
 
-def _write(work: Path, result: dict) -> None:
+def _write_make_receipt(work: Path, result: dict) -> None:
     (work / "make.json").write_text(json.dumps(result, indent=2), encoding="utf-8")

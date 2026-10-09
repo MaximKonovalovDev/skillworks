@@ -1,6 +1,7 @@
 """book2skill CLI: make (all in one) | extract | split | index | build | audit | eval | refresh | export."""
 from __future__ import annotations
 
+import difflib
 from pathlib import Path
 
 import click
@@ -16,7 +17,64 @@ from . import make as make_mod
 from . import refresh as refresh_mod
 
 
-@click.group()
+# Steal: clap-rs/clap suggestion UX (Apache-2.0).
+# Donor: https://github.com/clap-rs/clap/blob/master/clap_builder/src/parser/features/suggestions.rs
+# Jaro over 0.7 suggest-nearest, ported fresh with stdlib difflib cutoff 0.7.
+# Unknown command or flag prints a Did you mean hint line, not a help dump.
+def _did_you_mean(word: str, choices: list[str]) -> str:
+    match = difflib.get_close_matches(word, list(choices), n=1, cutoff=0.7)
+    q = chr(39)
+    return f"Did you mean {q}{match[0]}{q}?" if match else ""
+
+
+def _option_suggestion(cmd: click.Command, ctx: click.Context, name: str) -> str:
+    opts: list[str] = []
+    for param in cmd.get_params(ctx):
+        opts.extend(getattr(param, "opts", []) or [])
+        opts.extend(getattr(param, "secondary_opts", []) or [])
+    return _did_you_mean(name, opts)
+
+
+class SuggestCommand(click.Command):
+    """Command suggesting nearest flag on typo."""
+    def parse_args(self, ctx: click.Context, args: list[str]) -> list[str]:
+        try:
+            return super().parse_args(ctx, args)
+        except click.NoSuchOption as exc:
+            hint = _option_suggestion(self, ctx, exc.option_name)
+            q = chr(39)
+            if hint:
+                raise click.UsageError(f"No such option {q}{exc.option_name}{q}. {hint}", ctx) from None
+            raise
+
+
+class SuggestGroup(click.Group):
+    """Group suggesting nearest command or flag on typo."""
+    command_class: type[click.Command] | None = SuggestCommand
+    group_class: type[click.Group] | type[type] | None = type
+    def resolve_command(self, ctx: click.Context, args: list[str]):
+        try:
+            return super().resolve_command(ctx, args)
+        except click.UsageError as exc:
+            name = getattr(exc, "command_name", None)
+            if name is None and args:
+                name = str(args[0])
+            hint = _did_you_mean(str(name), list(self.commands))
+            if hint:
+                raise click.UsageError(f"No such command {name!r}. {hint}", ctx) from None
+            raise
+    def parse_args(self, ctx: click.Context, args: list[str]):
+        try:
+            return super().parse_args(ctx, args)
+        except click.NoSuchOption as exc:
+            hint = _option_suggestion(self, ctx, exc.option_name)
+            q = chr(39)
+            if hint:
+                raise click.UsageError(f"No such option {q}{exc.option_name}{q}. {hint}", ctx) from None
+            raise
+
+
+@click.group(cls=SuggestGroup)
 def main() -> None:
     """Books you own into Agent Skills."""
 

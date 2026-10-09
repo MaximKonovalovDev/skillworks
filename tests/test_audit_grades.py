@@ -1,5 +1,7 @@
 """K-43 [STEAL-AUDIT] graded audit: three cost numbers + gates in book2skill/audit.py."""
 import json
+
+import pytest
 from pathlib import Path
 
 from click.testing import CliRunner
@@ -111,3 +113,10 @@ def test_make_prints_over_budget_on_a_big_fixture(tmp_path: Path) -> None:
     assert "over budget" in result.output
     made = json.loads((work / "make.json").read_text(encoding="utf-8"))
     assert made["stages"]["audit"]["over_budget"] is True
+
+
+def test_audit_missing_skill_md_fails_loudly(tmp_path: Path) -> None:
+    skill = tmp_path / 'empty-skill'
+    (skill / 'references').mkdir(parents=True)
+    with pytest.raises(FileNotFoundError, match='SKILL.md unreadable'):
+        audit_mod.audit(skill)

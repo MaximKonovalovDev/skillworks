@@ -55,3 +55,4 @@ Proof (the test suite): `python -m pytest tests/ -q`
 - `skills/*/export/` is generated and git-ignored. Never commit it. Do not search or open it by a recursive walk.
 - Only owned or public-domain books. Never commit a copyrighted book.
 - The eval gate: a rate below 0.6 refuses export. Fix the skill, not the test.
+- `skills/freud-dream-psychology/chapters/notes.md` is huge: look up one id, never read it whole.

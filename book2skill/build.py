@@ -158,6 +158,10 @@ def _clean_chunk(full: str) -> tuple[str | None, bool, bool]:
     the file). Untouched chunks come back as the original string, so
     marker-free notes stay byte-identical.
     """
+    # Fast path: plain chunks carry neither marker family, so the per-line
+    # scans below cannot cut; skip splitlines + substring loops (same output).
+    if "GUTENBERG" not in full and "FULL LICENSE" not in full:
+        return full, False, False
     lines = full.splitlines()
     cut = False
     for i, line in enumerate(lines[:_HEAD_SCAN_LINES]):
@@ -236,7 +240,8 @@ def build(workdir: Path, skilldir: Path, name: str, description: str) -> dict:
     heads = []
     pg_cut = False
     tailed = False
-    for path in sorted((workdir / "chunks").glob("*.txt")):
+    chunk_paths = sorted((workdir / "chunks").glob("*.txt"))
+    for path in chunk_paths:
         if tailed:
             pg_cut = True
             continue
@@ -263,7 +268,7 @@ def build(workdir: Path, skilldir: Path, name: str, description: str) -> dict:
         (skilldir / fname).write_text(stub, encoding="utf-8")
     refs = skilldir / "references"
     refs.mkdir(exist_ok=True)
-    chunks = sorted((workdir / "chunks").glob("*.txt"))
+    chunks = chunk_paths
     sources_note = (
         "\nLicence: CC BY-NC-SA 3.0 (source) — NonCommercial, never sold; "
         "share free under the same licence.\n"

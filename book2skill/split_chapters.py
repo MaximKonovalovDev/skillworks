@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import json
 import re
+import unicodedata
 from pathlib import Path
 
 from . import build as build_mod
@@ -33,16 +34,32 @@ SLUG_CAP = 50
 HEADING_RE = re.compile(r"^(#{1,6}|={2,6})[ \t]+(\S.*)$")
 
 
-def _fence_kind(line: str) -> str | None:
-    """Block-delimiter kind of the line, or None: Markdown ```/~~~ fences,
-    AsciiDoc ---- listing blocks and ==== example blocks."""
+# Fence close rule ported fresh from executablebooks/markdown-it-py (MIT,
+# https://github.com/executablebooks/markdown-it-py/blob/master/markdown_it/rules_block/fence.py):
+# ideas only -- min_markers=3, same-marker close, closing run >= opening run.
+# No code copied; stdlib-only reimplementation for split_chapters.
+def _fence_kind(line: str) -> tuple[str, int] | None:
+    """(kind, run) of a block-delimiter line, or None.
+    Markdown ```/~~~ fences: leading run of same marker, min 3.
+    AsciiDoc ---- listing blocks and ==== example blocks: run of 4+."""
     s = line.strip()
-    if s.startswith("```") or s.startswith("~~~"):
-        return s[:3]
+    if not s:
+        return None
+    ch = s[0]
+    if ch in ("`", "~"):
+        n = 0
+        for c in s:
+            if c == ch:
+                n += 1
+            else:
+                break
+        if n < 3:
+            return None
+        return (ch * 3, n)
     if len(s) >= 4 and set(s) == {"-"}:
-        return "----"
+        return ("----", len(s))
     if len(s) >= 4 and set(s) == {"="}:
-        return "===="
+        return ("====", len(s))
     return None
 
 
@@ -56,16 +73,25 @@ def iter_headings(text: str) -> list[tuple[int, str, int]]:
 
     Only the matching delimiter closes a block, so a merge-conflict
     ``=======`` line inside a ``----`` listing block stays hidden content.
+    Closing run must reach the opening run (5-backtick open needs 5+ to
+    close), so a short 3-backtick line inside a long fence stays content.
     """
     found: list[tuple[int, str, int]] = []
-    open_fence: str | None = None
+    open_fence: tuple[str, int] | None = None
     for lineno, line in enumerate(text.splitlines()):
-        kind = _fence_kind(line)
-        if kind is not None:
+        if is_fence(line):
+            info = _fence_kind(line)
+            assert info is not None
+            kind, n = info
             if open_fence is None:
-                open_fence = kind
-            elif kind == open_fence:
-                open_fence = None
+                open_fence = info
+            else:
+                open_kind, open_n = open_fence
+                if kind == open_kind and n >= open_n:
+                    s = line.strip()
+                    rest = s[n:].strip() if kind in ("```", "~~~") else ""
+                    if rest == "":
+                        open_fence = None
             continue
         if open_fence is not None:
             continue
@@ -78,9 +104,13 @@ def iter_headings(text: str) -> list[tuple[int, str, int]]:
     return found
 
 
+# Slug NFKD rule ported fresh from django/django (BSD-3-Clause,
+# https://github.com/django/django/blob/main/django/utils/text.py slugify):
+# ideas only -- unicodedata NFKD decompose plus ascii-ignore plus lower plus re.
+# No code copied; stdlib-only reimplementation for split_chapters.
 def slug(title: str) -> str:
     """Short file-safe slug for a chapter title."""
-    out = re.sub(r"[^a-z0-9]+", "-", title.lower()).strip("-")
+    out = re.sub(r"[^a-z0-9]+", "-", unicodedata.normalize("NFKD", title).encode("ascii", "ignore").decode("ascii").lower()).strip("-")
     return (out[:SLUG_CAP].rstrip("-") or "chapter")
 
 

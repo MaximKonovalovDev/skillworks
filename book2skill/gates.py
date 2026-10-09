@@ -241,7 +241,7 @@ def check_format(name: str) -> None:
     md = d / "SKILL.md"
     assert md.is_file(), f"{name}: SKILL.md missing"
     text = md.read_text(encoding="utf-8")
-    check_code_syntax_and_markers(text)
+    # Cheapest first: in-memory frontmatter gates refuse before any parse or tree read.
     fm = frontmatter(text)
     assert fm.get("name") == name, f"{name}: frontmatter name {fm.get('name')!r} must equal the folder"
     assert re.fullmatch(r"[a-z0-9]+(-[a-z0-9]+)*", name) and len(name) <= 64
@@ -253,15 +253,16 @@ def check_format(name: str) -> None:
     # every referenced file must exist
     for rel in set(re.findall(r"`((?:references|scripts)/[\w./-]+)`", text)):
         assert (d / rel).exists(), f"{name}: SKILL.md names {rel} but it does not exist"
+    check_code_syntax_and_markers(text)
     # plain ASCII so no tool output turns into mojibake on this Windows PC
     for p in skill_files(name):
         bad = [c for c in p.read_text(encoding="utf-8") if ord(c) > 126]
         assert not bad, f"{name}: {p.name} has non-ASCII characters {sorted(set(bad))[:5]}"
-    report = audit_mod.audit(d)
-    assert report["total_tokens"] <= TOTAL_TOKEN_BUDGET, f"{name}: skill is {report['total_tokens']} tokens, budget {TOTAL_TOKEN_BUDGET}"
     if name in FORGE_SAFE:
         hits = forge_english_hits(name)
         assert not hits, f"{name}: words forge's English check bans: {hits[:6]}"
+    report = audit_mod.audit(d)
+    assert report["total_tokens"] <= TOTAL_TOKEN_BUDGET, f"{name}: skill is {report['total_tokens']} tokens, budget {TOTAL_TOKEN_BUDGET}"
 
 
 def check_sources(name: str) -> None:

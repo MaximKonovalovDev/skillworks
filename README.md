@@ -57,6 +57,8 @@ python mcp_server/server.py   # stdio MCP: skill_search
 python mcp_server/server.py --skills-dir <dir>  # serve skills from elsewhere ($SKILLWORKS_SKILLS_DIR also works)
 ```
 
+Proof: `python -m pytest tests/ -q`
+
 ## Seeds
 
 * `skills/flax-forge-ops/` — hand-written from your own Forge docs,

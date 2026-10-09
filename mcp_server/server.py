@@ -7,6 +7,7 @@ No dependencies, no network. Scope is honest: search + preview only, no generati
 """
 from __future__ import annotations
 
+import argparse
 import inspect
 import json
 import os
@@ -28,6 +29,15 @@ def _parse_skills_dir_override(argv: list[str]) -> Path | None:
         if arg.startswith("--skills-dir="):
             return Path(arg.split("=", 1)[1])
     return None
+
+
+def _build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        description="Minimal stdio MCP server: skill_search + skill_preview over built skills. Speaks JSON-RPC over stdio with initialize / tools/list / tools/call. Tools: skill_search (the list entry -- use a broad query to browse) and skill_preview (README-then-SKILL.md head for inspect-before-install).",
+        epilog="Reads JSON-RPC requests on stdin, writes replies on stdout. Example: python mcp_server/server.py --skills-dir ./skills",
+    )
+    parser.add_argument("--skills-dir", default=None, help="Skills directory to serve (default: ./skills; overrides SKILLWORKS_SKILLS_DIR/SKILLS_DIR).")
+    return parser
 
 
 def _skills_dir() -> Path:
@@ -119,7 +129,7 @@ def _skill_meta(name: str) -> dict:
     }
 
 _DESCRIPTIONS = {
-    "query": "Keywords to search skill markdown for (non-empty string).",
+    "query": "Keywords to search skill markdown for (non-empty string). skill_search is the list entry: use a broad query to browse.",
     "skill": "Optional skill name to restrict search to one skill.",
     "limit": "Max hits to return (integer 1-20, default 5).",
 }
@@ -308,7 +318,8 @@ def _unknown_skill_message(skill: str) -> str:
 
 def main(argv: list[str] | None = None) -> None:
     global _CLI_SKILLS_DIR
-    _CLI_SKILLS_DIR = _parse_skills_dir_override(list(sys.argv[1:] if argv is None else argv))
+    cli_args, _ = _build_parser().parse_known_args(list(sys.argv[1:] if argv is None else argv))
+    _CLI_SKILLS_DIR = Path(cli_args.skills_dir) if cli_args.skills_dir else None
     for line in sys.stdin:
         line = line.strip()
         if not line:
@@ -325,7 +336,7 @@ def main(argv: list[str] | None = None) -> None:
         elif method == "tools/list":
             search_tool = {
                 "name": "skill_search",
-                "description": "Search built skill markdown by keywords. Use when looking up skill content.",
+                "description": "Search built skill markdown by keywords. skill_search is the list entry: use a broad query to browse, then skill_preview to inspect one skill.",
                 "inputSchema": INPUT_SCHEMA,
                 "_meta": {"cacheHint": CACHE_HINT},
             }

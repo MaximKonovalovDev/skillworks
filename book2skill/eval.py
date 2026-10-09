@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import json
 import math
+import warnings
 from pathlib import Path
 
 from .index import search
@@ -44,6 +45,159 @@ def validate_qa(qa_path: Path) -> None:
         except json.JSONDecodeError as exc:
             raise ValueError(f"--qa {qa_path} line {lineno} must be {{\"q\", \"must\"}} (got invalid JSON: {exc.msg})") from None
         _check_item(item, qa_path, lineno)
+
+
+# Donor: keleshev/schema (MIT, https://github.com/keleshev/schema):
+# Schema/And/Or/Optional/Use idea ported fresh; no donor code copied.
+class Optional:
+    """Mark a dict key as optional for Schema."""
+    def __init__(self, key: str):
+        self.key = key
+
+
+class Use:
+    """Check a value with a predicate or converter (True when it works)."""
+    def __init__(self, fn):
+        self.fn = fn
+
+    def check(self, value) -> bool:
+        try:
+            result = self.fn(value)
+        except Exception:
+            return False
+        return result if isinstance(result, bool) else True
+
+
+class And:
+    """All sub-checks must match."""
+    def __init__(self, *checks):
+        self.checks = checks
+
+    def check(self, value) -> bool:
+        return all(_matches(c, value) for c in self.checks)
+
+
+class Or:
+    """At least one sub-check must match."""
+    def __init__(self, *checks):
+        self.checks = checks
+
+    def check(self, value) -> bool:
+        return any(_matches(c, value) for c in self.checks)
+
+
+def _matches(spec, value) -> bool:
+    """One spec against one value: type, literal, callable or helper."""
+    if isinstance(spec, (And, Or, Use)):
+        return spec.check(value)
+    if isinstance(spec, type):
+        if spec is int:
+            return isinstance(value, int) and not isinstance(value, bool)
+        return isinstance(value, spec)
+    if callable(spec):
+        try:
+            return bool(spec(value))
+        except Exception:
+            return False
+    return value == spec
+
+
+class Schema:
+    """Tiny dict validator returning file:line error strings."""
+    def __init__(self, spec: dict):
+        self.spec = spec
+
+    def validate(self, record: object, fname: str) -> list[str]:
+        if not isinstance(record, dict):
+            return [f"{fname}:1: expected object (got {type(record).__name__})"]
+        errors: list[str] = []
+        for raw_key, sub in self.spec.items():
+            optional = isinstance(raw_key, Optional)
+            key = raw_key.key if optional else raw_key
+            if key not in record:
+                if not optional:
+                    errors.append(f"{fname}:1: missing {key} (counts incomplete)")
+                continue
+            if not _matches(sub, record[key]):
+                errors.append(f"{fname}:1: bad {key}: {record[key]!r}")
+        return errors
+
+
+def _is_int(value) -> bool:
+    return isinstance(value, int) and not isinstance(value, bool)
+
+
+def _is_num(value) -> bool:
+    return isinstance(value, (int, float)) and not isinstance(value, bool)
+
+
+def _nonempty_str(value) -> bool:
+    return isinstance(value, str) and bool(value.strip())
+
+
+def _is_rate(value) -> bool:
+    return _is_num(value) and 0.0 <= float(value) <= 1.0
+
+
+def _is_lift(value) -> bool:
+    return _is_num(value) and -1.0 <= float(value) <= 1.0
+
+
+def _is_hex64(value) -> bool:
+    if not isinstance(value, str) or len(value) != 64:
+        return False
+    return all(c in "0123456789abcdefABCDEF" for c in value)
+
+
+def validate_receipt(record: object) -> list[str]:
+    """Check an eval_report record; returns file:line errors (empty when good)."""
+    fname = "eval_report.json"
+    errors = Schema({
+        "skill": Use(_nonempty_str),
+        "total": And(Use(_is_int), Use(lambda n: _is_int(n) and n >= 0)),
+        "passed": And(Use(_is_int), Use(lambda n: _is_int(n) and n >= 0)),
+        "rate": Use(_is_rate),
+        "graded_on": Or("skill", "work-chunks"),
+    }).validate(record, fname)
+    if isinstance(record, dict) and _is_int(record.get("total")) and _is_int(record.get("passed")):
+        total = record["total"]
+        passed = record["passed"]
+        if passed > total:
+            errors.append(f"{fname}:1: passed {passed} > total {total}")
+        rate = record.get("rate")
+        if _is_num(rate):
+            expected = (passed / total) if total else 0.0
+            try:
+                if abs(float(rate) - expected) > 1e-6:
+                    errors.append(f"{fname}:1: rate {rate!r} != passed/total {expected:.6f}")
+            except Exception:
+                pass
+    return errors
+
+
+def validate_trial_proof(record: object) -> list[str]:
+    """Check a trial-proof record; returns file:line errors (empty when good)."""
+    fname = "trial-proof.json"
+    errors = Schema({
+        "runs": And(Use(_is_int), Use(lambda n: _is_int(n) and n >= 0)),
+        "with_rate": Use(_is_rate),
+        "without_rate": Use(_is_rate),
+        "lift": Use(_is_lift),
+        "spread": Use(_is_rate),
+        "fingerprint": Use(_is_hex64),
+    }).validate(record, fname)
+    if isinstance(record, dict):
+        with_rate = record.get("with_rate")
+        without_rate = record.get("without_rate")
+        lift = record.get("lift")
+        if _is_num(with_rate) and _is_num(without_rate) and _is_num(lift):
+            expected = float(with_rate) - float(without_rate)
+            try:
+                if abs(float(lift) - expected) > 1e-3:
+                    errors.append(f"{fname}:1: lift {lift!r} != with_rate-without_rate {expected:.4f}")
+            except Exception:
+                pass
+    return errors
 
 
 def grow_qa(chapter: str, limit: int = 5) -> list[dict]:
@@ -114,6 +268,24 @@ def _rank(texts: list[tuple[str, str]], query: str, limit: int = 5) -> list[tupl
     return [(name, text) for _, name, text in scored[:limit]]
 
 
+# Idea from satchmakua/gatecheck (MIT): deterministic check ANDed with second grade + fault-injection negative control. Written fresh here, no donor code copied.
+def _substantive(blob: str, must: list[str]) -> bool:
+    import re
+    if not must:
+        return True
+    words = re.findall("[A-Za-z]{3,}", blob)
+    if len({w.lower() for w in words}) < 5:
+        return False
+    sentences = re.findall("[^.!?]+[.!?]", blob)
+    if not sentences:
+        return False
+    for m in must:
+        hit = [s for s in sentences if m in s and len(re.findall("[A-Za-z]{3,}", s)) >= 3]
+        if not hit:
+            return False
+    return True
+
+
 def run_eval(workdir: Path, skilldir: Path, qa_path: Path) -> dict:
     texts = skill_answer_texts(skilldir)
     # Legacy staged flow (book2skill/gates.py check_eval): the skill dir holds
@@ -140,13 +312,23 @@ def run_eval(workdir: Path, skilldir: Path, qa_path: Path) -> dict:
             )
         blob = blob.lower()
         must = [w.lower() for w in item.get("must", [])]
-        passed = all(w in blob for w in must)
+        passed = all(w in blob for w in must) and (graded_on != "skill" or _substantive(blob, must))
         results.append({"q": item["q"], "passed": passed})
     total = len(results)
     passed = sum(1 for r in results if r["passed"])
     rate = (passed / total) if total else 0.0
     report = {"skill": str(skilldir), "total": total, "passed": passed, "rate": rate,
               "graded_on": graded_on}
+    for err in validate_receipt(report):
+        warnings.warn(err)
+    proof_path = skilldir / "references" / "trial-proof.json"
+    if proof_path.exists():
+        try:
+            proof_record = json.loads(proof_path.read_text(encoding="utf-8"))
+            for err in validate_trial_proof(proof_record):
+                warnings.warn(err)
+        except Exception:
+            pass
     skilldir.mkdir(parents=True, exist_ok=True)
     (skilldir / "eval_report.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
     print(json.dumps(report, indent=2))
