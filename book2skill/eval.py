@@ -58,7 +58,7 @@ def _qa_line_errors(item: object, qa_path: Path, lineno: int) -> list[str]:
     unknown = sorted(set(item) - _QA_KEYS)
     if unknown:
         got = ", ".join(sorted(item.keys()))
-        return [f"{prefix} [{UNKNOWN_FIELD.code}] unknown field {unknown[0]!r} (got keys: {got})"]
+        return [f"{prefix} [{UNKNOWN_FIELD.code}] must be {{\"q\", \"must\"}} (got keys: {got}; unknown field {unknown[0]!r})"]
     if "q" not in item or "must" not in item:
         got = ", ".join(sorted(item.keys()))
         return [f"{prefix} [{MISSING_FIELD.code}] must be {{\"q\", \"must\"}} (got keys: {got})"]
@@ -78,7 +78,7 @@ def _check_item(item: object, qa_path: Path, lineno: int) -> None:
     unknown = sorted(set(item) - _QA_KEYS)
     if unknown:
         got = ", ".join(sorted(item.keys()))
-        raise ValueError(f"--qa {qa_path} line {lineno} [{UNKNOWN_FIELD.code}] unknown field {unknown[0]!r} (got keys: {got})")
+        raise ValueError(f"--qa {qa_path} line {lineno} [{UNKNOWN_FIELD.code}] must be {{\"q\", \"must\"}} (got keys: {got}; unknown field {unknown[0]!r})")
     if "q" not in item or "must" not in item:
         got = ", ".join(sorted(item.keys()))
         raise ValueError(f"--qa {qa_path} line {lineno} must be {{\"q\", \"must\"}} (got keys: {got})")
