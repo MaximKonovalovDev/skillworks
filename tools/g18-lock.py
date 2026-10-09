@@ -24,6 +24,7 @@ import json
 import re
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -178,6 +179,44 @@ def cmd_converge(args) -> int:
     mvers = _as_versions(manifest)
     lskills = lock.get("skills", {}) if isinstance(lock.get("skills"), dict) else {}
     rentries = _as_registry(registry)
+    # Steal pypa/hatch@e06b840 (MIT) check-seeds-committed-lock: copy committed
+    # lock into temp before regenerate so converge keeps compatible pins and
+    # reports true drift only. Donor src/hatch/env/lockers/uv.py +
+    # https://github.com/pypa/hatch/pull/2416.patch
+    try:
+        _committed_bytes = Path(args.lock).read_bytes()
+    except OSError as exc:
+        print(f"ERROR cannot read input: {exc}")
+        return 2
+    if skills_dir.is_dir():
+        with tempfile.TemporaryDirectory() as _td:
+            _tdp = Path(_td)
+            (_tdp / "committed.seed.lock").write_bytes(_committed_bytes)
+            _fresh: dict = {}
+            for _p in sorted(skills_dir.iterdir()):
+                if not _p.is_dir() or _p.name == "_template":
+                    continue
+                if not (_p / "SKILL.md").is_file():
+                    continue
+                try:
+                    _fm = parse_frontmatter((_p / "SKILL.md").read_text(encoding="utf-8"))
+                    _vv = str(_fm.get("version", ""))
+                    _ss = sha256_file(_p / "SKILL.md")
+                    _ff = {rel: sha256_file(_p / rel) for rel in payload_files(skills_dir, _p.name)}
+                except OSError:
+                    continue
+                _fresh[_p.name] = {"version": _vv, "skill_sha256": _ss, "files": _ff}
+            _seeded: dict = {}
+            for _n, _f in _fresh.items():
+                _old = lskills.get(_n)
+                if isinstance(_old, dict) and _old.get("version") == _f.get("version") and _old.get("files") == _f.get("files") and _old.get("skill_sha256") == _f.get("skill_sha256"):
+                    _seeded[_n] = _old
+                else:
+                    _seeded[_n] = _f
+            (_tdp / "regenerated.lock").write_text(json.dumps({"generated_at": lock.get("generated_at"), "source_pin": lock.get("source_pin"), "skills": _seeded}, indent=2), encoding="utf-8")
+            for _n in sorted(set(_seeded) | set(lskills)):
+                if _seeded.get(_n) != lskills.get(_n):
+                    problems.append(f"{_n}: lock stale vs disk (seeded recheck)")
     names = sorted(set(mvers) | set(lskills) | set(rentries))
     if not names:
         print("RESULT FAIL: no skills in manifest, lock, or registry")

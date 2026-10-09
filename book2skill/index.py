@@ -76,6 +76,95 @@ def bm25_search(workdir: Path, query: str, limit: int = 5, k1: float = 1.2, b: f
     return [{'file': name, 'score': score} for score, name in scored[:limit]]
 
 
+# Steal: precomputed doc_freqs/idf + subset batch scoring from
+# dorianbrown/rank_bm25 (Apache-2.0,
+# https://github.com/dorianbrown/rank_bm25/blob/master/rank_bm25.py,
+# LICENSE https://github.com/dorianbrown/rank_bm25/blob/master/LICENSE)
+# BM25Okapi.get_batch_scores: score only docs containing query terms.
+_BM25_PRE: dict = {}
+
+
+def _bm25_precomp(workdir: Path) -> tuple:
+    key = str(Path(workdir).resolve())
+    paths, texts, lens = _load_corpus(workdir)
+    fp = _CACHE[key][0]
+    hit = _BM25_PRE.get(key)
+    if hit is not None and hit[0] == fp:
+        return hit[1]
+    total = len(texts)
+    tfs: list = []
+    doc_freqs: dict = {}
+    postings: dict = {}
+    for idx, text in enumerate(texts):
+        ctr: dict = {}
+        for tok in text.split():
+            ctr[tok] = ctr.get(tok, 0) + 1
+        tfs.append(ctr)
+        for tok in ctr:
+            doc_freqs[tok] = doc_freqs.get(tok, 0) + 1
+            postings.setdefault(tok, []).append(idx)
+    avg_len = (sum(lens) / total) if total else 0.0
+    idfs = {t: math.log(1.0 + (total - n + 0.5) / (n + 0.5)) for t, n in doc_freqs.items()}
+    bundle = (paths, texts, tfs, lens, avg_len, doc_freqs, idfs, postings)
+    _BM25_PRE[key] = (fp, bundle)
+    return bundle
+
+
+def bm25_batch_search(workdir: Path, query: str, limit: int = 5, k1: float = 1.2, b: float = 0.75, doc_ids=None) -> list[dict]:
+    words = [w.lower() for w in query.split() if len(w) > 2]
+    if not words:
+        return []
+    pre = _bm25_precomp(workdir)
+    paths, texts, tfs, lens, avg_len, doc_freqs, idfs, postings = pre
+    total = len(paths)
+    if not total or not avg_len:
+        return []
+    oov = [w for w in words if w not in doc_freqs]
+    oov_df: dict = {}
+    oov_idf: dict = {}
+    if oov:
+        for w in oov:
+            n = sum(1 for t in texts if w in t)
+            oov_df[w] = n
+            oov_idf[w] = math.log(1.0 + (total - n + 0.5) / (n + 0.5))
+    if doc_ids is None:
+        cand_set = set()
+        for w in words:
+            lst = postings.get(w)
+            if lst:
+                cand_set.update(lst)
+        for w in oov:
+            if oov_df[w]:
+                for idx, t in enumerate(texts):
+                    if idx not in cand_set and w in t:
+                        cand_set.add(idx)
+        cand = sorted(cand_set)
+    else:
+        cand = sorted({i for i in doc_ids if 0 <= i < total})
+    if not cand:
+        return []
+    q_idfs = [(idfs[w] if w in idfs else oov_idf[w]) for w in words]
+    scored = []
+    for idx in cand:
+        ctr = tfs[idx]
+        norm = k1 * (1.0 - b + b * lens[idx] / avg_len)
+        score = 0.0
+        text = None
+        for j, w in enumerate(words):
+            tf = ctr.get(w, 0)
+            if tf == 0 and w in oov_df and oov_df[w]:
+                if text is None:
+                    text = texts[idx]
+                tf = text.count(w)
+            if not tf:
+                continue
+            score += q_idfs[j] * tf * (k1 + 1.0) / (tf + norm)
+        if score:
+            scored.append((score, paths[idx].name))
+    scored.sort(reverse=True)
+    return [{"file": name, "score": score} for score, name in scored[:limit]]
+
+
 def search(workdir: Path, query: str, limit: int = 5) -> list[dict]:
     words = [w.lower() for w in query.split() if len(w) > 2]
     if not words:

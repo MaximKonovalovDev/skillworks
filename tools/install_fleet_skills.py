@@ -2,6 +2,7 @@
 
     python tools/install_fleet_skills.py --to <skills dir> [skill ...]          # copy, report what changed
     python tools/install_fleet_skills.py --to <skills dir> --check [skill ...]  # exit 1 when a copy is stale
+    python tools/install_fleet_skills.py --to <skills dir> --dry-run [skill ...]  # preview what would change, write nothing
 
 Where OpenCode 1.18 looks (read from its own code and `opencode debug skill`, 2026-10-03):
   <repo>/.opencode/skills/<name>/SKILL.md      one repo
@@ -14,6 +15,7 @@ With no skill names, every fleet skill that is built is copied.
 from __future__ import annotations
 
 import argparse
+import datetime
 import difflib
 import filecmp
 import hashlib
@@ -135,15 +137,38 @@ def lock_drift(path, entries) -> bool:
     return False
 
 
-def install(name: str, dest_root: Path) -> list[str]:
+# STEAL S idea from percymcn/agent-cookbook (MIT, https://github.com/percymcn/agent-cookbook/blob/67a791a/scripts/install_skill.py, LICENSE https://github.com/percymcn/agent-cookbook/blob/67a791a/LICENSE):
+# timestamped backup-before-overwrite (.bak-%Y%m%d-%H%M%S copytree) + --dry-run preview install verb.
+# Fresh code below (backup_installed/install dry-run): no donor code copied.
+
+
+def backup_installed(name: str, dest_root: Path):
+    dest = dest_root / name
+    if not dest.is_dir():
+        return None
+    stamp = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
+    backup = dest_root / (name + '.bak-' + stamp)
+    n = 1
+    while backup.exists():
+        n += 1
+        backup = dest_root / (name + '.bak-' + stamp + '-' + str(n))
+    shutil.copytree(dest, backup)
+    return backup
+
+
+def install(name: str, dest_root: Path, dry_run=False):
     base, dest = SKILLS / name, dest_root / name
     changes = stale(name, dest_root)
+    if dry_run:
+        return changes
+    if changes and dest.is_dir():
+        backup_installed(name, dest_root)
     for rel in payload(name):
         target = dest / rel
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(base / rel, target)
     for line in changes:
-        if line.startswith("extra "):
+        if line.startswith('extra '):
             (dest / line[6:]).unlink()
     return changes
 
@@ -152,6 +177,7 @@ def main(argv: list[str]) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--to", required=True, help="skills folder to install into (its children are the skill folders)")
     ap.add_argument("--check", action="store_true", help="only compare; exit 1 when a copy is stale")
+    ap.add_argument('--dry-run', action='store_true', help='only preview; print what would change and write nothing')
     ap.add_argument("skills", nargs="*")
     args = ap.parse_args(argv)
     names = args.skills or [n for n in FLEET if (SKILLS / n / "SKILL.md").is_file()]
@@ -173,6 +199,9 @@ def main(argv: list[str]) -> int:
                     for dl in file_diff(name, dest_root, line[8:]):
                         print(f"  diff {dl}")
             worst = 1 if problems else worst
+        elif args.dry_run:
+            problems = stale(name, dest_root)
+            print(f"dry-run {name} -> {dest_root / name}: {'; '.join(problems) if problems else 'nothing to change'}")
         else:
             changes = install(name, dest_root)
             print(f"{'updated' if changes else 'current'} {name} -> {dest_root / name}: {'; '.join(changes) if changes else 'nothing to change'}")

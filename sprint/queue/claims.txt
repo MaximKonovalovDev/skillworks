@@ -1,2 +1,3 @@
 SCOUT | researcher-doctor-scout-9 |  | board row
 O-011 | 312-pack-rebuild2 | 2026-10-08T15:31Z | packs/fleet-vol-1/
+DR-1006-6 | builder-cure | 2026-10-09T05:08Z | skills/bash-allowlist/

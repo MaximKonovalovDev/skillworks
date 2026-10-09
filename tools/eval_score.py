@@ -115,6 +115,68 @@ def task_bootstrap_ci(scores: list[float], seed: int = 0) -> tuple[float, float]
     return lo, hi
 
 
+# Steal (fresh port, Apache-2.0): Wilson 95 percent rate interval plus paired
+# win/loss comparison idea from NVIDIA/SkillEvaluator@f32c884
+# (arXiv 2608.20614), file src/skillevaluator/tier3/harbor/collector.py
+# https://github.com/NVIDIA/SkillEvaluator/blob/f32c88455b6007b7afca9d1d3909283226d52efa/src/skillevaluator/tier3/harbor/collector.py
+# licence Apache-2.0 (see LICENSE in that repo),
+# paper https://arxiv.org/abs/2608.20614. Rewritten here stdlib only (math):
+# Wilson score bounds replace the plus-minus 0.0 false-certainty at 12/12 or
+# 0/N, and the paired comparison counts with-skill-only wins vs losses.
+def _wilson_score_interval(passed: int, total: int, z: float = 1.96) -> tuple[float, float]:
+    """Wilson 95 percent score interval for a binomial rate (stdlib only)."""
+    if total <= 0:
+        return 0.0, 0.0
+    p = max(0.0, min(1.0, float(passed) / float(total)))
+    denom = 1.0 + z * z / total
+    centre = p + z * z / (2.0 * total)
+    delta = z * math.sqrt(p * (1.0 - p) / total + z * z / (4.0 * total * total))
+    lo = max(0.0, (centre - delta) / denom)
+    hi = min(1.0, (centre + delta) / denom)
+    return lo, hi
+
+
+def rate_interval(passed: int, total: int, z: float = 1.96) -> tuple[float, float]:
+    """Public alias for the Wilson 95 percent rate interval."""
+    return _wilson_score_interval(passed, total, z)
+
+
+def _paired_pass_comparison(tasks: list[dict], with_rows: list[dict],
+                            without_rows: list[dict]) -> dict:
+    """Paired with-skill vs without-skill pass comparison (stdlib only)."""
+    if not tasks:
+        return {
+            "paired_cases": 0,
+            "with_skill_only_pass": 0,
+            "without_skill_only_pass": 0,
+            "both_pass": 0,
+            "both_fail": 0,
+            "pairing_status": "no-trials",
+        }
+    with_out, _ = trial_mod.score_arm(tasks, with_rows)
+    without_out, _ = trial_mod.score_arm(tasks, without_rows)
+    wins = losses = both_pass = both_fail = 0
+    for t in tasks:
+        w = bool(with_out[t["id"]])
+        wo = bool(without_out[t["id"]])
+        if w and not wo:
+            wins += 1
+        elif wo and not w:
+            losses += 1
+        elif w and wo:
+            both_pass += 1
+        else:
+            both_fail += 1
+    return {
+        "paired_cases": len(tasks),
+        "with_skill_only_pass": wins,
+        "without_skill_only_pass": losses,
+        "both_pass": both_pass,
+        "both_fail": both_fail,
+        "pairing_status": "paired",
+    }
+
+
 def grade_qa(items: list[dict], blobs: list[str]) -> dict:
     """Aggregate scored QA items into rate, weighted_rate and failure_score."""
     scored = []
@@ -128,6 +190,8 @@ def grade_qa(items: list[dict], blobs: list[str]) -> dict:
     rate, rate_stderr = mean_stderr(passes)
     weighted_rate, weighted_stderr = mean_stderr(scores)
     failure_score, _ = mean_stderr(fails)
+    passed = int(sum(passes))
+    wilson_lo, wilson_hi = _wilson_score_interval(passed, n)
     return {
         "n": n,
         "rate": round(rate, 4),
@@ -135,6 +199,9 @@ def grade_qa(items: list[dict], blobs: list[str]) -> dict:
         "weighted_rate": round(weighted_rate, 4),
         "weighted_stderr": round(weighted_stderr, 4),
         "failure_score": round(failure_score, 4),
+        "rate_ci_lo": round(wilson_lo, 4),
+        "rate_ci_hi": round(wilson_hi, 4),
+        "rate_interval": [round(wilson_lo, 4), round(wilson_hi, 4)],
         "items": scored,
     }
 
@@ -174,6 +241,11 @@ def lift_with_stderr(tasks: list[dict], with_rows: list[dict],
     lift, lift_stderr = mean_stderr(diffs)
     ci_lo, ci_hi = task_bootstrap_ci(diffs)
     runs = len(tasks)
+    with_pass = int(sum(1.0 if with_out[t["id"]] else 0.0 for t in tasks))
+    without_pass = int(sum(1.0 if without_out[t["id"]] else 0.0 for t in tasks))
+    with_ci_lo, with_ci_hi = _wilson_score_interval(with_pass, runs)
+    without_ci_lo, without_ci_hi = _wilson_score_interval(without_pass, runs)
+    paired = _paired_pass_comparison(tasks, with_rows, without_rows)
     with_rate = round(sum(1.0 if with_out[t["id"]] else 0.0 for t in tasks) / runs, 4)
     without_rate = round(sum(1.0 if without_out[t["id"]] else 0.0 for t in tasks) / runs, 4)
     return {
@@ -184,6 +256,16 @@ def lift_with_stderr(tasks: list[dict], with_rows: list[dict],
         "lift_stderr": round(lift_stderr, 4),
         "lift_ci_lo": round(ci_lo, 4),
         "lift_ci_hi": round(ci_hi, 4),
+        "with_rate_ci_lo": round(with_ci_lo, 4),
+        "with_rate_ci_hi": round(with_ci_hi, 4),
+        "without_rate_ci_lo": round(without_ci_lo, 4),
+        "without_rate_ci_hi": round(without_ci_hi, 4),
+        "paired_cases": paired["paired_cases"],
+        "with_skill_only_pass": paired["with_skill_only_pass"],
+        "without_skill_only_pass": paired["without_skill_only_pass"],
+        "both_pass": paired["both_pass"],
+        "both_fail": paired["both_fail"],
+        "pairing_status": paired["pairing_status"],
     }
 
 
@@ -244,6 +326,17 @@ def cmd_report(args: argparse.Namespace) -> int:
         "lift_stderr": trials["lift_stderr"] if trials else None,
         "lift_ci_lo": trials["lift_ci_lo"] if trials else None,
         "lift_ci_hi": trials["lift_ci_hi"] if trials else None,
+        "rate_ci_lo": qa["rate_ci_lo"],
+        "rate_ci_hi": qa["rate_ci_hi"],
+        "rate_interval": qa["rate_interval"],
+        "with_rate_ci_lo": trials["with_rate_ci_lo"] if trials else None,
+        "with_rate_ci_hi": trials["with_rate_ci_hi"] if trials else None,
+        "without_rate_ci_lo": trials["without_rate_ci_lo"] if trials else None,
+        "without_rate_ci_hi": trials["without_rate_ci_hi"] if trials else None,
+        "paired_cases": trials["paired_cases"] if trials else 0,
+        "with_skill_only_pass": trials["with_skill_only_pass"] if trials else 0,
+        "without_skill_only_pass": trials["without_skill_only_pass"] if trials else 0,
+        "pairing_status": trials["pairing_status"] if trials else "no-trials",
         "trials_note": trials_note,
         "fingerprint": hashlib.sha256(canonical.encode("utf-8")).hexdigest(),
         "at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%MZ"),

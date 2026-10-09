@@ -156,6 +156,37 @@ def field(text: str, key: str) -> str | None:
     return m.group(1) if m else None
 
 
+# Listing-vs-pack drift gate, idea from trycopilotai/skills@add1c6f (MIT,
+# https://github.com/trycopilotai/skills/blob/add1c6f5a3132eb1358baab5bf6dfe46d62c93e7/tools/validate.gpt.py):
+# their validate.gpt.py checks 7+8 require the marketplace name and licence to agree with the
+# manifest; ours compares the listing title and licence lines against pack.json and fails on drift
+# (price agreement is already gated by the price check in check_listing).
+def listing_title(text: str) -> str | None:
+    """The heading of listing.md, or None when it has none."""
+    m = re.search(r"(?m)^#\s+(.+?)\s*$", text)
+    return m.group(1).strip() if m else None
+
+
+def check_listing_drift(pack: dict, text: str, rep: Report) -> None:
+    """Fail when the listing heading or a licence line drifted from pack.json."""
+    want_title = str(pack.get("title", "")).strip()
+    if want_title:
+        heading = listing_title(text)
+        if heading is None:
+            rep.add("FAIL", f"listing.md: title-drift: no heading to match pack.json title {want_title!r}")
+        elif heading != want_title:
+            rep.add("FAIL", f"listing.md: title-drift: heading {heading!r} differs from pack.json title {want_title!r}")
+    lic = next((v for k, v in sections_of(text).items() if k.startswith("licences")), "")
+    for s in pack.get("skills", []):
+        name = str(s.get("name", "?"))
+        want_lic = str(s.get("licence", ""))
+        line = next((ln.strip() for ln in lic.splitlines() if name in ln), "")
+        if not line:
+            rep.add("FAIL", f"listing.md: licence-drift: licences section has no line for {name} (pack.json says {want_lic!r})")
+        elif want_lic and want_lic not in line:
+            rep.add("FAIL", f"listing.md: licence-drift: licences line for {name} says {line!r} but pack.json says {want_lic!r}")
+
+
 def check_manifest(pack_dir: Path, rep: Report) -> dict | None:
     try:
         pack = json.loads((pack_dir / "pack.json").read_text(encoding="utf-8"))
@@ -254,6 +285,7 @@ def check_listing(pack_dir: Path, pack: dict, skills: Path, rep: Report, price_t
         rep.add("FAIL", f"price: listing says {stated!r}, price.txt says {canon[0] if canon else 'nothing'}, pack.json says ${pack['price_usd']:g}; all three must match")
     else:
         rep.ok(f"price: ${pack['price_usd']:g} in listing.md, price.txt and pack.json")
+    check_listing_drift(pack, text, rep)
     disclosure = field(text, "AI disclosure") or ""
     if not re.match(r"(none|assisted|generated)\b", disclosure, re.I) or len(disclosure) < 12:
         rep.add("FAIL", "listing.md: 'AI disclosure:' must start with none, assisted or generated and say what")

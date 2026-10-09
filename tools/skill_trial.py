@@ -24,6 +24,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -213,6 +214,41 @@ def summarize(skill: str, tasks: list[dict], with_out: dict[str, bool],
     }
 
 
+# Donor: syrupy-project/syrupy@7dc8f88 (MIT,
+# https://raw.githubusercontent.com/syrupy-project/syrupy/7dc8f88a0b039467f808d40b9ccbf7b93488af69/src/syrupy/extensions/single_file.py):
+# SingleFileSnapshotExtension keeps one verbatim golden file per snapshot and
+# only rewrites it under --snapshot-update; ported fresh here as a frozen
+# runs/with_rate/lift golden compare for trial proofs, no donor code copied.
+GOLDEN_FIELDS = ("runs", "with_rate", "lift")
+GOLDEN_ENV = "SKILL_TRIAL_UPDATE_GOLDEN"
+
+
+def golden_view(record):
+    return {key: record.get(key) for key in GOLDEN_FIELDS}
+
+
+def check_trial_golden(record, golden_path, update=False):
+    path = Path(golden_path)
+    want_update = bool(update) or os.environ.get(GOLDEN_ENV, "") in ("1", "true", "yes")
+    view = golden_view(record)
+    if want_update:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(view, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        return True, None
+    try:
+        golden = json.loads(path.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        return False, "no golden " + str(path) + ": rerun with --update-golden to create it"
+    except (OSError, ValueError) as exc:
+        return False, "unreadable golden " + str(path) + ": " + str(exc)
+    if not isinstance(golden, dict):
+        return False, "unreadable golden " + str(path) + ": not an object"
+    for key in GOLDEN_FIELDS:
+        if golden.get(key) != view.get(key):
+            return False, "golden drift " + str(key) + ": golden " + repr(golden.get(key)) + " != proof " + repr(view.get(key)) + " (rerun with --update-golden to refresh)"
+    return True, None
+
+
 def cmd_sheet(args: argparse.Namespace) -> int:
     tasks, problems = load_sheet(args.skill, Path(args.evals) if args.evals else None)
     for problem in problems:
@@ -247,6 +283,13 @@ def cmd_grade(args: argparse.Namespace) -> int:
     for finding in without_find:
         print(f"FAIL without: {finding}")
     record = summarize(skill, tasks, with_out, without_out)
+    golden = getattr(args, "golden", None)
+    if golden:
+        ok_golden, reason = check_trial_golden(record, Path(golden), getattr(args, "update_golden", False))
+        if not ok_golden:
+            print("FAIL golden: " + str(reason))
+            print("RESULT FAIL")
+            return 1
     out = Path(args.out) if args.out else ROOT / "skills" / skill / "references" / "trial-proof.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
@@ -270,6 +313,8 @@ def main(argv: list[str] | None = None) -> int:
     grade.add_argument("--trials", default=None, help="trials dir (default work/trials/<name>/)")
     grade.add_argument("--evals", default=None, help="evals dir (default evals/)")
     grade.add_argument("--out", default=None, help="proof path (default skills/<name>/references/trial-proof.json)")
+    grade.add_argument("--golden", default=None, help="golden file holding frozen runs/with_rate/lift (drift refuses without --update-golden)")
+    grade.add_argument("--update-golden", action="store_true", help="rewrite the golden file instead of comparing (or set SKILL_TRIAL_UPDATE_GOLDEN=1)")
     grade.set_defaults(func=cmd_grade)
     args = parser.parse_args(argv)
     return args.func(args)

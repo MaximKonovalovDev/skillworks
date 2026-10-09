@@ -25,6 +25,36 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 PAIRS = HERE.parent / "references" / "pairs.json"
 
+# Steal-port attribution: quoting-trap shape informed by GuanKr/pwsh-pitfalls
+# (MIT licence, https://github.com/GuanKr/pwsh-pitfalls/blob/f343bf40a091583f0f4c0d032964809f47c0bfb9/SKILL.md,
+# licence https://github.com/GuanKr/pwsh-pitfalls/blob/f343bf40a091583f0f4c0d032964809f47c0bfb9/LICENSE);
+# re-implemented here in this repo style, no donor code copied.
+_NESTED_SPAWN_RE = re.compile(
+    r"(?i)\b(bash|sh|cmd)(\.exe)?\b\s+(-c|/c)\b"
+    r"|\b(pwsh|powershell)(\.exe)?\b\s+-c(ommand)?\b.*\b(bash|sh)\b"
+)
+
+
+def pwsh_quote_arg(text: str) -> str:
+    # Quote one pwsh value with outer single quotes (verbatim, no expansion).
+    # Single quotes keep a path with spaces as one value; an embedded
+    # single quote doubles to two singles so it survives verbatim. Callers
+    # pair this with -LiteralPath / Join-Path so brackets never expand.
+    return "'" + str(text).replace("'", "''") + "'"
+
+
+def guard_pwsh_argv(argv) -> list[str]:
+    # Keep a native pwsh spawn as a space-separated argv list (no nested hatch).
+    # Returns the argv unchanged for subprocess.run with shell False so a
+    # space-path or quote-char passes through verbatim. Refuses a nested
+    # shell hatch (bash -c / sh -c / cmd /c / pwsh -c plus bash) with ValueError.
+    args = [str(a) for a in argv]
+    joined = " ".join(args)
+    if _NESTED_SPAWN_RE.search(joined):
+        raise ValueError("nested shell spawn refused: " + joined[:160])
+    return args
+
+
 DRIVER = r"""
 param([string]$InFile, [string]$OutFile)
 $__items = Get-Content -LiteralPath $InFile -Raw | ConvertFrom-Json
@@ -74,12 +104,13 @@ def run_pairs(doc: dict) -> list[dict]:
     (root / "driver.ps1").write_text(DRIVER, encoding="utf-8")
     env = dict(os.environ)
     proc = subprocess.run(
-        [pwsh, "-NoLogo", "-NoProfile", "-NonInteractive", "-File", str(root / "driver.ps1"), str(root / "in.json"), str(root / "out.json")],
+        guard_pwsh_argv([pwsh, "-NoLogo", "-NoProfile", "-NonInteractive", "-File", str(root / "driver.ps1"), str(root / "in.json"), str(root / "out.json")]),
         env=env, capture_output=True, text=True, timeout=300,
     )
     out = root / "out.json"
     if not out.exists():
-        raise RuntimeError(f"driver failed: {proc.stdout[-400:]} {proc.stderr[-400:]}")
+        hint = pwsh_quote_arg(str(root))
+        raise RuntimeError(f"driver failed ({hint}): {proc.stdout[-400:]} {proc.stderr[-400:]}")
     raw = json.loads(out.read_text(encoding="utf-8-sig"))
     got = {r["key"]: r for r in (raw if isinstance(raw, list) else [raw])}
     results = []

@@ -183,6 +183,10 @@ def _clean_chunk(full: str) -> tuple[str | None, bool, bool]:
 # (MIT, https://github.com/pras-ops/indian-business-ops-skills/blob/main/skills/gst-compliance/SKILL.md
 # plus DISCLAIMER.md): a NOT-for line keeps the skill in its lane, a verify-before-act
 # footer sends regulated steps back to the source. No donor text copied.
+# Steal: thin-router scaffold shape, ported fresh from mattpocock/skills@b0618bc
+# (MIT, https://github.com/mattpocock/skills/blob/b0618bc436ad893b3c5e84e55fba86586d34a404/skills/engineering/implement/SKILL.md):
+# frontmatter carries the trigger, the body only routes to sibling refs plus peer
+# Skill-call composition lines. No donor text copied.
 def _scaffold_body(name: str) -> str:
     return (
         f"\n# {name}\n\nBuilt from owned sources. "
@@ -190,6 +194,13 @@ def _scaffold_body(name: str) -> str:
         "`patterns.md`, `cheatsheet.md`. Use when the trigger "
         "topic matches this skill description.\n"
         "NOT for: topics outside this skill (leave them to the skill that owns them).\n"
+        "Routes - read only the sibling that matches the task:\n"
+        "- Terms: see `glossary.md`.\n"
+        "- Patterns: see `patterns.md`.\n"
+        "- Recall: see `cheatsheet.md`.\n"
+        "Compose with peers when the task spans skills:\n"
+        "- For the peer-owned step, call it via `Skill: peer-skill-name`.\n"
+        "- After this skill route, call the next skill via `Skill: peer-skill-name`.\n"
         "Verify before acting: check the source before any regulated, filed, or paid step.\n"
     )
 
