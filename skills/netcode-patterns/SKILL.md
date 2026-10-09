@@ -1,6 +1,6 @@
 ---
 name: netcode-patterns
-description: Check a netcode message plan for send flags, connection states and P2P terms before it ships. Use when choosing GameNetworkingSockets send flags or reviewing a multiplayer message plan.
+description: Use when choosing GameNetworkingSockets send flags or reviewing a multiplayer message plan before it ships: check send flags, connection states and P2P terms in a plan.json file.
 license: MIT
 version: 0.1.0
 author: skillworks

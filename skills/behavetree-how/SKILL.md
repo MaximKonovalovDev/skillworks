@@ -1,6 +1,6 @@
 ---
 name: behavetree-how
-description: Use when writing or fixing a BehaviorTree.CPP tree: node types, XML shape, tick returns, and halt rules with a checker that validates the file.
+description: Use when writing or fixing a BehaviorTree.CPP tree XML file: node types, XML shape, tick returns and halt rules with a checker that validates the file.
 license: MIT
 ---
 

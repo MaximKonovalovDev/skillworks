@@ -60,7 +60,6 @@ TRUST_UNVERIFIED = "attested-unverified"
 
 def _attestations() -> dict[str, str]:
     """Pinned skill-name -> sha256 map from the local attestations file (local-only)."""
-    global _ATTESTATIONS_PINNED
     try:
         raw = json.loads(ATTESTATIONS_FILE.read_text(encoding="utf-8"))
     except (OSError, ValueError):
@@ -76,7 +75,6 @@ def _attestations() -> dict[str, str]:
         if not key or "/" in key or "\\" in key or ".." in key:
             continue
         pinned[key] = val
-    _ATTESTATIONS_PINNED = pinned
     return dict(pinned)
 
 
@@ -270,10 +268,6 @@ def _input_schema() -> dict:
             base = "integer"
         elif name == "limit":
             base = "integer"
-        elif name == "query":
-            base = "string"
-        elif name == "skill":
-            base = "string"
         prop: dict = {"type": base, "description": _DESCRIPTIONS.get(name, name)}
         if name == "limit":
             prop.update({"minimum": 1, "maximum": 20, "default": 5})

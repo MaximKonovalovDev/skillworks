@@ -1,6 +1,6 @@
 ---
 name: pwsh-docs
-description: Use when writing PowerShell parsing, quoting, comparison, splatting, redirection, pipeline-chain, or pwsh startup code that bash-trained authors get wrong: stop-parsing, escape sequences, quote expansion, case-insensitive operators, splat sigils, stream numbers, and chain operators with the exact syntax to type.
+description: Use when writing PowerShell parsing, quoting, comparison, splatting, redirection, pipeline-chain, or pwsh startup code that bash-trained authors get wrong: stop-parsing, escape sequences, quote expansion, case-insensitive operators, splat sigils, stream numbers, and chain operators with the exact syntax to type. For translating bash commands to pwsh use pwsh-for-bash-writers instead.
 version: 0.1.0
 author: skillworks
 license: MIT

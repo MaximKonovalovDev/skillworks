@@ -7,6 +7,7 @@ from pathlib import Path
 import click
 
 from . import audit as audit_mod
+from . import batch as batch_mod
 from . import build as build_mod
 from . import distill as distill_mod
 from . import eval as eval_mod
@@ -148,11 +149,21 @@ def extract(src: str, out: str, include: str | None, engine: str) -> None:
 
 @main.command()
 @click.option("--work", required=True)
-def split(work: str) -> None:
-    """Stage 2: 5k-char chunks."""
+@click.option("--chunk-mode", "chunk_mode", default="chars", type=click.Choice(["chars", "sentences"]),
+              help="chars slices or sentence windows")
+@click.option("--chunk", default=5000, type=int, help="chars mode: slice length")
+@click.option("--overlap", default=200, type=int, help="chars mode: overlap length")
+@click.option("--window", default=5, type=int, help="sentences mode: sentences per chunk")
+@click.option("--sent-overlap", "sent_overlap", default=1, type=int, help="sentences mode: overlap sentences")
+def split(work: str, chunk_mode: str, chunk: int, overlap: int, window: int, sent_overlap: int) -> None:
+    """Stage 2: 5k-char chunks, or sentence windows with --chunk-mode sentences."""
     from . import split as split_mod
 
-    receipt = split_mod.split(Path(work))
+    try:
+        receipt = split_mod.split(Path(work), chunk=chunk, overlap=overlap,
+                                  mode=chunk_mode, window=window, sent_overlap=sent_overlap)
+    except ValueError as exc:
+        _misuse(str(exc))
     click.echo(f"split into {receipt['chunks']} chunks")
 
 
@@ -283,6 +294,38 @@ def make(src: str, name: str, description: str, qa: str, work: str | None, skill
             live.finish()
             raise
     live.finish()
+
+
+@main.command(name="batch")
+@click.option("--in", "src", required=True, help="a file or a docs folder with many docs")
+@click.option("--work", "work", required=True, help="batch work dir, e.g. work/mybatch")
+@click.option("--qa", "qa", default=None, help="QA jsonl to grade merged plus per-doc")
+@click.option("--chunk-mode", "chunk_mode", default="chars", type=click.Choice(["chars", "sentences"]),
+              help="chars slices or sentence windows")
+@click.option("--chunk", default=5000, type=int, help="chars mode: slice length")
+@click.option("--overlap", default=200, type=int, help="chars mode: overlap length")
+@click.option("--window", default=5, type=int, help="sentences mode: sentences per chunk")
+@click.option("--sent-overlap", "sent_overlap", default=1, type=int, help="sentences mode: overlap sentences")
+@click.option("--k", default=5, type=int, help="top-k chunks per QA question")
+@click.option("--glob", "include", default=None, help="docs folder only: file pattern, e.g. 'about_*.md'")
+@click.option("--engine", default="classic", type=click.Choice(["classic", "markitdown", "auto"]),
+              help="extract engine per doc")
+def batch_cmd(src: str, work: str, qa: str | None, chunk_mode: str, chunk: int, overlap: int,
+              window: int, sent_overlap: int, k: int, include: str | None, engine: str) -> None:
+    """Batch-ingest many docs: manifest.jsonl plus merged chunks plus QA reports."""
+    from pathlib import Path as _Path
+    try:
+        receipt = batch_mod.ingest(src, _Path(work), chunk_mode=chunk_mode, chunk=chunk,
+                                   overlap=overlap, window=window, sent_overlap=sent_overlap,
+                                   include=include, engine=engine, k=k,
+                                   qa=_Path(qa) if qa else None)
+    except ValueError as exc:
+        _misuse(str(exc))
+    click.echo(f"batch {receipt['docs']} docs, {receipt['chunks']} chunks")
+    if "qa" in receipt:
+        m = receipt["qa"]["merged"]
+        click.echo(f"qa {m['passed']}/{m['total']} = {m['rate']:.3f} (k {receipt['k']})")
+    click.echo(f"receipt  {_Path(work) / 'batch.json'}")
 
 
 if __name__ == "__main__":

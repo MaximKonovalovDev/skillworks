@@ -163,9 +163,7 @@ def score_arm(tasks: list[dict], answers: list[dict]) -> tuple[dict[str, bool], 
     return outcomes, findings
 
 
-def summarize(skill: str, tasks: list[dict], with_out: dict[str, bool],
-              without_out: dict[str, bool]) -> dict:
-    """Aggregate the two arms into the trial-proof record."""
+def _trial_rates(tasks, with_out, without_out):
     runs = len(tasks)
     with_rate = round(sum(1 for t in tasks if with_out[t["id"]]) / runs, 4) if runs else 0.0
     without_rate = round(sum(1 for t in tasks if without_out[t["id"]]) / runs, 4) if runs else 0.0
@@ -173,6 +171,13 @@ def summarize(skill: str, tasks: list[dict], with_out: dict[str, bool],
     spread = round(
         sum(1 for t in tasks if with_out[t["id"]] != without_out[t["id"]]) / runs, 4
     ) if runs else 0.0
+    return runs, with_rate, without_rate, lift, spread
+
+
+def summarize(skill: str, tasks: list[dict], with_out: dict[str, bool],
+              without_out: dict[str, bool]) -> dict:
+    """Aggregate the two arms into the trial-proof record."""
+    runs, with_rate, without_rate, lift, spread = _trial_rates(tasks, with_out, without_out)
     with_scores = [1.0 if with_out[t["id"]] else 0.0 for t in tasks]
     without_scores = [1.0 if without_out[t["id"]] else 0.0 for t in tasks]
     with_median = _median(with_scores)

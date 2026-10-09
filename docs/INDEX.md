@@ -24,7 +24,7 @@ Stuck? Read `AGENTS.md`, then `sprint/board.md`; never commit `work/`, `skills/*
 ## Folders
 
 - `book2skill/` - the Python package. Turns a book or manual into a tested skill. Open `cli.py` first. See `book2skill/README.md`.
-- `skills/` - 59 skill folders plus `_template`. Each has a `SKILL.md`. See `skills/README.md`.
+- `skills/` - 66 skill folders plus `_template`. Each has a `SKILL.md`. See `skills/README.md`.
 - `evals/` - test questions per skill (`<skill>_qa.jsonl`) and trial logs. Open `sample_qa.jsonl` first. See `evals/README.md`.
 - `tests/` - the pytest suite. Open `skill_stock.py` first. See `tests/README.md`.
 - `tools/` - helper scripts. Open `b2s.py` or `new_skill.py` first. See `tools/README.md`.

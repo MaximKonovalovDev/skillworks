@@ -252,11 +252,7 @@ def audit(skilldir: Path) -> dict:
             if not t or t.startswith(("http://", "https://", "mailto:", "#")):
                 continue
             candidate = (path.parent / t).resolve() if not Path(t).is_absolute() else Path(t)
-            try:
-                inside = candidate == skilldir.resolve() or skilldir.resolve() in candidate.parents
-            except OSError as e:
-                raise OSError('audit: cannot resolve link target ' + repr(target.strip()) + ' in file ' + str(path) + ': ' + str(e)) from e
-            if not candidate.is_file() and not (inside and False):
+            if not candidate.is_file():
                 # Only flag relative links that do not resolve to a file.
                 broken_links.append({"file": str(path.relative_to(skilldir)), "target": target.strip()})
     if broken_links:

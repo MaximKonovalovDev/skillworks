@@ -47,18 +47,33 @@ def _stdio_session(requests: list[dict]) -> list[dict]:
     return [json.loads(line) for line in proc.stdout.splitlines() if line.strip()]
 
 
+_CACHED_BY_ID: dict | None = None
+
+
+def _shared_by_id() -> dict:
+    """Single subprocess for both stdio tests (ids 1-7 cover search + preview)."""
+    global _CACHED_BY_ID
+    if _CACHED_BY_ID is None:
+        resps = _stdio_session([
+            {"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {}},
+            {"jsonrpc": "2.0", "id": 2, "method": "tools/list", "params": {}},
+            {"jsonrpc": "2.0", "id": 3, "method": "tools/call",
+             "params": {"name": "skill_search", "arguments": {"query": "branching git"}}},
+            {"jsonrpc": "2.0", "id": 4, "method": "tools/call",
+             "params": {"name": "skill_search", "arguments": {"query": "branching git", "limit": 999}}},
+            {"jsonrpc": "2.0", "id": 5, "method": "tools/call",
+             "params": {"name": "skill_search", "arguments": {}}},
+            {"jsonrpc": "2.0", "id": 6, "method": "tools/call",
+             "params": {"name": "skill_preview", "arguments": {"skill": "progit-branching"}}},
+            {"jsonrpc": "2.0", "id": 7, "method": "tools/call",
+             "params": {"name": "skill_preview", "arguments": {"skill": "no-such-skill"}}},
+        ])
+        _CACHED_BY_ID = {r["id"]: r for r in resps}
+    return _CACHED_BY_ID
+
+
 def test_stdio_handshake_list_call_and_bad_call() -> None:
-    resps = _stdio_session([
-        {"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {}},
-        {"jsonrpc": "2.0", "id": 2, "method": "tools/list", "params": {}},
-        {"jsonrpc": "2.0", "id": 3, "method": "tools/call",
-         "params": {"name": "skill_search", "arguments": {"query": "branching git"}}},
-        {"jsonrpc": "2.0", "id": 4, "method": "tools/call",
-         "params": {"name": "skill_search", "arguments": {"query": "branching git", "limit": 999}}},
-        {"jsonrpc": "2.0", "id": 5, "method": "tools/call",
-         "params": {"name": "skill_search", "arguments": {}}},
-    ])
-    by_id = {r["id"]: r for r in resps}
+    by_id = _shared_by_id()
     assert "result" in by_id[1]  # handshake
     tools = by_id[2]["result"]["tools"]
     assert tools[0]["name"] == "skill_search"
@@ -77,26 +92,18 @@ def test_stdio_handshake_list_call_and_bad_call() -> None:
 
 def test_skill_preview_returns_head_and_unknown_skill_errors() -> None:
     """K-17 (S01-C3): skill_preview returns SKILL.md head; missing skill is_error."""
-    resps = _stdio_session([
-        {"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {}},
-        {"jsonrpc": "2.0", "id": 2, "method": "tools/list", "params": {}},
-        {"jsonrpc": "2.0", "id": 3, "method": "tools/call",
-         "params": {"name": "skill_preview", "arguments": {"skill": "progit-branching"}}},
-        {"jsonrpc": "2.0", "id": 4, "method": "tools/call",
-         "params": {"name": "skill_preview", "arguments": {"skill": "no-such-skill"}}},
-    ])
-    by_id = {r["id"]: r for r in resps}
+    by_id = _shared_by_id()
     assert "result" in by_id[1]  # handshake
     names = {t["name"]: t for t in by_id[2]["result"]["tools"]}
     assert set(names) >= {"skill_search", "skill_preview"}
     assert names["skill_preview"]["inputSchema"]["required"] == ["skill"]
     expected = (Path(__file__).resolve().parent.parent
                 / "skills" / "progit-branching" / "SKILL.md").read_text(encoding="utf-8")
-    preview = json.loads(by_id[3]["result"]["content"][0]["text"])
+    preview = json.loads(by_id[6]["result"]["content"][0]["text"])
     assert preview["skill"] == "progit-branching"
     assert preview["file"] == "SKILL.md"
     assert preview["head"] == expected[: srv.PREVIEW_HEAD_CHARS]
     assert "progit-branching" in preview["head"]
-    missing = by_id[4]["result"]
+    missing = by_id[7]["result"]
     assert missing.get("isError") is True and missing.get("is_error") is True
     assert "unknown skill" in missing["content"][0]["text"]

@@ -1,7 +1,7 @@
 # Glossary
 
 Terms below come from MIT code in code/cpp/*.h (structure only, prose omitted).
-Full MIT code listing lives in chapters/notes.md; see its Contents and Sample Code sections.
+Full MIT code listing lives in references/ per-domain files (sequencing, decoupling, optimization, behavioral); see their Contents and Sample Code sections. Start with patterns.md index.
 Source repo: https://github.com/munificent/game-programming-patterns (MIT code, book prose excluded).
 Licence note: MIT code is free to reuse; chapter prose is NonCommercial, never sold, not included.
 

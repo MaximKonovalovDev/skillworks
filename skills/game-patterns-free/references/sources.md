@@ -1,6 +1,6 @@
 # Sources
 
-Progressive disclosure: read SKILL.md first, then only the chunk listed here that matches the task.
+Progressive disclosure: read SKILL.md first, then patterns.md, then only the ONE references/*.md domain that matches the task (sequencing, decoupling, optimization, behavioral). Chunks below are the work provenance; the skill loads patterns plus ONE domain only.
 
 Licence: CC BY-NC-SA 3.0 (source) - NonCommercial, never sold; share free under the same licence.
 - `0000.txt`
@@ -40,6 +40,14 @@ Licence: CC BY-NC-SA 3.0 (source) - NonCommercial, never sold; share free under 
 - `0034.txt`
 - `0035.txt`
 - `0036.txt`
+
+## Domain refs (2026-10-09)
+
+- references/sequencing.md: Sequencing Patterns (Game Loop, Update Method, Double Buffer).
+- references/decoupling.md: Decoupling Patterns (Component, Command, Observer, Event Queue, Singleton, Service Locator).
+- references/optimization.md: Optimization Patterns (Object Pool, Flyweight, Dirty Flag, Spatial Partition, Data Locality).
+- references/behavioral.md: Behavioral Patterns (Bytecode, State, Subclass Sandbox, Type Object, Prototype helpers).
+- patterns.md is the index with pointers; SKILL.md loads patterns plus ONE domain only. Verify with scripts/check-refs.py.
 
 ## Provenance (verified 2026-10-08)
 

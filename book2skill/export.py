@@ -23,20 +23,14 @@ REPORT_FILENAME = "eval_report.json"
 # build and the ZIP beside the dir is the shippable artifact (K-41 shape).
 # Donor ideas only: Skill_Seekers per-target copy layouts (MIT, read live
 # 2026-10-03); no target-specific forks beyond this table.
-LAYOUTS = {
-    "claude": {"root_file": "SKILL.md", "lock": ".lock.json"},
-    "codex": {"root_file": "SKILL.md", "lock": ".lock.json"},
-    "opencode": {"root_file": "SKILL.md", "lock": ".lock.json"},
-    "gemini": {"root_file": "SKILL.md", "lock": ".lock.json"},
-}
+LAYOUTS = {t: {"root_file": "SKILL.md", "lock": ".lock.json"} for t in TARGETS}
 
 
 def layout_for(target: str) -> dict:
     """Layout descriptor for one export target (K-53); unknown targets stay a usage error."""
-    try:
-        return LAYOUTS[target]
-    except KeyError:
+    if target not in LAYOUTS:
         raise click.UsageError(f"unknown target {target}; legal: claude|codex|opencode|gemini") from None
+    return LAYOUTS[target]
 
 
 def load_eval_report(skilldir: Path) -> dict | None:

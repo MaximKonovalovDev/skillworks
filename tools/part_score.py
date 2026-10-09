@@ -231,6 +231,9 @@ def main(argv: list[str] | None = None) -> int:
     if "-h" in args or "--help" in args:
         print(USAGE)
         return 0
+    if args:
+        print(f"error: unknown argument(s): " + " ".join(args) + "\n" + USAGE, file=sys.stderr)
+        return 2
     for line in (_p1(), _p2(), _p3(), _p4(), _p5(), _workspace()):
         print(line)
     return 0

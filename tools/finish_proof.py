@@ -108,10 +108,15 @@ def skill_loads_detail(db: Path, hours: float = HOURS, now_ms: float | None = No
                  "where time_created > ? and time_created <= ? and json_extract(data,'$.type')='tool' "
                  "and json_extract(data,'$.tool')='skill'")
             args = (lo, hi)
+        repo_cache: dict[str, str | None] = {}
         out: dict[tuple[str, str], int] = {}
         for sid, name in con.execute(q, args):
             if name in names:
-                repo = _repo_of(sessions.get(sid) or "", own)
+                directory = sessions.get(sid) or ""
+                if directory in repo_cache:
+                    repo = repo_cache[directory]
+                else:
+                    repo = repo_cache[directory] = _repo_of(directory, own)
                 if repo and name:
                     out[(name, repo)] = out.get((name, repo), 0) + 1
         return out

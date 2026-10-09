@@ -1,7 +1,7 @@
 # Cheatsheet
 
 One-page recall from MIT code in code/cpp/*.h (structure only, prose omitted).
-Full listing: chapters/notes.md Contents and Sample Code. Source: https://github.com/munificent/game-programming-patterns (MIT code).
+Full listing: patterns.md index plus references/sequencing.md, references/decoupling.md, references/optimization.md, references/behavioral.md; see their Contents and Sample Code. Source: https://github.com/munificent/game-programming-patterns (MIT code).
 Licence: MIT code free to reuse; chapter prose NonCommercial, never sold, not included.
 Section map: Sequencing Patterns holds Game Loop plus Update Method.
 
@@ -23,4 +23,4 @@ Section map: Sequencing Patterns holds Game Loop plus Update Method.
 - locality: Thing things[NUM_THINGS] hot loop; split cold fields out.
 - sandbox: Superpower::spawnParticles plus playSound; subclasses add aim only.
 - type object: Monster holds Breed& breed_; getAttack() uses breed unless health_ < LOW_HEALTH. New types add a Breed row, no subclass.
-- where: code/cpp holds each header; chapters/notes.md keeps structure only headings plus MIT code blocks.
+- where: code/cpp holds each header; references/ per-domain files keep structure only headings plus MIT code blocks; see patterns.md index.

@@ -1,0 +1,16 @@
+{
+  "skill": "behavetree-how",
+  "runs": 12,
+  "with_rate": 1.0,
+  "without_rate": 0.0,
+  "lift": 1.0,
+  "spread": 1.0,
+  "with_median": 1.0,
+  "with_p10": 1.0,
+  "without_median": 0.0,
+  "without_p10": 0.0,
+  "fingerprint": "aa02ca1ef865bfe327686a5f05e273909c3560ee4824d1529dd8136354575cb9",
+  "sheet": "evals/behavetree-how_trials.jsonl",
+  "at": "2026-10-09T08:09Z",
+  "ok": true
+}

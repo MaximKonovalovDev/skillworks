@@ -240,11 +240,8 @@ def validate_receipt(record: object) -> list[str]:
         rate = record.get("rate")
         if _is_num(rate):
             expected = (passed / total) if total else 0.0
-            try:
-                if abs(float(rate) - expected) > 1e-6:
-                    errors.append(f"{fname}:1: rate {rate!r} != passed/total {expected:.6f}")
-            except Exception:
-                pass
+            if abs(float(rate) - expected) > 1e-6:
+                errors.append(f"{fname}:1: rate {rate!r} != passed/total {expected:.6f}")
     return errors
 
 

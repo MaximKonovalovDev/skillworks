@@ -300,7 +300,10 @@ def proof_line(name: str, skills: Path) -> str:
         data = json.loads((skills / name / "references" / "live-proof.json").read_text(encoding="utf-8"))
         passed = re.match(r"\d+ passed", data["result"]).group(0)
         return f"- `{name}`: {data['date'][:10]}, {passed} ({slot('what the tests ran against')})."
-    except (OSError, ValueError, KeyError, AttributeError):
+    except (OSError, ValueError, KeyError, AttributeError) as err:
+        proof = skills / name / "references" / "live-proof.json"
+        if proof.exists():
+            raise ValueError(f"corrupt live-proof.json for {name}: {proof} ({err}); fix the file, do not ship a slot") from err
         return f"- `{name}`: {slot('date and N passed from skills/' + name + '/references/live-proof.json; run python tests/live_proof.py ' + name)}"
 
 

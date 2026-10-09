@@ -1,6 +1,6 @@
 ---
 name: dora-delivery
-description: Use when grading delivery speed and stability with the four DORA metrics and capability checklist: deploy rate, lead time, failure share, restore time.
+description: Use when grading delivery speed and stability from a JSON file with the four DORA numbers: deploy rate, lead time, failure share, restore time plus capability checklist.
 version: 0.1.0
 author: skillworks
 license: CC-BY-4.0 (DORA text), MIT (this skill's scripts)
