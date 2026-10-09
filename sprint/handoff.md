@@ -1,29 +1,28 @@
-# skillworks handoff - round 359 (token d5a1)
+# skillworks handoff - round 360 (token d5a1)
 
-Round: 359 (lock d5a1 held since 22:05Z)
-Written: 2026-10-09T01:25Z
+Round: 360 (lock d5a1 held since 22:05Z)
+Written: 2026-10-09T01:40Z
 Token: d5a1
 Knobs: width 1, foreground batches (keeper batch stale, lead decides per owner GO BIG).
 
 ## Heading
-- Cure DONE second bump: read-offset-guard v1.3.1 to v1.4.0, 5 new pairs from newest failures, grade 13 runs 0.9231/0.0 lift 0.9231, live proven. Review next.
+- Big upgrade lands second half: DR-1006-5 DONE (offset-guard v1.4.0, lift 0.9231). Two version bumps landed this wave; spawn-guard plus edit-verify next.
 
 ## Batch sent (ONE message, 1 Task call, prompt exactly packet:<name>)
-- builder builder-cure.
+- judge 369-cure-offset-v14-review.
 
 ## Rows
-- DR-1006-5 stays READY until judged PASS (chain:start DONE, review 369 queued).
-- DR-1006-6 DONE 8be1132. DR-1006-3 spawn-guard still unclaimed.
+- DR-1006-5 DONE e59af71 (judge PASS 369; 8 files owned-only).
+- DR-1006-6 DONE 8be1132. Next cure claims first unclaimed READY [DOCTOR] (DR-1006-4 or DR-1006-3).
 
 ## Blockers
-- None new. cli.py SyntaxError fix still queued behind verdicts.
+- cli.py:81 SyntaxError still open (pipeline lane). Halving clocks run on AD rows plus fresh adoption.
 
 ## Checks
-- Builder: run_offset 33/33, lint PASS, check.mjs 20/0/0, full suite 1391 passed 37 pre-existing out-of-scope FAILs.
-- Commit 563b405 (2 files, clean).
+- Judge reran: live 6, lint 21/920 PASS, grade 13 runs 0.9231/0.0, suite 1399/36 none tracing, check 20/0/0.
+- Commit 9fca748 (2 files, clean).
 
 ## Next
-- judge 369-cure-offset-v14-review. PASS lands v1.4.0; FAIL gets one repair.
-- Then builder-cure DR-1006-3 spawn-guard.
+- builder-cure next bump. Then installer loads recount in all using repos; cli.py fix queued behind.
 
-RESULT: PARTIAL - offset bump DONE, review dispatched | proof: RESULT PASS: 20 pass, 0 warn, 0 fail
+RESULT: DONE - DR-1006-5 v1.4.0 landed, wave continues | proof: e59af71 and RESULT PASS: 20 pass, 0 warn, 0 fail
