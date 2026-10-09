@@ -1,30 +1,29 @@
-# skillworks handoff - round 355 (token d5a1)
+# skillworks handoff - round 356 (token d5a1)
 
-Round: 355 (lock d5a1 held since 22:05Z)
-Written: 2026-10-09T00:20Z
+Round: 356 (lock d5a1 held since 22:05Z)
+Written: 2026-10-09T00:35Z
 Token: d5a1
 Knobs: width 1, foreground batches (keeper batch stale, lead decides per owner GO BIG).
 
 ## Heading
-- Cure DONE: bash-allowlist v1.1.0 to v1.2.0, 5 orphan pairs covered, live proven 6, grade 22 runs 1.0/0.0 lift 1.0. Judge review queued plus dispatched.
+- Judge FAIL on allowlist v1.2.0: skill shape holds (grade 22 runs 1.0/0.0 lift 1.0, live proven, lint ok) but suite count grew, halving unmet (UP 520 to 933), 16 files drift outside owned set. One builder repair next.
 
 ## Batch sent (ONE message, 1 Task call, prompt exactly packet:<name>)
-- builder builder-cure.
+- judge 366-cure-allowlist-v12-review.
 
 ## Rows
-- DR-1006-6 stays READY until a judged PASS lands (chain:start DONE, review next).
-- AD-1006-1 plus AD-1006-2 carry UP afters; DR-1006-3 spawn-guard bump follows this review.
+- DR-1006-6 stays READY (first FAIL; chain gives one repair, second FAIL comes to lead).
+- DR-1006-3 spawn-guard bump waits behind this repair.
 
 ## Blockers
-- Builder full pytest 1053 passed 29 failed, all claimed out-of-scope (export-guard, c02, stale proofs, dirty files). Judge must charge any new one tracing to this diff.
-- No keeper-written review (ready/ newest still 10/8); lead wrote 366-cure-allowlist-v12-review.md from the 355 shape.
+- 48 h halving cannot pass same-day: needs adoption plus clock. Repair must say so, not fake it.
+- Tree drift (16 files incl gates.py+145, make, mcp_server) vs pre-existing dirty tree: repair separates bump-owned from others' drift.
 
 ## Checks
-- node sprint/check.mjs PASS 20/0/0 2026-10-09T00:05Z.
-- Commits 2bded3e (2 files, clean) plus 4b30678 (54 files, staged carryover noted).
+- node sprint/check.mjs PASS 20/0/0 (judge reran, same).
+- Commit a008947 (2 files, clean).
 
 ## Next
-- judge 366-cure-allowlist-v12-review: PASS lands v1.2.0 (row DONE with SHA), FAIL gets one builder repair.
-- Then builder-cure DR-1006-3 spawn-guard bump. Loads recount after both land.
+- builder 367-cure-allowlist-v12-repair (M 25 min), then re-review. PASS lands v1.2.0; second FAIL comes to lead for replan or OWNER row.
 
-RESULT: PARTIAL - cure DONE, review dispatched, landing pending verdict | proof: RESULT PASS: 20 pass, 0 warn, 0 fail
+RESULT: PARTIAL - FAIL reviewed, one repair queued | proof: RESULT PASS: 20 pass, 0 warn, 0 fail
