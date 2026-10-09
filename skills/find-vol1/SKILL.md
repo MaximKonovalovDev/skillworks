@@ -7,9 +7,8 @@ license: MIT
 
 # Find the Vol 1 skill that fits
 
-Fleet Vol 1 is three tested skills plus one free sample. This skill answers one
-question: which Vol 1 skill fits the task, and how is it installed. Every answer
-names exactly one skill (or none) and gives its install command.
+This skill answers one question: which Vol 1 skill fits the task, and how is it installed.
+Every answer names exactly one skill (or none) and gives its install command.
 
 ## Answer shape
 

@@ -22,13 +22,16 @@ Delivery is triple like godot-agent: bundled skill + CLI + MCP server
 
 ## Export targets
 
-`export --target <name>` copies the skill dir unchanged; each target reads
-spec-layout SKILL.md natively.
+`export --target <name>` writes an identical copy-layout export to
+`out/<target>/<name>/` with `SKILL.md` at the layout root; only the layout
+root differs per target. Export is gated: eval rate >= 0.6, scaffold text
+must be written first, same-version re-export is refused, and each export
+writes `.lock.json` plus a sibling `<name>.zip`.
 
-* `claude` — `~/.claude/skills/<name>/` or project `.claude/skills/<name>/`
-* `codex` — docs/ reference path wired per client
-* `opencode` — `.opencode/skills/<name>/` layout
-* `gemini` — docs/ reference path wired per client
+* `claude` — `out/claude/<name>/` (`SKILL.md` at root)
+* `codex` — `out/codex/<name>/` (`SKILL.md` at root)
+* `opencode` — `out/opencode/<name>/` (`SKILL.md` at root)
+* `gemini` — `out/gemini/<name>/` (`SKILL.md` at root)
 
 ## Skill layout (agentskills.io spec)
 

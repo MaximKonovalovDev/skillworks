@@ -172,6 +172,20 @@ def _chunk_refs_ok(body: str, skilldir: Path, workdir: Path | None) -> tuple[int
     return ok, dangling
 
 
+def _ascii_findings(skilldir: Path) -> list[str]:
+    # Non-ASCII carriers per skill file.
+    found: list[str] = []
+    for path in audit_mod._skill_files(skilldir):
+        try:
+            text = path.read_text(encoding="utf-8")
+        except OSError:
+            continue
+        bad = sorted({c for c in text if ord(c) > 126})
+        if bad:
+            found.append(f"{path.relative_to(skilldir)}: {_ascii_escape(''.join(bad[:5]))}")
+    return found
+
+
 def check(skilldir: Path, workdir: Path | None = None) -> dict:
     """Run the distill gate over a skill. Returns the report; ok=False on any finding."""
     skilldir = Path(skilldir)
@@ -209,15 +223,7 @@ def check(skilldir: Path, workdir: Path | None = None) -> dict:
     if pairs_total < MIN_PAIRS:
         findings.append(f"only {pairs_total} tested pairs or trials, need {MIN_PAIRS} or more")
 
-    ascii_bad: list[str] = []
-    for path in audit_mod._skill_files(skilldir):
-        try:
-            text = path.read_text(encoding="utf-8")
-        except OSError:
-            continue
-        bad = sorted({c for c in text if ord(c) > 126})
-        if bad:
-            ascii_bad.append(f"{path.relative_to(skilldir)}: {_ascii_escape(''.join(bad[:5]))}")
+    ascii_bad = _ascii_findings(skilldir)
     if ascii_bad:
         findings.append(f"non-ASCII characters in: {'; '.join(ascii_bad)}")
 

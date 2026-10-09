@@ -207,7 +207,7 @@ def _normalize_slug(slug: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", slug.lower()).strip("-")
 
 
-def _refuse_same_version(skilldir: Path, dest: Path) -> None:
+def _refuse_same_version(skilldir: Path, dest: Path, current_version: str) -> None:
     """Refuse a silent same-version re-export before any artifact is touched."""
     lock_path = dest / ".lock.json"
     if not lock_path.is_file():
@@ -216,7 +216,7 @@ def _refuse_same_version(skilldir: Path, dest: Path) -> None:
         existing = json.loads(lock_path.read_text(encoding="utf-8"))
     except (OSError, ValueError):
         return
-    current_version = skill_version(skilldir).strip()
+    current_version = current_version.strip()
     existing_version = str(existing.get("version", "")).strip()
     if not current_version or not existing_version:
         return
@@ -264,13 +264,14 @@ def export(skilldir: Path, target: str, out: Path, eval_report: dict | None = No
         raise SystemExit("export held: " + ", ".join(left) + " still hold the scaffold text; write them first (a pack with placeholder text is not shipped)")
     dest = out / target / skilldir.name
     _check_paths(skilldir, out, dest)
-    _refuse_same_version(skilldir, dest)
+    current_version = skill_version(skilldir)
+    _refuse_same_version(skilldir, dest, current_version)
     if dest.exists():
         shutil.rmtree(dest)
     shutil.copytree(skilldir, dest, ignore=_own_output_ignore(skilldir, out, dest))
     lock = {
         "name": skilldir.name,
-        "version": skill_version(skilldir),
+        "version": current_version,
         "eval-rate": rate,
         "target": target,
         "date": datetime.now(timezone.utc).date().isoformat(),

@@ -17,7 +17,6 @@ import random
 import re
 import sys
 import time
-import urllib.request
 import zipfile
 from pathlib import Path
 
@@ -383,6 +382,7 @@ def extract(src: str, workdir: Path, strip_gutenberg: bool = True, include: str 
     engine_used = "classic"
     enrich: dict = {}
     if re.match(r"https?://", src):
+        import urllib.request  # lazy: URL-only so --help and file runs skip http/ssl
         req = urllib.request.Request(src, headers={"User-Agent": "skillworks/0.1"})
         with urllib.request.urlopen(req, timeout=60) as resp:  # noqa: S310
             raw = resp.read().decode("utf-8", errors="replace")
