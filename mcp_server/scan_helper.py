@@ -55,7 +55,7 @@ def _parse_frontmatter(text: str) -> dict | None:
             continue
         key, _, val = line.partition(":")
         key = key.strip().lower()
-        val = val.strip().strip(chr(39) + chr(34))
+        val = val.strip().strip("'\"")
         if key:
             meta[key] = val
     return meta
