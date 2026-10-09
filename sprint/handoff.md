@@ -1,29 +1,30 @@
-# skillworks handoff - round 362 (token d5a1)
+# skillworks handoff - round 363 (token d5a1)
 
-Round: 362 (lock d5a1 held since 22:05Z)
-Written: 2026-10-09T02:10Z
+Round: 363 (lock d5a1 held since 22:05Z)
+Written: 2026-10-09T02:30Z
 Token: d5a1
 Knobs: width 1, foreground batches (keeper batch stale, lead decides per owner GO BIG).
 
 ## Heading
-- Big upgrade lands third: DR-1006-4 DONE (edit-verify re-proved, lift 1.0). Three rows closed this wave; spawn-guard bump next.
+- Cure DONE fourth: spawn-guard repaired (backup d5e7b47 rolled v1.4.0 to 1.3.0; rules restored, grade 12 runs 1.0/0.0). Review next. Backup rollback is now a pattern, flagged.
 
 ## Batch sent (ONE message, 1 Task call, prompt exactly packet:<name>)
-- judge 370-cure-editverify-reproof-review.
+- builder builder-cure.
 
 ## Rows
-- DR-1006-4 DONE 1c00f0e (judge PASS 370; reseal-only, 2 files).
-- DR-1006-6 DONE 8be1132. DR-1006-5 DONE e59af71.
-- Next cure claims first unclaimed READY [DOCTOR] (DR-1006-3 spawn-guard expected).
+- DR-1006-3 stays READY until judged PASS (review 371 queued).
+- DR-1006-6 DONE 8be1132. DR-1006-5 DONE e59af71. DR-1006-4 DONE 1c00f0e.
 
 ## Blockers
-- cli.py:81 SyntaxError still open (pipeline lane). Adoption plus 48 h clocks run on AD rows.
+- Auto-backup commits silently rewrite skill text (allowlist swept forward 067ecbe, spawn-guard rolled back d5e7b47). Lead lands judged work only; drift needs a guard row.
+- cli.py:81 SyntaxError still open (pipeline lane).
 
 ## Checks
-- Judge reran: live 7, lint 22/981 PASS, grade 12 runs 1.0/0.0, suite 1138/37 none tracing, check 20/0/0.
-- Commit dbd7b8c (2 files, clean).
+- Builder: live 10, lint 32/1251 PASS, grade 12 runs 1.0/0.0, check.mjs 20/0/0, export guard clean.
+- Commit 88e1f3d (2 files, clean).
 
 ## Next
-- builder-cure DR-1006-3 spawn-guard bump. Then installer recount in all using repos.
+- judge 371-cure-spawnguard-v14-review. PASS lands v1.4.0; FAIL gets one repair.
+- Then installer recount in all using repos.
 
-RESULT: DONE - DR-1006-4 re-proved and landed, wave continues | proof: 1c00f0e and RESULT PASS: 20 pass, 0 warn, 0 fail
+RESULT: PARTIAL - spawn-guard repaired, review dispatched | proof: RESULT PASS: 20 pass, 0 warn, 0 fail
