@@ -1,0 +1,10 @@
+{"q":"How does processInput update render drive the game loop each frame?","must":["processInput","render"]}
+{"q":"How do InputComponent and PhysicsComponent compose Bjorn in the component pattern code?","must":["InputComponent","Bjorn"]}
+{"q":"How does the bytecode VM interpret switch dispatch each instruction in the code?","must":["interpret","bytecode"]}
+{"q":"What does the Singleton pattern code check when the singleton instance is null?","must":["singleton","null"]}
+{"q":"Which section groups the game loop pattern and what contents headings list it?","must":["Sequencing Patterns","Game Loop"]}
+{"q":"What license covers the chapter prose and is it ever sold with this free skill?","must":["NonCommercial","never sold"]}
+{"q":"Which component classes split input physics and graphics for Bjorn?","must":["PhysicsComponent","GraphicsComponent"]}
+{"q":"What contents heading names the update step and the render step of the loop?","must":["Contents","Sample Code"]}
+{"q":"Where does the skill say the MIT code comes from and which chapter structure was kept?","must":["code/cpp","structure only"]}
+{"q":"What does the skill index list for patterns with MIT code and where is the source repo?","must":["MIT code","game-programming-patterns"]}

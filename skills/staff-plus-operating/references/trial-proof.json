@@ -1,0 +1,12 @@
+{
+  "skill": "staff-plus-operating",
+  "runs": 12,
+  "with_rate": 1.0,
+  "without_rate": 0.0,
+  "lift": 1.0,
+  "spread": 1.0,
+  "fingerprint": "041755a12a3f8b44382cdedeb0b38bb9c86458662a22c466f09208ec88e91914",
+  "sheet": "evals/staff-plus-operating_trials.jsonl",
+  "at": "2026-10-08T23:02Z",
+  "ok": true
+}

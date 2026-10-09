@@ -1,0 +1,10 @@
+{"q": "When should an agent load dora-delivery?", "must": ["deploy rate"]}
+{"q": "How do I run dora-delivery from the command line?", "must": ["scripts/dora_delivery.py", "--input", "--out"]}
+{"q": "What does the first word of stdout tell me?", "must": ["first word of stdout"]}
+{"q": "What does dora-delivery print on success and what is the exit code?", "must": ["GRADE", "exit 0"]}
+{"q": "What happens when the input is bad?", "must": ["ERROR", "exit 2", "nothing written"]}
+{"q": "Which four keys must the input JSON carry?", "must": ["deploy_per_week", "lead_hours", "fail_pct", "restore_hours"]}
+{"q": "What numbers make an elite grade?", "must": ["7 per week", "24 hours", "15 pct"]}
+{"q": "How is the overall grade picked from the four metric grades?", "must": ["weakest link"]}
+{"q": "Does dora-delivery read git history or set an official rank?", "must": ["does not read git history"]}
+{"q": "Which two practices lift delivery: version control and what trunk habit?", "must": ["version control", "trunk-based"]}

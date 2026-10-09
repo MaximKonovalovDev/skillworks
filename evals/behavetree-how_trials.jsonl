@@ -1,0 +1,4 @@
+{"id": "t01", "kind": "run", "task": "Run python skills/behavetree-how/scripts/behavetree_how.py --input <a good tree> --out <file> and quote the first word of stdout", "must": ["OK"], "must_not": ["ERROR"]}
+{"id": "t02", "kind": "run", "task": "Run the checker on a tree whose root tag lacks BTCPP_format and quote the error line and the exit code", "must": ["ERROR"], "exit": 2}
+{"id": "t03", "kind": "answer", "task": "When a child answers FAILURE inside a Sequence, does the Sequence keep ticking the later children?", "must": ["Sequence"], "must_not": ["ticks every child even after FAILURE"]}
+{"id": "t04", "kind": "answer", "task": "Does behavetree-how compile C++ code or drive a robot over the network?", "must": ["no network"]}

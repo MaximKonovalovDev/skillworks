@@ -1,0 +1,12 @@
+{"id": "s01", "kind": "run", "task": "Run the skill on a team-scope brief (title Migrate queue worker, 2 options, owner dana, review 2026-10-20, 1 risk) and quote the first word of stdout plus the checklist count.", "must": ["OPERATE tech-lead", "checklist 6/6"], "must_not": ["OPERATE architect"]}
+{"id": "s02", "kind": "run", "task": "Run the skill on a multi-team-scope brief (same shape, scope multi-team) and quote the archetype word of stdout.", "must": ["OPERATE architect"], "must_not": ["OPERATE solver"]}
+{"id": "s03", "kind": "run", "task": "Run the skill on a single-hard-problem-scope brief (same shape, scope single-hard-problem) and quote the archetype word of stdout.", "must": ["OPERATE solver"], "must_not": ["OPERATE architect"]}
+{"id": "s04", "kind": "run", "task": "Run the skill on a leader-support-scope brief (same shape, scope leader-support) and quote the archetype word of stdout.", "must": ["OPERATE right-hand"], "must_not": ["OPERATE tech-lead"]}
+{"id": "s05", "kind": "run", "task": "Run the skill on the full brief and say which report block holds the follow-up plus how many checklist lines read PASS.", "must": ["checklist 6/6", "## Choice"], "must_not": []}
+{"id": "s06", "kind": "run", "task": "Run the skill with scope Team (capital T) and quote the error line plus the exit code.", "must": ["ERROR bad scope"], "exit": 2}
+{"id": "s07", "kind": "run", "task": "Run the skill with only 1 option and quote the error line plus the exit code.", "must": ["ERROR bad options"], "exit": 2}
+{"id": "s08", "kind": "answer", "task": "Name the four staff-plus archetypes this skill files reports under.", "must": ["tech-lead", "architect", "solver", "right-hand"], "must_not": ["Team Lead"]}
+{"id": "s09", "kind": "answer", "task": "What does the risks checklist line check, in the exact checklist token?", "must": ["risks-listed"], "must_not": ["risk assessment"]}
+{"id": "s10", "kind": "answer", "task": "Which two field names does the decision template keep for follow-up?", "must": ["review-date", "owner"], "must_not": []}
+{"id": "s11", "kind": "answer", "task": "Which scope value maps to the solver archetype?", "must": ["single-hard-problem", "solver"], "must_not": []}
+{"id": "s12", "kind": "answer", "task": "Does this tool manage people or pick the choice for you?", "must": ["does not manage people"], "must_not": []}

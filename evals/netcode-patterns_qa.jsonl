@@ -1,0 +1,11 @@
+{"q": "When should an agent load netcode-patterns for a multiplayer message plan?", "must": ["multiplayer message plan"]}
+{"q": "How do I run netcode-patterns with an input plan and an out folder?", "must": ["scripts/netcode_patterns.py", "--input", "--out"]}
+{"q": "What does the first word of stdout tell me?", "must": ["first word of stdout"]}
+{"q": "What does netcode-patterns print on success with RUN messages flags and what is the exit code?", "must": ["RUN <n> messages flags", "exit 0"]}
+{"q": "What happens when the input is bad with ERROR exit 2 and is anything written?", "must": ["ERROR", "exit 2", "nothing written"]}
+{"q": "What name rule with [a-z0-9_] must message names follow, and must they be unique?", "must": ["[a-z0-9_]", "unique"]}
+{"q": "Which flag does unreliable urgent give for a fast position message?", "must": ["UnreliableNoNagle"]}
+{"q": "Which Connected state carries game traffic, and must game input send before Connected?", "must": ["Connected", "Never send game input before"]}
+{"q": "What is a poll group in the P2P words?", "must": ["poll group"]}
+{"q": "What is interpolation for smooth play, and why show others a little in the past?", "must": ["interpolation", "a little in the past"]}
+{"q": "Does netcode-patterns open sockets or does it only write report.json?", "must": ["does not open sockets", "report.json"]}

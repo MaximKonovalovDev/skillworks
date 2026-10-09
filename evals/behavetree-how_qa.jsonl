@@ -1,0 +1,12 @@
+{"q": "When should an agent load behavetree-how?", "must": ["BehaviorTree.CPP", "checker"]}
+{"q": "Which five node types does BehaviorTree.CPP define?", "must": ["ACTION", "CONDITION", "CONTROL", "DECORATOR", "SUBTREE"]}
+{"q": "How do Sequence and Fallback differ when a child fails or succeeds?", "must": ["Sequence", "Fallback"]}
+{"q": "Which decorator flips SUCCESS and FAILURE, and which two force a fixed result?", "must": ["Inverter", "ForceSuccess", "ForceFailure"]}
+{"q": "What XML root tag and format value does a tree file need?", "must": ["BTCPP_format", "BehaviorTree"]}
+{"q": "What does tickWhileRunning do and which statuses can a tick return?", "must": ["tickWhileRunning", "RUNNING", "SUCCESS", "FAILURE"]}
+{"q": "What does halt do to a RUNNING child, and which status follows?", "must": ["halt", "IDLE"]}
+{"q": "How do I run behavetree-how from the command line?", "must": ["scripts/behavetree_how.py", "--input", "--out"]}
+{"q": "What does behavetree-how print on success and what is the exit code?", "must": ["OK", "exit 0"]}
+{"q": "What happens when the input file is missing or the XML is bad?", "must": ["ERROR", "exit 2", "nothing written"]}
+{"q": "What must a Condition node never do to the world?", "must": ["side-effects"]}
+{"q": "Which control restarts from the first child on every tick?", "must": ["ReactiveSequence"]}

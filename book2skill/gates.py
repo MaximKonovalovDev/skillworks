@@ -10,6 +10,7 @@ Single code path (TS-2): this module owns the implementation.
 """
 from __future__ import annotations
 
+import ast
 import hashlib
 import json
 import os
@@ -33,7 +34,7 @@ __all__ = [
     "PROOF_NAME", "BODY_TOKEN_BUDGET", "TOTAL_TOKEN_BUDGET", "QA_MIN",
     "EVAL_GATE", "LICENSES", "JARGON",
     "frontmatter", "body_of", "body_tokens", "skill_files", "skill_text",
-    "forge_english_hits", "check_format", "check_sources", "check_eval",
+    "forge_english_hits", "check_code_syntax_and_markers", "check_format", "check_sources", "check_eval",
     "test_file_for", "fingerprint", "check_proof",
 ]
 
@@ -87,6 +88,7 @@ FLEET_SKILLS = {
     "grep-overflow-guard": [],
     "lsd-ls": ["lsd-rs/lsd"],
     "vivid-colors": ["sharkdp/vivid"],
+    "brooks-law-team": [],
 }
 # Installed in forge, whose `node scripts/check.mjs` bans some English words.
 FORGE_SAFE = {"pwsh-for-bash-writers", "git-one-branch", "cron-skip-clean", "pipe-run", "inbox-file-reader"}
@@ -214,11 +216,32 @@ def forge_english_hits(name: str) -> list[str]:
     return hits
 
 
+# Ported from williamzujkowski/cognitive-toolworks (Apache-2.0):
+# https://github.com/williamzujkowski/cognitive-toolworks/blob/main/tooling/validate_skill.py
+# Required-sections, ast.parse code-syntax, TODO/scaffold-marker and secret-pattern
+# checks. Fresh implementation in this repo style: syntax plus markers only.
+PYTHON_FENCE_RE = re.compile(r"```\s*(python|py|python3)\s*\n(.*?)```", re.S | re.I)
+SCAFFOLD_RE = re.compile(r"\{\{\s*slot\s*:|TODO\s*:|FIXME|\bXXX\b|PLACEHOLDER:|\bTBD\b|TODO-SCAFFOLD", re.I)
+
+
+def check_code_syntax_and_markers(text: str) -> None:
+    """Fail a skill body with broken python examples or leftover scaffold markers."""
+    body = body_of(text)
+    for m in PYTHON_FENCE_RE.finditer(body):
+        try:
+            ast.parse(m.group(2))
+        except SyntaxError as e:
+            raise AssertionError(f"SKILL.md python block does not parse: {e}") from e
+    hit = SCAFFOLD_RE.search(body)
+    assert not hit, f"SKILL.md carries a leftover scaffold marker {hit.group(0)!r}"
+
+
 def check_format(name: str) -> None:
     d = SKILLS / name
     md = d / "SKILL.md"
     assert md.is_file(), f"{name}: SKILL.md missing"
     text = md.read_text(encoding="utf-8")
+    check_code_syntax_and_markers(text)
     fm = frontmatter(text)
     assert fm.get("name") == name, f"{name}: frontmatter name {fm.get('name')!r} must equal the folder"
     assert re.fullmatch(r"[a-z0-9]+(-[a-z0-9]+)*", name) and len(name) <= 64

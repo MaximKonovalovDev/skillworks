@@ -1,0 +1,4 @@
+{"id": "t01", "kind": "run", "task": "Grade this team: write metrics.json with deploy_per_week 14, lead_hours 2, fail_pct 5, restore_hours 3, run python skills/dora-delivery/scripts/dora_delivery.py --input metrics.json --out grade.json, and quote the GRADE line.", "must": ["GRADE", "elite"], "must_not": ["Traceback"]}
+{"id": "t02", "kind": "run", "task": "Refuse a bad input: write metrics.json missing restore_hours, run the script with --input metrics.json --out grade.json, and quote the ERROR line and the exit code.", "must": ["ERROR"], "must_not": ["GRADE"], "exit": 2}
+{"id": "t03", "kind": "answer", "task": "Three metrics are elite and fail_pct is 50. What is the overall grade and which rule picks it?", "must": ["weakest link"], "must_not": ["average"]}
+{"id": "t04", "kind": "answer", "task": "Does dora-delivery read my git history to find the four metrics itself?", "must": ["does not read git history"], "must_not": ["reads your git log"]}

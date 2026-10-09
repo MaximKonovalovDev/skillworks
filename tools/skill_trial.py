@@ -91,6 +91,43 @@ def load_sheet(skill: str, evals: Path | None = None) -> tuple[list[dict], list[
     return rows, problems
 
 
+# Donor: ziyan-wang98/BazaarBench arXiv 2610.06748 (Apache-2.0,
+# https://github.com/ziyan-wang98/BazaarBench/blob/main/bazaar/metrics/core.py):
+# Pure SQLite Python no LLM no network compute_metrics from state tables,
+# MetricsSummary pcr mean median p10 ported fresh binary scores.
+# per-task scores with median and worst-decile p10 no donor code copied.
+def _median(xs):
+    # Median of per-task scores empty gives 0.
+    if not xs:
+        return 0.0
+    ordered = sorted(xs)
+    n = len(ordered)
+    mid = n // 2
+    if n % 2 == 1:
+        return round(float(ordered[mid]), 4)
+    return round(float((ordered[mid - 1] + ordered[mid]) / 2), 4)
+
+
+def _p10(xs):
+    # Worst decile tenth percentile nearest rank empty gives 0.
+    if not xs:
+        return 0.0
+    ordered = sorted(xs)
+    n = len(ordered)
+    rank = (n + 9) // 10 - 1
+    rank = max(0, min(rank, n - 1))
+    return round(float(ordered[rank]), 4)
+
+
+def check_record(run, want_exit=0, task_id="?"):
+    # Grade one run record by exit and output presence.
+    if not isinstance(run, dict) or not str(run.get("output", "") or "").strip():
+        return False, "refused: run task " + repr(task_id) + " has no run output"
+    if run.get("exit") != want_exit:
+        return False, repr(task_id) + " run exit " + repr(run.get("exit")) + " != " + str(want_exit)
+    return True, None
+
+
 def score_task(task: dict, answer: dict | None) -> tuple[bool, str | None]:
     """Score one task by code. Returns (passed, finding)."""
     task_id = task.get("id", "?")
@@ -108,11 +145,7 @@ def score_task(task: dict, answer: dict | None) -> tuple[bool, str | None]:
         if word.lower() in combined.lower():
             return False, f"{task_id!r} contains forbidden {word!r}"
     if task.get("kind") == "run":
-        if not isinstance(run, dict) or not str(run.get("output", "") or "").strip():
-            return False, f"refused: run task {task_id!r} has no run output"
-        want_exit = task.get("exit", 0)
-        if run.get("exit") != want_exit:
-            return False, f"{task_id!r} run exit {run.get('exit')!r} != {want_exit}"
+        return check_record(run, task.get("exit", 0), task_id)
     return True, None
 
 
@@ -139,6 +172,12 @@ def summarize(skill: str, tasks: list[dict], with_out: dict[str, bool],
     spread = round(
         sum(1 for t in tasks if with_out[t["id"]] != without_out[t["id"]]) / runs, 4
     ) if runs else 0.0
+    with_scores = [1.0 if with_out[t["id"]] else 0.0 for t in tasks]
+    without_scores = [1.0 if without_out[t["id"]] else 0.0 for t in tasks]
+    with_median = _median(with_scores)
+    with_p10 = _p10(with_scores)
+    without_median = _median(without_scores)
+    without_p10 = _p10(without_scores)
     canonical = json.dumps(
         [
             {
@@ -163,6 +202,10 @@ def summarize(skill: str, tasks: list[dict], with_out: dict[str, bool],
         "without_rate": without_rate,
         "lift": lift,
         "spread": spread,
+        "with_median": with_median,
+        "with_p10": with_p10,
+        "without_median": without_median,
+        "without_p10": without_p10,
         "fingerprint": fingerprint,
         "sheet": f"evals/{skill}_trials.jsonl",
         "at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%MZ"),

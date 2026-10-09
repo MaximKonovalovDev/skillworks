@@ -1,0 +1,10 @@
+{"q": "When should an agent load staff-plus-operating?", "must": ["leading technical direction"]}
+{"q": "How do I run staff-plus-operating from the command line?", "must": ["scripts/staff_plus_operating.py", "--input", "--out"]}
+{"q": "What does the first word of stdout tell me?", "must": ["first word of stdout"]}
+{"q": "What does staff-plus-operating print on success and what is the exit code?", "must": ["OPERATE <archetype> checklist <p>/6 decision <title>", "exit 0"]}
+{"q": "What happens when the input is bad?", "must": ["ERROR", "exit 2", "nothing written"]}
+{"q": "What scope values does the brief accept?", "must": ["team", "multi-team", "single-hard-problem", "leader-support"]}
+{"q": "Which archetype does team scope give?", "must": ["tech-lead"]}
+{"q": "What does the risks checklist line need to pass?", "must": ["risks-listed"]}
+{"q": "What fields does the decision template keep?", "must": ["review-date", "owner"]}
+{"q": "Does the tool manage people or pick the choice for me?", "must": ["does not manage people"]}
