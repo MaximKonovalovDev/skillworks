@@ -21,10 +21,64 @@ _SKIP_NAMES = {"listing.md", "vol0-sample.md", "vol0_sample.md", "eval_report.js
 _SKIP_DIRS = {"demo", "export"}
 
 
+# Donor: pyeve/cerberus@83f5dada (branch 1.3.x), licence ISC,
+# https://github.com/pyeve/cerberus/blob/1.3.x/cerberus/validator.py,
+# https://github.com/pyeve/cerberus/blob/1.3.x/cerberus/errors.py:
+# (1) unknown-field gate allow_unknown=False + UNKNOWN_FIELD + purge_unknown
+# as strict mode on Schema; (2) ErrorDefinition(code, rule) + collect-all
+# ErrorList for whole-file QA validate. Idea ported fresh; no donor code copied.
+class ErrorDefinition:
+    """One error kind: machine code plus human rule."""
+    def __init__(self, code: str, rule: str):
+        self.code = code
+        self.rule = rule
+
+    def __repr__(self) -> str:
+        return f"ErrorDefinition({self.code!r}, {self.rule!r})"
+
+
+UNKNOWN_FIELD = ErrorDefinition("UNKNOWN_FIELD", "unknown")
+MISSING_FIELD = ErrorDefinition("MISSING_FIELD", "required")
+BAD_VALUE = ErrorDefinition("BAD_VALUE", "bad")
+INVALID_JSON = ErrorDefinition("INVALID_JSON", "json")
+
+
+class ErrorList(list):
+    """Collect-all errors for one file run: file:line + code per entry."""
+
+
+_QA_KEYS = {"q", "must"}
+
+
+def _qa_line_errors(item: object, qa_path: Path, lineno: int) -> list[str]:
+    """One QA line to file:line+code strings (empty when good)."""
+    prefix = f"--qa {qa_path} line {lineno}"
+    if not isinstance(item, dict):
+        return [f"{prefix} [{BAD_VALUE.code}] must be {{\"q\", \"must\"}} (got {type(item).__name__})"]
+    unknown = sorted(set(item) - _QA_KEYS)
+    if unknown:
+        got = ", ".join(sorted(item.keys()))
+        return [f"{prefix} [{UNKNOWN_FIELD.code}] unknown field {unknown[0]!r} (got keys: {got})"]
+    if "q" not in item or "must" not in item:
+        got = ", ".join(sorted(item.keys()))
+        return [f"{prefix} [{MISSING_FIELD.code}] must be {{\"q\", \"must\"}} (got keys: {got})"]
+    if not isinstance(item["q"], str):
+        qtype = type(item["q"]).__name__
+        return [f"{prefix} [{BAD_VALUE.code}] \"q\" must be a question string (got {qtype})"]
+    if not isinstance(item["must"], list):
+        mtype = type(item["must"]).__name__
+        return [f"{prefix} [{BAD_VALUE.code}] \"must\" must be a list of words (got {mtype})"]
+    return []
+
+
 def _check_item(item: object, qa_path: Path, lineno: int) -> None:
     """Refuse a QA line that is not a {"q", "must"} item."""
     if not isinstance(item, dict):
         raise ValueError(f"--qa {qa_path} line {lineno} must be {{\"q\", \"must\"}} (got {type(item).__name__})")
+    unknown = sorted(set(item) - _QA_KEYS)
+    if unknown:
+        got = ", ".join(sorted(item.keys()))
+        raise ValueError(f"--qa {qa_path} line {lineno} [{UNKNOWN_FIELD.code}] unknown field {unknown[0]!r} (got keys: {got})")
     if "q" not in item or "must" not in item:
         got = ", ".join(sorted(item.keys()))
         raise ValueError(f"--qa {qa_path} line {lineno} must be {{\"q\", \"must\"}} (got keys: {got})")
@@ -34,8 +88,9 @@ def _check_item(item: object, qa_path: Path, lineno: int) -> None:
         raise ValueError(f"--qa {qa_path} line {lineno} \"must\" must be a list of words (got {type(item['must']).__name__})")
 
 
-def validate_qa(qa_path: Path) -> None:
-    """Refuse a QA file with a wrong-shaped line before any stage runs."""
+def validate_qa_all(qa_path: Path) -> ErrorList:
+    """Collect-all QA check: file:line+code per bad line, never raise-first."""
+    errors = ErrorList()
     for lineno, raw in enumerate(qa_path.read_text(encoding="utf-8").splitlines(), start=1):
         line = raw.strip()
         if not line:
@@ -43,8 +98,17 @@ def validate_qa(qa_path: Path) -> None:
         try:
             item = json.loads(line)
         except json.JSONDecodeError as exc:
-            raise ValueError(f"--qa {qa_path} line {lineno} must be {{\"q\", \"must\"}} (got invalid JSON: {exc.msg})") from None
-        _check_item(item, qa_path, lineno)
+            errors.append(f"--qa {qa_path} line {lineno} [{INVALID_JSON.code}] must be {{\"q\", \"must\"}} (got invalid JSON: {exc.msg})")
+            continue
+        errors.extend(_qa_line_errors(item, qa_path, lineno))
+    return errors
+
+
+def validate_qa(qa_path: Path) -> None:
+    """Refuse a QA file with a wrong-shaped line before any stage runs."""
+    errors = validate_qa_all(qa_path)
+    if errors:
+        raise ValueError(errors[0])
 
 
 # Donor: keleshev/schema (MIT, https://github.com/keleshev/schema):
@@ -104,12 +168,18 @@ def _matches(spec, value) -> bool:
 
 class Schema:
     """Tiny dict validator returning file:line error strings."""
-    def __init__(self, spec: dict):
+    def __init__(self, spec: dict, allow_unknown: bool = False, purge_unknown: bool = False):
         self.spec = spec
+        self.allow_unknown = allow_unknown
+        self.purge_unknown = purge_unknown
 
     def validate(self, record: object, fname: str) -> list[str]:
         if not isinstance(record, dict):
             return [f"{fname}:1: expected object (got {type(record).__name__})"]
+        known = {k.key if isinstance(k, Optional) else k for k in self.spec}
+        if self.purge_unknown and isinstance(record, dict):
+            for key in [k for k in record if k not in known]:
+                del record[key]
         errors: list[str] = []
         for raw_key, sub in self.spec.items():
             optional = isinstance(raw_key, Optional)
@@ -120,6 +190,9 @@ class Schema:
                 continue
             if not _matches(sub, record[key]):
                 errors.append(f"{fname}:1: bad {key}: {record[key]!r}")
+        if not self.allow_unknown:
+            for key in sorted(set(record) - known):
+                errors.append(f"{fname}:1: {UNKNOWN_FIELD.code} unknown field {key!r}")
         return errors
 
 
@@ -158,7 +231,7 @@ def validate_receipt(record: object) -> list[str]:
         "passed": And(Use(_is_int), Use(lambda n: _is_int(n) and n >= 0)),
         "rate": Use(_is_rate),
         "graded_on": Or("skill", "work-chunks"),
-    }).validate(record, fname)
+    }, allow_unknown=False).validate(record, fname)
     if isinstance(record, dict) and _is_int(record.get("total")) and _is_int(record.get("passed")):
         total = record["total"]
         passed = record["passed"]
@@ -185,7 +258,7 @@ def validate_trial_proof(record: object) -> list[str]:
         "lift": Use(_is_lift),
         "spread": Use(_is_rate),
         "fingerprint": Use(_is_hex64),
-    }).validate(record, fname)
+    }, allow_unknown=False).validate(record, fname)
     if isinstance(record, dict):
         with_rate = record.get("with_rate")
         without_rate = record.get("without_rate")

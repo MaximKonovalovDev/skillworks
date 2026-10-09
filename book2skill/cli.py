@@ -74,6 +74,57 @@ class SuggestGroup(click.Group):
             raise
 
 
+# pallets click misuse UX (BSD-3-Clause).
+# Source: https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/exceptions.py
+# Misuse exits show usage plus Try help hint; missing ctx shows only Error.
+# Fresh helper grabs current ctx so each misuse carries ctx.
+def _misuse(msg):
+    ctx = click.get_current_context(silent=True)
+    raise click.UsageError(msg, ctx) from None
+
+
+# Textualize rich transient status (MIT).
+# Source: https://github.com/Textualize/rich/blob/main/rich/status.py and rich/live.py
+# Single-line transient with stdlib carriage handling plus plain fallback,
+# leaving only final table. Fresh code, no copy.
+def _live_enabled():
+    import os
+    import sys
+    if "NO_COLOR" in os.environ:
+        return False
+    try:
+        return sys.stderr.isatty()
+    except OSError:
+        return False
+
+
+class _Live:
+    """Transient single-line status."""
+    def __init__(self):
+        self._live = _live_enabled()
+        self._buf = []
+    def say(self, msg):
+        import sys
+        self._buf.append(msg)
+        if self._live:
+            try:
+                sys.__stderr__.write(chr(13) + msg[:120])
+                sys.__stderr__.flush()
+            except OSError:
+                pass
+    def finish(self):
+        import sys
+        import click
+        if self._live:
+            try:
+                sys.__stderr__.write(chr(13) + " " * 120 + chr(13))
+                sys.__stderr__.flush()
+            except OSError:
+                pass
+        for line in self._buf:
+            click.echo(line)
+
+
 @click.group(cls=SuggestGroup)
 def main() -> None:
     """Books you own into Agent Skills."""
@@ -90,7 +141,7 @@ def extract(src: str, out: str, include: str | None, engine: str) -> None:
     try:
         receipt = extract_mod.extract(src, Path(out), include=include, engine=engine)
     except ValueError as exc:
-        raise click.UsageError(str(exc)) from None
+        _misuse(str(exc))
     counts = f"headings {receipt['md_headings']} tables {receipt['md_tables']} fences {receipt['md_fences']}"
     click.echo(f"extracted {receipt['chars']} chars ({receipt['kind']}, engine {receipt['engine']}; {counts})")
 
@@ -123,7 +174,7 @@ def build(work: str, skill: str, name: str, description: str) -> None:
     try:
         receipt = build_mod.build(Path(work), Path(skill), name, description)
     except ValueError as exc:
-        raise click.UsageError(str(exc)) from None
+        _misuse(str(exc))
     click.echo(f"built {receipt['skill']} ({receipt['note_chars']} note chars)")
 
 
@@ -131,7 +182,10 @@ def build(work: str, skill: str, name: str, description: str) -> None:
 @click.option("--skill", required=True)
 def audit(skill: str) -> None:
     """Stage 5: token-cost report."""
-    audit_mod.audit(Path(skill))
+    import contextlib
+    import io
+    with contextlib.redirect_stdout(io.StringIO()):
+        audit_mod.audit(Path(skill))
 
 
 @main.command()
@@ -168,7 +222,7 @@ def export(skill: str, target: str, out: str, work: str | None, qa: str | None, 
         eval_report = json.loads(Path(eval_report_path).read_text(encoding="utf-8"))
     elif work or qa:
         if not (work and qa):
-            raise click.UsageError("--work and --qa must be given together")
+            _misuse("--work and --qa must be given together")
         eval_report = eval_mod.run_eval(Path(work), Path(skill), Path(qa))
     export_mod.export(Path(skill), target, Path(out), eval_report=eval_report)
 
@@ -185,7 +239,7 @@ def distill_plan(work: str) -> None:
     try:
         distill_mod.plan(Path(work))
     except ValueError as exc:
-        raise click.UsageError(str(exc)) from None
+        _misuse(str(exc))
 
 
 @distill.command(name="check")
@@ -214,11 +268,19 @@ def distill_check(skill: str, work: str | None) -> None:
 def make(src: str, name: str, description: str, qa: str, work: str | None, skill: str | None,
          include: str | None, targets: tuple[str, ...], out: str | None, rebuild: bool, engine: str) -> None:
     """One command: extract, split, index, build, eval, audit, and export when --target is given."""
-    try:
-        make_mod.make(src, name, description, Path(qa), work=work, skill=skill, include=include,
-                      targets=targets, out=out, rebuild=rebuild, say=click.echo, engine=engine)
-    except ValueError as exc:
-        raise click.UsageError(str(exc)) from None
+    live = _Live()
+    import contextlib
+    import io
+    with contextlib.redirect_stderr(io.StringIO()):
+        try:
+            make_mod.make(src, name, description, Path(qa), work=work, skill=skill, include=include,
+                          targets=targets, out=out, rebuild=rebuild, say=live.say, engine=engine)
+        except ValueError as exc:
+            _misuse(str(exc))
+        except SystemExit:
+            live.finish()
+            raise
+    live.finish()
 
 
 if __name__ == "__main__":
