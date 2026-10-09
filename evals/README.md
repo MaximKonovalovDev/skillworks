@@ -7,5 +7,5 @@ Test questions for the skills, and the results of test runs.
 - `sample_qa.jsonl`: a small sample to try the eval command.
 - Some files are dated results, for example `edit-reread_reseal_2026-10-05.json`.
 - Open first: `sample_qa.jsonl`, then the `<skill>_qa.jsonl` of the skill you work on.
-- Run one: `python -m book2skill eval --skill skills/<name> --qa evals/<name>_qa.jsonl`.
+- Run one: `python -m book2skill eval --work work/<name> --skill skills/<name> --qa evals/<name>_qa.jsonl`.
 - Rate below 0.6 refuses export. Fix the skill, not the test.
