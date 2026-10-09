@@ -220,7 +220,17 @@ def _workspace() -> str:
     )
 
 
-def main() -> int:
+USAGE = (
+    "usage: python tools/part_score.py [--help] - print one line each for P1-P5 + workspace "
+    "from real artifacts (no args needed); e.g. python tools/part_score.py"
+)
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = sys.argv[1:] if argv is None else argv
+    if "-h" in args or "--help" in args:
+        print(USAGE)
+        return 0
     for line in (_p1(), _p2(), _p3(), _p4(), _p5(), _workspace()):
         print(line)
     return 0

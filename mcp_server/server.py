@@ -359,6 +359,84 @@ def _validate_args(args) -> tuple[bool, dict | str]:
     return True, {"query": query, "skill": skill, "limit": limit}
 
 
+def _parse_pinned_name(spec: str) -> tuple[str, str | None]:
+    """Split a name@version pin at the last @ (frontmatter version source).
+
+    No @ means unpinned (name, None). Empty name or empty pin falls back
+    to the literal spec with no pin so the unknown-skill guard fires.
+    """
+    if not isinstance(spec, str):
+        return "", None
+    text = spec.strip()
+    if "@" not in text:
+        return text, None
+    name, _, pinned = text.rpartition("@")
+    name, pinned = name.strip(), pinned.strip()
+    if not name or not pinned:
+        return text, None
+    return name, pinned
+
+
+def _versions_equal(have: str, want: str) -> bool:
+    """Dot-part equality: positive-int parts compare as ints, else literal."""
+    h, w = have.strip(), want.strip()
+    if h == w:
+        return True
+    hp, wp = h.split("."), w.split(".")
+    if len(hp) != len(wp):
+        return False
+    for a, b in zip(hp, wp):
+        if a.isdigit() and b.isdigit() and int(a) > 0 and int(b) > 0:
+            if int(a) != int(b):
+                return False
+        elif a != b:
+            return False
+    return True
+
+
+def _install(spec: str) -> dict:
+    """Pinned install receipt; refuse on version mismatch, never silent-latest.
+
+    Pin idea steal from VladUZH/wordhoard (licence MIT,
+    https://github.com/VladUZH/wordhoard); refuse-unknown-atVersion instead
+    of silent-latest is our guard. Written fresh in our style, no donor code
+    copied. Version source is local SKILL.md frontmatter via _skill_meta.
+    """
+    name, pinned = _parse_pinned_name(spec)
+    if name not in _skills():
+        return {"ok": False, "skill": name or spec, "error": _unknown_skill_message(name or spec)}
+    installed = _skill_meta(name)["version"]
+    if pinned is not None and not _versions_equal(installed, pinned):
+        return {"ok": False, "skill": name, "version": installed, "pinned": pinned,
+                "error": f"version mismatch for '{name}': pinned '{pinned}' != installed '{installed}' (refusing install)"}
+    return {"ok": True, "skill": name, "version": installed, "pinned": pinned,
+            "installed": True, "trust": _trust_for(name)}
+
+
+_INSTALL_DESCRIPTIONS = {
+    "skill": "Skill name with optional @version pin (e.g. progit-branching@0.1.0). Pinned installs refuse on mismatch.",
+}
+
+
+def _install_input_schema() -> dict:
+    """Derive skill_install inputSchema from the _install() signature."""
+    return {"type": "object", "properties": {
+        "skill": {"type": "string", "description": _INSTALL_DESCRIPTIONS["skill"]}}, "required": ["skill"]}
+
+
+INSTALL_INPUT_SCHEMA = _install_input_schema()
+
+
+def _validate_install_args(args) -> tuple[bool, dict | str]:
+    """Validate skill_install arguments against INSTALL_INPUT_SCHEMA."""
+    if not isinstance(args, dict):
+        return False, "arguments must be an object with skill"
+    skill = args.get("skill")
+    if not isinstance(skill, str) or not skill.strip():
+        return False, "skill is required (non-empty string, optional name@version pin)"
+    return True, {"skill": skill.strip()}
+
+
 def _error_envelope(message: str) -> dict:
     text = json.dumps({"error": message}, ensure_ascii=False)
     return {
@@ -412,10 +490,29 @@ def main(argv: list[str] | None = None) -> None:
                 "inputSchema": PREVIEW_INPUT_SCHEMA,
                 "_meta": {"cacheHint": CACHE_HINT},
             }
-            _reply(iid, {"tools": [search_tool, preview_tool], "_meta": {"cacheHint": CACHE_HINT}})
+            install_tool = {
+                "name": "skill_install",
+                "description": "Install one skill by name with optional @version pin. Pinned installs refuse on mismatch, never silent-latest.",
+                "inputSchema": INSTALL_INPUT_SCHEMA,
+                "_meta": {"cacheHint": CACHE_HINT},
+            }
+            _reply(iid, {"tools": [search_tool, preview_tool, install_tool], "_meta": {"cacheHint": CACHE_HINT}})
         elif method == "tools/call":
-            if params.get("name") not in ("skill_search", "skill_preview"):
+            if params.get("name") not in ("skill_search", "skill_preview", "skill_install"):
                 _reply(iid, error={"code": -32602, "message": "unknown tool"})
+                continue
+            if params.get("name") == "skill_install":
+                args = params.get("arguments", {}) or {}
+                ok, cleaned = _validate_install_args(args)
+                if not ok:
+                    _reply(iid, _error_envelope(cleaned))  # type: ignore[arg-type]
+                    continue
+                assert isinstance(cleaned, dict)
+                result = _install(cleaned["skill"])
+                if not result.get("ok"):
+                    _reply(iid, _error_envelope(str(result.get("error", "install refused"))))
+                    continue
+                _reply(iid, {"content": [{"type": "text", "text": json.dumps(result, ensure_ascii=False)}]})
                 continue
             if params.get("name") == "skill_preview":
                 args = params.get("arguments", {}) or {}

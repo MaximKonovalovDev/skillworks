@@ -178,6 +178,18 @@ def _check_description(description):
     return (desc_reasons, dlen, not desc_reasons)
 
 
+def _check_name(name, dirname):
+    name_reasons: list[str] = []
+    if not name:
+        name_reasons.append("name missing from SKILL.md frontmatter")
+    else:
+        if not NAME_RE.match(name):
+            name_reasons.append(f"name '{name}' breaks a-z0-9- kebab")
+        if name != dirname:
+            name_reasons.append(f"name '{name}' must match dir '{dirname}'")
+    return (name_reasons, not name_reasons)
+
+
 def audit(skilldir: Path) -> dict:
     skilldir = Path(skilldir)
     rows = []
@@ -224,17 +236,9 @@ def audit(skilldir: Path) -> dict:
     if desc_reasons:
         flags.extend(f"description: {r}" for r in desc_reasons)
 
-    name_reasons: list[str] = []
-    if not name:
-        name_reasons.append("name missing from SKILL.md frontmatter")
-    else:
-        if not NAME_RE.match(name):
-            name_reasons.append(f"name '{name}' breaks a-z0-9- kebab")
-        if name != skilldir.name:
-            name_reasons.append(f"name '{name}' must match dir '{skilldir.name}'")
+    name_reasons, name_ok = _check_name(name, skilldir.name)
     if name_reasons:
         flags.extend(f"name: {r}" for r in name_reasons)
-    name_ok = not name_reasons
 
     broken_links: list[dict] = []
     for path in _skill_files(skilldir):

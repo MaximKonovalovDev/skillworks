@@ -4,6 +4,15 @@ Start here. The rules for every agent are in `AGENTS.md`. The goal is `VISION.md
 
 Proof (the test suite): `python -m pytest tests/ -q`
 
+## Onboarding in 30 seconds
+
+What this is: one pipeline turns books you own into tested Agent Skills plus an MCP server.
+How it works (30s): `extract -> split -> index -> build -> audit -> eval -> export`; each stage writes `work/<name>/receipt.json`.
+Install: `pip install -r requirements.txt` (Python 3.10+).
+First task: `python -m book2skill make --in <file|folder|url> --name <name> --description "Use when ..." --qa evals/<name>_qa.jsonl`.
+Stuck? Read `AGENTS.md`, then `sprint/board.md`; never commit `work/`, `skills/*/export/`, or a book you do not own.
+
+
 ## Read first
 
 1. `AGENTS.md` - the rules every agent reads first.
@@ -27,7 +36,7 @@ Proof (the test suite): `python -m pytest tests/ -q`
 - `research/` - research notes. Open `research/INDEX.md` first.
 - `findings/` - dated findings, for example `adopted-check-2026-10-06.md`.
 - `from-design-studio/` - files sent from design-studio (one folder, `O-029`).
-- `sprint/` - loop files (board, inbox, handoff, halt). Rules are in `AGENTS.md`.
+- `sprint/` - loop-owned work files (board, inbox, handoff, halt, check). Open `board.md` first; loop rules live in `AGENTS.md`, not in `sprint/`.
 - `.opencode/` - OpenCode loop config. Open `repomap.md` first.
 - `.claude-plugin/` - plugin marketplace file (`marketplace.json`).
 - `archive/` - old text. Searches skip it. Read it by path only.

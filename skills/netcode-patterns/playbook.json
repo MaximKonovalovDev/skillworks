@@ -1,0 +1,138 @@
+{
+  "version": 1,
+  "project": "netcode-patterns",
+  "created_at": "2026-10-09T12:00:00.000Z",
+  "updated_at": "2026-10-09T12:00:00.000Z",
+  "bullets": [
+    {
+      "id": "11aa22bb",
+      "content": "Pick the send flag from delivery plus urgent: reliable false and urgent false gives Unreliable, false and true gives UnreliableNoNagle, true and false gives Reliable, true and true gives ReliableNoNagle; NoDelay and NoNagle send at once with no wait and Reliable resends until the peer acks.",
+      "category": "strategy",
+      "helpful_count": 5,
+      "harmful_count": 0,
+      "created_at": "2026-10-09T12:00:00.000Z",
+      "updated_at": "2026-10-09T12:00:00.000Z",
+      "source_session": null,
+      "tags": [
+        "netcode",
+        "flags"
+      ]
+    },
+    {
+      "id": "33cc44dd",
+      "content": "Name each message [a-z0-9_] with 1 to 32 chars and keep names unique across the plan; delivery is reliable or unreliable in lower case only and urgent is a strict bool, else the plan is refused.",
+      "category": "pitfall",
+      "helpful_count": 4,
+      "harmful_count": 0,
+      "created_at": "2026-10-09T12:00:00.000Z",
+      "updated_at": "2026-10-09T12:00:00.000Z",
+      "source_session": null,
+      "tags": [
+        "netcode",
+        "plan-shape"
+      ]
+    },
+    {
+      "id": "55ee66ff",
+      "content": "Only Connected carries game traffic: never send game input before Connected, and treat None, Connecting, FindingRoute, ClosedByMe, ClosedByPeer, FinWait, Linger and ProblemDetectedLocally as no-traffic states.",
+      "category": "domain",
+      "helpful_count": 5,
+      "harmful_count": 0,
+      "created_at": "2026-10-09T12:00:00.000Z",
+      "updated_at": "2026-10-09T12:00:00.000Z",
+      "source_session": null,
+      "tags": [
+        "netcode",
+        "states"
+      ]
+    },
+    {
+      "id": "77aa88bb",
+      "content": "Watch size and rate: a message over 1200 bytes may fragment and a reliable message over 20 per second warns on resend cost; plan caps are size 1 to 524288 and per_second over 0 and at most 120.",
+      "category": "pitfall",
+      "helpful_count": 3,
+      "harmful_count": 0,
+      "created_at": "2026-10-09T12:00:00.000Z",
+      "updated_at": "2026-10-09T12:00:00.000Z",
+      "source_session": null,
+      "tags": [
+        "netcode",
+        "guards"
+      ]
+    },
+    {
+      "id": "99cc00dd",
+      "content": "Send repeated positions over Unreliable and scores plus chat over Reliable; prediction guesses the next move at once, reconciliation fixes a wrong guess when server truth lands, interpolation shows others a little in the past, and lag compensation rewinds the world to check a late shot.",
+      "category": "domain",
+      "helpful_count": 4,
+      "harmful_count": 0,
+      "created_at": "2026-10-09T12:00:00.000Z",
+      "updated_at": "2026-10-09T12:00:00.000Z",
+      "source_session": null,
+      "tags": [
+        "netcode",
+        "smooth-play"
+      ]
+    },
+    {
+      "id": "12ab34cd",
+      "content": "Use the P2P words exactly: identity is who you are, listen socket takes new links, connection is one peer link, poll group reads many links at once, signaling swaps addresses, NAT traversal punches the path, relay carries packets when direct fails.",
+      "category": "domain",
+      "helpful_count": 2,
+      "harmful_count": 0,
+      "created_at": "2026-10-09T12:00:00.000Z",
+      "updated_at": "2026-10-09T12:00:00.000Z",
+      "source_session": null,
+      "tags": [
+        "netcode",
+        "p2p"
+      ]
+    },
+    {
+      "id": "56ef78ab",
+      "content": "Run python scripts/netcode_patterns.py --input plan.json --out dir: stdout starts RUN with exit 0 and writes report.json into the out folder, or starts ERROR with exit 2 and writes nothing; --out must not be a file and must not be the input file.",
+      "category": "tool_use",
+      "helpful_count": 5,
+      "harmful_count": 0,
+      "created_at": "2026-10-09T12:00:00.000Z",
+      "updated_at": "2026-10-09T12:00:00.000Z",
+      "source_session": null,
+      "tags": [
+        "netcode",
+        "checker"
+      ]
+    }
+  ],
+  "stats": {
+    "total_sessions": 6,
+    "total_reflections": 2,
+    "total_bullets_added": 7,
+    "total_bullets_pruned": 0,
+    "total_bullets_merged": 0
+  },
+  "config": {
+    "max_bullets": 200,
+    "dedup_threshold": 0.85,
+    "prune_threshold": -2,
+    "categories": [
+      "strategy",
+      "pitfall",
+      "domain",
+      "tool_use",
+      "pattern"
+    ],
+    "reflection_prompt": null,
+    "curation_prompt": null,
+    "auto_inject": true,
+    "max_inject_tokens": 4000,
+    "min_score_to_inject": 1,
+    "max_reflection_rounds": 3,
+    "min_traces_for_reflection": 5,
+    "stale_bullet_ttl_days": 14,
+    "inject_categories": [
+      "pitfall",
+      "domain"
+    ],
+    "tag_matching": true
+  }
+}

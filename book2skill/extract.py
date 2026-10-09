@@ -180,6 +180,64 @@ def _md_table_row(cells: list[str]) -> str:
     return "| " + " | ".join(cells) + " |"
 
 
+# Lattice-only table recovery (idea from jsvine/pdfplumber, MIT licence,
+# https://github.com/jsvine/pdfplumber: table_settings vertical/horizontal
+# strategy "lines" finds ruled tables from vector lines/rects; reimplemented
+# here, not pasted). Pages with no vector lines/rects skip both extract_tables
+# and the Courier char scan, so text-only pages cost one lines/rects check.
+_LATTICE_SETTINGS = {"vertical_strategy": "lines", "horizontal_strategy": "lines"}
+
+
+def _page_has_vectors(page) -> bool:
+    """True when the page draws at least one vector line or rect."""
+    try:
+        return bool(page.lines or page.rects)
+    except Exception:
+        return True
+
+
+def _render_lattice_tables(page, blocks: list[str]) -> int:
+    """Append pipe rows for one ruled page's lattice tables; returns new tables."""
+    found = 0
+    for table in page.extract_tables(table_settings=dict(_LATTICE_SETTINGS)) or []:
+        rows = [[c or "" for c in row] for row in table if any((c or "").strip() for c in row)]
+        if not rows:
+            continue
+        width = max(len(r) for r in rows)
+        rows = [r + [""] * (width - len(r)) for r in rows]
+        blocks.append(_md_table_row(rows[0]))
+        blocks.append("| " + " | ".join(["---"] * width) + " |")
+        blocks.extend(_md_table_row(r) for r in rows[1:])
+        found += 1
+    return found
+
+
+def _render_page_code(page, out: list[str]) -> int:
+    """Append fenced blocks for one page's Courier lines; returns new fences."""
+    lines: dict[tuple, list] = {}
+    for ch in page.chars:
+        key = round(float(ch["top"]))
+        lines.setdefault(key, []).append(ch)
+    fences = 0
+    code_run: list[str] = []
+    for key in sorted(lines):
+        chars = sorted(lines[key], key=lambda c: float(c["x0"]))
+        if not chars:
+            continue
+        mono = sum(1 for c in chars if "ourier" in str(c.get("fontname", "")))
+        text = "".join(c.get("text", "") for c in chars).rstrip()
+        if text and mono * 2 >= len(chars):
+            code_run.append(text)
+        elif code_run:
+            out.append("```\n" + "\n".join(code_run) + "\n```")
+            fences += 1
+            code_run = []
+    if code_run:
+        out.append("```\n" + "\n".join(code_run) + "\n```")
+        fences += 1
+    return fences
+
+
 def _pdf_tables_as_markdown(path: Path, max_pages: int) -> tuple[str, int, bool]:
     """pdfplumber lattice/line tables rendered as pipe rows (jsvine/pdfplumber, MIT).
 
@@ -194,16 +252,9 @@ def _pdf_tables_as_markdown(path: Path, max_pages: int) -> tuple[str, int, bool]
         blocks: list[str] = []
         count = 0
         for page in pdf.pages:
-            for table in page.extract_tables() or []:
-                rows = [[c or "" for c in row] for row in table if any((c or "").strip() for c in row)]
-                if not rows:
-                    continue
-                width = max(len(r) for r in rows)
-                rows = [r + [""] * (width - len(r)) for r in rows]
-                blocks.append(_md_table_row(rows[0]))
-                blocks.append("| " + " | ".join(["---"] * width) + " |")
-                blocks.extend(_md_table_row(r) for r in rows[1:])
-                count += 1
+            if not _page_has_vectors(page):
+                continue
+            count += _render_lattice_tables(page, blocks)
     if not blocks:
         return "", 0, False
     return "## Tables\n\n" + "\n".join(blocks), count, False
@@ -219,26 +270,9 @@ def _pdf_code_as_markdown(path: Path, max_pages: int) -> tuple[str, int, bool]:
         out: list[str] = []
         fences = 0
         for page in pdf.pages:
-            lines: dict[tuple, list] = {}
-            for ch in page.chars:
-                key = round(float(ch["top"]))
-                lines.setdefault(key, []).append(ch)
-            code_run: list[str] = []
-            for key in sorted(lines):
-                chars = sorted(lines[key], key=lambda c: float(c["x0"]))
-                if not chars:
-                    continue
-                mono = sum(1 for c in chars if "ourier" in str(c.get("fontname", "")))
-                text = "".join(c.get("text", "") for c in chars).rstrip()
-                if text and mono * 2 >= len(chars):
-                    code_run.append(text)
-                elif code_run:
-                    out.append("```\n" + "\n".join(code_run) + "\n```")
-                    fences += 1
-                    code_run = []
-            if code_run:
-                out.append("```\n" + "\n".join(code_run) + "\n```")
-                fences += 1
+            if not _page_has_vectors(page):
+                continue
+            fences += _render_page_code(page, out)
     if not out:
         return "", 0, False
     return "## Code\n\n" + "\n\n".join(out), fences, False
@@ -249,12 +283,30 @@ def _read_pdf_markitdown(path: Path) -> tuple[str, dict]:
     _ensure_local_tools()
     from markitdown import MarkItDown
 
+    import pdfplumber
+
     text = with_retry(lambda: MarkItDown(enable_builtins=True).convert(str(path)).text_content or "")
-    tables_md, table_count, tables_skipped = _pdf_tables_as_markdown(path, _PDF_ENRICH_MAX_PAGES)
-    code_md, fence_count, code_skipped = _pdf_code_as_markdown(path, _PDF_ENRICH_MAX_PAGES)
+    with pdfplumber.open(str(path)) as pdf:
+        pages = len(pdf.pages)
+        if pages > _PDF_ENRICH_MAX_PAGES:
+            tables_md, table_count, tables_skipped = "", 0, True
+            code_md, fence_count, code_skipped = "", 0, True
+        else:
+            blocks: list[str] = []
+            out: list[str] = []
+            table_count = 0
+            fence_count = 0
+            for page in pdf.pages:
+                if not _page_has_vectors(page):
+                    continue
+                table_count += _render_lattice_tables(page, blocks)
+                fence_count += _render_page_code(page, out)
+            tables_md = "## Tables\n\n" + "\n".join(blocks) if blocks else ""
+            code_md = "## Code\n\n" + "\n\n".join(out) if out else ""
+            tables_skipped = code_skipped = False
     extra = "\n\n".join(b for b in (tables_md, code_md) if b)
     info = {
-        "pages": _pdf_page_count(path),
+        "pages": pages,
         "table_count": table_count,
         "tables_skipped": tables_skipped,
         "code_skipped": code_skipped,

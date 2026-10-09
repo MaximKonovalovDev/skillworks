@@ -1,0 +1,12 @@
+{"q":"How do I make a repeatable seeded RNG with seedrandom instead of Math.random?","must":["seedrandom","Math.random"]}
+{"q":"How do I create an independent seeded generator stream with alea?","must":["alea","seedrandom"]}
+{"q":"How do I pick a seeded integer in range for room size and placement?","must":["int","range","seed"]}
+{"q":"How do I save and restore RNG state to replay the same dungeon?","must":["state","replay"]}
+{"q":"How do I seed the noise permutation table before generating terrain?","must":["noise.seed","permutation"]}
+{"q":"What does noise.perlin2 take and return for 2D terrain height?","must":["perlin2","height"]}
+{"q":"When do I use noise.simplex2 instead of perlin2?","must":["simplex2","perlin2"]}
+{"q":"How do I stack octaves into fbm for island terrain?","must":["octaves","fbm"]}
+{"q":"How do I place non-overlapping rooms and join them with corridors from a seeded RNG?","must":["rooms","corridors"]}
+{"q":"How do I smooth caves with cellular automata birth and survival passes?","must":["cellular","smoothing"]}
+{"q":"How do I prove the same seed builds the same dungeon every run?","must":["same seed","deterministic"]}
+{"q":"Which license covers the seedrandom and noisejs donor code and is it ever sold?","must":["MIT","never sold"]}

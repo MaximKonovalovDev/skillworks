@@ -269,6 +269,49 @@ def lift_with_stderr(tasks: list[dict], with_rows: list[dict],
     }
 
 
+# Steal (fresh port, MIT): pass@1 / pass@k / pass^k repeat-consistency plus
+# integer gate idea from lyncar98/agent-eval-harness (MIT)
+# https://github.com/lyncar98/agent-eval-harness
+# licence MIT (see LICENSE in that repo). Rewritten here stdlib only: pass@1
+# is the mean single-repeat rate, pass@k any-pass, pass^k all-pass, and the
+# integer gate n_passed >= required catches the 2/3 gate-PASS / strict-FAIL flip.
+def consistency(results: list[list[int | bool]], k: int = 3, required: int = 2) -> dict:
+    """Repeat consistency over per-task pass lists (stdlib only)."""
+    if not results:
+        return {
+            "tasks": 0,
+            "repeats": k,
+            "required": required,
+            "pass@1": 0.0,
+            "pass@k": 0.0,
+            "pass^k": 0.0,
+            "gate_pass": 0,
+            "gate_rate": 0.0,
+            "gate_flip": 0,
+            "status": "N/A",
+        }
+    tasks = len(results)
+    cells = sum(len(r) for r in results)
+    hits = sum(1 for r in results for c in r if bool(c))
+    pass_at_1 = (hits / cells) if cells else 0.0
+    n_any = sum(1 for r in results if any(bool(c) for c in r))
+    n_all = sum(1 for r in results if len(r) > 0 and all(bool(c) for c in r))
+    gate_pass = sum(1 for r in results if sum(1 for c in r if bool(c)) >= required)
+    gate_flip = gate_pass - n_all if required <= k else gate_pass
+    return {
+        "tasks": tasks,
+        "repeats": k,
+        "required": required,
+        "pass@1": round(pass_at_1, 4),
+        "pass@k": round(n_any / tasks, 4),
+        "pass^k": round(n_all / tasks, 4),
+        "gate_pass": gate_pass,
+        "gate_rate": round(gate_pass / tasks, 4),
+        "gate_flip": gate_flip,
+        "status": "ok",
+    }
+
+
 def cmd_report(args: argparse.Namespace) -> int:
     skill = args.skill
     qa_path = Path(args.qa) if args.qa else ROOT / "evals" / f"{skill}_qa.jsonl"

@@ -4,6 +4,15 @@ One pipeline turns books and docs you own the rights to into Agent Skills
 plus an MCP server. Seeds: your Forge/Flax docs (zero copyright risk) and
 public-domain books (Project Gutenberg). No copyrighted books bundled.
 
+## Setup
+
+Requires Python 3.10+. Install dependencies first to avoid ModuleNotFoundError:
+
+```powershell
+pip install -r requirements.txt
+python -m book2skill make --help   # then run the full pipeline from one command
+```
+
 ## Pipeline (best parts combined, credited in THIRD_PARTY_NOTICES.md)
 
 | Stage | Does | Stolen from |
