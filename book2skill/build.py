@@ -187,6 +187,45 @@ def _clean_chunk(full: str) -> tuple[str | None, bool, bool]:
     return "\n".join(lines), True, False
 
 
+# Steal: fenced-only behavior check, ported fresh from DietrichGebert/ponytail@7efd0b7c
+# (MIT, https://github.com/DietrichGebert/ponytail/pull/966) benchmarks/behavior.js:
+# onecheck scans only inside fenced blocks, then strips strings/comments
+# before the assert/test regex. No donor code copied; stdlib-only Python port.
+_BT = chr(96)
+_DQ = chr(34)
+_SQ = chr(39)
+_FENCE_RE = re.compile(_BT * 3 + r"[^\n]*\n?([\s\S]*?)" + _BT * 3)
+_CHECK_RE = re.compile(r"\b(assert|expect|test|it|describe)\b")
+_TRIPLE_DQ_RE = re.compile(_DQ * 3 + r"[\s\S]*?" + _DQ * 3)
+_TRIPLE_SQ_RE = re.compile(_SQ * 3 + r"[\s\S]*?" + _SQ * 3)
+_DQ_RE = re.compile(_DQ + r"(?:\\.|[^" + _DQ + r"\\\n])*" + _DQ)
+_SQ_RE = re.compile(_SQ + r"(?:\\.|[^" + _SQ + r"\\\n])*" + _SQ)
+_TICK_RE = re.compile(_BT + r"(?:\\.|[^" + _BT + r"\\])*" + _BT)
+_BLOCK_COMMENT_RE = re.compile(r"/\*[\s\S]*?\*/")
+_LINE_COMMENT_RE = re.compile(r"(?://[^\n]*|#[^\n]*)")
+
+
+def fenced_blocks(text):
+    # Code inside fenced blocks (info line dropped); prose outside ignored.
+    return [m.group(1) for m in _FENCE_RE.finditer(text)]
+
+
+def strip_strings_comments(code):
+    # Blank strings/comments so the assert/test regex sees runnable code only.
+    for rx in (_TRIPLE_DQ_RE, _TRIPLE_SQ_RE, _DQ_RE, _SQ_RE, _TICK_RE):
+        code = rx.sub(_DQ * 2, code)
+    code = _BLOCK_COMMENT_RE.sub("", code)
+    return "\n".join(_LINE_COMMENT_RE.sub("", ln) for ln in code.splitlines())
+
+
+def grade_fenced(text):
+    # True when cleaned fenced code holds a check; prose alone never passes.
+    for block in fenced_blocks(text):
+        if _CHECK_RE.search(strip_strings_comments(block)):
+            return True
+    return False
+
+
 # Steal: scope router + disclaimer lane, ported fresh from pras-ops/indian-business-ops-skills
 # (MIT, https://github.com/pras-ops/indian-business-ops-skills/blob/main/skills/gst-compliance/SKILL.md
 # plus DISCLAIMER.md): a NOT-for line keeps the skill in its lane, a verify-before-act

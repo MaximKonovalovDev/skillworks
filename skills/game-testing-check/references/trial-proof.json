@@ -1,0 +1,16 @@
+{
+  "skill": "game-testing-check",
+  "runs": 12,
+  "with_rate": 1.0,
+  "without_rate": 0.0,
+  "lift": 1.0,
+  "spread": 1.0,
+  "with_median": 1.0,
+  "with_p10": 1.0,
+  "without_median": 0.0,
+  "without_p10": 0.0,
+  "fingerprint": "c75831deb78dd68f69c2b1a2a2ce13731ac18727d7adb1c55538039ceec4e7f6",
+  "sheet": "evals/game-testing-check_trials.jsonl",
+  "at": "2026-10-09T09:15Z",
+  "ok": true
+}

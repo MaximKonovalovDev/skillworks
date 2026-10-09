@@ -1,0 +1,10 @@
+{"q": "What case do Rust constants, types, and functions use?", "must": ["UPPERCASE", "CamelCase", "snake_case"]}
+{"q": "How do you handle an Option without panicking?", "must": ["match", "Some", "None"]}
+{"q": "How does a fallible function propagate its failure?", "must": ["Result", "question mark"]}
+{"q": "What replaces an index loop over a slice?", "must": ["iter", "collect"]}
+{"q": "How does a builder chain its steps?", "must": ["builder", "Self", "build()"]}
+{"q": "How do you give a bare String id a distinct type?", "must": ["newtype", "UserId"]}
+{"q": "How is cleanup tied to ownership?", "must": ["RAII", "Drop", "cleanup"]}
+{"q": "How do you extend a foreign type and share it widely?", "must": ["extension trait", "blanket"]}
+{"q": "Which borrowed forms cover text and maybe owned text without cloning?", "must": ["&str", "Cow", "clone"]}
+{"q": "Which three antipatterns must stay out of idiomatic files?", "must": ["Deref", "singleton", "unsafe"]}

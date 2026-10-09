@@ -338,6 +338,55 @@ def check_evidence(listing: str, rep: Report, offline: bool, fetch: Callable[[st
         rep.ok(f"price evidence: {len(urls)} seller pages answer")
 
 
+
+# Storefront-drift gate, idea from Honorboxx/honorbox docs/failure-catalogue.md (MIT,
+# https://github.com/Honorboxx/honorbox/blob/main/docs/failure-catalogue.md):
+# their storefront-drift entry compares the page price against the live payment link
+# (a dead link still answers 200 so status alone lies; UNKNOWN is never OK).
+# Rewritten here as a listing-vs-live gate: fetch the Live listing page when online
+# and fail on dead, unknown, or page-price vs pack.json drift.
+def fetch_page_text(url: str) -> str:
+    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (pack_check)"})
+    try:
+        with urllib.request.urlopen(req, timeout=15) as resp:  # noqa: S310
+            return resp.read().decode("utf-8", "replace")
+    except (urllib.error.URLError, TimeoutError, OSError, ValueError):
+        return ""
+
+
+def check_storefront_drift(pack, listing_text, rep, offline, fetch, fetch_text=None):
+    m = LIVE.search(listing_text)
+    if m is None:
+        return
+    url = m.group(1).rstrip(".,;:")
+    if offline:
+        rep.add("WARN", "storefront-drift: " + url + " not fetched (--offline)")
+        return
+    code = fetch(url)
+    if code in (404, 410):
+        rep.add("FAIL", "storefront-drift: live link " + url + " is dead (" + str(code) + ")")
+        return
+    if not 200 <= code < 400:
+        rep.add("FAIL", "storefront-drift: live link " + url + " gave no clean answer (" + str(code or "no answer") + "): UNKNOWN is never OK")
+        return
+
+    body = fetch_text(url) if fetch_text is not None else fetch_page_text(url)
+    if not body:
+        rep.add("FAIL", "storefront-drift: live page " + url + " gave no body to compare: UNKNOWN is never OK")
+        return
+    try:
+        want = float(pack["price_usd"])
+    except (TypeError, ValueError):
+        return
+    found = [float(x) for x in PRICE.findall(body)]
+    if not found:
+        rep.add("FAIL", "storefront-drift: live page " + url + " carries no price to agree with pack.json: UNKNOWN is never OK")
+    elif not any(abs(v - want) < 0.005 for v in found):
+        rep.add("FAIL", "storefront-drift: page-price vs live-link drift: page shows " + repr(sorted(set(found))) + " but pack.json says " + repr(pack["price_usd"]))
+    else:
+        rep.ok("storefront-drift: live page price agrees with pack.json")
+
+
 def zip_problems(source: "Path | bytes", _cache: dict | None = None) -> tuple[list[str], dict[str, bytes]]:
     if isinstance(source, bytes) and _cache is not None:
         hit = _cache.get(id(source))
@@ -597,6 +646,7 @@ def check_factory_preflight(pack_dir: Path, pack: dict, dist: Path, rep: Report,
 def check_pack(pack_dir: Path, *, root: Path = ROOT, dist: Path | None = None, offline: bool = False,
                skill_problems: Callable[[str], list[str]] = default_skill_problems,
                fetch: Callable[[str], int] = fetch_status,
+               fetch_text: Callable[[str], str] | None = None,
                factory: bool = True, factory_audit: Callable | None = None) -> Report:
     rep = Report()
     pack = check_manifest(pack_dir, rep)
@@ -609,6 +659,7 @@ def check_pack(pack_dir: Path, *, root: Path = ROOT, dist: Path | None = None, o
     if listing:
         check_evidence(listing, rep, offline, fetch)
         check_assets(pack_dir, listing, live, rep)
+        check_storefront_drift(pack, listing, rep, offline, fetch, fetch_text)
     resolved = dist or root / "dist"
     check_zips(pack_dir, pack, skills, resolved, rep)
     check_factory_preflight(pack_dir, pack, resolved, rep, enabled=factory, audit=factory_audit, listing_text=listing, price_txt_text=price_txt_text)

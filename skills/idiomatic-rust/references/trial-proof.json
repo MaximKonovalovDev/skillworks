@@ -1,0 +1,16 @@
+{
+  "skill": "idiomatic-rust",
+  "runs": 12,
+  "with_rate": 1.0,
+  "without_rate": 0.0,
+  "lift": 1.0,
+  "spread": 1.0,
+  "with_median": 1.0,
+  "with_p10": 1.0,
+  "without_median": 0.0,
+  "without_p10": 0.0,
+  "fingerprint": "f4778fdbcc41592350a95453aa6e157f83160057fe3975db7ebee32346179879",
+  "sheet": "evals/idiomatic-rust_trials.jsonl",
+  "at": "2026-10-09T09:23Z",
+  "ok": true
+}

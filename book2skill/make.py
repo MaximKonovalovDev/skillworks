@@ -100,7 +100,7 @@ def make(src: str, name: str, description: str, qa: Path, work: Path | None = No
         stages["eval"] = {"total": report["total"], "passed": report["passed"], "rate": report["rate"]}
         say(f"eval     {report['passed']}/{report['total']} = {report['rate']:.3f} (gate {export_mod.GATE})")
     with _measure(timings, "audit"):
-        audit = _quiet(audit_mod.audit, skill)
+        audit = audit_mod.audit(skill, quiet=True)
         stages["audit"] = {"files": len(audit["sections"]), "total_tokens": audit["total_tokens"],
                            "body_tokens": audit.get("body_tokens"), "over_budget": audit.get("over_budget", False)}
         audit_line = f"audit    {len(audit['sections'])} files, {audit['total_tokens']} tokens"

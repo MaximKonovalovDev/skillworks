@@ -12,8 +12,8 @@ GradeFn = Callable[[str, list[str]], bool]
 
 def code_contains(answer: str, must: list[str]) -> bool:
     """Substring grade: every must-word appears in the answer blob."""
-    blob = answer.lower()
-    return all(w.lower() in blob for w in must)
+    blob = answer.casefold()
+    return all(w.casefold() in blob for w in must)
 
 
 def neg_control(answer: str, must: list[str]) -> bool:
@@ -22,8 +22,8 @@ def neg_control(answer: str, must: list[str]) -> bool:
 
     if not code_contains(answer, must):
         return False
-    words = re.findall(r"[A-Za-z]{3,}", answer)
-    return len({w.lower() for w in words}) >= 5
+    words = re.findall(r"[^\W\d_]{3,}", answer)
+    return len({w.casefold() for w in words}) >= 5
 
 
 _GRADERS: dict[str, dict] = {}

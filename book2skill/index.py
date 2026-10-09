@@ -117,57 +117,99 @@ def _bm25_precomp(workdir: Path) -> tuple:
     return bundle
 
 
+# Steal: eager BM25 posting-lists (idf*tfc precomputed at index time,
+# query = sparse-select top-k) idea from xhluca/bm25s (MIT,
+# https://github.com/xhluca/bm25s bm25s/__init__.py + bm25s/scoring.py).
+# Stdlib-only port: tokenize once, store per-token [(doc, idf*tfc)] dict
+# posting-lists, accumulate query hits sparsely; substring fallback only
+# for out-of-vocab query terms so scores stay bit-identical.
+_BM25_EAGER: dict = {}
+
+
+def _bm25_eager(workdir: Path, k1: float = 1.2, b: float = 0.75) -> tuple:
+    key = str(Path(workdir).resolve())
+    ekey = (key, float(k1), float(b))
+    pre = _bm25_precomp(workdir)
+    paths, texts, tfs, lens, avg_len, doc_freqs, idfs, postings = pre
+    fp = _CACHE[key][0]
+    hit = _BM25_EAGER.get(ekey)
+    if hit is not None and hit[0] == fp:
+        return hit[1]
+    eager: dict = {}
+    if len(paths) and avg_len:
+        for tok, lst in postings.items():
+            w = idfs[tok]
+            col: list = []
+            for idx in lst:
+                tf = tfs[idx].get(tok, 0)
+                norm = k1 * (1.0 - b + b * lens[idx] / avg_len)
+                col.append((idx, w * tf * (k1 + 1.0) / (tf + norm)))
+            eager[tok] = col
+    bundle = (paths, texts, tfs, lens, avg_len, doc_freqs, idfs, postings, eager)
+    _BM25_EAGER[ekey] = (fp, bundle)
+    return bundle
+
+
 def bm25_batch_search(workdir: Path, query: str, limit: int = 5, k1: float = 1.2, b: float = 0.75, doc_ids=None) -> list[dict]:
     words = [w.lower() for w in query.split() if len(w) > 2]
     if not words:
         return []
-    pre = _bm25_precomp(workdir)
-    paths, texts, tfs, lens, avg_len, doc_freqs, idfs, postings = pre
+    pre = _bm25_eager(workdir, k1, b)
+    paths, texts, tfs, lens, avg_len, doc_freqs, idfs, postings, eager = pre
     total = len(paths)
     if not total or not avg_len:
         return []
+    allowed = None
+    if doc_ids is not None:
+        allowed = {i for i in doc_ids if 0 <= i < total}
+        if not allowed:
+            return []
+    scores: dict = {}
+    for w in words:
+        lst = eager.get(w)
+        if not lst:
+            continue
+        if allowed is None:
+            for idx, wt in lst:
+                scores[idx] = scores.get(idx, 0.0) + wt
+        else:
+            for idx, wt in lst:
+                if idx in allowed:
+                    scores[idx] = scores.get(idx, 0.0) + wt
     oov = [w for w in words if w not in doc_freqs]
-    oov_df: dict = {}
-    oov_idf: dict = {}
     if oov:
-        for w in oov:
+        uniq = list(dict.fromkeys(oov))
+        oov_df: dict = {}
+        oov_idf: dict = {}
+        for w in uniq:
             n = sum(1 for t in texts if w in t)
             oov_df[w] = n
             oov_idf[w] = math.log(1.0 + (total - n + 0.5) / (n + 0.5))
-    if doc_ids is None:
-        cand_set = set()
+        norms = [k1 * (1.0 - b + b * doc_len / avg_len) for doc_len in lens]
         for w in words:
-            lst = postings.get(w)
-            if lst:
-                cand_set.update(lst)
-        for w in oov:
-            if oov_df[w]:
-                for idx, t in enumerate(texts):
-                    if idx not in cand_set and w in t:
-                        cand_set.add(idx)
-        cand = sorted(cand_set)
-    else:
-        cand = sorted({i for i in doc_ids if 0 <= i < total})
-    if not cand:
-        return []
-    q_idfs = [(idfs[w] if w in idfs else oov_idf[w]) for w in words]
-    scored = []
-    for idx in cand:
-        ctr = tfs[idx]
-        norm = k1 * (1.0 - b + b * lens[idx] / avg_len)
-        score = 0.0
-        text = None
-        for j, w in enumerate(words):
-            tf = ctr.get(w, 0)
-            if tf == 0 and w in oov_df and oov_df[w]:
-                if text is None:
-                    text = texts[idx]
-                tf = text.count(w)
-            if not tf:
+            if w in doc_freqs:
                 continue
-            score += q_idfs[j] * tf * (k1 + 1.0) / (tf + norm)
-        if score:
-            scored.append((score, paths[idx].name))
+            if not oov_df[w]:
+                continue
+            iw = oov_idf[w]
+            if allowed is None:
+                for idx, t in enumerate(texts):
+                    if w not in t:
+                        continue
+                    tf = t.count(w)
+                    if tf:
+                        scores[idx] = scores.get(idx, 0.0) + iw * tf * (k1 + 1.0) / (tf + norms[idx])
+            else:
+                for idx in allowed:
+                    t = texts[idx]
+                    if w not in t:
+                        continue
+                    tf = t.count(w)
+                    if tf:
+                        scores[idx] = scores.get(idx, 0.0) + iw * tf * (k1 + 1.0) / (tf + norms[idx])
+    if not scores:
+        return []
+    scored = [(score, paths[idx].name) for idx, score in scores.items() if score]
     scored.sort(reverse=True)
     return [{"file": name, "score": score} for score, name in scored[:limit]]
 

@@ -1,0 +1,4 @@
+{"id": "hr-t01", "kind": "answer", "must": ["GameMode", "restart"], "must_not": ["bracket-lib"], "q": "State the three Flappy states and which call moves Menu to Playing.", "task": "State the three Flappy states and which call moves Menu to Playing."}
+{"id": "hr-t02", "kind": "answer", "must": ["STAGGER_DISTANCE", "seeded"], "must_not": ["legion"], "q": "How long is the drunkard walk and why do two seeds differ?", "task": "How long is the drunkard walk and why do two seeds differ?"}
+{"id": "hr-t03", "kind": "answer", "must": ["WantsToMove", "can_enter"], "must_not": ["bracket-lib"], "q": "Which intent carries dx and dy, and which gate blocks walls?", "task": "Which intent carries dx and dy, and which gate blocks walls?"}
+{"id": "hr-t04", "kind": "run", "must": ["cargo test", "test result: ok"], "must_not": ["FAILED"], "q": "Run the three demo crates and paste the passing result line.", "task": "Run the three demo crates and paste the passing result line."}

@@ -1,0 +1,8 @@
+{"must": ["GameMode", "restart"], "q": "Which enum holds the Flappy states and which call moves Menu to Playing?"}
+{"must": ["Playing", "End"], "q": "Which two states does play() connect in the Flappy state machine?"}
+{"must": ["STAGGER_DISTANCE", "400"], "q": "How many steps does the seeded drunkard walk take?"}
+{"must": ["seeded", "deterministic"], "q": "Why does the same seed give the same dungeon map?"}
+{"must": ["floor_connected", "BFS"], "q": "Which function checks that every floor tile stays reachable, and how?"}
+{"must": ["WantsToMove", "can_enter"], "q": "Which intent struct carries the move, and which gate decides it?"}
+{"must": ["apply_intent", "collisions"], "q": "Which two functions move the player and clear enemies on the player pos?"}
+{"must": ["cargo test", "scratch"], "q": "Which command proves each pair, and where does it run?"}

@@ -1,0 +1,13 @@
+{"id": "t01", "kind": "answer", "task": "Which three playtest formats does the checklist name, and when is each used?", "must": ["one-on-one", "focus group", "extended playtest"], "must_not": ["just ship it"]}
+{"id": "t02", "kind": "answer", "task": "What does the moderator do in a one-on-one session, and who often fills that role?", "must": ["moderator", "takes notes"], "must_not": ["just ship it"]}
+{"id": "t03", "kind": "answer", "task": "Whose shoes should the tester wear, and which audience must screening find?", "must": ["player shoes", "target audience"], "must_not": ["just ship it"]}
+{"id": "t04", "kind": "answer", "task": "How do screening surveys and a bug-free build keep a playtest fair?", "must": ["screening surveys", "bug-free"], "must_not": ["just ship it"]}
+{"id": "t05", "kind": "answer", "task": "What two play qualities are scored per level, and what scale is used?", "must": ["fun factor", "difficulty balancing"], "must_not": ["just ship it"]}
+{"id": "t06", "kind": "answer", "task": "How do stress testing and load testing differ, and who often runs them?", "must": ["stress testing", "load testing"], "must_not": ["just ship it"]}
+{"id": "t07", "kind": "answer", "task": "Which two perf signals show performance under stress in a busy scene?", "must": ["frame rate", "lag"], "must_not": ["just ship it"]}
+{"id": "t08", "kind": "answer", "task": "What device plan covers hardware compatibility across low, mid, and high tiers?", "must": ["test sets", "hardware compatibility"], "must_not": ["just ship it"]}
+{"id": "t09", "kind": "answer", "task": "Which light doc replaces heavy cases when the team needs exploratory testing?", "must": ["test charter", "exploratory testing"], "must_not": ["just ship it"]}
+{"id": "t10", "kind": "answer", "task": "How does pairwise testing work, and why are two heads better than one?", "must": ["pairwise testing", "two heads"], "must_not": ["just ship it"]}
+{"id": "t11", "kind": "answer", "task": "Which two risk steps open the plan: listing breaks and weighing impact?", "must": ["risk identification", "risk analysis"], "must_not": ["just ship it"]}
+{"id": "t12", "kind": "answer", "task": "Which gates cover basic function, real players, and a script-free pass?", "must": ["smoke testing", "beta testing", "ad hoc"], "must_not": ["just ship it"]}
+

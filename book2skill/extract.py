@@ -320,6 +320,31 @@ def _pdf_page_count(path: Path) -> int:
     return len(PdfReader(str(path)).pages)
 
 
+def _epub_attr(tag, name):
+    """Safe BeautifulSoup attr read that never raises.
+
+    Returns "" when tag is None, already decomposed, has no attrs dict,
+    or any lookup fails; preserves list values, never raises.
+    """
+    try:
+        if tag is None:
+            return ""
+        if getattr(tag, "decomposed", False):
+            return ""
+        attrs = getattr(tag, "attrs", None)
+        if not isinstance(attrs, dict):
+            return ""
+        try:
+            val = attrs.get(name, "")
+        except Exception:
+            return ""
+        if val is None:
+            return ""
+        return val
+    except Exception:
+        return ""
+
+
 def _read_epub_classic(path: Path) -> tuple[str, list[dict]]:
     """Flattened body text via stdlib zipfile + BeautifulSoup (no ebooklib).
 
@@ -341,31 +366,68 @@ def _read_epub_classic(path: Path) -> tuple[str, list[dict]]:
             title = ""
             for tag in ("h1", "h2", "h3", "h4", "h5", "h6"):
                 head = root.find(tag)
-                if head is not None and head.get_text(strip=True):
-                    title = head.get_text(strip=True)
+                if head is None or getattr(head, "decomposed", False):
+                    continue
+                try:
+                    head_text = head.get_text(strip=True)
+                except Exception:
+                    continue
+                if head_text:
+                    try:
+                        title = head.get_text(strip=True)
+                    except Exception:
+                        title = head_text
                     break
             for el in root.find_all(True):
-                ptype = el.get("epub:type") or el.get("type") or ""
-                if isinstance(ptype, list):
-                    ptype = " ".join(ptype)
-                role = el.get("role") or ""
-                if isinstance(role, list):
-                    role = " ".join(role)
+                if getattr(el, "decomposed", False):
+                    continue
+                try:
+                    ptype = _epub_attr(el, "epub:type") or _epub_attr(el, "type") or ""
+                    if isinstance(ptype, list):
+                        ptype = " ".join(ptype)
+                    role = _epub_attr(el, "role") or ""
+                    if isinstance(role, list):
+                        role = " ".join(role)
+                except Exception:
+                    continue
                 if str(ptype).strip().lower() == "pagebreak" or str(role).strip().lower() == "doc-pagebreak":
-                    pid = str(el.get("id") or "")
-                    aria = str(el.get("aria-label") or "")
-                    etitle = str(el.get("title") or "")
-                    label = el.get_text(strip=True) or aria.strip() or etitle.strip() or title or pid
+                    try:
+                        pid = str(_epub_attr(el, "id") or "")
+                        aria = str(_epub_attr(el, "aria-label") or "")
+                        etitle = str(_epub_attr(el, "title") or "")
+                        try:
+                            etext = el.get_text(strip=True)
+                        except Exception:
+                            etext = ""
+                        label = etext or aria.strip() or etitle.strip() or title or pid
+                    except Exception:
+                        continue
                     pages.append({"id": pid, "label": label})
             for bad in root.find_all(["script", "style", "nav"]):
-                bad.decompose()
-            for bad in root.find_all(attrs={"epub:type": True}):
-                val = bad.get("epub:type") or ""
-                if isinstance(val, list):
-                    val = " ".join(val)
-                if str(val).strip().lower() in _NAV_TYPES:
+                if getattr(bad, "decomposed", False):
+                    continue
+                try:
                     bad.decompose()
-            parts.append(root.get_text("\n"))
+                except Exception:
+                    continue
+            for bad in root.find_all(attrs={"epub:type": True}):
+                if getattr(bad, "decomposed", False):
+                    continue
+                try:
+                    val = _epub_attr(bad, "epub:type") or ""
+                    if isinstance(val, list):
+                        val = " ".join(val)
+                    if str(val).strip().lower() in _NAV_TYPES:
+                        try:
+                            bad.decompose()
+                        except Exception:
+                            continue
+                except Exception:
+                    continue
+            try:
+                parts.append(root.get_text("\n"))
+            except Exception:
+                parts.append("")
     return "\n".join(parts), pages
 
 

@@ -1,0 +1,11 @@
+{"q": "When should an agent load refactoring-to-rust?", "must": ["porting C", "stealing Bevy"]}
+{"q": "How do I run refactoring-to-rust from the command line?", "must": ["refactoring-to-rust", "--input", "--out"]}
+{"q": "What does the first word of stdout tell me?", "must": ["first word of stdout"]}
+{"q": "What does refactoring-to-rust print on success and what is the exit code?", "must": ["PORTED", "exit 0"]}
+{"q": "What happens when the input file is missing or empty?", "must": ["ERROR", "exit 2", "nothing written"]}
+{"q": "How does a C string cross into Rust?", "must": ["CString::new", "CStr::from_ptr"]}
+{"q": "How is the foreign function boundary declared?", "must": ["extern", "unsafe"]}
+{"q": "What happens when a moved value is used again?", "must": ["E0382", "clone()"]}
+{"q": "How is fallible code expressed and propagated?", "must": ["Result", "?"]}
+{"q": "How is the web target built and shipped?", "must": ["wasm-pack build", "pkg"]}
+

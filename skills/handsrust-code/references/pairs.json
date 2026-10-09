@@ -1,0 +1,215 @@
+{
+  "about": "Every pair runs with real cargo 1.97.1 in its own fresh scratch directory (see scripts/handsrust_code.py). good prints the output shown; bad fails with the real cargo error named. All fixtures are dependency-free with no bracket-lib and no legion, and run with CARGO_NET_OFFLINE=1.",
+  "pairs": [
+    {
+      "id": "hr-p01",
+      "title": "flappy_states transitions: Menu Playing End with restart and play",
+      "group": "state",
+      "good": {
+        "steps": [
+          {
+            "argv": [
+              "cargo",
+              "new",
+              "--lib",
+              "state_demo"
+            ],
+            "expect": [
+              "Creating library"
+            ],
+            "expect_exit": 0
+          },
+          {
+            "write": {
+              "state_demo/src/lib.rs": "#[derive(Debug, Clone, Copy, PartialEq, Eq)]\npub enum GameMode {\n    Menu,\n    Playing,\n    End,\n}\n\n#[derive(Debug)]\npub struct State {\n    pub mode: GameMode,\n}\n\nimpl State {\n    pub fn new() -> Self {\n        Self { mode: GameMode::Menu }\n    }\n    pub fn restart(&mut self) {\n        self.mode = GameMode::Playing;\n    }\n    pub fn play(&mut self) {\n        if self.mode == GameMode::Playing {\n            self.mode = GameMode::End;\n        }\n    }\n}\n\n#[cfg(test)]\nmod tests {\n    use super::*;\n    #[test]\n    fn menu_to_playing() {\n        let mut s = State::new();\n        assert_eq!(s.mode, GameMode::Menu);\n        s.restart();\n        assert_eq!(s.mode, GameMode::Playing);\n    }\n    #[test]\n    fn playing_to_end() {\n        let mut s = State::new();\n        s.restart();\n        s.play();\n        assert_eq!(s.mode, GameMode::End);\n    }\n    #[test]\n    fn end_to_playing() {\n        let mut s = State::new();\n        s.restart();\n        s.play();\n        assert_eq!(s.mode, GameMode::End);\n        s.restart();\n        assert_eq!(s.mode, GameMode::Playing);\n    }\n}\n"
+            }
+          },
+          {
+            "argv": [
+              "cargo",
+              "test"
+            ],
+            "cwd": "state_demo",
+            "expect": [
+              "test result: ok",
+              "3 passed"
+            ],
+            "expect_exit": 0
+          }
+        ]
+      },
+      "bad": {
+        "steps": [
+          {
+            "argv": [
+              "cargo",
+              "new",
+              "--lib",
+              "state_demo"
+            ],
+            "expect": [
+              "Creating library"
+            ],
+            "expect_exit": 0
+          },
+          {
+            "write": {
+              "state_demo/src/lib.rs": "#[derive(Debug, Clone, Copy, PartialEq, Eq)]\npub enum GameMode {\n    Menu,\n    Playing,\n    End,\n}\n\n#[derive(Debug)]\npub struct State {\n    pub mode: GameMode,\n}\n\nimpl State {\n    pub fn new() -> Self {\n        Self { mode: GameMode::Menu }\n    }\n    pub fn restart(&mut self) {\n        self.mode = GameMode::Menu;\n    }\n    pub fn play(&mut self) {\n        if self.mode == GameMode::Playing {\n            self.mode = GameMode::End;\n        }\n    }\n}\n\n#[cfg(test)]\nmod tests {\n    use super::*;\n    #[test]\n    fn menu_to_playing() {\n        let mut s = State::new();\n        assert_eq!(s.mode, GameMode::Menu);\n        s.restart();\n        assert_eq!(s.mode, GameMode::Playing);\n    }\n    #[test]\n    fn playing_to_end() {\n        let mut s = State::new();\n        s.restart();\n        s.play();\n        assert_eq!(s.mode, GameMode::End);\n    }\n    #[test]\n    fn end_to_playing() {\n        let mut s = State::new();\n        s.restart();\n        s.play();\n        assert_eq!(s.mode, GameMode::End);\n        s.restart();\n        assert_eq!(s.mode, GameMode::Playing);\n    }\n}\n"
+            }
+          },
+          {
+            "argv": [
+              "cargo",
+              "test"
+            ],
+            "cwd": "state_demo",
+            "expect": [
+              "FAILED"
+            ],
+            "expect_exit": 101
+          }
+        ]
+      }
+    },
+    {
+      "id": "hr-p02",
+      "title": "drunkard seeded connectivity: STAGGER_DISTANCE walk with BFS check",
+      "group": "dungeon",
+      "good": {
+        "steps": [
+          {
+            "argv": [
+              "cargo",
+              "new",
+              "--lib",
+              "drunk_demo"
+            ],
+            "expect": [
+              "Creating library"
+            ],
+            "expect_exit": 0
+          },
+          {
+            "write": {
+              "drunk_demo/src/lib.rs": "pub struct Rng {\n    state: u64,\n}\n\nimpl Rng {\n    pub fn new(seed: u64) -> Self {\n        Self { state: seed.wrapping_add(0x9E3779B97F4A7C15) }\n    }\n    pub fn range(&mut self, lo: i32, hi: i32) -> i32 {\n        self.state = self.state.wrapping_mul(6364136223846793005).wrapping_add(1442695040888963407);\n        let span = (hi - lo) as u64;\n        lo + ((self.state >> 33) % span) as i32\n    }\n}\n\npub const W: usize = 20;\npub const H: usize = 20;\npub const STAGGER_DISTANCE: usize = 400;\n\npub fn build_map(seed: u64) -> Vec<bool> {\n    let mut map = vec![false; W * H];\n    let mut rng = Rng::new(seed);\n    let mut x = (W / 2) as i32;\n    let mut y = (H / 2) as i32;\n    for _ in 0..STAGGER_DISTANCE {\n        let idx = (y as usize) * W + (x as usize);\n        map[idx] = true;\n        match rng.range(0, 4) {\n            0 => x = (x + 1).min((W - 2) as i32),\n            1 => x = (x - 1).max(1),\n            2 => y = (y + 1).min((H - 2) as i32),\n            _ => y = (y - 1).max(1),\n        }\n    }\n    map\n}\n\npub fn floor_connected(map: &[bool]) -> bool {\n    let total = map.iter().filter(|&&b| b).count();\n    if total == 0 {\n        return false;\n    }\n    let start = map.iter().position(|&b| b).unwrap();\n    let mut seen = vec![false; map.len()];\n    let mut stack = vec![start];\n    seen[start] = true;\n    let mut count = 0;\n    while let Some(idx) = stack.pop() {\n        count += 1;\n        let x = (idx % W) as i32;\n        let y = (idx / W) as i32;\n        for (dx, dy) in [(1, 0), (-1, 0), (0, 1), (0, -1)] {\n            let nx = x + dx;\n            let ny = y + dy;\n            if nx < 0 || ny < 0 || nx >= W as i32 || ny >= H as i32 {\n                continue;\n            }\n            let n = (ny as usize) * W + (nx as usize);\n            if map[n] && !seen[n] {\n                seen[n] = true;\n                stack.push(n);\n            }\n        }\n    }\n    count == total\n}\n\n#[cfg(test)]\nmod tests {\n    use super::*;\n    #[test]\n    fn seeded_walk_is_deterministic() {\n        assert_eq!(build_map(123), build_map(123));\n    }\n    #[test]\n    fn different_seeds_differ() {\n        assert_ne!(build_map(1), build_map(2));\n    }\n    #[test]\n    fn all_floor_stays_connected() {\n        assert!(floor_connected(&build_map(42)));\n    }\n}\n"
+            }
+          },
+          {
+            "argv": [
+              "cargo",
+              "test"
+            ],
+            "cwd": "drunk_demo",
+            "expect": [
+              "test result: ok",
+              "3 passed"
+            ],
+            "expect_exit": 0
+          }
+        ]
+      },
+      "bad": {
+        "steps": [
+          {
+            "argv": [
+              "cargo",
+              "new",
+              "--lib",
+              "drunk_demo"
+            ],
+            "expect": [
+              "Creating library"
+            ],
+            "expect_exit": 0
+          },
+          {
+            "write": {
+              "drunk_demo/src/lib.rs": "pub struct Rng {\n    state: u64,\n}\n\nimpl Rng {\n    pub fn new(seed: u64) -> Self {\n        Self { state: seed }\n    }\n    pub fn range(&mut self, lo: i32, hi: i32) -> i32 {\n        let _ = self.state;\n        let _ = hi;\n        lo\n    }\n}\n\npub const W: usize = 20;\npub const H: usize = 20;\npub const STAGGER_DISTANCE: usize = 400;\n\npub fn build_map(seed: u64) -> Vec<bool> {\n    let mut map = vec![false; W * H];\n    let mut rng = Rng::new(seed);\n    let mut x = (W / 2) as i32;\n    let mut y = (H / 2) as i32;\n    for _ in 0..STAGGER_DISTANCE {\n        let idx = (y as usize) * W + (x as usize);\n        map[idx] = true;\n        match rng.range(0, 4) {\n            0 => x = (x + 1).min((W - 2) as i32),\n            1 => x = (x - 1).max(1),\n            2 => y = (y + 1).min((H - 2) as i32),\n            _ => y = (y - 1).max(1),\n        }\n    }\n    map\n}\n\npub fn floor_connected(map: &[bool]) -> bool {\n    let total = map.iter().filter(|&&b| b).count();\n    if total == 0 {\n        return false;\n    }\n    let start = map.iter().position(|&b| b).unwrap();\n    let mut seen = vec![false; map.len()];\n    let mut stack = vec![start];\n    seen[start] = true;\n    let mut count = 0;\n    while let Some(idx) = stack.pop() {\n        count += 1;\n        let x = (idx % W) as i32;\n        let y = (idx / W) as i32;\n        for (dx, dy) in [(1, 0), (-1, 0), (0, 1), (0, -1)] {\n            let nx = x + dx;\n            let ny = y + dy;\n            if nx < 0 || ny < 0 || nx >= W as i32 || ny >= H as i32 {\n                continue;\n            }\n            let n = (ny as usize) * W + (nx as usize);\n            if map[n] && !seen[n] {\n                seen[n] = true;\n                stack.push(n);\n            }\n        }\n    }\n    count == total\n}\n\n#[cfg(test)]\nmod tests {\n    use super::*;\n    #[test]\n    fn seeded_walk_is_deterministic() {\n        assert_eq!(build_map(123), build_map(123));\n    }\n    #[test]\n    fn different_seeds_differ() {\n        assert_ne!(build_map(1), build_map(2));\n    }\n    #[test]\n    fn all_floor_stays_connected() {\n        assert!(floor_connected(&build_map(42)));\n    }\n}\n"
+            }
+          },
+          {
+            "argv": [
+              "cargo",
+              "test"
+            ],
+            "cwd": "drunk_demo",
+            "expect": [
+              "FAILED"
+            ],
+            "expect_exit": 101
+          }
+        ]
+      }
+    },
+    {
+      "id": "hr-p03",
+      "title": "dungeonecs collide intent: WantsToMove plus can_enter plus collisions",
+      "group": "ecs",
+      "good": {
+        "steps": [
+          {
+            "argv": [
+              "cargo",
+              "new",
+              "--lib",
+              "intent_demo"
+            ],
+            "expect": [
+              "Creating library"
+            ],
+            "expect_exit": 0
+          },
+          {
+            "write": {
+              "intent_demo/src/lib.rs": "#[derive(Debug, Clone, Copy, PartialEq, Eq)]\npub struct Point {\n    pub x: i32,\n    pub y: i32,\n}\n\n#[derive(Debug)]\npub struct WantsToMove {\n    pub dx: i32,\n    pub dy: i32,\n}\n\n#[derive(Debug)]\npub struct Map {\n    pub width: i32,\n    pub height: i32,\n}\n\nimpl Map {\n    pub fn new(width: i32, height: i32) -> Self {\n        Self { width, height }\n    }\n    pub fn can_enter(&self, p: &Point) -> bool {\n        if p.x < 0 || p.y < 0 || p.x >= self.width || p.y >= self.height {\n            return false;\n        }\n        if p.x == 0 || p.y == 0 || p.x == self.width - 1 || p.y == self.height - 1 {\n            return false;\n        }\n        true\n    }\n}\n\npub fn apply_intent(pos: &mut Point, want: &WantsToMove, map: &Map) {\n    let next = Point { x: pos.x + want.dx, y: pos.y + want.dy };\n    if map.can_enter(&next) {\n        *pos = next;\n    }\n}\n\npub fn collisions(player: &Point, enemies: &mut Vec<Point>) {\n    enemies.retain(|e| e.x != player.x || e.y != player.y);\n}\n\n#[cfg(test)]\nmod tests {\n    use super::*;\n    #[test]\n    fn wall_blocks_intent() {\n        let map = Map::new(10, 10);\n        let mut p = Point { x: 1, y: 1 };\n        apply_intent(&mut p, &WantsToMove { dx: -1, dy: 0 }, &map);\n        assert_eq!(p, Point { x: 1, y: 1 });\n    }\n    #[test]\n    fn floor_allows_intent() {\n        let map = Map::new(10, 10);\n        let mut p = Point { x: 1, y: 1 };\n        apply_intent(&mut p, &WantsToMove { dx: 1, dy: 0 }, &map);\n        assert_eq!(p, Point { x: 2, y: 1 });\n    }\n    #[test]\n    fn enemy_on_player_is_removed() {\n        let player = Point { x: 2, y: 1 };\n        let mut enemies = vec![Point { x: 2, y: 1 }, Point { x: 5, y: 5 }];\n        collisions(&player, &mut enemies);\n        assert_eq!(enemies, vec![Point { x: 5, y: 5 }]);\n    }\n}\n"
+            }
+          },
+          {
+            "argv": [
+              "cargo",
+              "test"
+            ],
+            "cwd": "intent_demo",
+            "expect": [
+              "test result: ok",
+              "3 passed"
+            ],
+            "expect_exit": 0
+          }
+        ]
+      },
+      "bad": {
+        "steps": [
+          {
+            "argv": [
+              "cargo",
+              "new",
+              "--lib",
+              "intent_demo"
+            ],
+            "expect": [
+              "Creating library"
+            ],
+            "expect_exit": 0
+          },
+          {
+            "write": {
+              "intent_demo/src/lib.rs": "#[derive(Debug, Clone, Copy, PartialEq, Eq)]\npub struct Point {\n    pub x: i32,\n    pub y: i32,\n}\n\n#[derive(Debug)]\npub struct WantsToMove {\n    pub dx: i32,\n    pub dy: i32,\n}\n\n#[derive(Debug)]\npub struct Map {\n    pub width: i32,\n    pub height: i32,\n}\n\nimpl Map {\n    pub fn new(width: i32, height: i32) -> Self {\n        Self { width, height }\n    }\n    pub fn can_enter(&self, p: &Point) -> bool {\n        if p.x < 0 || p.y < 0 || p.x >= self.width || p.y >= self.height {\n            return false;\n        }\n        if p.x == 0 || p.y == 0 || p.x == self.width - 1 || p.y == self.height - 1 {\n            return false;\n        }\n        true\n    }\n}\n\npub fn apply_intent(pos: &mut Point, want: &WantsToMove, map: &Map) {\n    let _ = map;\n    pos.x += want.dx;\n    pos.y += want.dy;\n}\n\npub fn collisions(player: &Point, enemies: &mut Vec<Point>) {\n    let _ = player;\n    let _ = enemies;\n}\n\n#[cfg(test)]\nmod tests {\n    use super::*;\n    #[test]\n    fn wall_blocks_intent() {\n        let map = Map::new(10, 10);\n        let mut p = Point { x: 1, y: 1 };\n        apply_intent(&mut p, &WantsToMove { dx: -1, dy: 0 }, &map);\n        assert_eq!(p, Point { x: 1, y: 1 });\n    }\n    #[test]\n    fn floor_allows_intent() {\n        let map = Map::new(10, 10);\n        let mut p = Point { x: 1, y: 1 };\n        apply_intent(&mut p, &WantsToMove { dx: 1, dy: 0 }, &map);\n        assert_eq!(p, Point { x: 2, y: 1 });\n    }\n    #[test]\n    fn enemy_on_player_is_removed() {\n        let player = Point { x: 2, y: 1 };\n        let mut enemies = vec![Point { x: 2, y: 1 }, Point { x: 5, y: 5 }];\n        collisions(&player, &mut enemies);\n        assert_eq!(enemies, vec![Point { x: 5, y: 5 }]);\n    }\n}\n"
+            }
+          },
+          {
+            "argv": [
+              "cargo",
+              "test"
+            ],
+            "cwd": "intent_demo",
+            "expect": [
+              "FAILED"
+            ],
+            "expect_exit": 101
+          }
+        ]
+      }
+    }
+  ]
+}

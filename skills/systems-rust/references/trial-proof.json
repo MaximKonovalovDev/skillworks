@@ -1,0 +1,16 @@
+{
+  "skill": "systems-rust",
+  "runs": 12,
+  "with_rate": 1.0,
+  "without_rate": 0.25,
+  "lift": 0.75,
+  "spread": 0.75,
+  "with_median": 1.0,
+  "with_p10": 1.0,
+  "without_median": 0.0,
+  "without_p10": 0.0,
+  "fingerprint": "21471f4a93823d767aa24723ea120f1458643c0a9f87d0cf22b1e88ed7c2fb6a",
+  "sheet": "evals/systems-rust_trials.jsonl",
+  "at": "2026-10-09T09:21Z",
+  "ok": true
+}

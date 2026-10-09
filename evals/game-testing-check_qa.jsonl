@@ -1,0 +1,13 @@
+{"q": "Which three playtest formats does the checklist name for a new build?", "must": ["one-on-one", "focus group", "extended playtest"]}
+{"q": "What does the moderator do during a one-on-one playtest session?", "must": ["moderator", "takes notes"]}
+{"q": "Whose shoes should a tester wear, and which audience must the test recruit?", "must": ["player shoes", "target audience"]}
+{"q": "How do screening surveys and a bug-free build set up a fair playtest?", "must": ["screening surveys", "bug-free"]}
+{"q": "What two play qualities does the checklist score on every level?", "must": ["fun factor", "difficulty balancing"]}
+{"q": "How do stress testing and load testing differ in a perf pass?", "must": ["stress testing", "load testing"]}
+{"q": "Which two perf signals show performance under stress in a busy scene?", "must": ["frame rate", "lag"]}
+{"q": "What device plan covers hardware compatibility across tiers?", "must": ["test sets", "hardware compatibility"]}
+{"q": "Which light doc replaces heavy cases for exploratory testing?", "must": ["test charter", "exploratory testing"]}
+{"q": "How does pairwise testing use two heads to find more issues?", "must": ["pairwise testing", "two heads"]}
+{"q": "Which two risk steps open the test plan before a new feature?", "must": ["risk identification", "risk analysis"]}
+{"q": "Which three light gates cover basic function, real players, and script-free passes?", "must": ["smoke testing", "beta testing", "ad hoc"]}
+

@@ -278,10 +278,10 @@ def grow_qa(chapter: str, limit: int = 5) -> list[dict]:
     """
     import re
 
-    words = re.findall(r"[A-Za-z][A-Za-z-]{4,}", chapter)
+    words = re.findall(r"[^\W\d_][^\W\d_-]{4,}", chapter)
     seen: dict[str, None] = {}
     for w in words:
-        key = w.lower()
+        key = w.casefold()
         if key not in seen:
             seen[key] = None
     terms = list(seen)[:limit]
@@ -322,8 +322,8 @@ def _rank(texts: list[tuple[str, str]], query: str, limit: int = 5) -> list[tupl
     sum of count * weight. A question whose words match no skill file ranks
     nothing, so its must-words cannot pass.
     """
-    words = [w.lower() for w in query.split() if len(w) > 2]
-    lowered = [(name, text.lower()) for name, text in texts]
+    words = [w.casefold() for w in query.split() if len(w) > 2]
+    lowered = [(name, text.casefold()) for name, text in texts]
     total = len(lowered)
     weights = {}
     for w in words:
@@ -343,14 +343,14 @@ def _substantive(blob: str, must: list[str]) -> bool:
     import re
     if not must:
         return True
-    words = re.findall("[A-Za-z]{3,}", blob)
-    if len({w.lower() for w in words}) < 5:
+    words = re.findall(r"[^\W\d_]{3,}", blob)
+    if len({w.casefold() for w in words}) < 5:
         return False
     sentences = re.findall("[^.!?]+[.!?]", blob)
     if not sentences:
         return False
     for m in must:
-        hit = [s for s in sentences if m in s and len(re.findall("[A-Za-z]{3,}", s)) >= 3]
+        hit = [s for s in sentences if m in s and len(re.findall(r"[^\W\d_]{3,}", s)) >= 3]
         if not hit:
             return False
     return True
@@ -380,8 +380,8 @@ def run_eval(workdir: Path, skilldir: Path, qa_path: Path) -> dict:
                 (workdir / "chunks" / f"{h['file']}").read_text(encoding="utf-8")
                 for h in hits
             )
-        blob = blob.lower()
-        must = [w.lower() for w in item.get("must", [])]
+        blob = blob.casefold()
+        must = [w.casefold() for w in item.get("must", [])]
         passed = all(w in blob for w in must) and (graded_on != "skill" or _substantive(blob, must))
         results.append({"q": item["q"], "passed": passed})
     total = len(results)

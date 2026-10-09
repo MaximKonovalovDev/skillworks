@@ -190,7 +190,13 @@ def _check_name(name, dirname):
     return (name_reasons, not name_reasons)
 
 
-def audit(skilldir: Path) -> dict:
+def audit(skilldir: Path, quiet: bool = False) -> dict:
+    """Build the token-cost report for skilldir.
+
+    Contract (machine stdout, human stderr): the JSON report goes to
+    stdout, human_summary goes to stderr. quiet=True returns the report
+    with no prints (for make/CLI layers that print it themselves).
+    """
     skilldir = Path(skilldir)
     rows = []
     total = 0
@@ -272,6 +278,7 @@ def audit(skilldir: Path) -> dict:
         "broken_links": broken_links,
         "flags": flags,
     }
-    print(json.dumps(report, indent=2))
-    print(human_summary(report), file=sys.stderr)
+    if not quiet:
+        print(json.dumps(report, indent=2))
+        print(human_summary(report), file=sys.stderr)
     return report

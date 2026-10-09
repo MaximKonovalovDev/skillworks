@@ -1,0 +1,12 @@
+{"must": ["E0382", "clone"], "q": "What happens when a String is assigned with let s2 = s1, and how do you fix the later use of s1?"}
+{"must": ["i32", "String", "Copy"], "q": "Which values copy on assignment and which ones move?"}
+{"must": ["Box::new", "dropped"], "q": "How does Box::new manage heap memory, and when is it freed?"}
+{"must": ["Rc", "Arc", "atomic"], "q": "When do you pick Rc over Arc for shared ownership?"}
+{"must": ["&mut", "never both", "outlive"], "q": "What borrow combinations may coexist, and how long may a borrow live?"}
+{"must": ["chunks_mut", "band", "spawn"], "q": "How do scoped threads split a pixel buffer so each thread owns its piece?"}
+{"must": ["scope", "spawner", "returns"], "q": "How does std::thread::scope keep stack borrows safe?"}
+{"must": ["available_parallelism", "div_ceil"], "q": "How do you size a thread pool from the machine?"}
+{"must": ["Mutex", "holding the lock"], "q": "What discipline does a Mutex impose on shared data?"}
+{"must": ["data races", "by construction", "unsafe"], "q": "Why is safe Rust free of data races?"}
+{"must": ["CStr", "null-terminated", "from_bytes_with_nul"], "q": "Which Rust type represents a null-terminated C string, and how do you build one from bytes?"}
+{"must": ["smallest", "'a"], "q": "How do you tie a returned reference lifetime to an input slice?"}

@@ -192,13 +192,11 @@ def build(work: str, skill: str, name: str, description: str) -> None:
 @main.command()
 @click.option("--skill", required=True)
 def audit(skill: str) -> None:
-    """Stage 5: token-cost report."""
-    import contextlib
-    import io
+    """Stage 5: token-cost report (JSON on stdout, human summary on stderr)."""
     import json
-    with contextlib.redirect_stdout(io.StringIO()):
-        report = audit_mod.audit(Path(skill))
+    report = audit_mod.audit(Path(skill), quiet=True)
     click.echo(json.dumps(report, indent=2))
+    click.echo(audit_mod.human_summary(report), err=True)
 
 
 @main.command()

@@ -1,0 +1,35 @@
+# Glossary: the words the checker uses
+
+- UPPERCASE: constants and globals in upper case with underscores, example MAX_SIZE.
+- CamelCase: type names in mixed case starting upper, example UserId.
+- snake_case: variable and function names in lower case with underscores, example user_id.
+- match: exhaustive branch over Some and None for Option handling.
+- Some: the present arm of Option with the inner value.
+- None: the absent arm of Option with the fallback value.
+- unwrap: panicking helper that fails the check on Option and Result.
+- Result: fallible return with Ok and Err arms.
+- question mark: the propagate operator that returns Err early from a Result function.
+- iter: borrowed iteration over a slice with no index.
+- map: adapter that transforms each iter item.
+- collect: adapter that gathers iter items into a container.
+- builder: chained with star steps that take mut self and return Self, closed by build.
+- Self: the builder return type that enables chaining.
+- build: terminal builder call that yields the finished value.
+- newtype: single field tuple struct like UserId that adds type safety over String.
+- RAII: cleanup tied to ownership with Drop at scope end.
+- Drop: trait with a drop method that runs the cleanup step.
+- cleanup: the release step that Drop runs automatically.
+- extension trait: trait Ext that adds methods to a foreign type.
+- blanket: generic impl over a bound like Clone that shares behavior widely.
+- borrowed str: function input as str ref that accepts owned and borrowed text.
+- Cow: clone on write holder for the borrowed or owned branch.
+- clone: ownership copy that must not feed a loop.
+- borrowed item: loop variable as item ref where the slow code called clone.
+- Deref: deref coercion trait that must not fake polymorphism.
+- singleton: global single instance that must not hide mut state.
+- static mut: mutable global that fails the check.
+- unsafe: unchecked block that stays tiny with a safety comment.
+- safety: comment that states why a tiny unsafe block is sound.
+- prelude: curated re export module that brings common names into scope.
+- state machine: type level states that make invalid transitions unrepresentable.
+

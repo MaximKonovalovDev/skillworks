@@ -15,6 +15,7 @@ With no skill names, every fleet skill that is built is copied.
 from __future__ import annotations
 
 import argparse
+import base64
 import datetime
 import difflib
 import filecmp
@@ -193,6 +194,114 @@ def lock_drift(path, entries) -> bool:
         if entry.get("computedHash-sha256") != _hash_entry(entries[name]):
             return True
     return False
+
+
+
+# STEAL S idea from extensiondev/artifact-integrity (Apache-2.0, https://github.com/extensiondev/artifact-integrity):
+# pinned digest order expectedSha256 over manifest files.zip.sha256 over metadata sha256 or SRI, requireDigest fail-closed.
+# Fresh code below, no donor code copied.
+DIGEST_ORDER = ("expectedSha256", "files.zip.sha256", "sha256")
+
+
+def _sri_sha256_to_hex(sri):
+    """Hex digest from a sha256 SRI value or None when unparsable."""
+    if not isinstance(sri, str):
+        return None
+    for token in sri.strip().split():
+        if not token.startswith("sha256-"):
+            continue
+        raw = token[len("sha256-"):]
+        if not raw:
+            continue
+        try:
+            digest = base64.b64decode(raw, validate=True)
+        except Exception:
+            continue
+        if len(digest) != 32:
+            continue
+        return digest.hex()
+    return None
+
+
+def pinned_digest(artifact):
+    """Pinned hex digest in DIGEST_ORDER or (None, None) when absent."""
+    if not isinstance(artifact, dict):
+        return (None, None)
+    expected = artifact.get("expectedSha256")
+    if isinstance(expected, str) and expected.strip():
+        return (DIGEST_ORDER[0], expected.strip().lower())
+    manifest = artifact.get("manifest")
+    if isinstance(manifest, dict):
+        direct = manifest.get("files.zip.sha256")
+        if isinstance(direct, str) and direct.strip():
+            return (DIGEST_ORDER[1], direct.strip().lower())
+        files = manifest.get("files")
+        if isinstance(files, dict):
+            zipped = files.get("zip")
+            if isinstance(zipped, dict):
+                nested = zipped.get("sha256")
+                if isinstance(nested, str) and nested.strip():
+                    return (DIGEST_ORDER[1], nested.strip().lower())
+    metadata = artifact.get("metadata")
+    if isinstance(metadata, dict):
+        meta_hex = metadata.get("sha256")
+        if isinstance(meta_hex, str) and meta_hex.strip():
+            return (DIGEST_ORDER[2], meta_hex.strip().lower())
+        integrity = metadata.get("integrity")
+        parsed = _sri_sha256_to_hex(integrity) if isinstance(integrity, str) else None
+        if parsed:
+            return (DIGEST_ORDER[2], parsed)
+    return (None, None)
+
+
+def verify_artifact(artifact, actual_sha256, require_digest=True):
+    """One item checks list with digest-present or digest-match finding."""
+    source, expected = pinned_digest(artifact)
+    if expected is None:
+        ok = not require_digest
+        return [
+            {
+                "id": "digest-present",
+                "ok": ok,
+                "level": "error" if require_digest else "info",
+                "title": "Pinned digest is present",
+                "summary": "No pinned digest found in expectedSha256, manifest files.zip.sha256, or metadata sha256 or SRI.",
+                "remediation": "Pin expectedSha256 or manifest files.zip.sha256 or metadata sha256 before install.",
+                "expected": None,
+                "actual": actual_sha256,
+            }
+        ]
+    actual_text = actual_sha256 if isinstance(actual_sha256, str) else ""
+    ok = actual_text.strip().lower() == expected.lower() and bool(actual_text.strip())
+    return [
+        {
+            "id": "digest-match",
+            "ok": ok,
+            "level": "info" if ok else "error",
+            "title": "Pinned digest matches artifact bytes",
+            "summary": "Pinned digest matches computed sha256." if ok else "Pinned digest does not match computed sha256.",
+            "remediation": "No action needed." if ok else "Refuse install and repin from trusted source.",
+            "expected": expected,
+            "actual": actual_sha256,
+        }
+    ]
+
+
+def unverified_install_paths(artifacts, require_digest=True):
+    """Sorted artifact names with no pinned digest, empty when not required."""
+    if not require_digest:
+        return []
+    names = []
+    for artifact in artifacts or []:
+        if not isinstance(artifact, dict):
+            continue
+        source, expected = pinned_digest(artifact)
+        if expected is None:
+            name = artifact.get("name")
+            if isinstance(name, str) and name:
+                names.append(name)
+    return sorted(names)
+
 
 
 # STEAL S idea from percymcn/agent-cookbook (MIT, https://github.com/percymcn/agent-cookbook/blob/67a791a/scripts/install_skill.py, LICENSE https://github.com/percymcn/agent-cookbook/blob/67a791a/LICENSE):
